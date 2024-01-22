@@ -112,12 +112,18 @@ const profile_items = [
 
 const rightSidebarDisplay = ref(false);
 onUpdated(() => {
-    if (window.location.pathname !== "/dashboard") {
+    if (
+        window.location.pathname !== "/dashboard" ||
+        window.location.pathname !== "/system-settings/setup-options"
+    ) {
         rightSidebarDisplay.value = true;
     }
 });
 onMounted(() => {
-    if (window.location.pathname !== "/dashboard") {
+    if (
+        window.location.pathname !== "/dashboard" ||
+        window.location.pathname !== "/system-settings/setup-options"
+    ) {
         rightSidebarDisplay.value = true;
     }
 });
