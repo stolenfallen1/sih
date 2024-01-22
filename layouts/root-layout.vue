@@ -2,7 +2,7 @@
     <v-app>
         <v-app-bar flat elevation="1" color="#117dad">
             <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
-            <img src="/public/cduh_logo.png" width="50" height="50" />
+            <img src="/cduh_logo.png" width="50" height="50" />
             <v-app-bar-title>Hospital Information System</v-app-bar-title>
             <v-app-bar-nav @click="drawer = !drawer"> </v-app-bar-nav>
             <!-- GLOBAL SETTINGS MODAL -->
@@ -32,7 +32,7 @@
         </v-app-bar>
 
         <!-- LEFT SIDEBAR -->
-        <v-navigation-drawer class="drawer" v-model="drawer" permanent="true">
+        <v-navigation-drawer class="drawer" v-model="drawer" :permanent="true">
             <v-list :lines="false" density="compact" nav>
                 <template v-for="(item, i) in items" :key="i">
                     <template v-if="item.child.length == 0">
@@ -48,7 +48,7 @@
                     <v-list-group
                         :value="item.label"
                         v-if="item.child.length > 0"
-                        fluid
+                        :fluid="true"
                     >
                         <template v-slot:activator="{ props }">
                             <v-list-item
@@ -56,8 +56,8 @@
                                 :prepend-icon="item.icon"
                                 :title="item.label"
                                 density="compact"
-                                exact="true"
-                                slim="true"
+                                :exact="true"
+                                :slim="true"
                             ></v-list-item>
                         </template>
                         <v-list-item
@@ -69,8 +69,8 @@
                             :to="child.path"
                             :prepend-icon="child.icon"
                             density="compact"
-                            exact="true"
-                            slim="true"
+                            :exact="true"
+                            :slim="true"
                         ></v-list-item>
                     </v-list-group>
                 </template>
@@ -82,14 +82,14 @@
             location="right"
             class="drawer"
             v-model="drawer"
-            permanent="true"
+            :permanent="true"
             v-if="rightSidebarDisplay"
         >
         </v-navigation-drawer>
 
         <!-- MAIN CONTENT -->
         <v-main>
-            <v-container fluid="true">
+            <v-container :fluid="true">
                 <NuxtPage />
             </v-container>
         </v-main>
@@ -112,12 +112,18 @@ const profile_items = [
 
 const rightSidebarDisplay = ref(false);
 onUpdated(() => {
-    if (window.location.pathname !== "/dashboard") {
+    if (
+        window.location.pathname !== "/dashboard" ||
+        window.location.pathname !== "/system-settings/setup-options"
+    ) {
         rightSidebarDisplay.value = true;
     }
 });
 onMounted(() => {
-    if (window.location.pathname !== "/dashboard") {
+    if (
+        window.location.pathname !== "/dashboard" ||
+        window.location.pathname !== "/system-settings/setup-options"
+    ) {
         rightSidebarDisplay.value = true;
     }
 });

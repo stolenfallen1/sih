@@ -1,34 +1,42 @@
 <template>
-    <div class="my-8 mx-4">
+    <v-container>
         <v-row justify="start">
-            <v-dialog v-model="dialog" persistent width="1024">
+            <v-dialog v-model="searchDialog" width="800">
                 <template v-slot:activator="{ props }">
-                    <v-btn color="primary" v-bind="props">+ Add User</v-btn>
+                    <v-btn color="#117dad" v-bind="props">+ Add User</v-btn>
                 </template>
+                <search-user
+                    @close-search-dialog="closeSearchDialog"
+                    @open-dialog="openAddRecordDialog"
+                />
+            </v-dialog>
+        </v-row>
+        <v-row>
+            <v-dialog v-model="inputDialog" width="1024">
                 <registration-form
                     @close-dialog="closeDialog"
                 ></registration-form>
             </v-dialog>
         </v-row>
-    </div>
-    <div>
-        <ReusableTable
-            :items-per-page="10"
-            :columns="tableColumns"
-            :serverItems="tableData"
-            :totalItems="totalItems"
-            :loading="isLoading"
-            :tabs="tableTabs"
-            :tableTitle="pageTitle"
-            @action-search="handleSearch"
-            @action-refresh="handleRefresh"
-            @action-dots="handleDots"
-        />
-    </div>
+    </v-container>
+
+    <ReusableTable
+        :items-per-page="10"
+        :columns="tableColumns"
+        :serverItems="tableData"
+        :totalItems="totalItems"
+        :loading="isLoading"
+        :tabs="tableTabs"
+        :tableTitle="pageTitle"
+        @action-search="handleSearch"
+        @action-refresh="handleRefresh"
+        @action-dots="handleDots"
+    />
 </template>
 
 <script setup>
 import RegistrationForm from "~/components/system-settings/forms/system-users/RegistrationForm.vue";
+import SearchUser from "~/components/system-settings/forms/system-users/SearchUser.vue";
 import ReusableTable from "~/components/system-settings/tables/ReusableTable.vue";
 import { ref } from "vue";
 
@@ -86,7 +94,8 @@ const tableData = ref([
     },
 ]);
 const isLoading = ref(false);
-const dialog = ref(false);
+const searchDialog = ref(false);
+const inputDialog = ref(false);
 const tableTabs = ref([
     { label: "Tab One", value: "one" },
     { label: "Tab Two", value: "two" },
@@ -94,8 +103,17 @@ const tableTabs = ref([
 ]);
 const pageTitle = ref("Dynamic Table Title");
 
+const closeSearchDialog = () => {
+    searchDialog.value = false;
+};
+
 const closeDialog = () => {
-    dialog.value = false;
+    inputDialog.value = false;
+};
+
+const openAddRecordDialog = () => {
+    searchDialog.value = false;
+    inputDialog.value = true;
 };
 
 const handleSearch = () => {
