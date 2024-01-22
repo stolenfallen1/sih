@@ -1,0 +1,146 @@
+export default [
+    {
+        label: "Master Files",
+        icon: "mdi-folder-check",
+        active: true,
+        rule: "browse_menus",
+        child: [
+            {
+                label: "Patients",
+                link: "/dashboard/patient-master",
+                icon: "mdi-account-injury-outline",
+                path: "/master-file/patients",
+            },
+            {
+                label: "Consultants",
+                link: "/dashboard/consultant-master",
+                icon: "mdi-doctor",
+                path: "/master-file/consultants",
+            },
+            {
+                label: "Items and Services",
+                link: "/dashboard/consultant-master",
+                icon: "mdi-invoice-list-outline",
+                path: "/master-file/items-services",
+            },
+            {
+                label: "Rooms and Beds",
+                link: "/dashboard/consultant-master",
+                icon: "mdi-bed-outline",
+                path: "/master-file/rooms-beds",
+            },
+            {
+                label: "HMO Guarantors",
+                link: "/dashboard/consultant-master",
+                icon: "mdi-heart-plus",
+                path: "/master-file/hmo",
+            },
+            {
+                label: "ICD-10 Codes",
+                link: "/dashboard/consultant-master",
+                icon: "mdi-code-array",
+                path: "/master-file/icd",
+            },
+        ],
+    },
+    {
+        label: "Transaction",
+        icon: "mdi-handshake-outline",
+        active: true,
+        rule: "browse_menus",
+        child: [
+            {
+                label: "Emergency",
+                link: "/dashboard/patient-master",
+                icon: "mdi-car-emergency",
+                path: "/transactions/emergency",
+            },
+            {
+                label: "Out Patients",
+                link: "/dashboard/consultant-master",
+                icon: "mdi-account",
+                path: "/transactions/out-patient",
+            },
+            {
+                label: "In Patients",
+                link: "/dashboard/consultant-master",
+                icon: "mdi-account-check",
+                path: "/transactions/in-patient",
+            },
+            {
+                label: "Nursing Services",
+                link: "/dashboard/consultant-master",
+                icon: "mdi-medical-bag",
+                path: "/transactions/nursing-services",
+            },
+            {
+                label: "Dietary Services",
+                link: "/dashboard/consultant-master",
+                icon: "mdi-food-fork-drink",
+                path: "/transactions/dietary-services",
+            },
+            {
+                label: "Ancillary Services",
+                link: "/dashboard/consultant-master",
+                icon: "mdi-radar",
+                path: "/transactions/ancillary-services",
+            },
+            {
+                label: "Examination Upshots",
+                link: "/dashboard/consultant-master",
+                icon: "mdi-needle",
+                path: "/transactions/examination-upshots",
+            },
+            {
+                label: "Cash Reciepts",
+                link: "/dashboard/consultant-master",
+                icon: "mdi-cash-check",
+                path: "/transactions/cash-reciepts",
+            },
+            {
+                label: "Payment Refunds",
+                link: "/dashboard/consultant-master",
+                icon: "mdi-credit-card-settings-outline",
+                path: "/transactions/payment-refunds",
+            },
+            {
+                label: "Billing Schedules",
+                link: "/dashboard/consultant-master",
+                icon: "mdi-account-credit-card-outline",
+                path: "/transactions/billing-schedules",
+            },
+            {
+                label: "Centralized Patients",
+                link: "/dashboard/consultant-master",
+                icon: "mdi-set-left-center",
+                path: "/transactions/centralized-patients",
+            },
+        ],
+    },
+    {
+        label: "System Settings",
+        icon: "mdi-cogs",
+        active: false,
+        role: "browse-menus",
+        child: [
+            {
+                label: "Setup and Options",
+                link: "/dashboard/patient-master",
+                icon: "mdi-server-network",
+                path: "/system-settings/setup-options",
+            },
+            {
+                label: "System Users",
+                link: "/dashboard/consultant-master",
+                icon: "mdi-account-group-outline",
+                path: "/system-settings/system-users",
+            },
+            {
+                label: "Report Manager",
+                link: "/dashboard/consultant-master",
+                icon: "mdi-chart-bar",
+                path: "/system-settings/report-manager",
+            },
+        ],
+    },
+];
