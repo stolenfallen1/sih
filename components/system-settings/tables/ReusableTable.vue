@@ -1,7 +1,6 @@
-<!-- ReusableTable.vue -->
 <template>
-    <v-card rounded="lg">
-        <v-tabs v-model="tab" bg-color="#117dad">
+    <v-card rounded="lg" elevation="3">
+        <v-tabs v-model="tab">
             <v-tab
                 v-for="tabItem in tabs"
                 :key="tabItem.value"
@@ -10,7 +9,7 @@
                 {{ tabItem.label }}
             </v-tab>
         </v-tabs>
-
+        <v-divider></v-divider>
         <v-toolbar density="compact" color="#FFF">
             <v-btn icon @click="handleActionClick('refresh')">
                 <v-icon>mdi-refresh</v-icon>
@@ -29,6 +28,9 @@
         </v-toolbar>
 
         <v-data-table-server
+            :fixed-header="true"
+            density="compact"
+            height="60vh"
             class="animated animatedFadeInUp fadeInUp"
             v-model:items-per-page="itemsPerPage"
             :search="search"
@@ -44,7 +46,7 @@
 </template>
 
 <script>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, defineProps } from "vue";
 import "../../../styes/animation.css";
 
 export default {
