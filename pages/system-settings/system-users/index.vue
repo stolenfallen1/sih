@@ -115,8 +115,6 @@ const fetchData = async () => {
     const data = await response.json();
     updateTotalItems(data.total);
     updateServerItems(data.data);
-    console.log("Error fetching data:", data.data);
-
     // tableColumns.value = currentTabInfo?.columns || [];
   } catch (error) {
     console.error("Error fetching data:", error);
