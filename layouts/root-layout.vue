@@ -92,7 +92,7 @@
             class="drawer"
             v-model="drawer"
             :permanent="true"
-            v-if="rightSidebarDisplay && authenticated"
+            v-if="!rightSidebarDisplay && authenticated"
         >
             <v-list v-for="options in subcomponents">
                 <v-list-item :to="options.path" :key="options.label" link

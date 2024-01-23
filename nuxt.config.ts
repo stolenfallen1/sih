@@ -1,11 +1,11 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 import vuetify, { transformAssetUrls } from "vite-plugin-vuetify";
 export default defineNuxtConfig({
-  runtimeConfig: {
-    apiSecret: 'http://10.4.15.15:3004/', 
+   runtimeConfig: {
+    apiSecret:"1234",
     public: {
-      apiBase: 'http://10.4.15.15:3004/', 
-    }
+      apiBase: "http://10.4.15.15/api"
+    },
   },
   app: {
     head: {
