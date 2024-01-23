@@ -22,15 +22,15 @@
 
     <ReusableTable
         :items-per-page="10"
-        :columns="tableColumns"
         :serverItems="tableData"
         :totalItems="totalItems"
         :loading="isLoading"
         :tabs="tableTabs"
         :tableTitle="pageTitle"
+        :current-tab="currentTab"
+        @tab-change="handleTabChange"
         @action-search="handleSearch"
         @action-refresh="handleRefresh"
-        @action-dots="handleDots"
     />
 </template>
 
@@ -43,92 +43,111 @@ import { ref } from "vue";
 definePageMeta({
     layout: "root-layout",
 });
-
-const tableColumns = ref([
-    { title: "User Name", key: "name", align: "start", sortable: true },
-    { title: "User Group", key: "calories", align: "end" },
-    { title: "Position", key: "fat", align: "end" },
-    { title: "Branch", key: "protein", align: "end" },
-    { title: "Department", key: "iron", align: "end" },
-    { title: "Section", key: "iron", align: "end" },
-]);
+const tableData = ref([]);
 const totalItems = ref(0);
-const tableData = ref([
-    {
-        name: "Frozen Yogurt",
-        calories: 159,
-        fat: 6.0,
-        carbs: 24,
-        protein: 4.0,
-        iron: "1",
-    },
-    {
-        name: "Jelly bean",
-        calories: 375,
-        fat: 0.0,
-        carbs: 94,
-        protein: 0.0,
-        iron: "0",
-    },
-    {
-        name: "KitKat",
-        calories: 518,
-        fat: 26.0,
-        carbs: 65,
-        protein: 7,
-        iron: "6",
-    },
-    {
-        name: "Eclair",
-        calories: 262,
-        fat: 16.0,
-        carbs: 23,
-        protein: 6.0,
-        iron: "7",
-    },
-    {
-        name: "Gingerbread",
-        calories: 356,
-        fat: 16.0,
-        carbs: 49,
-        protein: 3.9,
-        iron: "16",
-    },
-]);
 const isLoading = ref(false);
+// Dialog state
 const searchDialog = ref(false);
 const inputDialog = ref(false);
+// Tabs
+const currentTab = ref("one");
 const tableTabs = ref([
-    { label: "Tab One", value: "one" },
-    { label: "Tab Two", value: "two" },
-    { label: "Tab Three", value: "three" },
+    {
+        label: "Tab One",
+        title: "Tab One",
+        value: "one",
+        endpoint: "https://jsonplaceholder.typicode.com/posts",
+        columns: [
+            { title: "User ID", key: "userId", align: "start", sortable: true },
+            { title: "ID", key: "id", align: "end" },
+            { title: "Title", key: "title", align: "start" },
+            { title: "Body", key: "body", align: "start" },
+        ],
+    },
+    {
+        label: "Tab Two",
+        title: "Tab Two",
+        value: "two",
+        endpoint: "https://jsonplaceholder.typicode.com/comments",
+        columns: [
+            { title: "Post ID", key: "postId", align: "start", sortable: true },
+            { title: "ID", key: "id", align: "end" },
+            { title: "Name", key: "name", align: "start" },
+            { title: "Email", key: "email", align: "start" },
+            { title: "Body", key: "body", align: "start" },
+        ],
+    },
+    {
+        label: "Tab Three",
+        title: "Tab Three",
+        value: "Tab Three",
+        endpoint: "https://jsonplaceholder.typicode.com/todos",
+        columns: [
+            { title: "User ID", key: "userId", align: "start", sortable: true },
+            { title: "ID", key: "id", align: "end" },
+            { title: "Title", key: "title", align: "start" },
+            { title: "Completed", key: "completed", align: "center" },
+        ],
+    },
 ]);
-const pageTitle = ref("Dynamic Table Title");
-
+const pageTitle = ref(""); // This should be dynamic base on the current tab
+// States for opening and closing dialogs
 const closeSearchDialog = () => {
     searchDialog.value = false;
 };
-
 const closeDialog = () => {
     inputDialog.value = false;
 };
-
 const openAddRecordDialog = () => {
     searchDialog.value = false;
     inputDialog.value = true;
 };
+
+// Fetch Data sample
+const fetchData = async () => {
+    try {
+        isLoading.value = true;
+        const currentTabInfo = tableTabs.value.find(
+            (tab) => tab.value === currentTab.value
+        );
+        const response = await fetch(currentTabInfo?.endpoint || "");
+        const data = await response.json();
+        updateTotalItems(data.length);
+        updateServerItems(data);
+
+        tableColumns.value = currentTabInfo?.columns || [];
+    } catch (error) {
+        console.error("Error fetching data:", error);
+    } finally {
+        isLoading.value = false;
+    }
+};
+const updateTotalItems = (newTotalItems) => {
+    totalItems.value = newTotalItems;
+};
+const updateServerItems = (newServerItems) => {
+    tableData.value = newServerItems;
+};
+const handleTabChange = (tabValue) => {
+    currentTab.value = tabValue;
+    const currentTabInfo = tableTabs.value.find(
+        (tab) => tab.value === tabValue
+    );
+    fetchData();
+    pageTitle.value = currentTabInfo?.title || "";
+};
+fetchData();
+handleTabChange(currentTab.value);
 
 const handleSearch = () => {
     // Handle search action
 };
 
 const handleRefresh = () => {
-    // Handle refresh action
+    fetchData();
 };
 
-const handleDots = () => {
-    // Handle dots action
-};
+// const handleDots = () => {};
 </script>
 
 <style scoped></style>
