@@ -75,12 +75,15 @@
                             :title="child.label"
                             :value="child.label"
                             :to="child.path"
-                            :prepend-icon="child.icon"
                             density="compact"
                             :exact="true"
                             :slim="true"
                             @click="displayRightOptions(child)"
-                        ></v-list-item>
+                        >
+                            <template v-slot:prepend>
+                            <v-icon  :icon="child.icon"></v-icon>
+                            </template>
+                        </v-list-item>
                     </v-list-group>
                 </template>
             </v-list>
@@ -92,7 +95,7 @@
             class="drawer"
             v-model="drawer"
             :permanent="true"
-            v-if="rightSidebarDisplay && authenticated"
+            v-if="!rightSidebarDisplay && authenticated"
         >
             <v-list v-for="options in subcomponents">
                 <v-list-item :to="options.path" :key="options.label" link

@@ -42,7 +42,17 @@
             :loading="loading"
             v-bind="showSelect ? { 'show-select': true } : {}"
             item-value="name"
-        />
+       >
+        <template v-slot:item.role="{ item }">
+          {{ item.role ? item.role.name : '' }}
+        </template>
+        <template v-slot:item.branch="{ item }">
+          {{ item.branch ? item.branch.abbreviation : '' }}
+        </template>
+        <template v-slot:item.warehouse="{ item }">
+          {{ item.warehouse ? item.warehouse.warehouse_description : '' }}
+        </template>
+       </v-data-table-server>
     </v-card>
 </template>
 
@@ -60,49 +70,13 @@ const props = defineProps({
     /*
     SIR AKOA USA GI COMMENT KAY MO ERROR NI
     */
-    // setup(props) {
-    //     const itemsPerPage = ref(props.itemsPerPage);
-    //     const search = ref("");
-    //     const tab = ref(null);
-
-    //     const handleActionClick = (action) => {
-    //         // Handle action button clicks (search, refresh)
-    //         // Emit events or perform actions as needed
-    //         emit(`action-${action}`);
-    //     };
-
-    //     const loadItems = async ({ page, itemsPerPage, sortBy }) => {
-    //         console.log(itemsPerPage);
-    //         console.log(page);
-    //         console.log(sortBy);
-    //         const { data } = await useFetch(
-    //             "http://10.4.15.15/api/userss?page=" +
-    //                 page +
-    //                 "&per_page=" +
-    //                 itemsPerPage
-    //         );
-    //         console.log(data);
-    //     };
-
-    //     onMounted(() => {
-    //         // Additional initialization logic, if needed
-    //     });
-
-    //     return {
-    //         itemsPerPage,
-    //         search,
-    //         tab,
-    //         handleActionClick,
-    //         loadItems,
-    //     };
-    // },
     serverItems: {
         type: Array,
         default: () => [],
     },
     columns: {
         type: Array,
-        required: false,
+        required: true,
     },
     totalItems: {
         type: Number,
