@@ -102,7 +102,7 @@ const props = defineProps({
     },
     columns: {
         type: Array,
-        required: true,
+        required: false,
     },
     totalItems: {
         type: Number,

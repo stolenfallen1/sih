@@ -53,8 +53,8 @@ const inputDialog = ref(false);
 const currentTab = ref("one");
 const tableTabs = ref([
     {
-        label: "Tab One",
-        title: "Tab One",
+        label: "Sytem User",
+        title: "List of system user",
         value: "one",
         endpoint: "https://jsonplaceholder.typicode.com/posts",
         columns: [
@@ -65,8 +65,8 @@ const tableTabs = ref([
         ],
     },
     {
-        label: "Tab Two",
-        title: "Tab Two",
+        label: "User Group",
+        title: "List of user Group",
         value: "two",
         endpoint: "https://jsonplaceholder.typicode.com/comments",
         columns: [
@@ -75,18 +75,6 @@ const tableTabs = ref([
             { title: "Name", key: "name", align: "start" },
             { title: "Email", key: "email", align: "start" },
             { title: "Body", key: "body", align: "start" },
-        ],
-    },
-    {
-        label: "Tab Three",
-        title: "Tab Three",
-        value: "Tab Three",
-        endpoint: "https://jsonplaceholder.typicode.com/todos",
-        columns: [
-            { title: "User ID", key: "userId", align: "start", sortable: true },
-            { title: "ID", key: "id", align: "end" },
-            { title: "Title", key: "title", align: "start" },
-            { title: "Completed", key: "completed", align: "center" },
         ],
     },
 ]);
@@ -115,7 +103,7 @@ const fetchData = async () => {
         updateTotalItems(data.length);
         updateServerItems(data);
 
-        tableColumns.value = currentTabInfo?.columns || [];
+        // tableColumns.value = currentTabInfo?.columns || [];
     } catch (error) {
         console.error("Error fetching data:", error);
     } finally {
