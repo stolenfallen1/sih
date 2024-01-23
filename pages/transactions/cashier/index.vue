@@ -1,5 +1,5 @@
 <template>
-    <div>HMO Guarantors</div>
+    <div>Cashier</div>
 </template>
 
 <script setup>

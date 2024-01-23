@@ -1,5 +1,5 @@
 <template>
-    <div>Cash Reciepts</div>
+    <div>Refunds</div>
 </template>
 
 <script setup>

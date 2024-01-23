@@ -1,13 +1,15 @@
 <template>
     <v-app>
-        <v-app-bar v-if="authenticated" flat elevation="1" color="#117dad">
+        <v-app-bar v-if="authenticated" flat elevation="1" color="#6984FF">
             <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
+            <img src="/cdg_logo.png" width="50" height="50" />
             <img src="/cduh_logo.png" width="50" height="50" />
-            <v-app-bar-title>Hospital Information System</v-app-bar-title>
-            <!-- <v-app-bar-nav @click="drawer = !drawer"> </v-app-bar-nav> -->
-            <!-- GLOBAL SETTINGS MODAL -->
-            <v-btn icon="mdi-home"></v-btn>
+            <v-title class="mx-4"
+                >Cebu Doctors University Hospital <br />
+                Hospital Information System</v-title
+            >
             <v-spacer></v-spacer>
+            <v-title class="mr-10">{{ currentTime }}</v-title>
             <ModalSettings />
             <v-btn icon="mdi-bell-alert-outline"></v-btn>
             <v-menu>
@@ -44,17 +46,14 @@
             <v-list :lines="false" density="compact" nav>
                 <template v-for="(item, i) in items" :key="i">
                     <template v-if="item.child.length == 0">
-                        <v-list-item :value="item" color="primary">
-                            <template v-slot:prepend>
-                                <v-icon :icon="item.icon"></v-icon>
-                            </template>
+                        <v-list-item :value="item">
                             <v-list-item-title
                                 v-text="item.label"
                             ></v-list-item-title>
                         </v-list-item>
                     </template>
                     <v-list-group
-                        :value="item.label"
+                        :value="i"
                         v-if="item.child.length > 0"
                         :fluid="true"
                     >
@@ -81,7 +80,13 @@
                             @click="displayRightOptions(child)"
                         >
                             <template v-slot:prepend>
-                            <v-icon  :icon="child.icon"></v-icon>
+                                <v-btn
+                                    class="mr-2 pa-1"
+                                    size="medium"
+                                    color="#6984FF"
+                                    :icon="child.icon"
+                                >
+                                </v-btn>
                             </template>
                         </v-list-item>
                     </v-list-group>
@@ -90,7 +95,7 @@
         </v-navigation-drawer>
 
         <!-- RIGHT SIDEBAR RENDER CONDITIONALLY -->
-        <v-navigation-drawer
+        <!-- <v-navigation-drawer
             location="right"
             class="drawer"
             v-model="drawer"
@@ -102,7 +107,7 @@
                     >TEST</v-list-item
                 >
             </v-list>
-        </v-navigation-drawer>
+        </v-navigation-drawer> -->
 
         <!-- MAIN CONTENT -->
         <v-main>
@@ -129,6 +134,23 @@ const drawer = ref(null);
 const subcomponents = ref([]);
 
 const rightSidebarDisplay = ref(false);
+
+// Current time state and update function
+const currentTime = ref(new Date().toLocaleTimeString());
+const updateTime = () => {
+    currentTime.value = new Date().toLocaleTimeString();
+};
+onMounted(() => {
+    updateTime();
+    // Update the time every second
+    const intervalId = setInterval(updateTime, 1000);
+    // Stop the interval when the component is unmounted
+    watchEffect(() => {
+        onBeforeUnmount(() => {
+            clearInterval(intervalId);
+        });
+    });
+});
 
 const displayRightOptions = (item) => {
     subcomponents.value = [];
@@ -163,6 +185,14 @@ const logout = () => {
     text-align: center;
 }
 .v-list-item--nav .v-list-item-title {
-    font-size: 16px !important;
+    font-weight: bold;
+    font-size: 14.5px !important;
+    color: #117dad;
 }
+/* .v-list-item__prepend {
+    margin-right: 8px;
+    background-color: #6984ff;
+    border-radius: 50%;
+    padding: 4px;
+} */
 </style>
