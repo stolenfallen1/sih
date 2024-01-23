@@ -1,6 +1,12 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 import vuetify, { transformAssetUrls } from "vite-plugin-vuetify";
 export default defineNuxtConfig({
+  runtimeConfig: {
+    apiSecret: 'http://10.4.15.15:3004/', 
+    public: {
+      apiBase: 'http://10.4.15.15:3004/', 
+    }
+  },
   app: {
     head: {
       title: "CDG HIS",
@@ -21,6 +27,8 @@ export default defineNuxtConfig({
         config.plugins.push(vuetify({ autoImport: true }));
       });
     },
+    
+    
     //...
   ],
   vite: {
