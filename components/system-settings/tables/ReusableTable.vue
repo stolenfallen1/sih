@@ -91,12 +91,8 @@ export default {
             emit(`action-${action}`);
         };
 
-        const loadItems = async ({ page, itemsPerPage, sortBy }) => {
-           console.log(itemsPerPage)
-           console.log(page)
-           console.log(sortBy)
-           const { data } = await useFetch('http://10.4.15.15/api/userss?page='+page+"&per_page="+itemsPerPage);
-           console.log(data);
+        const loadItems = ({ page, itemsPerPage, sortBy }) => {
+            // Handle data loading logic
         };
 
         onMounted(() => {
