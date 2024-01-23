@@ -45,12 +45,14 @@ definePageMeta({
 });
 
 const tableColumns = ref([
-    { title: "Name", key: "name", align: "start", sortable: true },
-    { title: "Calories", key: "calories", align: "end" },
-    { title: "Fat (g)", key: "fat", align: "end" },
-    { title: "Protein (g)", key: "protein", align: "end" },
-    { title: "Iron (%)", key: "iron", align: "end" },
+    { title: "User Name", key: "name", align: "start", sortable: true },
+    { title: "User Group", key: "calories", align: "end" },
+    { title: "Position", key: "fat", align: "end" },
+    { title: "Branch", key: "protein", align: "end" },
+    { title: "Department", key: "iron", align: "end" },
+    { title: "Section", key: "iron", align: "end" },
 ]);
+const totalItems = ref(0);
 const tableData = ref([
     {
         name: "Frozen Yogurt",

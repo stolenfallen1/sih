@@ -6,6 +6,7 @@
                 <v-text-field
                     class="input"
                     clearable
+                    v-model="user.idnumber"
                     label="Username"
                     placeholder="Enter your id as username"
                 ></v-text-field>
@@ -13,6 +14,7 @@
                 <v-text-field
                     class="input"
                     clearable
+                    v-model="user.password"
                     type="password"
                     label="Password"
                     placeholder="Enter your password"
@@ -35,11 +37,25 @@
 </template>
 
 <script setup>
+import { storeToRefs } from 'pinia'; // import storeToRefs helper hook from pinia
+import { useAuthStore } from '~/store/auth'; // import the auth store we just created
+const { authenticateUser } = useAuthStore(); // use authenticateUser action from  auth store
+
+const { authenticated } = storeToRefs(useAuthStore()); // make authenticated state reactive with storeToRefs
+const user = ref({
+  idnumber: '', 
+  password: '',
+});
 const router = useRouter();
 
-function login() {
+const login = async () => {
+  await authenticateUser(user.value); // call authenticateUser and pass the user object
+  // redirect to homepage if user is authenticated
+  if (authenticated) {
     router.push({ path: "/dashboard" });
-}
+  }
+};
+
 </script>
 
 <style scoped>
