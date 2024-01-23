@@ -2,9 +2,11 @@
     <v-card rounded="lg" elevation="3">
         <v-tabs v-model="tab">
             <v-tab
+                v-if="showTabs"
                 v-for="tabItem in tabs"
                 :key="tabItem.value"
                 :value="tabItem.value"
+                @click="handleTabClick(tabItem.value)"
             >
                 {{ tabItem.label }}
             </v-tab>
@@ -38,80 +40,111 @@
             :items-length="totalItems"
             :items="serverItems"
             :loading="loading"
-            show-select
+            v-bind="showSelect ? { 'show-select': true } : {}"
             item-value="name"
-            @update:options="loadItems"
         />
     </v-card>
 </template>
 
-<script>
-import { ref, onMounted, defineProps } from "vue";
+<script setup>
+import { onMounted, defineProps, defineEmits } from "vue";
 import "../../../styes/animation.css";
 
-export default {
-    props: {
-        itemsPerPage: {
-            type: Number,
-            default: 5,
-        },
-        columns: {
-            type: Array,
-            required: true,
-        },
-        serverItems: {
-            type: Array,
-            default: () => [],
-        },
-        totalItems: {
-            type: Number,
-            default: 0,
-        },
-        loading: {
-            type: Boolean,
-            default: false,
-        },
-        tabs: {
-            type: Array,
-            default: () => [],
-        },
-        tableTitle: {
-            type: String,
-            default: "Table Title Here",
-        },
+const emits = defineEmits();
+
+const props = defineProps({
+    itemsPerPage: {
+        type: Number,
+        default: 5,
     },
-    setup(props) {
-        const itemsPerPage = ref(props.itemsPerPage);
-        const search = ref("");
-        const tab = ref(null);
+    /*
+    SIR AKOA USA GI COMMENT KAY MO ERROR NI
+    */
+    // setup(props) {
+    //     const itemsPerPage = ref(props.itemsPerPage);
+    //     const search = ref("");
+    //     const tab = ref(null);
 
-        const handleActionClick = (action) => {
-            // Handle action button clicks (search, refresh)
-            // Emit events or perform actions as needed
-            emit(`action-${action}`);
-        };
+    //     const handleActionClick = (action) => {
+    //         // Handle action button clicks (search, refresh)
+    //         // Emit events or perform actions as needed
+    //         emit(`action-${action}`);
+    //     };
 
-        const loadItems = async ({ page, itemsPerPage, sortBy }) => {
-           console.log(itemsPerPage)
-           console.log(page)
-           console.log(sortBy)
-           const { data } = await useFetch('http://10.4.15.15/api/userss?page='+page+"&per_page="+itemsPerPage);
-           console.log(data);
-        };
+    //     const loadItems = async ({ page, itemsPerPage, sortBy }) => {
+    //         console.log(itemsPerPage);
+    //         console.log(page);
+    //         console.log(sortBy);
+    //         const { data } = await useFetch(
+    //             "http://10.4.15.15/api/userss?page=" +
+    //                 page +
+    //                 "&per_page=" +
+    //                 itemsPerPage
+    //         );
+    //         console.log(data);
+    //     };
 
-        onMounted(() => {
-            // Additional initialization logic, if needed
-        });
+    //     onMounted(() => {
+    //         // Additional initialization logic, if needed
+    //     });
 
-        return {
-            itemsPerPage,
-            search,
-            tab,
-            handleActionClick,
-            loadItems,
-        };
+    //     return {
+    //         itemsPerPage,
+    //         search,
+    //         tab,
+    //         handleActionClick,
+    //         loadItems,
+    //     };
+    // },
+    serverItems: {
+        type: Array,
+        default: () => [],
     },
+    columns: {
+        type: Array,
+        required: true,
+    },
+    totalItems: {
+        type: Number,
+        default: 0,
+    },
+    loading: {
+        type: Boolean,
+        default: false,
+    },
+    tabs: {
+        type: Array,
+        default: () => [],
+    },
+    tableTitle: {
+        type: String,
+        default: "",
+    },
+    showSelect: {
+        type: Boolean,
+        default: true,
+    },
+    showTabs: {
+        type: Boolean,
+        default: true,
+    },
+});
+
+const { itemsPerPage, search, tab } = toRefs(props);
+
+const handleActionClick = (action) => {
+    // Handle action button clicks (search, refresh)
+    // Emit events or perform actions as needed
+    emits(`action-${action}`);
 };
+
+const handleTabClick = (tabValue) => {
+    emits("tab-change", tabValue);
+};
+
+onMounted(() => {
+    // Additional initialization logic, if needed
+});
 </script>
 
 <style scoped></style>
