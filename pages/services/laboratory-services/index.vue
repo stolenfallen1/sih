@@ -1,5 +1,5 @@
 <template>
-    <div>Examination Upshots</div>
+    <div>Laborator Services</div>
 </template>
 
 <script setup>

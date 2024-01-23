@@ -1,5 +1,5 @@
 <template>
-    <div>Centralized Patients</div>
+    <div>Billing</div>
 </template>
 
 <script setup>

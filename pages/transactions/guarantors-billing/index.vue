@@ -1,5 +1,5 @@
 <template>
-    <div>Billing Schedules</div>
+    <div>Guarantors Billing</div>
 </template>
 
 <script setup>

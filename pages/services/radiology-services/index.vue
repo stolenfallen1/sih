@@ -1,5 +1,5 @@
 <template>
-    <div>Payment Refunds</div>
+    <div>Radiology Services</div>
 </template>
 
 <script setup>

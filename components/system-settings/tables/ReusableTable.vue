@@ -42,17 +42,17 @@
             :loading="loading"
             v-bind="showSelect ? { 'show-select': true } : {}"
             item-value="name"
-       >
-        <template v-slot:item.role="{ item }">
-          {{ item.role ? item.role.name : '' }}
-        </template>
-        <template v-slot:item.branch="{ item }">
-          {{ item.branch ? item.branch.abbreviation : '' }}
-        </template>
-        <template v-slot:item.warehouse="{ item }">
-          {{ item.warehouse ? item.warehouse.warehouse_description : '' }}
-        </template>
-       </v-data-table-server>
+        >
+            <template v-slot:item.role="{ item }">
+                {{ item.role ? item.role.name : "" }}
+            </template>
+            <template v-slot:item.branch="{ item }">
+                {{ item.branch ? item.branch.abbreviation : "" }}
+            </template>
+            <template v-slot:item.warehouse="{ item }">
+                {{ item.warehouse ? item.warehouse.warehouse_description : "" }}
+            </template>
+        </v-data-table-server>
     </v-card>
 </template>
 
@@ -67,9 +67,6 @@ const props = defineProps({
         type: Number,
         default: 5,
     },
-    /*
-    SIR AKOA USA GI COMMENT KAY MO ERROR NI
-    */
     serverItems: {
         type: Array,
         default: () => [],

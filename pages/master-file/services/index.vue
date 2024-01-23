@@ -1,5 +1,5 @@
 <template>
-    <div>ICD 10-Codes</div>
+    <div>Services</div>
 </template>
 
 <script setup>
