@@ -34,12 +34,13 @@
             density="compact"
             height="60vh"
             class="animated animatedFadeInUp fadeInUp"
-            v-model:items-per-page="itemsPerPage"
             :search="search"
             :headers="columns"
             :items-length="totalItems"
             :items="serverItems"
+            :items-per-page="options.itemsPerPage"
             :loading="loading"
+            @update:options="refetch"
             v-bind="showSelect ? { 'show-select': true } : {}"
             item-value="name"
         >
@@ -59,13 +60,18 @@
 <script setup>
 import "../../../styes/animation.css";
 
-const emits = defineEmits();
+const emits = defineEmits(['fetchPage', 'tab-change']);
+const options = reactive({
+    itemsPerPage: 10,
+    page:1
+})
+
+
+function refetch(options){
+    emits('fetchPage', options)
+}
 
 const props = defineProps({
-    itemsPerPage: {
-        type: Number,
-        default: 5,
-    },
     serverItems: {
         type: Array,
         default: () => [],
@@ -111,6 +117,8 @@ const handleActionClick = (action) => {
 const handleTabClick = (tabValue) => {
     emits("tab-change", tabValue);
 };
+
+// options.itemsPerPage.value = props
 
 onMounted(() => {
     // Additional initialization logic, if needed
