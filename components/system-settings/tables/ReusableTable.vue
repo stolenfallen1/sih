@@ -1,8 +1,7 @@
 <template>
     <v-card rounded="lg" elevation="3">
-        <v-tabs v-model="tab">
+        <v-tabs v-model="tab"  v-if="showTabs">
             <v-tab
-                v-if="showTabs"
                 v-for="tabItem in tabs"
                 :key="tabItem.value"
                 :value="tabItem.value"
@@ -11,8 +10,8 @@
                 {{ tabItem.label }}
             </v-tab>
         </v-tabs>
-        <v-divider></v-divider>
-        <v-toolbar density="compact" color="#FFF">
+        <v-divider  v-if="showTabs"></v-divider>
+        <v-toolbar color="#FFF">
             <v-btn icon @click="handleActionClick('refresh')">
                 <v-icon>mdi-refresh</v-icon>
             </v-btn>
@@ -28,7 +27,7 @@
             >
             </v-text-field>
         </v-toolbar>
-
+        <v-divider></v-divider>
         <v-data-table-server
             :fixed-header="true"
             density="compact"
