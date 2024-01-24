@@ -43,7 +43,7 @@ export default [
             },
             {
                 label: "Emergency",
-                icon: "mdi-car-emergency",
+                icon: "mdi-ambulance",
                 path: "/services/emergency",
             },
             {
@@ -73,7 +73,7 @@ export default [
             },
             {
                 label: "Radiology Services",
-                icon: "mdi-cash-check",
+                icon: "mdi-skull-scan-outline",
                 path: "/services/radiology-services",
             },
         ],
@@ -85,22 +85,22 @@ export default [
         child: [
             {
                 label: "Billing",
-                icon: "mdi-account-credit-card-outline",
+                icon: "mdi-cash-check",
                 path: "/transactions/billing",
             },
             {
                 label: "Cashier",
-                icon: "mdi-set-left-center",
+                icon: "mdi-cash-register",
                 path: "/transactions/cashier",
             },
             {
                 label: "Guarantors Billing",
-                icon: "mdi-set-left-center",
+                icon: "mdi-account-child",
                 path: "/transactions/guarantors-billing",
             },
             {
                 label: "Refunds",
-                icon: "mdi-set-left-center",
+                icon: "mdi-cash-edit",
                 path: "/transactions/refunds",
             },
         ],
@@ -120,28 +120,7 @@ export default [
                 label: "System Users",
                 icon: "mdi-account-group-outline",
                 path: "/system-settings/system-users",
-                subcomponents: [
-                    {
-                        label: "Report Manager",
-                        icon: "mdi-chart-bar",
-                        path: "/test",
-                    },
-                    {
-                        label: "Report Manager",
-                        icon: "mdi-chart-bar",
-                        path: "/system-settings/report-manager",
-                    },
-                    {
-                        label: "Report Manager",
-                        icon: "mdi-chart-bar",
-                        path: "/system-settings/report-manager",
-                    },
-                    {
-                        label: "Report Manager",
-                        icon: "mdi-chart-bar",
-                        path: "/system-settings/report-manager",
-                    },
-                ],
+                subcomponents: [],
             },
             {
                 label: "Report Manager",
