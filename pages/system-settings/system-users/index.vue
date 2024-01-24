@@ -60,7 +60,6 @@ import RegistrationForm from "~/components/system-settings/forms/system-users/Re
 import SearchUser from "~/components/system-settings/forms/system-users/SearchUser.vue";
 import ReusableTable from "~/components/system-settings/tables/ReusableTable.vue";
 import { ref } from "vue";
-import { NULL } from "sass";
 definePageMeta({
     layout: "root-layout",
 });
@@ -141,11 +140,11 @@ const params = ref('')
 // Fetch Data sample
 const fetchData = async (options=null) => {
     console.log(options,"options")
-    if(options!=null){
-        params.value = 'page=' + options.page + '&per_page=' + options.itemsPerPage
-    }
+    params.value = options  ?  'page=' + options.page + '&per_page=' + options.itemsPerPage : 'page=1&per_page=10'
+  
     console.log(params.value, "params")
     try {
+        if(options != null && currentTab.value == 'two') return // ge addan ra nko ani condition
         isLoading.value = true;
         const currentTabInfo = tableTabs.value.find(
             (tab) => tab.value === currentTab.value
