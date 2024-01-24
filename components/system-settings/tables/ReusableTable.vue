@@ -43,21 +43,20 @@
             v-bind="showSelect ? { 'show-select': true } : {}"
             item-value="name"
         >
-            <template v-slot:item.role="{ item }">
-                {{ item.role ? item.role.name : "" }}
-            </template>
-            <template v-slot:item.branch="{ item }">
-                {{ item.branch ? item.branch.abbreviation : "" }}
-            </template>
-            <template v-slot:item.warehouse="{ item }">
-                {{ item.warehouse ? item.warehouse.warehouse_description : "" }}
+            <template
+                v-for="column in columns"
+                v-slot:[`item.${column.key}`]="props"
+            >
+                <!-- Dynamically use slots based on column key -->
+                <slot :name="`column-${column.key}`" :item="props.item">
+                    {{ props.item[column.key] || "..." }}
+                </slot>
             </template>
         </v-data-table-server>
     </v-card>
 </template>
 
 <script setup>
-import { onMounted, defineProps, defineEmits } from "vue";
 import "../../../styes/animation.css";
 
 const emits = defineEmits();
