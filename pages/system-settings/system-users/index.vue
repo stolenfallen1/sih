@@ -33,6 +33,7 @@
         @tab-change="handleTabChange"
         @action-search="handleSearch"
         @action-refresh="handleRefresh"
+        @fetchPage="fetchData"
     >
         <!-- Custom templates for each column -->
         <template
@@ -59,6 +60,7 @@ import RegistrationForm from "~/components/system-settings/forms/system-users/Re
 import SearchUser from "~/components/system-settings/forms/system-users/SearchUser.vue";
 import ReusableTable from "~/components/system-settings/tables/ReusableTable.vue";
 import { ref } from "vue";
+import { NULL } from "sass";
 definePageMeta({
     layout: "root-layout",
 });
@@ -94,7 +96,7 @@ const tableTabs = ref([
         label: "Individual User",
         title: "List of system users",
         value: "one",
-        endpoint: `${config.public.apiBase}` + `/users?page=1&per_page=15`,
+        endpoint: `${config.public.apiBase}` + `/users`,
         columns: [
             {
                 title: "IDNumber",
@@ -134,15 +136,21 @@ const tableTabs = ref([
     },
 ]);
 const pageTitle = ref(""); // This should be dynamic base on the current tab
+const params = ref('')
 
 // Fetch Data sample
-const fetchData = async () => {
+const fetchData = async (options=null) => {
+    console.log(options,"options")
+    if(options!=null){
+        params.value = 'page=' + options.page + '&per_page=' + options.itemsPerPage
+    }
+    console.log(params.value, "params")
     try {
         isLoading.value = true;
         const currentTabInfo = tableTabs.value.find(
             (tab) => tab.value === currentTab.value
         );
-        const response = await fetch(currentTabInfo?.endpoint || "", {
+        const response = await fetch(currentTabInfo?.endpoint + '?' + params.value || "", {
             headers: {
                 Authorization: `Bearer ${token.value}`,
             },
