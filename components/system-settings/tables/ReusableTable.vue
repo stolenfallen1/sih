@@ -22,26 +22,31 @@
                 class="mt-5 mr-2"
                 label="Search"
                 rounded
+                v-model="keyword"
+                @keyup.enter="handleSearch"
                 density="compact"
                 variant="outlined"
+                prepend-inner-icon="mdi-magnify"
             >
             </v-text-field>
         </v-toolbar>
         <v-divider></v-divider>
         <v-data-table-server
             :fixed-header="true"
+            v-model="selectedRows"
             density="compact"
             height="60vh"
             class="animated animatedFadeInUp fadeInUp"
-            :search="search"
             :headers="columns"
             :items-length="totalItems"
             :items="serverItems"
             :items-per-page="options.itemsPerPage"
             :loading="loading"
             @update:options="refetch"
+            @update:input="handleSelectedRow"
             v-bind="showSelect ? { 'show-select': true } : {}"
-            item-value="name"
+            @click:row="handleSelectedRow"
+            item-value="id"
         >
             <template
                 v-for="column in columns"
@@ -52,6 +57,9 @@
                     {{ props.item[column.key] || "..." }}
                 </slot>
             </template>
+            <template v-slot:loading>
+                <v-skeleton-loader type="table-row@10"></v-skeleton-loader>
+            </template>
         </v-data-table-server>
     </v-card>
 </template>
@@ -59,15 +67,31 @@
 <script setup>
 import "../../../styes/animation.css";
 
-const emits = defineEmits(['fetchPage', 'tab-change']);
+const emits = defineEmits(['fetchPage', 'tab-change','action-search']);
 const options = reactive({
     itemsPerPage: 10,
     page:1
 })
+const selectedRows = ref([]);
+const keyword = ref('');
 
-
-function refetch(options){
+const refetch =(options) =>{
+    selectedRows.value = [];
+    options.keyword = keyword.value;
     emits('fetchPage', options)
+    console.log(options)
+}
+
+const handleSelectedRow = (event,selectedRow)=>{
+    const index = selectedRows.value.indexOf(selectedRow?.item.id);
+    this.$store.dispatch("authenticateUser",id)
+    selectedRows.value = [];
+    if (index === -1) {
+      selectedRows.value.push(selectedRow?.item.id);
+    } else {
+      selectedRows.value.splice(index, 1);
+    }
+    emits('selected-row', selectedRow.item)
 }
 
 const props = defineProps({
@@ -105,8 +129,6 @@ const props = defineProps({
     },
 });
 
-const { itemsPerPage, search, tab } = toRefs(props);
-
 const handleActionClick = (action) => {
     // Handle action button clicks (search, refresh)
     // Emit events or perform actions as needed
@@ -117,6 +139,12 @@ const handleTabClick = (tabValue) => {
     emits("tab-change", tabValue);
 };
 
+const search = () => {
+};
+
+const handleSearch = () => {
+    emits("action-search", keyword.value);
+}
 // options.itemsPerPage.value = props
 
 onMounted(() => {

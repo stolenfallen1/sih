@@ -108,7 +108,7 @@ export default [
     {
         label: "Settings and Others",
         active: false,
-        role: "browse-menus",
+        rule: "browse_users",
         child: [
             {
                 label: "Setup and Options",
@@ -120,7 +120,34 @@ export default [
                 label: "System Users",
                 icon: "mdi-account-group-outline",
                 path: "/system-settings/system-users",
-                subcomponents: [],
+                rule: "browse_users",
+                subcomponents: [
+                    {
+                        label: "Setup and Options",
+                        icon: "mdi-server-network",
+                        path: "/system-settings/setup-options",
+                    },
+                    {
+                        label: "Setup and Options",
+                        icon: "mdi-server-network",
+                        path: "/system-settings/setup-options",
+                    },
+                    {
+                        label: "Setup and Options",
+                        icon: "mdi-server-network",
+                        path: "/system-settings/setup-options",
+                    },
+                    {
+                        label: "Setup and Options",
+                        icon: "mdi-server-network",
+                        path: "/system-settings/setup-options",
+                    },
+                    {
+                        label: "Setup and Options",
+                        icon: "mdi-server-network",
+                        path: "/system-settings/setup-options",
+                    },
+                ],
             },
             {
                 label: "Report Manager",
