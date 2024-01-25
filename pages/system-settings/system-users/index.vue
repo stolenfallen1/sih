@@ -127,10 +127,9 @@ const tableTabs = ref([
         value: "two",
         endpoint: "https://jsonplaceholder.typicode.com/comments",
         columns: [
-            { title: "User ID", key: "userId", align: "start", sortable: true },
-            { title: "User Name", key: "id", align: "end" },
-            { title: "User Name", key: "id", align: "end" },
-            { title: "User Name", key: "id", align: "end" },
+            { title: "Group Code", key: "userId", align: "start", sortable: true },
+            { title: "Group Name", key: "id", align: "end" },
+            { title: "Remarks", key: "id", align: "end" },
         ],
     },
 ]);
