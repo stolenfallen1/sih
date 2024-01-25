@@ -4,10 +4,12 @@
             <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
             <img src="/cdg_logo.png" width="50" height="50" />
             <img src="/cduh_logo.png" width="50" height="50" />
-            <v-title class="mx-4"
-                >Cebu Doctors University Hospital <br />
-                Hospital Information System</v-title
-            >
+            <div class="ml-4">
+                <p>Cebu Doctors University Hospital</p>
+                <span class="title-span">Hospital Information System</span>
+            </div>
+            <v-spacer></v-spacer>
+            <v-btn icon="mdi-home" @click="router.push('/dashboard')"></v-btn>
             <v-spacer></v-spacer>
             <v-title class="mr-10">{{ currentTime }}</v-title>
             <ModalSettings />
@@ -43,10 +45,10 @@
             v-model="drawer"
             :permanent="true"
         >
-            <v-list :lines="false" density="compact" nav>
+            <v-list :lines="false" density="compact" nav v-model:opened="open">
                 <template v-for="(item, i) in items" :key="i">
                     <template v-if="item.child.length == 0">
-                        <v-list-item :value="item">
+                        <v-list-item :value="item" >
                             <v-list-item-title
                                 v-text="item.label"
                             ></v-list-item-title>
@@ -54,8 +56,9 @@
                     </template>
                     <v-list-group
                         :value="i"
-                        v-if="item.child.length > 0"
+                        v-if="item.child.length > 0 && can_browse(item.rule)"
                         :fluid="true"
+                        group
                     >
                         <template v-slot:activator="{ props }">
                             <v-list-item
@@ -77,6 +80,7 @@
                             density="compact"
                             :exact="true"
                             :slim="true"
+                            
                             @click="displayRightOptions(child)"
                         >
                             <template v-slot:prepend>
@@ -95,19 +99,18 @@
         </v-navigation-drawer>
 
         <!-- RIGHT SIDEBAR RENDER CONDITIONALLY -->
-        <!-- <v-navigation-drawer
+        <v-navigation-drawer
             location="right"
             class="drawer"
+            width="210"
             v-model="drawer"
             :permanent="true"
-            v-if="!rightSidebarDisplay && authenticated"
+            v-if="rightSidebarDisplay && authenticated"
         >
             <v-list v-for="options in subcomponents">
-                <v-list-item :to="options.path" :key="options.label" link
-                    >TEST</v-list-item
-                >
+                <v-list-item :to="options.path+'?id=123'" :key="options.label" link>TEST</v-list-item>
             </v-list>
-        </v-navigation-drawer> -->
+        </v-navigation-drawer>
 
         <!-- MAIN CONTENT -->
         <v-main>
@@ -130,8 +133,9 @@ const route = useRoute();
 const { authenticated } = storeToRefs(useAuthStore()); // make authenticated state reactive
 const { logUserOut } = useAuthStore();
 const items = navigation_items;
+const open = ref([]);
 const drawer = ref(null);
-const subcomponents = ref([]);
+// const subcomponents = ref([]);
 
 const rightSidebarDisplay = ref(false);
 
@@ -157,21 +161,26 @@ const displayRightOptions = (item) => {
     subcomponents.value = item.subcomponents;
 };
 
+const can_browse = (item) => {
+    // return user_details.role.permissions.some(permission => permission.key == item)
+    return true
+    // 
+};
+
 onUpdated(() => {
-    if (
-        route.path !== "/dashboard" ||
-        route.path !== "/system-settings/setup-options"
-    ) {
+    if (route.path !== "/dashboard") {
         rightSidebarDisplay.value = true;
     }
 });
 onMounted(() => {
-    if (
-        route.path !== "/dashboard" ||
-        route.path !== "/system-settings/setup-options"
-    ) {
+    if (route.path !== "/dashboard") {
         rightSidebarDisplay.value = true;
     }
+    // Filter items based on the `active` property and map their indices
+    const defaultOpenGroups = items
+        .filter((item) => item.active)
+        .map((item, index) => index);
+    open.value = defaultOpenGroups;
 });
 const logout = () => {
     logUserOut();
@@ -184,10 +193,19 @@ const logout = () => {
     font-weight: bolder;
     text-align: center;
 }
+.v-list-group {
+    margin-bottom: 4px;
+    border: 1px solid #117dad;
+    padding: 4px;
+}
 .v-list-item--nav .v-list-item-title {
     font-weight: bold;
     font-size: 14.5px !important;
     color: #117dad;
+}
+.title-span {
+    font-size: 14.5px;
+    font-style: italic;
 }
 /* .v-list-item__prepend {
     margin-right: 8px;

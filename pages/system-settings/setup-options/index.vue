@@ -8,160 +8,13 @@
                     :disabled="disabled"
                     multiple
                 >
-                    <v-expansion-panel>
-                        <v-expansion-panel-title
-                            >Panel 1</v-expansion-panel-title
-                        >
-                        <v-expansion-panel-text>
-                            <v-text-field
-                                variant="outlined"
-                                density="compact"
-                            ></v-text-field>
-                        </v-expansion-panel-text>
-                    </v-expansion-panel>
-                    <v-expansion-panel>
-                        <v-expansion-panel-title
-                            >Panel 2</v-expansion-panel-title
-                        >
-                        <v-expansion-panel-text>
-                            <v-text-field
-                                variant="outlined"
-                                density="compact"
-                            ></v-text-field>
-                        </v-expansion-panel-text>
-                    </v-expansion-panel>
-                    <v-expansion-panel>
-                        <v-expansion-panel-title
-                            >Panel 3</v-expansion-panel-title
-                        >
-                        <v-expansion-panel-text>
-                            <v-text-field
-                                variant="outlined"
-                                density="compact"
-                            ></v-text-field>
-                        </v-expansion-panel-text>
-                    </v-expansion-panel>
-                    <v-expansion-panel>
-                        <v-expansion-panel-title
-                            >Panel 4</v-expansion-panel-title
-                        >
-                        <v-expansion-panel-text>
-                            <v-text-field
-                                variant="outlined"
-                                density="compact"
-                            ></v-text-field>
-                        </v-expansion-panel-text>
-                    </v-expansion-panel>
-                    <v-expansion-panel>
-                        <v-expansion-panel-title
-                            >Panel 5</v-expansion-panel-title
-                        >
-                        <v-expansion-panel-text>
-                            <v-text-field
-                                variant="outlined"
-                                density="compact"
-                            ></v-text-field>
-                        </v-expansion-panel-text>
-                    </v-expansion-panel>
-                    <v-expansion-panel>
-                        <v-expansion-panel-title
-                            >Panel 6</v-expansion-panel-title
-                        >
-                        <v-expansion-panel-text>
-                            <v-text-field
-                                variant="outlined"
-                                density="compact"
-                            ></v-text-field>
-                        </v-expansion-panel-text>
-                    </v-expansion-panel>
-                    <v-expansion-panel>
-                        <v-expansion-panel-title
-                            >Panel 7</v-expansion-panel-title
-                        >
-                        <v-expansion-panel-text>
-                            <v-text-field
-                                variant="outlined"
-                                density="compact"
-                            ></v-text-field>
-                        </v-expansion-panel-text>
-                    </v-expansion-panel>
-                    <v-expansion-panel>
-                        <v-expansion-panel-title
-                            >Panel 8</v-expansion-panel-title
-                        >
-                        <v-expansion-panel-text>
-                            <v-text-field
-                                variant="outlined"
-                                density="compact"
-                            ></v-text-field>
-                        </v-expansion-panel-text>
-                    </v-expansion-panel>
-                    <v-expansion-panel>
-                        <v-expansion-panel-title
-                            >Panel 9</v-expansion-panel-title
-                        >
-                        <v-expansion-panel-text>
-                            <v-text-field
-                                variant="outlined"
-                                density="compact"
-                            ></v-text-field>
-                        </v-expansion-panel-text>
-                    </v-expansion-panel>
-                    <v-expansion-panel>
-                        <v-expansion-panel-title
-                            >Panel 10</v-expansion-panel-title
-                        >
-                        <v-expansion-panel-text>
-                            <v-text-field
-                                variant="outlined"
-                                density="compact"
-                            ></v-text-field>
-                        </v-expansion-panel-text>
-                    </v-expansion-panel>
-                    <v-expansion-panel>
-                        <v-expansion-panel-title
-                            >Panel 11</v-expansion-panel-title
-                        >
-                        <v-expansion-panel-text>
-                            <v-text-field
-                                variant="outlined"
-                                density="compact"
-                            ></v-text-field>
-                        </v-expansion-panel-text>
-                    </v-expansion-panel>
-                    <v-expansion-panel>
-                        <v-expansion-panel-title
-                            >Panel 12</v-expansion-panel-title
-                        >
-                        <v-expansion-panel-text>
-                            <v-text-field
-                                variant="outlined"
-                                density="compact"
-                            ></v-text-field>
-                        </v-expansion-panel-text>
-                    </v-expansion-panel>
-                    <v-expansion-panel>
-                        <v-expansion-panel-title
-                            >Panel 13</v-expansion-panel-title
-                        >
-                        <v-expansion-panel-text>
-                            <v-text-field
-                                variant="outlined"
-                                density="compact"
-                            ></v-text-field>
-                        </v-expansion-panel-text>
-                    </v-expansion-panel>
-                    <v-expansion-panel>
-                        <v-expansion-panel-title
-                            >Panel 14</v-expansion-panel-title
-                        >
-                        <v-expansion-panel-text>
-                            <v-text-field
-                                variant="outlined"
-                                density="compact"
-                            ></v-text-field>
-                        </v-expansion-panel-text>
-                    </v-expansion-panel>
+                    <SettingPanels
+                        v-for="(item, index) in panelData"
+                        :key="index"
+                        :PanelTitle="item.name"
+                        :headers="headers"
+                        :tableData="panelData.desserts"
+                    ></SettingPanels>
                 </v-expansion-panels>
             </v-card-text>
             <v-card-actions>
@@ -173,6 +26,9 @@
 </template>
 
 <script setup>
+import SettingPanels from "~/components/system-settings/panels/SettingPanels.vue";
+import paneldata from "~/components/system-settings/panels/paneldata.js";
+
 definePageMeta({
     layout: "root-layout",
 });
@@ -181,6 +37,17 @@ const panel = ref([0]);
 const disabled = ref(false);
 const router = useRouter();
 const dialog = ref(true);
+const panelData = paneldata;
+
+const headers = ref([
+    {
+        title: "Description",
+        align: "start",
+        sortable: false,
+        key: "name",
+    },
+    { title: "Value", key: "calories", align: "end" },
+]);
 </script>
 
 <style scoped></style>

@@ -1,24 +1,52 @@
 <template>
-    <v-container>
-        <v-row class="mb-4" justify="end">
-            <v-dialog v-model="searchDialog" width="800">
-                <template v-slot:activator="{ props }">
-                    <v-btn color="#117dad" v-bind="props">+ Add User</v-btn>
-                </template>
-                <search-user
-                    @close-search-dialog="closeSearchDialog"
-                    @open-dialog="openAddRecordDialog"
-                />
-            </v-dialog>
-        </v-row>
-        <v-row>
-            <v-dialog v-model="inputDialog" width="1024">
-                <registration-form
-                    @close-dialog="closeDialog"
-                ></registration-form>
-            </v-dialog>
-        </v-row>
-    </v-container>
+    <v-card class="mb-2" elevation="2">
+        <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn
+                prepend-icon="mdi-eye-outline"
+                width="100"
+                color="primary"
+                class="bg-info text-white"
+            >
+                View
+            </v-btn>
+            <v-btn
+                @click="openAddRecordDialog"
+                :disabled="tableData.length == 0 ? false : true"
+                prepend-icon="mdi-plus-outline"
+                width="100"
+                color="primary"
+                class="bg-primary text-white"
+            >
+                New
+            </v-btn>
+            <v-btn
+                prepend-icon="mdi-pencil"
+                :disabled="tableData.length == 0 ? false : true"
+                width="100"
+                color="primary"
+                class="bg-success text-white"
+            >
+                Edit
+            </v-btn>
+            <v-btn
+                prepend-icon="mdi-delete"
+                :disabled="tableData.length == 0 ? false : true"
+                width="100"
+                color="primary"
+                class="bg-error text-white"
+            >
+                Delete
+            </v-btn>
+        </v-card-actions>
+    </v-card>
+
+    <v-dialog v-model="inputDialog" width="1124">
+        <registration-form
+            @register-user="registerUser"
+            @close-dialog="closeDialog"
+        ></registration-form>
+    </v-dialog>
 
     <ReusableTable
         :items-per-page="10"
@@ -30,6 +58,7 @@
         :itemsPerPage="itemsPerPage"
         :tableTitle="pageTitle"
         :current-tab="currentTab"
+        @selected-row="selectedUser"
         @tab-change="handleTabChange"
         @action-search="handleSearch"
         @action-refresh="handleRefresh"
@@ -105,14 +134,14 @@ const tableTabs = ref([
                 sortable: true,
             },
             { title: "User Name", key: "name", width: "30%", align: "start" },
-            { title: "User Group", key: "role", width: "15%", align: "start" },
-            {
-                title: "Position",
-                key: "position_id",
-                width: "15%",
-                align: "start",
-            },
-            { title: "Branch", key: "branch", width: "5%", align: "start" },
+            { title: "User Group", key: "role", width: "20%", align: "start" },
+            //   {
+            //     title: "Position",
+            //     key: "position_id",
+            //     width: "15%",
+            //     align: "start",
+            //   },
+            //   { title: "Branch", key: "branch", width: "5%", align: "start" },
             {
                 title: "Department",
                 key: "warehouse",
@@ -127,33 +156,48 @@ const tableTabs = ref([
         value: "two",
         endpoint: "https://jsonplaceholder.typicode.com/comments",
         columns: [
-            { title: "User ID", key: "userId", align: "start", sortable: true },
-            { title: "User Name", key: "id", align: "end" },
-            { title: "User Name", key: "id", align: "end" },
-            { title: "User Name", key: "id", align: "end" },
+            {
+                title: "Group Code",
+                key: "userId",
+                align: "start",
+                sortable: true,
+            },
+            { title: "Group Name", key: "id", align: "end" },
+            { title: "Remarks", key: "id", align: "end" },
         ],
     },
 ]);
 const pageTitle = ref(""); // This should be dynamic base on the current tab
-const params = ref('')
+const params = ref("");
 
 // Fetch Data sample
-const fetchData = async (options=null) => {
-    console.log(options,"options")
-    params.value = options  ?  'page=' + options.page + '&per_page=' + options.itemsPerPage : 'page=1&per_page=10'
-  
-    console.log(params.value, "params")
+const fetchData = async (options = null, searchkeyword = null) => {
+    console.log(options, "options");
+    let keyword = searchkeyword || "";
+    params.value = options
+        ? "page=" +
+          options.page +
+          "&per_page=" +
+          options.itemsPerPage +
+          "&keyword=" +
+          options.keyword
+        : "page=1&per_page=10&keyword=" + keyword;
+    // useCookie new hook in nuxt 3
+
     try {
-        if(options != null && currentTab.value == 'two') return // ge addan ra nko ani condition
+        if (options != null && currentTab.value == "two") return; // ge addan ra nko ani condition
         isLoading.value = true;
         const currentTabInfo = tableTabs.value.find(
             (tab) => tab.value === currentTab.value
         );
-        const response = await fetch(currentTabInfo?.endpoint + '?' + params.value || "", {
-            headers: {
-                Authorization: `Bearer ${token.value}`,
-            },
-        });
+        const response = await fetch(
+            currentTabInfo?.endpoint + "?" + params.value || "",
+            {
+                headers: {
+                    Authorization: `Bearer ${token.value}`,
+                },
+            }
+        );
         const data = await response.json();
         updateTotalItems(data.total);
         updateServerItems(data.data);
@@ -164,12 +208,15 @@ const fetchData = async (options=null) => {
         isLoading.value = false;
     }
 };
+
 const updateTotalItems = (newTotalItems) => {
     totalItems.value = newTotalItems;
 };
+
 const updateServerItems = (newServerItems) => {
     tableData.value = newServerItems;
 };
+
 const handleTabChange = (tabValue) => {
     currentTab.value = tabValue;
     columns.value = tableTabs.value[0].columns;
@@ -182,13 +229,34 @@ const handleTabChange = (tabValue) => {
     fetchData();
     pageTitle.value = currentTabInfo?.title || "";
 };
-const handleSearch = () => {
+
+const handleSearch = (keyword) => {
     // Handle search action
+    fetchData(null, keyword);
+    console.log(keyword);
 };
+
 const handleRefresh = () => {
     fetchData();
 };
 
+const selectedUser = (item) => {
+    console.log(item);
+};
+const registerUser = async (payload) => {
+    const { data, pending } = await useFetch("http://10.4.15.15/api/users", {
+        method: "post",
+        headers: {
+            Authorization: `Bearer ${token.value}`,
+            "Content-Type": "application/json",
+        },
+        body: { payload: payload },
+    });
+    if (data.value) {
+        closeDialog();
+        fetchData(null, payload.lastname);
+    }
+};
 // fetchData();
 handleTabChange(currentTab.value);
 </script>

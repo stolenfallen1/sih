@@ -33,7 +33,7 @@ export default [
     },
     {
         label: "Services",
-        active: false,
+        active: true,
         rule: "browse_menus",
         child: [
             {
@@ -80,7 +80,7 @@ export default [
     },
     {
         label: "Transactions",
-        active: false,
+        active: true,
         rule: "browse_menus",
         child: [
             {
@@ -107,7 +107,7 @@ export default [
     },
     {
         label: "Settings and Others",
-        active: false,
+        active: true,
         role: "browse-menus",
         child: [
             {
@@ -120,7 +120,34 @@ export default [
                 label: "System Users",
                 icon: "mdi-account-group-outline",
                 path: "/system-settings/system-users",
-                subcomponents: [],
+                rule: "browse_users",
+                subcomponents: [
+                    {
+                        label: "Setup and Options",
+                        icon: "mdi-server-network",
+                        path: "/system-settings/setup-options",
+                    },
+                    {
+                        label: "Setup and Options",
+                        icon: "mdi-server-network",
+                        path: "/system-settings/setup-options",
+                    },
+                    {
+                        label: "Setup and Options",
+                        icon: "mdi-server-network",
+                        path: "/system-settings/setup-options",
+                    },
+                    {
+                        label: "Setup and Options",
+                        icon: "mdi-server-network",
+                        path: "/system-settings/setup-options",
+                    },
+                    {
+                        label: "Setup and Options",
+                        icon: "mdi-server-network",
+                        path: "/system-settings/setup-options",
+                    },
+                ],
             },
             {
                 label: "Report Manager",
