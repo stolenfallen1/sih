@@ -33,7 +33,7 @@ export default [
     },
     {
         label: "Services",
-        active: false,
+        active: true,
         rule: "browse_menus",
         child: [
             {
@@ -80,7 +80,7 @@ export default [
     },
     {
         label: "Transactions",
-        active: false,
+        active: true,
         rule: "browse_menus",
         child: [
             {
@@ -107,8 +107,8 @@ export default [
     },
     {
         label: "Settings and Others",
-        active: false,
-        rule: "browse_users",
+        active: true,
+        role: "browse-menus",
         child: [
             {
                 label: "Setup and Options",
