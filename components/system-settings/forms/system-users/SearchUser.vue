@@ -3,25 +3,34 @@
         <v-container>
             <v-title>Search User</v-title>
             <v-row>
-                <v-col cols="12" sm="6" md="4">
+                <v-col cols="12" sm="6" md="3">
+                    <v-text-field
+                        label="Employee Number*"
+                        required
+                        :rules="[(v) => !!v || 'Employee # is required']"
+                        density="compact"
+                        variant="outlined"
+                    ></v-text-field>
+                </v-col>
+                <v-col cols="12" sm="6" md="3">
                     <v-text-field
                         label="Lastname*"
                         required
-                        :rules="nameRules"
+                        :rules="[(v) => !!v || 'Lastname is required']"
                         density="compact"
                         variant="outlined"
                     ></v-text-field>
                 </v-col>
-                <v-col cols="12" sm="6" md="4">
+                <v-col cols="12" sm="6" md="3">
                     <v-text-field
                         label="Firstname*"
                         required
-                        :rules="nameRules"
+                        :rules="[(v) => !!v || 'Firstname is required']"
                         density="compact"
                         variant="outlined"
                     ></v-text-field>
                 </v-col>
-                <v-col cols="12" sm="6" md="4">
+                <v-col cols="12" sm="6" md="3">
                     <v-text-field
                         label="Middlename"
                         density="compact"
@@ -66,11 +75,7 @@
 </template>
 
 <script setup>
-import { defineEmits } from "vue";
-
 const emits = defineEmits();
-
-const nameRules = [(v) => !!v || "Name is required"];
 
 const openAddRecordDialog = () => {
     emits("open-dialog");
@@ -121,30 +126,6 @@ const tableData = ref([
         carbs: 23,
         protein: 6.0,
         iron: "7",
-    },
-    {
-        name: "Gingerbread",
-        calories: 356,
-        fat: 16.0,
-        carbs: 49,
-        protein: 3.9,
-        iron: "16",
-    },
-    {
-        name: "Gingerbread",
-        calories: 356,
-        fat: 16.0,
-        carbs: 49,
-        protein: 3.9,
-        iron: "16",
-    },
-    {
-        name: "Gingerbread",
-        calories: 356,
-        fat: 16.0,
-        carbs: 49,
-        protein: 3.9,
-        iron: "16",
     },
     {
         name: "Gingerbread",

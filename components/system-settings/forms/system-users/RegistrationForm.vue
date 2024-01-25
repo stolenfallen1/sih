@@ -7,62 +7,51 @@
             <v-form ref="form">
                 <v-container>
                     <v-row>
-                        <v-col cols="12" sm="6" md="4">
+                        <v-col cols="12" sm="6" md="3">
                             <v-text-field
                                 label="Lastname*"
+                                type="text"
                                 required
-                                :rules="nameRules"
+                                :rules="[(v) => !!v || 'Lastname is required']"
                                 density="compact"
                                 variant="outlined"
                             ></v-text-field>
                         </v-col>
-                        <v-col cols="12" sm="6" md="4">
+                        <v-col cols="12" sm="6" md="3">
                             <v-text-field
                                 label="Firstname*"
+                                type="text"
                                 required
-                                :rules="nameRules"
+                                :rules="[(v) => !!v || 'Firstname is required']"
                                 density="compact"
                                 variant="outlined"
                             ></v-text-field>
                         </v-col>
-                        <v-col cols="12" sm="6" md="4">
+                        <v-col cols="12" sm="6" md="3">
                             <v-text-field
                                 label="Middlename"
+                                type="text"
                                 density="compact"
                                 variant="outlined"
                             ></v-text-field>
                         </v-col>
-                        <v-col cols="12" sm="6" md="2">
-                            <v-text-field
-                                label="Suffix"
-                                density="compact"
-                                variant="outlined"
-                            ></v-text-field>
-                        </v-col>
-                        <v-col cols="12" sm="6" md="4">
-                            <v-text-field
-                                label="Position"
-                                density="compact"
-                                variant="outlined"
-                            ></v-text-field>
-                        </v-col>
-                        <v-col cols="12" sm="6" md="4">
-                            <v-text-field
-                                label="Email"
-                                density="compact"
-                                variant="outlined"
-                            ></v-text-field>
-                        </v-col>
-                        <v-col cols="12" sm="6" md="2">
+                        <v-col cols="12" sm="6" md="3">
                             <v-select
-                                :items="['CDUH', 'MDUH', 'SGH', 'NGH']"
-                                label="Branch"
+                                :items="['Jr', 'Sr', 'II', 'III']"
+                                label="Suffix"
                                 required
-                                :rules="[(v) => !!v || 'Item is required']"
                                 clearable
                                 density="compact"
                                 variant="outlined"
                             ></v-select>
+                        </v-col>
+                        <v-col cols="12" sm="6" md="4">
+                            <v-text-field
+                                label="Position"
+                                type="text"
+                                density="compact"
+                                variant="outlined"
+                            ></v-text-field>
                         </v-col>
                         <v-col cols="12" sm="6" md="4">
                             <v-menu v-model="isDatePickerOpen" width="300">
@@ -86,6 +75,47 @@
                             </v-menu>
                         </v-col>
                         <v-col cols="12" sm="6" md="4">
+                            <v-text-field
+                                label="Email"
+                                type="email"
+                                density="compact"
+                                variant="outlined"
+                            ></v-text-field>
+                        </v-col>
+                        <v-col cols="12" sm="6" md="3">
+                            <v-text-field
+                                label="Employee Number*"
+                                type="text"
+                                required
+                                :rules="[
+                                    (v) => !!v || 'Employee number is required',
+                                ]"
+                                density="compact"
+                                variant="outlined"
+                            ></v-text-field>
+                        </v-col>
+                        <v-col cols="12" sm="6" md="4">
+                            <v-text-field
+                                label="Password*"
+                                type="password"
+                                required
+                                :rules="[(v) => !!v || 'Password is required']"
+                                density="compact"
+                                variant="outlined"
+                            ></v-text-field>
+                        </v-col>
+                        <v-col cols="12" sm="6" md="2">
+                            <v-select
+                                :items="['CDUH', 'MDUH', 'SGH', 'NGH']"
+                                label="Branch"
+                                required
+                                :rules="[(v) => !!v || 'Branch is required']"
+                                clearable
+                                density="compact"
+                                variant="outlined"
+                            ></v-select>
+                        </v-col>
+                        <v-col cols="12" sm="6" md="3">
                             <v-select
                                 :items="[
                                     'IT',
@@ -96,7 +126,9 @@
                                 label="Department"
                                 clearable
                                 required
-                                :rules="[(v) => !!v || 'Item is required']"
+                                :rules="[
+                                    (v) => !!v || 'Department is required',
+                                ]"
                                 density="compact"
                                 variant="outlined"
                             ></v-select>
@@ -115,7 +147,7 @@
                                 variant="outlined"
                             ></v-select>
                         </v-col>
-                        <v-col cols="12" sm="6">
+                        <v-col cols="12" sm="6" md="4">
                             <v-select
                                 :items="[
                                     'User Group 1',
@@ -127,12 +159,14 @@
                                 label="User Group"
                                 clearable
                                 required
-                                :rules="[(v) => !!v || 'Item is required']"
+                                :rules="[
+                                    (v) => !!v || 'User Group is required',
+                                ]"
                                 density="compact"
                                 variant="outlined"
                             ></v-select>
                         </v-col>
-                        <v-col cols="12" sm="6">
+                        <v-col cols="12" sm="6" md="4">
                             <v-autocomplete
                                 :items="[
                                     'System 1',
@@ -145,7 +179,9 @@
                                 clearable
                                 multiple
                                 required
-                                :rules="[(v) => !!v || 'Item is required']"
+                                :rules="[
+                                    (v) => !!v || 'System Access is required',
+                                ]"
                                 density="compact"
                                 variant="outlined"
                             ></v-autocomplete>
@@ -166,10 +202,6 @@
 </template>
 
 <script setup>
-import { ref, defineEmits } from "vue";
-
-const nameRules = [(v) => !!v || "Name is required"];
-
 // const validate = async () => {
 //     const { valid } = await this.$refs.form.validate();
 
