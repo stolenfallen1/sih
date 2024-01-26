@@ -5,7 +5,6 @@
         table-title="Patients List"
         :columns="tableColumns"
         :serverItems="tableData"
-        :totalItems="totalItems"
         :loading="isLoading"
         :show-tabs="false"
         :show-select="false"
