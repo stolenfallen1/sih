@@ -4,7 +4,6 @@
         :items-per-page="10"
         :columns="tableColumns"
         :serverItems="tableData"
-        :totalItems="totalItems"
         :loading="isLoading"
         :tabs="tableTabs"
         :show-select="false"

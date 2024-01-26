@@ -13,8 +13,9 @@
                         :key="index"
                         :PanelTitle="item.name"
                         :headers="headers"
-                        :tableData="panelData.desserts"
-                    ></SettingPanels>
+                        :tableData="item.desserts"
+                    >
+                    </SettingPanels>
                 </v-expansion-panels>
             </v-card-text>
             <v-card-actions>

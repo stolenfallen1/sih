@@ -6,18 +6,19 @@ export default [
                 text: "Description",
                 align: "start",
                 sortable: false,
-                value: "description",
             },
-            { text: "Value", value: "description_value" },
+            {
+                text: "Value",
+                value: "description_value",
+                action_type: "select",
+            },
         ],
         desserts: [
             {
                 name: "Frozen Yogurt",
-                calories: 159,
             },
             {
                 name: "Ice cream sandwich",
-                calories: 237,
             },
         ],
     },
@@ -30,16 +31,18 @@ export default [
                 sortable: false,
                 value: "description",
             },
-            { text: "Value", value: "description_value" },
+            {
+                text: "Value",
+                value: "description_value",
+                action_type: "checkbox",
+            },
         ],
         desserts: [
             {
                 name: "Eclair",
-                calories: 262,
             },
             {
                 name: "Cupcake",
-                calories: 305,
             },
         ],
     },
@@ -52,16 +55,18 @@ export default [
                 sortable: false,
                 value: "description",
             },
-            { text: "Value", value: "description_value" },
+            {
+                text: "Value",
+                value: "description_value",
+                action_type: "checkbox",
+            },
         ],
         desserts: [
             {
                 name: "Frozen Yogurt",
-                calories: 159,
             },
             {
                 name: "Ice cream sandwich",
-                calories: 237,
             },
         ],
     },
@@ -74,16 +79,18 @@ export default [
                 sortable: false,
                 value: "description",
             },
-            { text: "Value", value: "description_value" },
+            {
+                text: "Value",
+                value: "description_value",
+                action_type: "checkbox",
+            },
         ],
         desserts: [
             {
                 name: "Frozen Yogurt",
-                calories: 159,
             },
             {
                 name: "Ice cream sandwich",
-                calories: 237,
             },
         ],
     },
@@ -96,16 +103,18 @@ export default [
                 sortable: false,
                 value: "description",
             },
-            { text: "Value", value: "description_value" },
+            {
+                text: "Value",
+                value: "description_value",
+                action_type: "select",
+            },
         ],
         desserts: [
             {
                 name: "Frozen Yogurt",
-                calories: 159,
             },
             {
                 name: "Ice cream sandwich",
-                calories: 237,
             },
         ],
     },
@@ -118,16 +127,18 @@ export default [
                 sortable: false,
                 value: "description",
             },
-            { text: "Value", value: "description_value" },
+            {
+                text: "Value",
+                value: "description_value",
+                action_type: "checkbox",
+            },
         ],
         desserts: [
             {
                 name: "Frozen Yogurt",
-                calories: 159,
             },
             {
                 name: "Ice cream sandwich",
-                calories: 237,
             },
         ],
     },
@@ -140,16 +151,18 @@ export default [
                 sortable: false,
                 value: "description",
             },
-            { text: "Value", value: "description_value" },
+            {
+                text: "Value",
+                value: "description_value",
+                action_type: "select",
+            },
         ],
         desserts: [
             {
                 name: "Frozen Yogurt",
-                calories: 159,
             },
             {
                 name: "Ice cream sandwich",
-                calories: 237,
             },
         ],
     },
@@ -162,16 +175,18 @@ export default [
                 sortable: false,
                 value: "description",
             },
-            { text: "Value", value: "description_value" },
+            {
+                text: "Value",
+                value: "description_value",
+                action_type: "checkbox",
+            },
         ],
         desserts: [
             {
                 name: "Frozen Yogurt",
-                calories: 159,
             },
             {
                 name: "Ice cream sandwich",
-                calories: 237,
             },
         ],
     },
@@ -184,16 +199,18 @@ export default [
                 sortable: false,
                 value: "description",
             },
-            { text: "Value", value: "description_value" },
+            {
+                text: "Value",
+                value: "description_value",
+                action_type: "checkbox",
+            },
         ],
         desserts: [
             {
                 name: "Frozen Yogurt",
-                calories: 159,
             },
             {
                 name: "Ice cream sandwich",
-                calories: 237,
             },
         ],
     },
@@ -206,16 +223,18 @@ export default [
                 sortable: false,
                 value: "description",
             },
-            { text: "Value", value: "description_value" },
+            {
+                text: "Value",
+                value: "description_value",
+                action_type: "select",
+            },
         ],
         desserts: [
             {
                 name: "Frozen Yogurt",
-                calories: 159,
             },
             {
                 name: "Ice cream sandwich",
-                calories: 237,
             },
         ],
     },
@@ -228,16 +247,18 @@ export default [
                 sortable: false,
                 value: "description",
             },
-            { text: "Value", value: "description_value" },
+            {
+                text: "Value",
+                value: "description_value",
+                action_type: "checkbox",
+            },
         ],
         desserts: [
             {
                 name: "Frozen Yogurt",
-                calories: 159,
             },
             {
                 name: "Ice cream sandwich",
-                calories: 237,
             },
         ],
     },
@@ -250,16 +271,18 @@ export default [
                 sortable: false,
                 value: "description",
             },
-            { text: "Value", value: "description_value" },
+            {
+                text: "Value",
+                value: "description_value",
+                action_type: "checkbox",
+            },
         ],
         desserts: [
             {
                 name: "Frozen Yogurt",
-                calories: 159,
             },
             {
                 name: "Ice cream sandwich",
-                calories: 237,
             },
         ],
     },
@@ -272,16 +295,18 @@ export default [
                 sortable: false,
                 value: "description",
             },
-            { text: "Value", value: "description_value" },
+            {
+                text: "Value",
+                value: "description_value",
+                action_type: "select",
+            },
         ],
         desserts: [
             {
                 name: "Frozen Yogurt",
-                calories: 159,
             },
             {
                 name: "Ice cream sandwich",
-                calories: 237,
             },
         ],
     },
@@ -294,16 +319,18 @@ export default [
                 sortable: false,
                 value: "description",
             },
-            { text: "Value", value: "description_value" },
+            {
+                text: "Value",
+                value: "description_value",
+                action_type: "checkbox",
+            },
         ],
         desserts: [
             {
                 name: "Frozen Yogurt",
-                calories: 159,
             },
             {
                 name: "Ice cream sandwich",
-                calories: 237,
             },
         ],
     },
