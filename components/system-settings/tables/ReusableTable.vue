@@ -37,6 +37,7 @@
             density="compact"
             height="60vh"
             class="animated animatedFadeInUp fadeInUp"
+            :search="search"
             :headers="columns"
             :items-length="totalItems"
             :items="serverItems"
@@ -67,7 +68,7 @@
 <script setup>
 import "../../../styes/animation.css";
 
-const emits = defineEmits(['fetchPage', 'tab-change','action-search']);
+const emits = defineEmits(['fetchPage', 'tab-change']);
 const options = reactive({
     itemsPerPage: 10,
     page:1
@@ -84,7 +85,6 @@ const refetch =(options) =>{
 
 const handleSelectedRow = (event,selectedRow)=>{
     const index = selectedRows.value.indexOf(selectedRow?.item.id);
-    this.$store.dispatch("authenticateUser",id)
     selectedRows.value = [];
     if (index === -1) {
       selectedRows.value.push(selectedRow?.item.id);
@@ -140,6 +140,7 @@ const handleTabClick = (tabValue) => {
 };
 
 const search = () => {
+    emits("action-search", '');
 };
 
 const handleSearch = () => {

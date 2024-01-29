@@ -13,7 +13,7 @@
                         :key="index"
                         :PanelTitle="item.name"
                         :headers="headers"
-                        :tableData="panelData.desserts"
+                        :tableData="item.desserts"
                     ></SettingPanels>
                 </v-expansion-panels>
             </v-card-text>
