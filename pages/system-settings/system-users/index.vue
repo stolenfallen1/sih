@@ -1,5 +1,6 @@
 <template>
     <v-card class="mb-2" elevation="2">
+       <v-card-actions>
             <v-spacer></v-spacer>
             <v-btn prepend-icon="mdi-eye-outline"  width="100" color="primary" class="bg-info text-white"> View </v-btn>
             <v-btn @click="openAddRecordDialog" :disabled="tableData.length == 0 ? false : true" prepend-icon="mdi-plus-outline" width="100" color="primary" class="bg-primary text-white"> New </v-btn>
