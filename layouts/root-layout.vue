@@ -56,7 +56,7 @@
                     </template>
                     <v-list-group
                         :value="i"
-                        v-if="item.child.length > 0 && can_browse(item.rule)"
+                        v-if="item.child.length > 0  && can_browse(item.rule)"
                         :fluid="true"
                         group
                     >
@@ -70,16 +70,17 @@
                                 :slim="true"
                             ></v-list-item>
                         </template>
+                        <template  v-for="child in item.child"  :key="child.label">
                         <v-list-item
                             class="ml-4 mt-2"
-                            v-for="child in item.child"
-                            :key="child.label"
+                            v-if="can_browse(child.rule)"
                             :title="child.label"
                             :value="child.label"
                             :to="child.path"
                             density="compact"
                             :exact="true"
                             :slim="true"
+                            @click="displayRightOptions(child)"
                         >
                             <template v-slot:prepend>
                                 <v-btn
@@ -91,6 +92,7 @@
                                 </v-btn>
                             </template>
                         </v-list-item>
+                        </template>
                     </v-list-group>
                 </template>
             </v-list>
@@ -103,8 +105,7 @@
             width="210"
             v-model="drawer"
             :permanent="true"
-            v-if="rightSidebarDisplay && authenticated"
-        >
+            v-if="rightSidebarDisplay && authenticated">
             <v-list v-for="options in subcomponents">
                 <v-list-item
                     :to="options.path + '?id=123'"
@@ -125,6 +126,7 @@
 </template>
 
 <script setup>
+import nuxtStorage from 'nuxt-storage';
 import { storeToRefs } from "pinia";
 import { useAuthStore } from "~/store/auth";
 import { ref, onUpdated, onMounted } from "vue";
@@ -134,12 +136,15 @@ import navigation_items from "../constants/navigation-menu";
 const router = useRouter();
 const route = useRoute();
 const { authenticated } = storeToRefs(useAuthStore()); // make authenticated state reactive
+const { user_details } = storeToRefs(useUserDetailsStore()); 
+const {fetchUserDetails} = useUserDetailsStore(); // make fetch userdetals state reactive
 const { logUserOut } = useAuthStore();
 const items = navigation_items;
 const open = ref([]);
 const drawer = ref(null);
-// const subcomponents = ref([]);
+const subcomponents = ref([]);
 
+const token = useCookie('token');
 const rightSidebarDisplay = ref(false);
 
 // Current time state and update function
@@ -160,14 +165,15 @@ onMounted(() => {
 });
 
 const displayRightOptions = (item) => {
-    // subcomponents.value = [];
-    // subcomponents.value = item.subcomponents;
+    subcomponents.value = [];
+    subcomponents.value = item.subcomponents;
 };
 
 const can_browse = (item) => {
-    // return user_details.role.permissions.some(permission => permission.key == item)
-    return true;
-    //
+    let userdetails = JSON.parse(nuxtStorage.localStorage.getData('user_details'));
+    if(userdetails){
+        return userdetails.role.permissions.some(permission => permission.key == item)
+    }
 };
 
 onUpdated(() => {
@@ -175,7 +181,8 @@ onUpdated(() => {
         rightSidebarDisplay.value = true;
     }
 });
-onMounted(() => {
+   
+onMounted(async () => {
     if (route.path !== "/dashboard") {
         rightSidebarDisplay.value = true;
     }
@@ -184,10 +191,15 @@ onMounted(() => {
         .filter((item) => item.active)
         .map((item, index) => index);
     open.value = defaultOpenGroups;
+    
+
 });
+ 
+    
+   
 const logout = () => {
     logUserOut();
-    router.push("/login");
+    router.push("/");
 };
 </script>
 
