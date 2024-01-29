@@ -14,7 +14,8 @@
                         :PanelTitle="item.name"
                         :headers="headers"
                         :tableData="item.desserts"
-                    ></SettingPanels>
+                    >
+                    </SettingPanels>
                 </v-expansion-panels>
             </v-card-text>
             <v-card-actions>

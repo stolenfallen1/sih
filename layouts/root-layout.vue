@@ -48,7 +48,7 @@
             <v-list :lines="false" density="compact" nav v-model:opened="open">
                 <template v-for="(item, i) in items" :key="i">
                     <template v-if="item.child.length == 0">
-                        <v-list-item :value="item" >
+                        <v-list-item :value="item">
                             <v-list-item-title
                                 v-text="item.label"
                             ></v-list-item-title>
@@ -107,7 +107,12 @@
             :permanent="true"
             v-if="rightSidebarDisplay && authenticated">
             <v-list v-for="options in subcomponents">
-                <v-list-item :to="options.path+'?id=123'" :key="options.label" link>TEST</v-list-item>
+                <v-list-item
+                    :to="options.path + '?id=123'"
+                    :key="options.label"
+                    link
+                    >TEST</v-list-item
+                >
             </v-list>
         </v-navigation-drawer>
 
