@@ -8,6 +8,7 @@ export default [
                 label: "Patients",
                 icon: "mdi-account-injury-outline",
                 path: "/master-file/patients",
+                rule: "browse_masterfiles",
                 subcomponents: [],
             },
             {
@@ -141,7 +142,21 @@ export default [
                 path: "/system-settings/system-users",
                 rule: "browse_users",
                 subcomponents: [
-                    
+                    {
+                        label: "Modules",
+                        icon: "mdi-table-large",
+                        path: "/system-settings/system-users/modules",
+                    },
+                    {
+                        label: "Nurse Stations",
+                        icon: "mdi-file-document",
+                        path: "/system-settings/system-users/nurse-stations",
+                    },
+                    {
+                        label: "Reports",
+                        icon: "mdi-file-document",
+                        path: "/system-settings/system-users/reports",
+                    },
                 ],
             },
             {
