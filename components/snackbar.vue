@@ -14,5 +14,4 @@ const props = defineProps({
     default: () => {},
   },
 });
-const snackbar = ref(false);
 </script>
