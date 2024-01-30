@@ -1,5 +1,5 @@
 <template>
-  <v-form ref="form">
+<v-form ref="form" @submit.prevent="handleSubmit(payload)">
     <v-card>
       <v-card-title>
         <span class="text-h7">User Registration</span>
@@ -290,8 +290,12 @@
       <v-card-actions>
         <v-btn color="blue-darken-1" @click="closeDialog"> Close </v-btn>
         <v-spacer></v-spacer>
-        <v-btn class="bg-primary text-white" @click="handleRegisterUser">
-          Register
+        <v-btn
+          v-if="payload.type == 'edit' || payload.type == 'new'"
+          class="bg-primary text-white"
+          type="submit"
+        >
+          {{ payload.type == "new" ? "Save and Close" : "Update and Close" }}
         </v-btn>
       </v-card-actions>
     </v-card>
@@ -299,12 +303,14 @@
 </template>
 
 <script setup>
+const emits = defineEmits(["register-user", "update-user"]);
 const props = defineProps({
   payload: {
     type: Object,
     default: () => {},
   },
 });
+const form = ref(null);
 const tab = ref(null);
 const grantAdminAccess = ref(false);
 const hisAccess = ref(false);
@@ -368,25 +374,29 @@ const systems = ref([
   { id: 4, name: "System 4", value: 4 },
 ]);
 
-const emits = defineEmits(["register-user"]);
 
 const isDatePickerOpen = ref(false);
-const selectedDate = ref(null);
 
-const openDatePicker = () => {
-  isDatePickerOpen.value = true;
-};
-
-const closeDatePicker = () => {
-  isDatePickerOpen.value = false;
-};
 
 const closeDialog = () => {
   emits("close-dialog");
 };
 
-const handleRegisterUser = async () => {
-  emits("register-user", payload.value);
+const handleSubmit = async (payload) => {
+  const { valid } = await form.value.validate();
+  if (!valid) return;
+  if (payload.type == "new") {
+    handleRegisterUser(payload);
+  } else if (payload.type == "edit") {
+    handleUpdateUser(payload);
+  }
+};
+const handleRegisterUser = (payload) => {
+  emits("register-user", payload);
+};
+
+const handleUpdateUser = (payload) => {
+  emits("update-user", payload);
 };
 </script>
 
