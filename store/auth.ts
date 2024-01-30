@@ -10,6 +10,7 @@ interface UserPayloadInterface {
 export const useAuthStore = defineStore('auth', {
   state: () => ({
     authenticated: false,
+    passcode:'',
     loading: false,
   }),
   actions: {
@@ -31,6 +32,7 @@ export const useAuthStore = defineStore('auth', {
         const token = useCookie('token'); // useCookie new hook in nuxt 3
         token.value = data?.value?.access_token; // set token to cookie
         this.authenticated = true; // set authenticated  state value to true
+        this.passcode = data.value.user.passcode;
         const {fetchUserDetails} = useUserDetailsStore();
         await fetchUserDetails(token.value); 
       }

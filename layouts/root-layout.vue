@@ -11,7 +11,7 @@
       <v-spacer></v-spacer>
       <v-btn icon="mdi-home" @click="router.push('/dashboard')"></v-btn>
       <v-spacer></v-spacer>
-      <v-title class="mr-10">{{ currentTime }}</v-title>
+      <div class="mr-10">{{ currentTime }}</div>
       <ModalSettings />
       <v-btn icon="mdi-bell-alert-outline"></v-btn>
       <v-menu>
