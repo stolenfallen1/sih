@@ -47,7 +47,7 @@
   <v-dialog v-model="inputDialog" width="1120">
     <registration-form
       :payload="payload"
-      @update-user="updateUser"
+      @update-user="updateConfirmation"
       @register-user="submitConfirmation"
       @close-dialog="closeDialog"
     ></registration-form>
@@ -98,6 +98,14 @@
     @close="closeConfirmation"
     @submit="registerUser"
   />
+  <Confirmation
+    :show="updateconfirmationDialog"
+    :payload="payload"
+    :error_msg="error_msg"
+    @close="closeupdateConfirmation"
+    @submit="updateUser"
+  />
+  <Snackbar :show="isShowSnackBar" :text="text"></Snackbar>
 </template>
 
 <script setup>
@@ -127,24 +135,30 @@ const payload = ref({
 });
 const isSelectedUser = ref(false);
 const confirmationDialog = ref(false);
-const error_msg = ref('');
+const updateconfirmationDialog = ref(false);
+const error_msg = ref("");
+const isShowSnackBar = ref(false);
+const text = ref("");
 
 // States for opening and closing dialogs
 
 const closeDialog = () => {
   inputDialog.value = false;
 };
+
 const openAddRecordDialog = () => {
   payload.value = Object.assign({});
   payload.value.type = "new";
   inputDialog.value = true;
 };
+
 const DeactiveUser = () => {
   if (id.value) {
     payload.value.type = "edit";
     inputDialog.value = true;
   }
 };
+
 const EditUserDetails = () => {
   if (id.value) {
     payload.value.type = "edit";
@@ -284,53 +298,81 @@ const selectedUser = (item) => {
   }
 };
 
+
+
+const updateConfirmation = () => {
+  updateconfirmationDialog.value = true;
+};
+
+const closeupdateConfirmation = () => {
+  updateconfirmationDialog.value = false;
+};
+
 const submitConfirmation = () => {
   confirmationDialog.value = true;
 };
+
 const closeConfirmation = () => {
   confirmationDialog.value = false;
 };
+
 const registerUser = async (payload) => {
   console.log(payload);
   console.log(userdetails.passcode, "asd");
   if (userdetails.passcode == payload.user_passcode) {
-      const { data, pending,error } = await useFetch(`${config.public.apiBase}` + `/users`, {
-        method: "post",
-        headers: {
-          Authorization: `Bearer ${token.value}`,
-          "Content-Type": "application/json",
-        },
-        body: { payload: payload },
-      });
-      if (data.value) {
-        closeDialog();
-        fetchData(null, payload.lastname);
-      }
-      if(error){
-        alert("test error")
-      }
+    const { data } = await useFetch(`${config.public.apiBase}` + `/users`, {
+      method: "post",
+      headers: {
+        Authorization: `Bearer ${token.value}`,
+        "Content-Type": "application/json",
+      },
+      body: { payload: payload },
+    });
+    if (data.value) {
+      snackbar(data.value.msg);
+      closeDialog();
+      confirmationDialog.value = false;
+      fetchData(null, payload.lastname);
+    }
   } else {
-    error_msg.value = 'Incorrect Passcode';
+    error_msg.value = "Incorrect Passcode";
     setTimeout(() => {
-        error_msg.value = '';
+      error_msg.value = "";
     }, 3000);
   }
 };
 
 const updateUser = async (payload) => {
   console.log(payload);
-  const { data } = await useFetch(`${config.public.apiBase}` + `/users/` + payload.id, {
-    method: "PUT",
-    headers: {
-      Authorization: `Bearer ${token.value}`,
-      "Content-Type": "application/json",
-    },
-    body: { payload: payload },
-  });
-  if (data.value) {
-    closeDialog();
-    fetchData(null, payload.lastname);
+  if (userdetails.passcode == payload.user_passcode) {
+    const { data } = await useFetch(`${config.public.apiBase}` + `/users/` + payload.id, {
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${token.value}`,
+        "Content-Type": "application/json",
+      },
+      body: { payload: payload },
+    });
+    if (data.value) {
+      snackbar(data.value.msg);
+      closeDialog();
+      updateconfirmationDialog.value = false;
+      fetchData(null, payload.lastname);
+    }
+  } else {
+    error_msg.value = "Incorrect Passcode";
+    setTimeout(() => {
+      error_msg.value = "";
+    }, 3000);
   }
+};
+const snackbar = (value) =>{
+    isShowSnackBar.value = true;
+    text.value = value;
+    setTimeout(() => {
+      isShowSnackBar.value = false;
+      text.value = '';
+    }, 3000);
 };
 // fetchData();
 handleTabChange(currentTab.value);
