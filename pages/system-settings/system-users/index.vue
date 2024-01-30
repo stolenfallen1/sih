@@ -8,7 +8,7 @@
             <v-btn prepend-icon="mdi-delete" :disabled="tableData.length == 0 ? false : true" width="100" color="primary" class="bg-error text-white"> Delete </v-btn>
         </v-card-actions>
     </v-card>
-    <v-dialog v-model="inputDialog" width="750">
+    <v-dialog v-model="inputDialog" width="750" scrollable>
         <registration-form :payload="payload" @register-user="registerUser" @close-dialog="closeDialog"></registration-form>
     </v-dialog>
 
