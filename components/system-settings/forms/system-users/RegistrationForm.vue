@@ -5,7 +5,42 @@
         <span class="text-h7">User Registration</span>
       </v-card-title>
       <v-divider></v-divider>
+      <v-tabs v-model="tab">
+        <v-tab value="one">General</v-tab>
+        <v-tab value="two">Miscellaneous</v-tab>
+      </v-tabs>
+      <v-divider></v-divider>
       <v-card-text>
+        <v-window v-model="tab">
+          <v-window-item value="one">
+            <v-row>
+              <v-col lg="8" align-self="center">
+                <v-table>
+                  <thead>
+                    <tr>
+                      <th>
+                        <v-text-field
+                          label="Lastname*"
+                          type="text"
+                          v-model="payload.lastname"
+                          required
+                          :rules="[(v) => !!v || 'Lastname is required']"
+                          density="compact"
+                          variant="outlined"
+                        ></v-text-field>
+                      </th>
+                    </tr>
+                  </thead>
+                </v-table>
+              </v-col>
+              <v-col lg="4">2</v-col>
+            </v-row>
+          </v-window-item>
+
+          <v-window-item value="two"> Two </v-window-item>
+
+          <v-window-item value="three"> Three </v-window-item>
+        </v-window>
         <v-container>
           <v-row>
             <v-col cols="12" sm="6" md="3">
@@ -54,13 +89,13 @@
             </v-col>
             <v-col cols="12" sm="6" md="3">
               <v-text-field
-                    label="Birth Date"
-                    @click="openDatePicker"
-                    v-model="payload.birthdate"
-                    density="compact"
-                    type="date"
-                    variant="outlined"
-                  ></v-text-field>
+                label="Birth Date"
+                @click="openDatePicker"
+                v-model="payload.birthdate"
+                density="compact"
+                type="date"
+                variant="outlined"
+              ></v-text-field>
             </v-col>
             <v-col cols="12" sm="6" md="3">
               <v-text-field
@@ -121,8 +156,8 @@
                 variant="outlined"
               ></v-autocomplete>
             </v-col>
-            <v-col  cols="12" sm="6" md="3">
-             <v-autocomplete
+            <v-col cols="12" sm="6" md="3">
+              <v-autocomplete
                 :items="position"
                 item-title="name"
                 item-value="value"
@@ -181,61 +216,67 @@
       <v-card-actions>
         <v-btn color="blue-darken-1" @click="closeDialog"> Close </v-btn>
         <v-spacer></v-spacer>
-        <v-btn  class="bg-primary text-white"   @click="handleRegisterUser"> Register </v-btn>
+        <v-btn class="bg-primary text-white" @click="handleRegisterUser">
+          Register
+        </v-btn>
       </v-card-actions>
     </v-form>
   </v-card>
 </template>
 
 <script setup>
+const props = defineProps({
+  payload: {
+    type: Object,
+    default: () => {},
+  },
+});
 import { ref } from "vue";
-const payload = ref({});
+const tab = ref(null);
 const suffix = ref([
-    {id:1,name:"Suffix 1",value:1},
-    {id:2,name:"Suffix 2",value:2},
-    {id:3,name:"Suffix 3",value:3},
-    {id:4,name:"Suffix 4",value:4},
+  { id: 1, name: "Suffix 1", value: 1 },
+  { id: 2, name: "Suffix 2", value: 2 },
+  { id: 3, name: "Suffix 3", value: 3 },
+  { id: 4, name: "Suffix 4", value: 4 },
 ]);
 const position = ref([
-    {id:1,name:"Position 1",value:1},
-    {id:2,name:"Position 2",value:2},
-    {id:3,name:"Position 3",value:3},
-    {id:4,name:"Position 4",value:4},
+  { id: 1, name: "Position 1", value: 1 },
+  { id: 2, name: "Position 2", value: 2 },
+  { id: 3, name: "Position 3", value: 3 },
+  { id: 4, name: "Position 4", value: 4 },
 ]);
 const branch = ref([
-    {id:1,name:"Branch 1",value:1},
-    {id:2,name:"Branch 2",value:2},
-    {id:3,name:"Branch 3",value:3},
-    {id:4,name:"Branch 4",value:4},
+  { id: 1, name: "Branch 1", value: 1 },
+  { id: 2, name: "Branch 2", value: 2 },
+  { id: 3, name: "Branch 3", value: 3 },
+  { id: 4, name: "Branch 4", value: 4 },
 ]);
 const department = ref([
-    {id:1,name:"Department 1",value:1},
-    {id:2,name:"Department 2",value:2},
-    {id:3,name:"Department 3",value:3},
-    {id:4,name:"Department 4",value:4},
+  { id: 1, name: "Department 1", value: 1 },
+  { id: 2, name: "Department 2", value: 2 },
+  { id: 3, name: "Department 3", value: 3 },
+  { id: 4, name: "Department 4", value: 4 },
 ]);
 const section = ref([
-    {id:1,name:"Section 1",value:1},
-    {id:2,name:"Section 2",value:2},
-    {id:3,name:"Section 3",value:3},
-    {id:4,name:"Section 4",value:4},
+  { id: 1, name: "Section 1", value: 1 },
+  { id: 2, name: "Section 2", value: 2 },
+  { id: 3, name: "Section 3", value: 3 },
+  { id: 4, name: "Section 4", value: 4 },
 ]);
 const usergroup = ref([
-    {id:1,name:"User Group 1",value:1},
-    {id:2,name:"User Group 2",value:2},
-    {id:3,name:"User Group 3",value:3},
-    {id:4,name:"User Group 4",value:4},
+  { id: 1, name: "User Group 1", value: 1 },
+  { id: 2, name: "User Group 2", value: 2 },
+  { id: 3, name: "User Group 3", value: 3 },
+  { id: 4, name: "User Group 4", value: 4 },
 ]);
 const systems = ref([
-    {id:1,name:"System 1",value:1},
-    {id:2,name:"System 2",value:2},
-    {id:3,name:"System 3",value:3},
-    {id:4,name:"System 4",value:4}
+  { id: 1, name: "System 1", value: 1 },
+  { id: 2, name: "System 2", value: 2 },
+  { id: 3, name: "System 3", value: 3 },
+  { id: 4, name: "System 4", value: 4 },
 ]);
 
-
-
-const emits = defineEmits(['register-user']);
+const emits = defineEmits(["register-user"]);
 
 const isDatePickerOpen = ref(false);
 const selectedDate = ref(null);
@@ -253,7 +294,7 @@ const closeDialog = () => {
 };
 
 const handleRegisterUser = async () => {
-    emits("register-user",payload.value);
+  emits("register-user", payload.value);
 };
 </script>
 

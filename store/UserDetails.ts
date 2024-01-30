@@ -1,7 +1,7 @@
 import nuxtStorage from 'nuxt-storage';
 export const useUserDetailsStore = defineStore('user',{
   state: () => ({
-    user_details:{}
+    user_details:{},
   }),
   actions: {
     async fetchUserDetails(token:any) {
