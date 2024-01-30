@@ -1,16 +1,57 @@
 <template>
-    <v-card class="mb-2" elevation="2">
-       <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn @click="ViewUserDetails"  :disabled="isSelectedUser ? false : true" prepend-icon="mdi-eye-outline"  width="100" color="primary" class="bg-info text-white"> View </v-btn>
-            <v-btn @click="openAddRecordDialog" :disabled="tableData.length == 0 ? false : true" prepend-icon="mdi-plus-outline" width="100" color="primary" class="bg-primary text-white"> New </v-btn>
-            <v-btn  prepend-icon="mdi-pencil"  :disabled="tableData.length == 0 ? false : true" width="100" color="primary" class="bg-success text-white"> Edit </v-btn>
-            <v-btn prepend-icon="mdi-delete" :disabled="tableData.length == 0 ? false : true" width="100" color="primary" class="bg-error text-white"> Delete </v-btn>
-        </v-card-actions>
-    </v-card>
-    <v-dialog v-model="inputDialog" width="750">
-        <registration-form :payload="payload" @register-user="registerUser" @close-dialog="closeDialog"></registration-form>
-    </v-dialog>
+  <v-card class="mb-2" elevation="2">
+    <v-card-actions>
+      <v-spacer></v-spacer>
+      <v-btn
+        @click="ViewUserDetails"
+        :disabled="isSelectedUser ? false : true"
+        prepend-icon="mdi-eye-outline"
+        width="100"
+        color="primary"
+        class="bg-info text-white"
+      >
+        View
+      </v-btn>
+      <v-btn
+        @click="openAddRecordDialog"
+        :disabled="tableData.length == 0 ? false : true"
+        prepend-icon="mdi-plus-outline"
+        width="100"
+        color="primary"
+        class="bg-primary text-white"
+      >
+        New
+      </v-btn>
+      <v-btn
+        @click="EditUserDetails"
+        prepend-icon="mdi-pencil"
+        :disabled="isSelectedUser ? false : true"
+        width="100"
+        color="primary"
+        class="bg-success text-white"
+      >
+        Edit
+      </v-btn>
+      <v-btn
+        @click="DeactiveUser"
+        prepend-icon="mdi-toggle-switch"
+        :disabled="isSelectedUser ? false : true"
+        width="150"
+        color="primary"
+        class="bg-error text-white"
+      >
+        Deactive</v-btn
+      >
+    </v-card-actions>
+  </v-card>
+  <v-dialog v-model="inputDialog" width="1120">
+    <registration-form
+      :payload="payload"
+      @update-user="updateUser"
+      @register-user="submitConfirmation"
+      @close-dialog="closeDialog"
+    ></registration-form>
+  </v-dialog>
 
   <ReusableTable
     :items-per-page="10"
@@ -35,64 +76,86 @@
       <span v-if="column.key === 'branch'">{{
         item.branch ? item.branch.abbreviation : ""
       }}</span>
-     
-      <span v-if="column.key === 'warehouse'">
-        {{
-        item.warehouse ? item.warehouse.warehouse_description : ""
-      }}</span>
-       <span v-if="column.key === 'birthdate'">
-        {{
-        item.birthdate ? formatDate(item.birthdate) : ""
-      }}</span>
 
-       <span v-if="column.key === 'isactive'">
-        {{
-        item.isactive == 1 ?  "Active": "In Active"
-      }}</span>
-      
+      <span v-if="column.key === 'warehouse'">
+        {{ item.warehouse ? item.warehouse.warehouse_description : "" }}</span
+      >
+      <span v-if="column.key === 'birthdate'">
+        {{ item.birthdate ? formatDate(item.birthdate) : "" }}</span
+      >
+
+      <span v-if="column.key === 'isactive'">
+        {{ item.isactive == 1 ? "Active" : "In Active" }}</span
+      >
+
       <!-- Add more custom logic for other columns -->
     </template>
   </ReusableTable>
+  <Confirmation
+    :show="confirmationDialog"
+    :payload="payload"
+    :error_msg="error_msg"
+    @close="closeConfirmation"
+    @submit="registerUser"
+  />
 </template>
 
 <script setup>
+import nuxtStorage from "nuxt-storage";
 import { storeToRefs } from "pinia";
-import moment from 'moment';
-moment.locale('en');
+import moment from "moment";
+moment.locale("en");
 import RegistrationForm from "~/components/system-settings/forms/system-users/RegistrationForm.vue";
 import ReusableTable from "~/components/system-settings/tables/ReusableTable.vue";
-const { id,isrefresh } = storeToRefs(useSubcomponentIDStore()); // state id for subcomponents ?id=123
-
-import { ref } from "vue";
+const { id, isrefresh } = storeToRefs(useSubcomponentIDStore()); // state id for subcomponents ?id=123
+let userdetails = JSON.parse(nuxtStorage.localStorage.getData("user_details"));
 definePageMeta({
   layout: "root-layout",
 });
 
 // Auth refs and config
 const config = useRuntimeConfig();
-const token = useCookie('token');
+const token = useCookie("token");
 
 // Dialog refs ( form )
-const searchDialog = ref(false);
 const inputDialog = ref(false);
 
-const payload = ref({});
+const payload = ref({
+  type: "",
+  isactive: "1",
+  user_passcode: "",
+});
 const isSelectedUser = ref(false);
+const confirmationDialog = ref(false);
+const error_msg = ref('');
 
 // States for opening and closing dialogs
-const closeSearchDialog = () => {
-  searchDialog.value = false;
-};
+
 const closeDialog = () => {
   inputDialog.value = false;
 };
 const openAddRecordDialog = () => {
-  searchDialog.value = false;
+  payload.value = Object.assign({});
+  payload.value.type = "new";
   inputDialog.value = true;
 };
+const DeactiveUser = () => {
+  if (id.value) {
+    payload.value.type = "edit";
+    inputDialog.value = true;
+  }
+};
+const EditUserDetails = () => {
+  if (id.value) {
+    payload.value.type = "edit";
+    inputDialog.value = true;
+  }
+};
 const ViewUserDetails = () => {
-  searchDialog.value = false;
-  inputDialog.value = true;
+  if (id.value) {
+    payload.value.type = "view";
+    inputDialog.value = true;
+  }
 };
 // Table refs and tab related
 const tableData = ref([]);
@@ -143,8 +206,15 @@ const params = ref("");
 
 // Fetch Data sample
 const fetchData = async (options = null, searchkeyword = null) => {
-  let keyword = searchkeyword || '';
-  params.value = options ? "page=" + options.page + "&per_page=" + options.itemsPerPage+"&keyword="+ options.keyword : "page=1&per_page=10&keyword="+keyword;
+  let keyword = searchkeyword || "";
+  params.value = options
+    ? "page=" +
+      options.page +
+      "&per_page=" +
+      options.itemsPerPage +
+      "&keyword=" +
+      options.keyword
+    : "page=1&per_page=10&keyword=" + keyword;
   // useCookie new hook in nuxt 3
 
   try {
@@ -188,59 +258,91 @@ const handleTabChange = (tabValue) => {
 
 const handleSearch = (keyword) => {
   // Handle search action
-  fetchData(null,keyword);
+  fetchData(null, keyword);
 };
 
 const handleRefresh = () => {
   fetchData();
 };
 
+const selectedUser = (item) => {
+  isSelectedUser.value = false;
+  isrefresh.value = false;
+  id.value = ""; //clear state id for subcomponents ?id=''
+  if (item) {
+    item.birthdate = formatDate(item.birthdate);
+    item.warehouse_id = parseInt(item.warehouse_id);
+    item.position_id = parseInt(item.position_id) ? "1" : 1;
+    item.section_id = parseInt(item.section_id) ? "1" : 1;
+    item.role_id = parseInt(item.role_id);
+    item.branch_id = parseInt(item.branch_id);
+    item.suffix = parseInt(item.suffix) ? "1" : 1;
+    payload.value = Object.assign({}, item);
+    id.value = item.id; //set state id for subcomponents ?id=item.id value
+    isrefresh.value = true;
+    isSelectedUser.value = true;
+  }
+};
 
-const selectedUser = (item) =>{
-    isSelectedUser.value = false;
-    isrefresh.value = false;
-    id.value = ''; //clear state id for subcomponents ?id=''
-    if(item){
-      item.birthdate = formatDate(item.birthdate);
-      item.warehouse_id = parseInt(item.warehouse_id);
-      item.position_id = parseInt(item.position_id);
-      item.section_id = parseInt(item.section_id);
-      item.role_id = parseInt(item.role_id);
-      item.branch_id = parseInt(item.branch_id);
-      item.suffix = parseInt(item.suffix);
-      payload.value = Object.assign({},item);
-      id.value = item.id; //set state id for subcomponents ?id=item.id value
-      isrefresh.value = true;
-      isSelectedUser.value = true;
-    }
-}
-
-const registerUser  = async (payload) =>{
-    const { data, pending } = await useFetch('http://10.4.15.15/api/users', {
-        method: 'post',
-        headers: { 
-            'Authorization': `Bearer ${token.value}`,
-            'Content-Type': 'application/json'
-            
-         },
-        body:{payload:payload},
+const submitConfirmation = () => {
+  confirmationDialog.value = true;
+};
+const closeConfirmation = () => {
+  confirmationDialog.value = false;
+};
+const registerUser = async (payload) => {
+  console.log(payload);
+  console.log(userdetails.passcode, "asd");
+  if (userdetails.passcode == payload.user_passcode) {
+      const { data, pending,error } = await useFetch(`${config.public.apiBase}` + `/users`, {
+        method: "post",
+        headers: {
+          Authorization: `Bearer ${token.value}`,
+          "Content-Type": "application/json",
+        },
+        body: { payload: payload },
       });
       if (data.value) {
         closeDialog();
-        fetchData(null,payload.lastname);
+        fetchData(null, payload.lastname);
       }
-}
+      if(error){
+        alert("test error")
+      }
+  } else {
+    error_msg.value = 'Incorrect Passcode';
+    setTimeout(() => {
+        error_msg.value = '';
+    }, 3000);
+  }
+};
+
+const updateUser = async (payload) => {
+  console.log(payload);
+  const { data } = await useFetch(`${config.public.apiBase}` + `/users/` + payload.id, {
+    method: "PUT",
+    headers: {
+      Authorization: `Bearer ${token.value}`,
+      "Content-Type": "application/json",
+    },
+    body: { payload: payload },
+  });
+  if (data.value) {
+    closeDialog();
+    fetchData(null, payload.lastname);
+  }
+};
 // fetchData();
 handleTabChange(currentTab.value);
 onMounted(async () => {
-  id.value = '';
+  id.value = "";
 });
 onUpdated(() => {
-  id.value = '';
+  // id.value = '';
 });
-const formatDate =(value)=>{
-   return moment(value).format("YYYY-MM-DD");
-}
+const formatDate = (value) => {
+  return moment(value).format("YYYY-MM-DD");
+};
 </script>
 
 <style scoped></style>

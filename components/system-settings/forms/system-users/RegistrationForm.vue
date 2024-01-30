@@ -1,46 +1,11 @@
 <template>
   <v-card>
-    <v-form ref="form">
+    <v-form ref="form" @submit.prevent="handleSubmit(payload)">
       <v-card-title>
         <span class="text-h7">User Registration</span>
       </v-card-title>
       <v-divider></v-divider>
-      <v-tabs v-model="tab">
-        <v-tab value="one">General</v-tab>
-        <v-tab value="two">Miscellaneous</v-tab>
-      </v-tabs>
-      <v-divider></v-divider>
       <v-card-text>
-        <v-window v-model="tab">
-          <v-window-item value="one">
-            <v-row>
-              <v-col lg="8" align-self="center">
-                <v-table>
-                  <thead>
-                    <tr>
-                      <th>
-                        <v-text-field
-                          label="Lastname*"
-                          type="text"
-                          v-model="payload.lastname"
-                          required
-                          :rules="[(v) => !!v || 'Lastname is required']"
-                          density="compact"
-                          variant="outlined"
-                        ></v-text-field>
-                      </th>
-                    </tr>
-                  </thead>
-                </v-table>
-              </v-col>
-              <v-col lg="4">2</v-col>
-            </v-row>
-          </v-window-item>
-
-          <v-window-item value="two"> Two </v-window-item>
-
-          <v-window-item value="three"> Three </v-window-item>
-        </v-window>
         <v-container>
           <v-row>
             <v-col cols="12" sm="6" md="3">
@@ -194,7 +159,7 @@
                 variant="outlined"
               ></v-autocomplete>
             </v-col>
-            <v-col cols="12" sm="6" md="5">
+            <v-col cols="12" sm="6" md="4">
               <v-autocomplete
                 :items="systems"
                 item-title="name"
@@ -208,6 +173,12 @@
                 variant="outlined"
               ></v-autocomplete>
             </v-col>
+            <v-col cols="12" sm="2" md="4">
+              <v-radio-group v-model="payload.isactive" inline>
+                <v-radio label="Active" value="1"></v-radio>
+                <v-radio label="In-Active" value="0"></v-radio>
+              </v-radio-group>
+            </v-col>
           </v-row>
         </v-container>
         <small>*indicates required field</small>
@@ -216,8 +187,12 @@
       <v-card-actions>
         <v-btn color="blue-darken-1" @click="closeDialog"> Close </v-btn>
         <v-spacer></v-spacer>
-        <v-btn class="bg-primary text-white" @click="handleRegisterUser">
-          Register
+        <v-btn
+          v-if="payload.type == 'edit' || payload.type == 'new'"
+          class="bg-primary text-white"
+          type="submit"
+        >
+          {{ payload.type == "new" ? "Save and Close" : "Update and Close" }}
         </v-btn>
       </v-card-actions>
     </v-form>
@@ -225,14 +200,14 @@
 </template>
 
 <script setup>
+const emits = defineEmits(["register-user", "update-user"]);
 const props = defineProps({
   payload: {
     type: Object,
     default: () => {},
   },
 });
-import { ref } from "vue";
-const tab = ref(null);
+const form = ref(null);
 const suffix = ref([
   { id: 1, name: "Suffix 1", value: 1 },
   { id: 2, name: "Suffix 2", value: 2 },
@@ -276,25 +251,29 @@ const systems = ref([
   { id: 4, name: "System 4", value: 4 },
 ]);
 
-const emits = defineEmits(["register-user"]);
 
 const isDatePickerOpen = ref(false);
-const selectedDate = ref(null);
 
-const openDatePicker = () => {
-  isDatePickerOpen.value = true;
-};
-
-const closeDatePicker = () => {
-  isDatePickerOpen.value = false;
-};
 
 const closeDialog = () => {
   emits("close-dialog");
 };
 
-const handleRegisterUser = async () => {
-  emits("register-user", payload.value);
+const handleSubmit = async (payload) => {
+  const { valid } = await form.value.validate();
+  if (!valid) return;
+  if (payload.type == "new") {
+    handleRegisterUser(payload);
+  } else if (payload.type == "edit") {
+    handleUpdateUser(payload);
+  }
+};
+const handleRegisterUser = (payload) => {
+  emits("register-user", payload);
+};
+
+const handleUpdateUser = (payload) => {
+  emits("update-user", payload);
 };
 </script>
 
