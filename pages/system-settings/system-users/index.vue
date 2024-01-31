@@ -44,7 +44,7 @@
       >
     </v-card-actions>
   </v-card>
-  <v-dialog v-model="inputDialog" width="750" scrollable>
+  <v-dialog v-model="inputDialog" width="950" scrollable>
     <registration-form
       :payload="payload"
       @update-user="updateConfirmation"
@@ -132,6 +132,7 @@ const payload = ref({
   type: "",
   isactive: "1",
   user_passcode: "",
+  systems:[]
 });
 const isSelectedUser = ref(false);
 const confirmationDialog = ref(false);
@@ -285,11 +286,11 @@ const selectedUser = (item) => {
   if (item) {
     item.birthdate = formatDate(item.birthdate);
     item.warehouse_id = parseInt(item.warehouse_id);
-    item.position_id = parseInt(item.position_id) ? "1" : 1;
+    item.position_id = item.position_id;
     item.section_id = parseInt(item.section_id) ? "1" : 1;
     item.role_id = parseInt(item.role_id);
     item.branch_id = parseInt(item.branch_id);
-    item.suffix = parseInt(item.suffix) ? "1" : 1;
+    item.suffix = parseInt(item.suffix);
     payload.value = Object.assign({}, item);
     id.value = item.id; //set state id for subcomponents ?id=item.id value
     isrefresh.value = true;

@@ -15,7 +15,7 @@
               <v-col cols="12" class="pa-1">
                 <v-text-field
                   class="mt-3"
-                  :type="!showPassword ? 'text' : 'password'"
+                  :type="!showPassword ? 'password' : 'text'"
                   v-model="payload.user_passcode"
                   placeholder="Enter passcode"
                   label="Enter Passcode"
@@ -25,7 +25,7 @@
                   autofocus
                   hide-details
                   @click:append="showPassword = !showPassword"
-                  :append-icon="showPassword ? 'mdi-eye-off-outline ' : 'mdi-eye-outline'"
+                  :append-icon="showPassword ? 'mdi-eye-outline ' : 'mdi-eye-off-outline'"
                 ></v-text-field>
                 <v-alert :closable="true" flat color="danger"  class="mt-3 pa-2" v-if="error_msg" :text="error_msg"></v-alert>
               </v-col>
