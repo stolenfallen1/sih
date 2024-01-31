@@ -1,7 +1,7 @@
 <template>
     <v-dialog v-model="dialog" persistent hide-overlay width="800" scrollable>
         <v-card>
-            <v-card-title> System User Group </v-card-title>
+            <v-card-title> System User Group Modules </v-card-title>
             <v-divider></v-divider>
             <v-card-text>
                 <v-tabs v-model="tab" center-active>
@@ -37,6 +37,7 @@
                                                 v-model="item.select"
                                                 hide-details
                                                 density="compact"
+                                                color="#117dad"
                                             ></v-checkbox>
                                         </td>
                                         <td>
@@ -45,6 +46,7 @@
                                                 density="compact"
                                                 color="#6984FF"
                                                 icon="mdi-link-circle-outline"
+                                                @click="openSubModule"
                                             ></v-btn>
                                         </td>
                                         <td>{{ item.module }}</td>
@@ -53,6 +55,7 @@
                                                 v-model="item.read"
                                                 hide-details
                                                 density="compact"
+                                                color="#117dad"
                                             ></v-checkbox>
                                         </td>
                                         <td>
@@ -60,6 +63,7 @@
                                                 v-model="item.edit"
                                                 hide-details
                                                 density="compact"
+                                                color="#117dad"
                                             ></v-checkbox>
                                         </td>
                                         <td>
@@ -67,6 +71,7 @@
                                                 v-model="item.add"
                                                 hide-details
                                                 density="compact"
+                                                color="#117dad"
                                             ></v-checkbox>
                                         </td>
                                         <td>
@@ -74,6 +79,7 @@
                                                 v-model="item.print"
                                                 hide-details
                                                 density="compact"
+                                                color="#117dad"
                                             ></v-checkbox>
                                         </td>
                                         <td>
@@ -81,6 +87,7 @@
                                                 v-model="item.post"
                                                 hide-details
                                                 density="compact"
+                                                color="#117dad"
                                             ></v-checkbox>
                                         </td>
                                         <td>
@@ -88,6 +95,7 @@
                                                 v-model="item.approved"
                                                 hide-details
                                                 density="compact"
+                                                color="#117dad"
                                             ></v-checkbox>
                                         </td>
                                         <td>
@@ -95,6 +103,7 @@
                                                 v-model="item.void"
                                                 hide-details
                                                 density="compact"
+                                                color="#117dad"
                                             ></v-checkbox>
                                         </td>
                                     </tr>
@@ -111,16 +120,29 @@
             </v-card-actions>
         </v-card>
     </v-dialog>
+    <v-dialog
+        v-model="subdialog"
+        persistent
+        hide-overlay
+        width="800"
+        scrollable
+    >
+        <sub-module @close-dialog="closeSubModule"></sub-module>
+    </v-dialog>
 </template>
 
 <script setup>
+import SubModule from "./SubModule.vue";
+
 definePageMeta({
     layout: "root-layout",
 });
 
 const router = useRouter();
 
+const panel = ref([0]);
 const dialog = ref(true);
+const subdialog = ref(false);
 let tab = ref("HIS");
 const tabs = ref([
     {
@@ -209,6 +231,14 @@ const tabs = ref([
         ],
     },
 ]);
+
+const openSubModule = () => {
+    subdialog.value = true;
+};
+
+const closeSubModule = () => {
+    subdialog.value = false;
+};
 </script>
 
 <style scoped></style>

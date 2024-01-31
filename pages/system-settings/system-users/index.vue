@@ -44,7 +44,7 @@
       >
     </v-card-actions>
   </v-card>
-  <v-dialog v-model="inputDialog" width="1120">
+  <v-dialog v-model="inputDialog" width="750" scrollable>
     <registration-form
       :payload="payload"
       @update-user="updateConfirmation"
