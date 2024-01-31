@@ -207,11 +207,10 @@ const tableTabs = ref([
     label: "User Groups",
     title: "List of user Groups",
     value: "two",
-    endpoint: "https://jsonplaceholder.typicode.com/comments",
+    endpoint: `${config.public.apiBase}` + `/roles`,
     columns: [
-      { title: "Group Code", key: "userId", align: "start", sortable: true },
-      { title: "Group Name", key: "id", align: "end" },
-      { title: "Remarks", key: "id", align: "end" },
+      { title: "Group Code", key: "id", align: "start",  width: "20%", sortable: true },
+      { title: "Group Name", key: "display_name", align: "start" },
     ],
   },
 ]);
