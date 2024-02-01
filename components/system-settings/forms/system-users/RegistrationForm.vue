@@ -8,8 +8,8 @@
           <v-tab value="one">General</v-tab>
           <v-tab value="two">Miscellaneous</v-tab>
         </v-tabs>
+      <v-divider></v-divider>
       </v-card-title>
-
       <v-card-text style="max-height: 450px" class="pa-1">
         <v-window v-model="tab" class="pa-0">
           <v-window-item value="one" class="pa-1">
@@ -165,7 +165,7 @@
                     <v-row>
                       <v-col cols="12" align="center">
                         <v-card class="pa-1">
-                          <v-avatar color="grey" rounded="0" size="155">
+                          <v-avatar  rounded="0" size="155">
                             <v-img
                               cover
                               width="100%"
@@ -181,6 +181,7 @@
                           class="mt-3"
                           v-model="image"
                           type="file"
+                          @update:model-value="checkfile"
                           @change="onFileChange"
                           variant="outlined"
                           bg-color="primary"
@@ -273,14 +274,14 @@
               <v-row>
                 <v-col cols="12">
                   <v-card>
-                    <v-card-title>Organizational Details</v-card-title>
+                    <v-card-title>System Accessibility</v-card-title>
                     <v-card-text>
                       <v-row>
                         <v-col cols="12" sm="6" md="6" v-for="item in systems" :key="item.id">
                             <v-checkbox 
                               hide-details
                               v-model="system"
-                              @click="test"
+                              @update:model-value="selectedsystem"
                               :label="item.system_description"
                               :value="item.id"
                               density="compact"
@@ -327,7 +328,7 @@ const props = defineProps({
 const { payload } = props;
 const form = ref(null);
 const system = ref([]);
-const image = ref(undefined);
+const image = ref('');
 const imageUrl = ref("");
 const tab = ref(null);
 const isdepartmentLoading = ref(false);
@@ -342,12 +343,14 @@ const posAccessAdmin = ref(false);
 const fmsAccessAdmin = ref(false);
 const checkUncheckAll = () => {
 
-  const systemIds = systems.map((system) => system.id); //get all system id
+  let systemIds = systems.map((system) => system.id); //get all system id
   if(grantAdminAccess.value){
     system.value = systemIds;
     grantAdminAccess.value = true;
+    payload.system = systemIds;
   }else{
     system.value = [];
+    payload.system = [];
     grantAdminAccess.value = false;
   }
   console.log(grantAdminAccess.value);
@@ -364,8 +367,10 @@ const section = ref([
   { id: 4, name: "Section 4", value: 4 },
 ]);
 const systems = JSON.parse(nuxtStorage.localStorage.getData("systems")) || [];;
-const test = ()=>{
-console.log(system)
+const selectedsystem = ()=>{
+const systemIds = system.value.map((system) => system); 
+console.log(systemIds)
+ payload.system = systemIds;
 
 }
 const createImage = (file) => {
@@ -382,12 +387,17 @@ const createImage = (file) => {
 };
 const onFileChange = (event) => {
   const file = event.target.files[0];
-
   if (!file) {
     return (imageUrl.value = "");
   }
   createImage(file);
 };
+
+const checkfile = ()=>{
+  if(image.value == ''){
+    imageUrl.value = "";
+  }
+}
 
 const closeDialog = () => {
   emits("close-dialog");
@@ -420,6 +430,7 @@ const handleBranch = async () => {
 const handleSubmit = async (payload) => {
   const { valid } = await form.value.validate();
   if (!valid) return;
+ 
   if (payload.type == "new") {
     handleRegisterUser(payload);
   } else if (payload.type == "edit") {
@@ -434,7 +445,16 @@ const handleUpdateUser = (payload) => {
   emits("update-user", payload);
 };
 
+onUpdated(()=>{
+  const systemIds = payload.system_user_access.map((system) => parseInt(system.subsystem_id)); 
+  system.value = systemIds;
+  console.log(systemIds)
+});
 onMounted(async () => {
+  const systemIds = payload.system_user_access.map((system) => parseInt(system.subsystem_id)); 
+  system.value = systemIds;
+
+  console.log(systemIds)
   handleBranch()
 });
 
