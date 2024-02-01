@@ -7,6 +7,7 @@
                     class="input"
                     clearable
                     v-model="user.idnumber"
+                    color="#117dad"
                     label="Username"
                     placeholder="Enter your id as username"
                 ></v-text-field>
@@ -15,17 +16,19 @@
                     class="input"
                     clearable
                     v-model="user.password"
-                    type="password"
+                    color="#117dad"
+                    :type="showPassword ? 'text' : 'password'"
                     label="Password"
                     placeholder="Enter your password"
                 ></v-text-field>
+                <v-checkbox v-model="showPassword" label="Show Password" density="compact" color="#117dad"></v-checkbox>
 
                 <br />
 
                 <v-btn
                     block
                     type="submit"
-                    color="info"
+                    color="#6984FF"
                     size="large"
                     variant="elevated"
                 >
@@ -47,6 +50,7 @@ const user = ref({
   password: '',
 });
 const router = useRouter();
+const showPassword = ref(false);
 
 const login = async () => {
   await authenticateUser(user.value); // call authenticateUser and pass the user object

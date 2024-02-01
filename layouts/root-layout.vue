@@ -194,7 +194,7 @@ const displayRightOptions = (item) => {
 
 const can_browse = (item) => {
   let userdetails = JSON.parse(nuxtStorage.localStorage.getData("user_details"));
-  return true;
+  // return true;
   if (userdetails) {
     return userdetails.role.permissions.some((permission) => permission.key == item);
   }
