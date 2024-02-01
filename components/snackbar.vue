@@ -1,10 +1,14 @@
 <template>
-  <v-snackbar color="success" location="top" :model-value="show">
+  <v-snackbar :color="color" location="top" :model-value="show">
     {{ text }}
   </v-snackbar>
 </template>
 <script setup>
 const props = defineProps({
+  color: {
+    type: String,
+    default: () => 'success',
+  },
   show: {
     type: Boolean,
     default: () => false,

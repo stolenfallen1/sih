@@ -2,38 +2,48 @@
     <div class="container">
         <h2 class="header">Hospital Information System</h2>
         <v-card class="card">
-            <v-form @submit.prevent="login">
-                <v-text-field
-                    class="input"
-                    clearable
-                    v-model="user.idnumber"
-                    color="#117dad"
-                    label="Username"
-                    placeholder="Enter your id as username"
-                ></v-text-field>
+            <v-form>
 
                 <v-text-field
-                    class="input"
-                    clearable
-                    v-model="user.password"
-                    color="#117dad"
-                    :type="showPassword ? 'text' : 'password'"
-                    label="Password"
-                    placeholder="Enter your password"
-                ></v-text-field>
-                <v-checkbox v-model="showPassword" label="Show Password" density="compact" color="#117dad"></v-checkbox>
+                class="input"
+                clearable
+                append-icon="mdi-account"
+                type="text"
+                :rules="[(v) => !!v || 'Username is required']"
+                label="Username"
+                placeholder="Enter your id as username"
+                v-model="user.idnumber"
+                ></v-text-field>   
 
+                <v-text-field
+                class="input"
+                clearable
+                label="Password"
+                placeholder="Enter your password"
+                :append-icon="showPassword ? 'mdi-eye-off':'mdi-eye'"
+                name="password"
+                :rules="[(v) => !!v || 'Password is required']"
+                :type="showPassword ? 'text':'password'"
+                v-model="user.password"
+                @keypress.enter="login"
+                @click:append="showPassword = !showPassword"
+                ></v-text-field>
                 <br />
-
                 <v-btn
+                    :disabled="!user.idnumber || !user.password"
                     block
                     type="submit"
                     color="#6984FF"
                     size="large"
                     variant="elevated"
+                    :loading="isLoading"
+                    @click.prevent="login"
                 >
                     Login
                 </v-btn>
+
+                <Snackbar :show="showSuccessSnackbar" text="Login successful!" />
+                <Snackbar :color="snackbarError" :show="showErrorSnackbar" text="Login failed." />
             </v-form>
         </v-card>
     </div>
@@ -46,18 +56,33 @@ const { authenticateUser } = useAuthStore(); // use authenticateUser action from
 
 const { authenticated } = storeToRefs(useAuthStore()); // make authenticated state reactive with storeToRefs
 const user = ref({
-  idnumber: '', 
-  password: '',
+    idnumber: '', 
+    password: '',
 });
 const router = useRouter();
 const showPassword = ref(false);
+const isLoading = ref(false);
+const showSuccessSnackbar = ref(false); 
+const showErrorSnackbar = ref(false); 
+const snackbarError = ref("red");
 
 const login = async () => {
-  await authenticateUser(user.value); // call authenticateUser and pass the user object
-  // redirect to homepage if user is authenticated
-  if (authenticated) {
-    router.push({ path: "/dashboard" });
-  }
+    try {
+        isLoading.value = true;
+        await authenticateUser(user.value); 
+        if (authenticated.value) {
+            isLoading.value = false;
+            router.push({ path: "/dashboard" });
+            showSuccessSnackbar.value = true;
+        } else {
+            showErrorSnackbar.value = true;
+        }
+    } catch(error) {
+        console.error(error);
+        showErrorSnackbar.value = true;
+    } finally {
+        isLoading.value = false;
+    }
 };
 
 </script>
@@ -80,5 +105,8 @@ const login = async () => {
 }
 .input {
     width: 400px;
+}
+.error-class{
+    color: red;
 }
 </style>
