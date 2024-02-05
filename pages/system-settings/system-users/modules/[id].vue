@@ -2,7 +2,7 @@
   <div>
     <v-dialog v-model="dialog" persistent hide-overlay width="950" scrollable>
       <v-card>
-        <v-card-title> System User Group Modules </v-card-title>
+        <v-card-title> System User Group {{ selectedGroup }} </v-card-title>
         <v-divider></v-divider>
         <v-card-text>
           <v-tabs v-model="tab" center-active>
@@ -10,7 +10,7 @@
               {{ tabs.name }}
             </v-tab>
           </v-tabs>
-
+          <v-divider></v-divider>
           <v-window v-model="tab">
             <v-skeleton-loader
               :loading="loading"
@@ -52,13 +52,18 @@
                                   :key="permission.id"
                                   v-if="browse_column(permission.key, tabData.name)"
                                 >
-                                  <v-checkbox
-                                    :checked="role_permission(permission.key)"
-                                    :value="role_permission(permission.key)"
-                                    hide-details
-                                    density="compact"
-                                    color="#117dad"
-                                  ></v-checkbox>
+                                  <v-icon
+                                    size="24"
+                                    @click="addPermission(permission, true)"
+                                    v-if="!checkpermission(permission.key)"
+                                    >mdi-checkbox-blank-outline</v-icon
+                                  >
+                                  <v-icon
+                                    size="24"
+                                    @click="addPermission(permission, false)"
+                                    v-else
+                                    >mdi-checkbox-outline</v-icon
+                                  >
                                 </td>
                               </template>
                               <template v-for="permission in tabData.items">
@@ -67,7 +72,7 @@
                                   v-if="browse_column(permission.key, tabData.name)"
                                 >
                                   <v-btn
-                                    @click="$emit('submodule', permission)"
+                                    @click="openSubModule(permission)"
                                     size="small"
                                     density="compact"
                                     color="#6984FF"
@@ -86,13 +91,36 @@
                                   :key="keyindex"
                                   v-if="other_column(permission.key, tabData.name)"
                                 >
-                                  <v-checkbox
-                                    :value="checkpermission(permission.id)"
-                                    v-model="permission.id"
-                                    hide-details
-                                    density="compact"
-                                    color="#117dad"
-                                  ></v-checkbox>
+                                  <v-icon
+                                    size="24"
+                                    @click="addPermission(permission, true)"
+                                    v-if="
+                                      !checkpermission(permission.key) &&
+                                      check_can_select_permission(
+                                        permission.key,
+                                        tabData.name
+                                      )
+                                    "
+                                    >mdi-checkbox-blank-outline</v-icon
+                                  >
+                                  <v-icon
+                                    size="24"
+                                    color="grey"
+                                    v-else-if="
+                                      !checkpermission(permission.key) &&
+                                      !check_can_select_permission(
+                                        permission.key,
+                                        tabData.name
+                                      )
+                                    "
+                                    >mdi-checkbox-blank-outline</v-icon
+                                  >
+                                  <v-icon
+                                    size="24"
+                                    @click="addPermission(permission, false)"
+                                    v-else
+                                    >mdi-checkbox-outline</v-icon
+                                  >
                                 </td>
                               </template>
                             </tr>
@@ -113,11 +141,19 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+    <v-dialog v-model="subdialog" persistent hide-overlay width="950" scrollable>
+      <sub-module
+        :subModuleData="subModuleData"
+        :isrefresh="isrefresh"
+        @getsubmodule_permisson="getsubmodule_permisson"
+        @close-dialog="closeSubModule"
+      ></sub-module>
+    </v-dialog>
   </div>
 </template>
 
 <script setup>
-import nuxtStorage from "nuxt-storage";
+import SubModule from "./SubModule.vue";
 import { reactive, computed } from "vue";
 definePageMeta({
   layout: "root-layout",
@@ -130,21 +166,17 @@ const loading = ref(true);
 const dialog = ref(true);
 const router = useRouter();
 const subdialog = ref(false);
+const isrefresh = ref(false);
 const tab = ref(null);
+const selectedGroup = ref("");
 
 const modules = ref([]);
 let moduleList = ref([]);
+let subModuleData = ref([]);
+const subModuleList = ref([]);
 let roleList = ref([]);
 const config = useRuntimeConfig();
 const token = useCookie("token");
-
-const openSubModule = () => {
-  subdialog.value = true;
-};
-
-const closeSubModule = () => {
-  subdialog.value = false;
-};
 
 const browse_column = (item, table) => {
   if (item.split("_")[0] == "browse" && table != null) {
@@ -157,13 +189,6 @@ const other_column = (item, table) => {
     return true;
   }
   return false;
-};
-const role_permission = (val) => {
-  let userdetails = JSON.parse(nuxtStorage.localStorage.getData("user_details"));
-  // return true;
-  if (userdetails) {
-    return userdetails.role.permissions.some((permission) => permission.key == val);
-  }
 };
 
 const check_permission = async () => {
@@ -182,9 +207,11 @@ const check_permission = async () => {
     loading.value = false;
     modules.value = data.value.permission;
     roleList.value = data.value.role.permissions;
+    selectedGroup.value = " (" + data.value.role.display_name + ")";
     tab.value = 0;
   }
 };
+
 // Usage:
 onMounted(async () => {
   check_permission();
@@ -240,18 +267,66 @@ onMounted(async () => {
       groups: group_permission[name],
     }));
   });
-  moduleList = moduleitems;
 
+  moduleList = moduleitems;
   panel.value = [0, 1, 2];
+
 });
 onUpdated(() => {
   panel.value = [0, 1, 2];
 });
 
-const checkpermission = (id) => {
-  if (roleList.value.some((permission) => permission.id == id)) {
-    return id;
+const checkpermission = (key) => {
+  if (key) {
+    if (roleList.value.some((permission) => permission.key == key)) {
+      return key;
+    }
   }
+};
+
+const check_can_select_permission = (key, table) => {
+  let browse = "browse_" + key.split("_")[1];
+  if (roleList.value.some((permission) => permission.key == browse)) {
+    return true;
+  }
+};
+
+const addPermission = async (permission, type) => {
+  permission.type = type;
+  permission.role_id = route.params.id;
+  const { data } = await useFetch(`${config.public.apiBase}` + `/add-permission`, {
+    method: "post",
+    headers: {
+      Authorization: `Bearer ${token.value}`,
+      "Content-Type": "application/json",
+    },
+    body: { payload: permission },
+  });
+  if (data.value) {
+    check_permission();
+  }
+};
+
+const openSubModule = async (permission) => {
+  subdialog.value = true;
+  isrefresh.value = true;
+  getsubmodule_permisson( permission.module_id);
+};
+const getsubmodule_permisson = async(id)=>{
+  const response = await fetch(
+    `${config.public.apiBase}` + `/get-permissions?id=` + id,
+    {
+      headers: {
+        Authorization: `Bearer ${token.value}`,
+      },
+    }
+  );
+  const data = await response.json();
+  subModuleData.value = data.data;
+  isrefresh.value = false;
+}
+const closeSubModule = () => {
+  subdialog.value = false;
 };
 </script>
 
