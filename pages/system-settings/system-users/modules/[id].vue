@@ -6,114 +6,110 @@
         <v-divider></v-divider>
         <v-card-text>
           <v-tabs v-model="tab" center-active>
-            <v-tab v-for="tab in moduleList" :key="tab.id">
-              {{ tab.name }}
+            <v-tab v-for="(tabs, index) in moduleList" :value="index" :key="index">
+              {{ tabs.name }}
             </v-tab>
           </v-tabs>
 
           <v-window v-model="tab">
-            <v-window-item v-for="module in moduleList" :key="module.name">
-              <v-expansion-panels variant="accordion" multiple>
-                <v-expansion-panel v-for="group in module.groups" :key="group.name">
-                  <v-expansion-panel-title>{{ group.name }}</v-expansion-panel-title>
-                  <v-expansion-panel-text>
-                    <v-table density="compact">
-                      <thead>
-                        <tr>
-                          <th width="4">Select</th>
-                          <th width="4"></th>
-                          <th width="420">Module</th>
-                          <th>Read</th>
-                          <th>Edit</th>
-                          <th>Add</th>
-                          <th>Print</th>
-                          <th>Post</th>
-                          <th>Approved</th>
-                          <th>Void</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <template v-for="(tabData,i) in group.modules" :key="i">
-                          <tr >
-                            <td>
-                              <v-checkbox
-                                hide-details
-                                density="compact"
-                                color="#117dad"
-                              ></v-checkbox>
-                            </td>
-                            <td>
-                              <v-btn
-                                size="small"
-                                density="compact"
-                                color="#6984FF"
-                                icon="mdi-link-circle-outline"
-                              ></v-btn>
-                            </td>
-                            <td>{{ tabData.name }}</td>
-                            <td>
-                              <v-checkbox
-                                hide-details
-                                density="compact"
-                                color="#117dad"
-                              ></v-checkbox>
-                            </td>
-                            <td>
-                              <v-checkbox
-                                hide-details
-                                density="compact"
-                                color="#117dad"
-                              ></v-checkbox>
-                            </td>
-                            <td>
-                              <v-checkbox
-                                hide-details
-                                density="compact"
-                                color="#117dad"
-                              ></v-checkbox>
-                            </td>
-                            <td>
-                              <v-checkbox
-                                hide-details
-                                density="compact"
-                                color="#117dad"
-                              ></v-checkbox>
-                            </td>
-                            <td>
-                              <v-checkbox
-                                hide-details
-                                density="compact"
-                                color="#117dad"
-                              ></v-checkbox>
-                            </td>
-                            <td>
-                              <v-checkbox
-                                hide-details
-                                density="compact"
-                                color="#117dad"
-                              ></v-checkbox>
-                            </td>
-                            <td>
-                              <v-checkbox
-                                hide-details
-                                density="compact"
-                                color="#117dad"
-                              ></v-checkbox>
-                            </td>
+            <v-skeleton-loader
+              :loading="loading"
+              v-if="loading"
+              type="list-item-two-line"
+            >
+              <v-list-item lines="two" rounded></v-list-item>
+            </v-skeleton-loader>
+            <template v-for="(module, index) in moduleList" :key="module.name">
+              <v-window-item :value="index" class="pa-1">
+                <v-expansion-panels v-model="panel" variant="accordion" multiple>
+                  <v-expansion-panel
+                    class="mb-1"
+                    v-for="group in module.groups"
+                    :key="group.name"
+                  >
+                    <v-expansion-panel-title>{{ group.name }}</v-expansion-panel-title>
+                    <v-expansion-panel-text>
+                      <v-table density="compact">
+                        <thead>
+                          <tr>
+                            <th width="4">Select</th>
+                            <th width="4"></th>
+                            <th width="420">Module</th>
+                            <th>Read</th>
+                            <th>Edit</th>
+                            <th>Add</th>
+                            <th>Print</th>
+                            <th>Post</th>
+                            <th>Approved</th>
+                            <th>Void</th>
                           </tr>
-                        </template>
-                      </tbody>
-                    </v-table>
-                  </v-expansion-panel-text>
-                </v-expansion-panel>
-              </v-expansion-panels>
-            </v-window-item>
+                        </thead>
+                        <tbody>
+                          <template v-for="(tabData, i) in group.modules" :key="i">
+                            <tr>
+                              <template v-for="permission in tabData.items">
+                                <td
+                                  :key="permission.id"
+                                  v-if="browse_column(permission.key, tabData.name)"
+                                >
+                                  <v-checkbox
+                                    :checked="role_permission(permission.key)"
+                                    :value="role_permission(permission.key)"
+                                    hide-details
+                                    density="compact"
+                                    color="#117dad"
+                                  ></v-checkbox>
+                                </td>
+                              </template>
+                              <template v-for="permission in tabData.items">
+                                <td
+                                  :key="permission.key"
+                                  v-if="browse_column(permission.key, tabData.name)"
+                                >
+                                  <v-btn
+                                    @click="$emit('submodule', permission)"
+                                    size="small"
+                                    density="compact"
+                                    color="#6984FF"
+                                    icon="mdi-link-circle-outline"
+                                  >
+                                  </v-btn>
+                                </td>
+                              </template>
+                              <td width="280">
+                                {{
+                                  tabData.name != null ? tabData.name.toUpperCase() : ""
+                                }}
+                              </td>
+                              <template v-for="(permission, keyindex) in tabData.items">
+                                <td
+                                  :key="keyindex"
+                                  v-if="other_column(permission.key, tabData.name)"
+                                >
+                                  <v-checkbox
+                                    :value="checkpermission(permission.id)"
+                                    v-model="permission.id"
+                                    hide-details
+                                    density="compact"
+                                    color="#117dad"
+                                  ></v-checkbox>
+                                </td>
+                              </template>
+                            </tr>
+                          </template>
+                        </tbody>
+                      </v-table>
+                    </v-expansion-panel-text>
+                  </v-expansion-panel>
+                </v-expansion-panels>
+              </v-window-item>
+            </template>
           </v-window>
         </v-card-text>
         <v-divider></v-divider>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn @click="router.back()">Close</v-btn>
+          <v-btn to="/system-settings/system-users">Close</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -121,107 +117,26 @@
 </template>
 
 <script setup>
+import nuxtStorage from "nuxt-storage";
 import { reactive, computed } from "vue";
 definePageMeta({
   layout: "root-layout",
 });
 const route = useRoute();
-
-// When accessing /posts/1, route.params.id will be 1
-console.log(route.params.id);
-const dialog = ref(true);
-
-const router = useRouter();
 const panel = ref([0]);
+const show = ref(false);
+// When accessing /posts/1, route.params.id will be 1
+const loading = ref(true);
+const dialog = ref(true);
+const router = useRouter();
 const subdialog = ref(false);
-let tab = ref("HIS");
-const tabs = ref([
-  {
-    id: 1,
-    name: "HIS",
-    data: [
-      {
-        select: true,
-        module: "Module 1",
-        read: false,
-        edit: false,
-        add: true,
-        print: false,
-        post: true,
-        approved: true,
-        void: false,
-      },
-    ],
-  },
-  {
-    id: 2,
-    name: "BUILD_FILE",
-    data: [
-      {
-        select: true,
-        module: "Module 2",
-        read: true,
-        edit: false,
-        add: true,
-        print: false,
-        post: true,
-        approved: false,
-        void: false,
-      },
-    ],
-  },
-  {
-    id: 3,
-    name: "MMIS",
-    data: [
-      {
-        select: true,
-        module: "Module 3",
-        read: true,
-        edit: true,
-        add: true,
-        print: false,
-        post: true,
-        approved: true,
-        void: false,
-      },
-    ],
-  },
-  {
-    id: 4,
-    name: "POS",
-    data: [
-      {
-        select: true,
-        module: "Module 4",
-        read: true,
-        edit: false,
-        add: true,
-        print: false,
-        post: true,
-        approved: true,
-        void: true,
-      },
-    ],
-  },
-  {
-    id: 5,
-    name: "ORSCHEDULES",
-    data: [
-      {
-        select: true,
-        module: "Module 5",
-        read: true,
-        edit: true,
-        add: true,
-        print: false,
-        post: true,
-        approved: true,
-        void: false,
-      },
-    ],
-  },
-]);
+const tab = ref(null);
+
+const modules = ref([]);
+let moduleList = ref([]);
+let roleList = ref([]);
+const config = useRuntimeConfig();
+const token = useCookie("token");
 
 const openSubModule = () => {
   subdialog.value = true;
@@ -230,13 +145,30 @@ const openSubModule = () => {
 const closeSubModule = () => {
   subdialog.value = false;
 };
-const modules = ref([]);
-let moduleList = ref([]);
-const config = useRuntimeConfig();
-const token = useCookie("token");
+
+const browse_column = (item, table) => {
+  if (item.split("_")[0] == "browse" && table != null) {
+    return true;
+  }
+  return false;
+};
+const other_column = (item, table) => {
+  if (item.split("_")[0] != "browse" && table != null) {
+    return true;
+  }
+  return false;
+};
+const role_permission = (val) => {
+  let userdetails = JSON.parse(nuxtStorage.localStorage.getData("user_details"));
+  // return true;
+  if (userdetails) {
+    return userdetails.role.permissions.some((permission) => permission.key == val);
+  }
+};
 
 const check_permission = async () => {
   console.log(route.params);
+  loading.value = true;
   const { data } = await useFetch(
     `${config.public.apiBase}` + `/get-role-permission?role_id=` + route.params.id,
     {
@@ -247,12 +179,13 @@ const check_permission = async () => {
     }
   );
   if (data.value) {
+    loading.value = false;
     modules.value = data.value.permission;
+    roleList.value = data.value.role.permissions;
+    tab.value = 0;
   }
 };
-
 // Usage:
-
 onMounted(async () => {
   check_permission();
   const moduleitems = computed(() => {
@@ -308,8 +241,18 @@ onMounted(async () => {
     }));
   });
   moduleList = moduleitems;
-  console.log(moduleitems);
+
+  panel.value = [0, 1, 2];
 });
+onUpdated(() => {
+  panel.value = [0, 1, 2];
+});
+
+const checkpermission = (id) => {
+  if (roleList.value.some((permission) => permission.id == id)) {
+    return id;
+  }
+};
 </script>
 
 <style scoped></style>
