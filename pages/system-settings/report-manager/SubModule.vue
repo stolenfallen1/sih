@@ -100,10 +100,6 @@
 </template>
 
 <script setup>
-definePageMeta({
-    layout: "root-layout",
-});
-
 const emits = defineEmits();
 
 let tab = ref("HIS");
