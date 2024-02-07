@@ -1,244 +1,123 @@
 <template>
-    <v-dialog v-model="dialog" persistent hide-overlay width="800" scrollable>
-        <v-card>
-            <v-card-title> System User Group Modules </v-card-title>
-            <v-divider></v-divider>
-            <v-card-text>
-                <v-tabs v-model="tab" center-active>
-                    <v-tab v-for="tab in tabs" :key="tab.id">
-                        {{ tab.name }}
-                    </v-tab>
-                </v-tabs>
-                <v-window v-model="tab">
-                    <v-window-item v-for="tab in tabs" :key="tab.id">
-                        <v-table density="compact">
-                            <thead>
-                                <tr>
-                                    <th width="4">Select</th>
-                                    <th width="4"></th>
-                                    <th width="320">Module</th>
-                                    <th>Read</th>
-                                    <th>Edit</th>
-                                    <th>Add</th>
-                                    <th>Print</th>
-                                    <th>Post</th>
-                                    <th>Approved</th>
-                                    <th>Void</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <template v-for="tabData in tabs">
-                                    <tr
-                                        v-for="item in tabData.data"
-                                        :key="tabData.id"
-                                    >
-                                        <td>
-                                            <v-checkbox
-                                                v-model="item.select"
-                                                hide-details
-                                                density="compact"
-                                                color="#117dad"
-                                            ></v-checkbox>
-                                        </td>
-                                        <td>
-                                            <v-btn
-                                                size="small"
-                                                density="compact"
-                                                color="#6984FF"
-                                                icon="mdi-link-circle-outline"
-                                                @click="openSubModule"
-                                            ></v-btn>
-                                        </td>
-                                        <td>{{ item.module }}</td>
-                                        <td>
-                                            <v-checkbox
-                                                v-model="item.read"
-                                                hide-details
-                                                density="compact"
-                                                color="#117dad"
-                                            ></v-checkbox>
-                                        </td>
-                                        <td>
-                                            <v-checkbox
-                                                v-model="item.edit"
-                                                hide-details
-                                                density="compact"
-                                                color="#117dad"
-                                            ></v-checkbox>
-                                        </td>
-                                        <td>
-                                            <v-checkbox
-                                                v-model="item.add"
-                                                hide-details
-                                                density="compact"
-                                                color="#117dad"
-                                            ></v-checkbox>
-                                        </td>
-                                        <td>
-                                            <v-checkbox
-                                                v-model="item.print"
-                                                hide-details
-                                                density="compact"
-                                                color="#117dad"
-                                            ></v-checkbox>
-                                        </td>
-                                        <td>
-                                            <v-checkbox
-                                                v-model="item.post"
-                                                hide-details
-                                                density="compact"
-                                                color="#117dad"
-                                            ></v-checkbox>
-                                        </td>
-                                        <td>
-                                            <v-checkbox
-                                                v-model="item.approved"
-                                                hide-details
-                                                density="compact"
-                                                color="#117dad"
-                                            ></v-checkbox>
-                                        </td>
-                                        <td>
-                                            <v-checkbox
-                                                v-model="item.void"
-                                                hide-details
-                                                density="compact"
-                                                color="#117dad"
-                                            ></v-checkbox>
-                                        </td>
-                                    </tr>
-                                </template>
-                            </tbody>
-                        </v-table>
-                    </v-window-item>
-                </v-window>
-            </v-card-text>
-            <v-divider></v-divider>
-            <v-card-actions>
-                <v-spacer></v-spacer>
-                <v-btn @click="router.back()">Close</v-btn>
-            </v-card-actions>
-        </v-card>
-    </v-dialog>
-    <v-dialog
-        v-model="subdialog"
-        persistent
-        hide-overlay
-        width="800"
-        scrollable
-    >
-        <sub-module @close-dialog="closeSubModule"></sub-module>
-    </v-dialog>
+    <v-card>
+        <v-card-title>Report Manager</v-card-title>
+        <v-card-text>
+            <v-container>
+                <v-row>
+                    <v-col v-for="(report, reportIndex) in reports" :key="reportIndex" cols="12" sm="6" md="12">
+                        <v-divider></v-divider>
+                        <br/>
+                        <v-expansion-panels v-model="panel" variant="accordion" multiple>
+                            <v-expansion-panel v-for="(settings, settingsIndex) in report.settings" :key="settingsIndex" :title="settings.settingsPanel">
+                                <v-expansion-panel-text>
+                                    <v-table density="compact">
+                                        <thead>
+                                            <tr>
+                                                <th width="4"></th>
+                                                <th width="4"></th>
+                                                <th>Report Description</th>
+                                                <th>Remarks</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <template v-for="(reportItem, reportItemIndex) in settings.report" :key="reportItemIndex">
+                                                <tr>
+                                                    <template v-for="(value, key) in reportItem" :key="key">
+                                                        <td v-if="key === 'printIcon'"><v-btn density="compact"><v-icon color="green">{{ value }}</v-icon></v-btn></td>
+                                                    </template>
+                                                    <template v-for="(value, key) in reportItem" :key="key">
+                                                        <td v-if="key === 'toolIcon'"><v-btn density="compact"><v-icon color="orange">{{ value }}</v-icon></v-btn></td>
+                                                    </template>
+                                                    <!-- For the Report Description -->
+                                                    <template v-for="(value, key) in reportItem" :key="key">
+                                                        <td v-if="key === 'description'">{{ value }}</td>
+                                                    </template>
+                                                    <!-- For the Remarks -->
+                                                    <template v-for="(value, key) in reportItem" :key="key">
+                                                        <td v-if="key === 'remarks'">{{ value }}</td>
+                                                    </template>
+                                                </tr>
+                                            </template>
+                                        </tbody>
+                                    </v-table>
+                                </v-expansion-panel-text>
+                            </v-expansion-panel>
+                        </v-expansion-panels>
+                    </v-col>
+                </v-row>
+            </v-container>
+        </v-card-text>
+        <v-divider></v-divider>
+        <!-- Buttons here if ever needed -->
+        <!-- <v-card-actions>
+        </v-card-actions> -->
+    </v-card>
 </template>
 
 <script setup>
-import SubModule from "./SubModule.vue";
-
 definePageMeta({
     layout: "root-layout",
 });
 
-const router = useRouter();
+const panel = ref([]);
+const reports = [
+    {
+        settings: [
+            {
+                settingsPanel: "Group: Admissions, Emergencies and Outpatients",
+                report: [
+                    { printIcon: "mdi-printer", toolIcon: "mdi-tools", description:  "Reports Settings 1A", remarks: "TEST REMARKS"},
+                    { printIcon: "mdi-printer", toolIcon: "mdi-tools", description:  "Reports Settings 1B", remarks: "TEST REMARKS"},
+                ],
+            },
+            {
+                settingsPanel: "Group: Cash Reciepts and Collections",
+                report: [
+                    { printIcon: "mdi-printer", toolIcon: "mdi-tools", description:  "Reports Settings 2", remarks: "TEST REMARKS"},
+                ],
+            },
+            {
+                settingsPanel: "Group: Customized Reports",
+                report: [
+                    { printIcon: "mdi-printer", toolIcon: "mdi-tools", description:  "Reports Settings 3", remarks: "TEST REMARKS"},
+                ],
+            },
+            {
+                settingsPanel: "Group: Government Reports",
+                report: [
+                    { printIcon: "mdi-printer", toolIcon: "mdi-tools", description:  "Reports Settings 4A", remarks: "TEST REMARKS"},
+                    { printIcon: "mdi-printer", toolIcon: "mdi-tools", description:  "Reports Settings 4B", remarks: "TEST REMARKS"},
+                ],
+            },
+            {
+                settingsPanel: "Group: Master File and Templates",
+                report: [
+                    { printIcon: "mdi-printer", toolIcon: "mdi-tools", description:  "Reports Settings 5", remarks: "TEST REMARKS"},
+                ],
+            },
+            {
+                settingsPanel: "Group: Requisitions, Charges and Billing Statements",
+                report: [
+                    { printIcon: "mdi-printer", toolIcon: "mdi-tools", description:  "Reports Settings 6", remarks: "TEST REMARKS"},
+                ],
+            },
+            {
+                settingsPanel: "Group: Others",
+                report: [
+                    { printIcon: "mdi-printer", toolIcon: "mdi-tools", description:  "Reports Settings 7A", remarks: "TEST REMARKS"},
+                    { printIcon: "mdi-printer", toolIcon: "mdi-tools", description:  "Reports Settings 7B", remarks: "TEST REMARKS"},
+                ],
+            },
+        ],
+    },
+];
 
-const panel = ref([0]);
-const dialog = ref(true);
-const subdialog = ref(false);
-let tab = ref("HIS");
-const tabs = ref([
-    {
-        id: 1,
-        name: "HIS",
-        data: [
-            {
-                select: true,
-                module: "Module 1",
-                read: false,
-                edit: false,
-                add: true,
-                print: false,
-                post: true,
-                approved: true,
-                void: false,
-            },
-        ],
-    },
-    {
-        id: 2,
-        name: "BUILD_FILE",
-        data: [
-            {
-                select: true,
-                module: "Module 2",
-                read: true,
-                edit: false,
-                add: true,
-                print: false,
-                post: true,
-                approved: false,
-                void: false,
-            },
-        ],
-    },
-    {
-        id: 3,
-        name: "MMIS",
-        data: [
-            {
-                select: true,
-                module: "Module 3",
-                read: true,
-                edit: true,
-                add: true,
-                print: false,
-                post: true,
-                approved: true,
-                void: false,
-            },
-        ],
-    },
-    {
-        id: 4,
-        name: "POS",
-        data: [
-            {
-                select: true,
-                module: "Module 4",
-                read: true,
-                edit: false,
-                add: true,
-                print: false,
-                post: true,
-                approved: true,
-                void: true,
-            },
-        ],
-    },
-    {
-        id: 5,
-        name: "ORSCHEDULES",
-        data: [
-            {
-                select: true,
-                module: "Module 5",
-                read: true,
-                edit: true,
-                add: true,
-                print: false,
-                post: true,
-                approved: true,
-                void: false,
-            },
-        ],
-    },
-]);
-
-const openSubModule = () => {
-    subdialog.value = true;
-};
-
-const closeSubModule = () => {
-    subdialog.value = false;
-};
+onMounted(() => {
+    panel.value = [0, 1, 2, 3, 4, 5, 6];
+})
+onUpdated(() => {
+    panel.value = [0, 1, 2, 3, 4, 5, 6];
+})
 </script>
 
 <style scoped></style>
