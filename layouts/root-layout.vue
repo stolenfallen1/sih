@@ -141,6 +141,8 @@
         <NuxtPage />
       </v-container>
     </v-main>
+
+    <Snackbar :show="showWarning" color="red" text="Please select a record first" />
   </v-app>
 </template>
 
@@ -164,6 +166,7 @@ const openedGroups = ref(["group1"]);
 const subcomponents = ref([]);
 const token = useCookie("token");
 const rightSidebarDisplay = ref(false);
+const showWarning = ref(false);
 
 // Current time state and update function
 const currentTime = ref(new Date().toLocaleTimeString());
@@ -185,6 +188,11 @@ onMounted(() => {
 const computeTo = (path, id) => {
   if (id) {
     return router.push({ path: `${path}/${id}` });
+  } else if(id.value == "" || id.value == null) {
+    showWarning.value = true;
+    setTimeout(() => {
+      showWarning.value = false;
+    }, 1000);
   }
 };
 const displayRightOptions = (item) => {

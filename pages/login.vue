@@ -43,7 +43,7 @@
                 </v-btn>
 
                 <Snackbar :show="showSuccessSnackbar" text="Login successful!" />
-                <Snackbar :color="snackbarError" :show="showErrorSnackbar" text="Login failed." />
+                <Snackbar :show="showErrorSnackbar" color="red" text="Login failed." />
             </v-form>
         </v-card>
     </div>
@@ -64,7 +64,6 @@ const showPassword = ref(false);
 const isLoading = ref(false);
 const showSuccessSnackbar = ref(false); 
 const showErrorSnackbar = ref(false); 
-const snackbarError = ref("red");
 
 const login = async () => {
     try {
@@ -74,12 +73,17 @@ const login = async () => {
             isLoading.value = false;
             router.push({ path: "/dashboard" });
             showSuccessSnackbar.value = true;
+            setTimeout(() => {
+                showSuccessSnackbar.value = false;
+            }, 1000);
         } else {
             showErrorSnackbar.value = true;
+            setTimeout(() => {
+                showErrorSnackbar.value = false;
+            }, 1000);
         }
     } catch(error) {
         console.error(error);
-        showErrorSnackbar.value = true;
     } finally {
         isLoading.value = false;
     }
