@@ -144,8 +144,10 @@
     <v-dialog v-model="subdialog" persistent hide-overlay width="950" scrollable>
       <sub-module
         :subModuleData="subModuleData"
+        :roleList="roleList"
         :isrefresh="isrefresh"
-        @getsubmodule_permisson="getsubmodule_permisson"
+        :submoduleTitle="submoduleTitle"
+        @getsubmodule_permisson="check_permission"
         @close-dialog="closeSubModule"
       ></sub-module>
     </v-dialog>
@@ -169,11 +171,11 @@ const subdialog = ref(false);
 const isrefresh = ref(false);
 const tab = ref(null);
 const selectedGroup = ref("");
+const submoduleTitle = ref('');
 
 const modules = ref([]);
 let moduleList = ref([]);
 let subModuleData = ref([]);
-const subModuleList = ref([]);
 let roleList = ref([]);
 const config = useRuntimeConfig();
 const token = useCookie("token");
@@ -310,7 +312,8 @@ const addPermission = async (permission, type) => {
 const openSubModule = async (permission) => {
   subdialog.value = true;
   isrefresh.value = true;
-  getsubmodule_permisson( permission.module_id);
+  submoduleTitle.value = permission.module;
+  getsubmodule_permisson(permission.module_id);
 };
 const getsubmodule_permisson = async(id)=>{
   const response = await fetch(

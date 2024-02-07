@@ -137,7 +137,8 @@ const handleActionClick = (action) => {
     emits(`action-${action}`);
 };
 
-const handleTabClick = (tabValue) => {
+const handleTabClick = (tabValue) => {  
+    selectedRows.value = [];
     emits("tab-change", tabValue);
 };
 

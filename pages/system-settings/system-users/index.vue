@@ -3,8 +3,8 @@
     <v-card-actions>
       <v-spacer></v-spacer>
       <v-btn
-        @click="ViewUserDetails"
-        :disabled="isSelectedUser ? false : true"
+        @click="handleView"
+        :disabled="isSelectedUser"
         prepend-icon="mdi-eye-outline"
         width="100"
         color="primary"
@@ -13,7 +13,7 @@
         View
       </v-btn>
       <v-btn
-        @click="openAddRecordDialog"
+        @click="handleNew"
         :disabled="tableData.length == 0 ? false : true"
         prepend-icon="mdi-plus-outline"
         width="100"
@@ -23,9 +23,9 @@
         New
       </v-btn>
       <v-btn
-        @click="EditUserDetails"
+        @click="handleEdit"
         prepend-icon="mdi-pencil"
-        :disabled="isSelectedUser ? false : true"
+        :disabled="isSelectedUser"
         width="100"
         color="primary"
         class="bg-success text-white"
@@ -33,9 +33,10 @@
         Edit
       </v-btn>
       <v-btn
+        v-if="currentTab == 'one'"
         @click="DeactiveUser"
         prepend-icon="mdi-toggle-switch"
-        :disabled="isSelectedUser ? false : true"
+        :disabled="isSelectedUser"
         width="150"
         color="primary"
         class="bg-error text-white"
@@ -105,6 +106,9 @@
     @close="closeupdateConfirmation"
     @submit="updateUser"
   />
+
+
+  <ModuleForm :moduleDialog="moduleDialog" @close-dialog="closeModuleDialog" @submit-user-group="submitUserGroup" :usergroup_payload="usergroup_payload"></ModuleForm>
   <Snackbar :show="isShowSnackBar" :text="text"></Snackbar>
 </template>
 
@@ -115,6 +119,7 @@ import moment from "moment";
 moment.locale("en");
 import RegistrationForm from "~/components/system-settings/forms/system-users/RegistrationForm.vue";
 import ReusableTable from "~/components/system-settings/tables/ReusableTable.vue";
+import ModuleForm from './modules/ModuleForm.vue'
 const { id, isrefresh } = storeToRefs(useSubcomponentIDStore()); // state id for subcomponents ?id=123
 let userdetails = JSON.parse(nuxtStorage.localStorage.getData("user_details"));
 definePageMeta({
@@ -127,6 +132,7 @@ const token = useCookie("token");
 
 // Dialog refs ( form )
 const inputDialog = ref(false);
+const moduleDialog = ref(false);
 
 const payload = ref({
   type: "",
@@ -134,45 +140,8 @@ const payload = ref({
   user_passcode: "",
   systems:[]
 });
-const isSelectedUser = ref(false);
-const confirmationDialog = ref(false);
-const updateconfirmationDialog = ref(false);
-const error_msg = ref("");
-const isShowSnackBar = ref(false);
-const text = ref("");
 
-// States for opening and closing dialogs
-
-const closeDialog = () => {
-  inputDialog.value = false;
-};
-
-const openAddRecordDialog = () => {
-  payload.value = Object.assign({});
-  payload.value.type = "new";
-  inputDialog.value = true;
-};
-
-const DeactiveUser = () => {
-  if (id.value) {
-    payload.value.type = "edit";
-    inputDialog.value = true;
-  }
-};
-
-const EditUserDetails = () => {
-  if (id.value) {
-    payload.value.type = "edit";
-    inputDialog.value = true;
-  }
-};
-const ViewUserDetails = () => {
-  if (id.value) {
-    payload.value.type = "view";
-    inputDialog.value = true;
-  }
-};
-// Table refs and tab related
+//  Table refs and tab related
 const tableData = ref([]);
 const columns = ref([]);
 const totalItems = ref(0);
@@ -210,13 +179,72 @@ const tableTabs = ref([
     value: "two",
     endpoint: `${config.public.apiBase}` + `/roles`,
     columns: [
-      { title: "Group Code", key: "id", align: "start",  width: "20%", sortable: true },
+      { title: "Group Code", key: "id", align: "start",  width: "17%", sortable: true },
       { title: "Group Name", key: "display_name", align: "start" },
+      { title: "Status", key: "isactive", align: "start" },
     ],
   },
 ]);
 const pageTitle = ref(""); // This should be dynamic base on the current tab
 const params = ref("");
+
+
+const usergroup_payload = ref({});
+
+const isSelectedUser = ref(true);
+const confirmationDialog = ref(false);
+const updateconfirmationDialog = ref(false);
+const error_msg = ref("");
+const isShowSnackBar = ref(false);
+const text = ref("");
+
+// States for opening and closing dialogs
+
+const closeDialog = () => {
+  inputDialog.value = false;
+};
+
+
+const closeModuleDialog = () => {
+  moduleDialog.value = false;
+};
+
+const openAddRecordDialog = () => {
+  payload.value = Object.assign({});
+  payload.value.type = "new";
+  inputDialog.value = true;
+};
+
+const DeactiveUser = () => {
+  if (id.value) {
+    payload.value.type = "edit";
+    inputDialog.value = true;
+  }
+};
+
+const EditUserDetails = () => {
+  if (id.value) {
+    payload.value.type = "edit";
+    inputDialog.value = true;
+  }
+};
+
+
+
+const ViewUserDetails = () => {
+  if (id.value) {
+    payload.value.type = "view";
+    inputDialog.value = true;
+  }
+};
+
+const ViewUserGroups = () => {
+  if (id.value) {
+    moduleDialog.value = true;
+  }else{
+    moduleDialog.value = true;
+  }
+};
 
 // Fetch Data sample
 const fetchData = async (options = null, searchkeyword = null) => {
@@ -232,7 +260,7 @@ const fetchData = async (options = null, searchkeyword = null) => {
   // useCookie new hook in nuxt 3
 
   try {
-    if (options != null) return; // ge addan ra nko ani condition
+    // if ((options != null || options == null) && currentTab.value == 'two') return; // ge addan ra nko ani condition
     isLoading.value = true;
     const currentTabInfo = tableTabs.value.find((tab) => tab.value === currentTab.value);
     const response = await fetch(currentTabInfo?.endpoint + "?" + params.value || "", {
@@ -259,7 +287,40 @@ const updateServerItems = (newServerItems) => {
   tableData.value = newServerItems;
 };
 
+const handleNew = ()=>{
+ if(currentTab.value == 'one'){
+    openAddRecordDialog();
+  }else{
+    usergroup_payload.value = Object.assign({});
+    usergroup_payload.value.type = "new";
+    ViewUserGroups();
+  }
+}
+
+const handleView = ()=>{
+  if(currentTab.value == 'one'){
+    ViewUserDetails();
+  }else{
+    ViewUserGroups();
+  }
+} 
+
+const handleEdit = ()=>{
+  if(currentTab.value == 'one'){
+    usergroup_payload.value.type = "view";
+    EditUserDetails();
+  }else{
+    usergroup_payload.value.type = "edit";
+    ViewUserGroups();
+  }
+} 
+
+
 const handleTabChange = (tabValue) => {
+  id.value = '';
+  payload.value = Object.assign({});
+  usergroup_payload.value = Object.assign({});
+  isSelectedUser.value = true;
   currentTab.value = tabValue;
   columns.value = tableTabs.value[0].columns;
   if (tabValue == "two") {
@@ -280,10 +341,10 @@ const handleRefresh = () => {
 };
 
 const selectedUser = (item) => {
-  isSelectedUser.value = false;
+  isSelectedUser.value = true;
   isrefresh.value = false;
   id.value = ""; //clear state id for subcomponents ?id=''
-  if (item) {
+  if (item && currentTab.value == 'one') {
     item.birthdate = formatDate(item.birthdate);
     item.warehouse_id = parseInt(item.warehouse_id);
     item.position_id = item.position_id;
@@ -294,7 +355,15 @@ const selectedUser = (item) => {
     payload.value = Object.assign({}, item);
     id.value = item.id; //set state id for subcomponents ?id=item.id value
     isrefresh.value = true;
-    isSelectedUser.value = true;
+    isSelectedUser.value = false;
+  }
+  else if(item && currentTab.value == 'two'){
+      id.value = item.id;
+      item.isactive = item.isactive == 1 ? true : false;
+      usergroup_payload.value = Object.assign({}, item);
+      console.log(usergroup_payload);   
+      isrefresh.value = true;
+      isSelectedUser.value = false;
   }
 };
 
@@ -366,6 +435,32 @@ const updateUser = async (payload) => {
     }, 3000);
   }
 };
+
+const submitUserGroup = async (payload)=>{
+    let method = 'post';
+    let id = '';
+    if(payload.id){
+       method = 'PUT';
+       id = '/'+payload.id
+    }
+    const { data } = await useFetch(`${config.public.apiBase}` + `/roles`+id, {
+      method: method,
+      headers: {
+        Authorization: `Bearer ${token.value}`,
+        "Content-Type": "application/json",
+      },
+      body: { payload: payload },
+    });
+   
+    if (data.value) {
+      snackbar(data.value.msg);
+      closeModuleDialog();
+      currentTab.value = 'two';
+      fetchData(null, payload.name);
+    }
+}
+
+
 const snackbar = (value) =>{
     isShowSnackBar.value = true;
     text.value = value;
@@ -374,6 +469,7 @@ const snackbar = (value) =>{
       text.value = '';
     }, 3000);
 };
+
 // fetchData();
 handleTabChange(currentTab.value);
 onMounted(async () => {

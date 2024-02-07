@@ -8,7 +8,7 @@
           <v-tab value="one">General</v-tab>
           <v-tab value="two">Miscellaneous</v-tab>
         </v-tabs>
-      <v-divider></v-divider>
+        <v-divider></v-divider>
       </v-card-title>
       <v-card-text style="max-height: 450px" class="pa-1">
         <v-window v-model="tab" class="pa-0">
@@ -165,7 +165,7 @@
                     <v-row>
                       <v-col cols="12" align="center">
                         <v-card class="pa-1">
-                          <v-avatar  rounded="0" size="155">
+                          <v-avatar rounded="0" size="155">
                             <v-img
                               cover
                               width="100%"
@@ -277,16 +277,22 @@
                     <v-card-title>System Accessibility</v-card-title>
                     <v-card-text>
                       <v-row>
-                        <v-col cols="12" sm="6" md="6" v-for="item in systems" :key="item.id">
-                            <v-checkbox 
-                              hide-details
-                              v-model="system"
-                              @update:model-value="selectedsystem"
-                              :label="item.system_description"
-                              :value="item.id"
-                              density="compact"
-                              color="#117dad"
-                            ></v-checkbox>
+                        <v-col
+                          cols="12"
+                          sm="6"
+                          md="6"
+                          v-for="item in systems"
+                          :key="item.id"
+                        >
+                          <v-checkbox
+                            hide-details
+                            v-model="system"
+                            @update:model-value="selectedsystem"
+                            :label="item.system_description"
+                            :value="item.id"
+                            density="compact"
+                            color="#117dad"
+                          ></v-checkbox>
                         </v-col>
                       </v-row>
                     </v-card-text>
@@ -318,7 +324,7 @@
 import nuxtStorage from "nuxt-storage";
 const token = useCookie("token"); // useCookie new hook in nuxt 3
 const config = useRuntimeConfig();
-const emits = defineEmits(["register-user", "update-user","close-dialog"]);
+const emits = defineEmits(["register-user", "update-user", "close-dialog"]);
 const props = defineProps({
   payload: {
     type: Object,
@@ -328,7 +334,7 @@ const props = defineProps({
 const { payload } = props;
 const form = ref(null);
 const system = ref([]);
-const image = ref('');
+const image = ref("");
 const imageUrl = ref("");
 const tab = ref(null);
 const isdepartmentLoading = ref(false);
@@ -342,20 +348,19 @@ const mmisAccessAdmin = ref(false);
 const posAccessAdmin = ref(false);
 const fmsAccessAdmin = ref(false);
 const checkUncheckAll = () => {
-
   let systemIds = systems.map((system) => system.id); //get all system id
-  if(grantAdminAccess.value){
+  if (grantAdminAccess.value) {
     system.value = systemIds;
     grantAdminAccess.value = true;
     payload.system = systemIds;
-  }else{
+  } else {
     system.value = [];
     payload.system = [];
     grantAdminAccess.value = false;
   }
   console.log(grantAdminAccess.value);
 };
-const suffix = JSON.parse(nuxtStorage.localStorage.getData("suffix")) || [];;
+const suffix = JSON.parse(nuxtStorage.localStorage.getData("suffix")) || [];
 const position = JSON.parse(nuxtStorage.localStorage.getData("position")) || [];
 const branch = JSON.parse(nuxtStorage.localStorage.getData("branches")) || [];
 const usergroup = JSON.parse(nuxtStorage.localStorage.getData("roles")) || [];
@@ -366,13 +371,12 @@ const section = ref([
   { id: 3, name: "Section 3", value: 3 },
   { id: 4, name: "Section 4", value: 4 },
 ]);
-const systems = JSON.parse(nuxtStorage.localStorage.getData("systems")) || [];;
-const selectedsystem = ()=>{
-const systemIds = system.value.map((system) => system); 
-console.log(systemIds)
- payload.system = systemIds;
-
-}
+const systems = JSON.parse(nuxtStorage.localStorage.getData("systems")) || [];
+const selectedsystem = () => {
+  const systemIds = system.value.map((system) => system);
+  console.log(systemIds);
+  payload.system = systemIds;
+};
 const createImage = (file) => {
   if (!file || !(file instanceof Blob)) {
     console.error("Invalid file");
@@ -393,11 +397,11 @@ const onFileChange = (event) => {
   createImage(file);
 };
 
-const checkfile = ()=>{
-  if(image.value == ''){
+const checkfile = () => {
+  if (image.value == "") {
     imageUrl.value = "";
   }
-}
+};
 
 const closeDialog = () => {
   emits("close-dialog");
@@ -406,14 +410,12 @@ const closeDialog = () => {
 const handleBranch = async () => {
   department.value = [];
   isdepartmentLoading.value = true;
-  if(!payload.branch_id){
+  if (!payload.branch_id) {
     isdepartmentLoading.value = false;
     return;
-  };
+  }
   const response = await fetch(
-    `${config.public.apiBase}` +
-      `/get-branch-warehouse?branch_id=` +
-      payload.branch_id,
+    `${config.public.apiBase}` + `/get-branch-warehouse?branch_id=` + payload.branch_id,
     {
       headers: {
         Authorization: `Bearer ${token.value}`,
@@ -421,7 +423,7 @@ const handleBranch = async () => {
     }
   );
   const json = await response.json();
-  if(json){
+  if (json) {
     isdepartmentLoading.value = false;
     department.value = json.data || [];
   }
@@ -430,7 +432,7 @@ const handleBranch = async () => {
 const handleSubmit = async (payload) => {
   const { valid } = await form.value.validate();
   if (!valid) return;
- 
+
   if (payload.type == "new") {
     handleRegisterUser(payload);
   } else if (payload.type == "edit") {
@@ -445,19 +447,25 @@ const handleUpdateUser = (payload) => {
   emits("update-user", payload);
 };
 
-onUpdated(()=>{
-  const systemIds = payload.system_user_access.map((system) => parseInt(system.subsystem_id)); 
-  system.value = systemIds;
-  console.log(systemIds)
+onUpdated(() => {
+  if (payload.system_user_access) {
+    const systemIds = payload.system_user_access.map((system) =>
+      parseInt(system.subsystem_id)
+    );
+    system.value = systemIds;
+  }
+  tab.value = "one";
 });
 onMounted(async () => {
-  const systemIds = payload.system_user_access.map((system) => parseInt(system.subsystem_id)); 
-  system.value = systemIds;
-
-  console.log(systemIds)
-  handleBranch()
+  if (payload.system_user_access) {
+    const systemIds = payload.system_user_access.map((system) =>
+      parseInt(system.subsystem_id)
+    );
+    system.value = systemIds;
+  }
+  handleBranch();
+  tab.value = "one";
 });
-
 </script>
 
 <style scoped></style>

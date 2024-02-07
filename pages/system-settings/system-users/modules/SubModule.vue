@@ -1,6 +1,6 @@
 <template>
   <v-card>
-    <v-card-title> System User Group Sub Modules </v-card-title>
+    <v-card-title> System User Group Sub Modules {{ title }}</v-card-title>
     <v-divider></v-divider>
     <v-card-text style="height: 500px">
       <v-table density="compact">
@@ -17,7 +17,7 @@
             <th>Void</th>
           </tr>
         </thead>
-        <tbody v-if="isrefresh">
+        <tbody>
           <template v-for="(item, index) in list" :key="index">
             <tr>
               <template v-for="permission in item.items" :key="permission.id">
@@ -53,12 +53,13 @@
                   <v-icon
                     size="24"
                     color="grey"
-                    v-else-if="
-                      !checkpermission(permission.key) &&
-                      !check_can_select_permission(permission.key, item.module)
-                    "
+                    v-else-if="!checkpermission(permission.key) && !check_can_select_permission(permission.key, item.module)"
                     >mdi-checkbox-blank-outline</v-icon
                   >
+                  <v-icon
+                    size="24"
+                    color="grey"
+                    v-else-if="checkpermission(permission.key) && !check_can_select_permission(permission.key, item.module)">mdi-checkbox-blank-outline</v-icon>
                   <v-icon size="24" @click="addPermission(permission, false)" v-else
                     >mdi-checkbox-outline</v-icon
                   >
@@ -84,13 +85,21 @@ const token = useCookie("token");
 const emits = defineEmits("getsubmodule_permisson");
 const props = defineProps({
   subModuleData: {
-    type: Object,
-    default: () => {},
+    type: Array,
+    default: () => [],
+  },
+  roleList: {
+    type: Array,
+    default: () => [],
   },
   isrefresh: {
     type: Boolean,
     default: () => false,
   },
+  submoduleTitle:{
+    type: String,
+    default: () => '',
+  }
 });
 
 const closeDialog = () => {
@@ -98,34 +107,6 @@ const closeDialog = () => {
 };
 
 let { isrefresh } = props;
-
-const browse_column = (item, table) => {
-  if (item.split("_")[0] == "browse" && table != null) {
-    return true;
-  }
-  return false;
-};
-const other_column = (item, table) => {
-  if (item.split("_")[0] != "browse" && table != null) {
-    return true;
-  }
-  return false;
-};
-
-const checkpermission = (key) => {
-  if (key) {
-    if (props.subModuleData.some((permission) => permission.key == key)) {
-      return key;
-    }
-  }
-};
-
-const check_can_select_permission = (key, table) => {
-  let browse = "browse_" + key.split("_")[1];
-  if (props.subModuleData.some((permission) => permission.key == browse)) {
-    return true;
-  }
-};
 
 const addPermission = async (permission, type) => {
   permission.type = type;
@@ -138,12 +119,12 @@ const addPermission = async (permission, type) => {
     },
     body: { payload: permission },
   });
-  emits("getsubmodule_permisson",permission.module_id);
+  emits("getsubmodule_permisson", permission.module_id);
 };
-
-
+const title = computed(()=>{
+    return '('+props.submoduleTitle+')';
+})
 let list = ref([]);
-
 const submoduleitems = computed(() => {
   const group_permission = {};
   props.subModuleData.forEach((item) => {
@@ -163,10 +144,36 @@ const submoduleitems = computed(() => {
 });
 isrefresh = true;
 list = submoduleitems;
-setTimeout(() => {
-  isrefresh = false;
-}, 1000);
-console.log(list);
+
+const browse_column = (item, table) => {
+  if (item.split("_")[0] == "browse" && table != null) {
+    return true;
+  }
+  return false;
+};
+const other_column = (item, table) => {
+  if (item.split("_")[0] != "browse" && table != null) {
+    return true;
+  }
+  return false;
+};
+
+const checkpermission = (key) => {
+  if (key) {
+    if (props.roleList.some((permission) => permission.key == key)) {
+      return true;
+    }
+  }
+};
+
+const check_can_select_permission = (key, table) => {
+  let browse = "browse_" + key.split("_")[1];
+  if (props.roleList.some((permission) => permission.key == browse)) {
+    return true;
+  }
+};
+
+console.log(props.roleList);
 </script>
 
 <style scoped></style>
