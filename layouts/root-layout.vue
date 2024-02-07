@@ -52,7 +52,7 @@
             </v-list-item>
           </template>
           <v-list-group
-            :value="i"
+            :value="item.label"
             v-if="item.child.length > 0 && can_browse(item.rule)"
             :fluid="true"
             group
@@ -69,7 +69,7 @@
             </template>
             <template v-for="child in item.child" :key="child.label">
               <v-list-item
-                class="ml-4 mt-2"
+                class="ml-4 mt-1"
                 v-if="can_browse(child.rule)"
                 :title="child.label"
                 :value="child.label"
@@ -94,7 +94,6 @@
         </template>
       </v-list>
     </v-navigation-drawer>
-
     <!-- RIGHT SIDEBAR RENDER CONDITIONALLY -->
     <v-navigation-drawer
       location="right"
@@ -108,7 +107,6 @@
         :lines="false"
         density="compact"
         nav
-        class="pa-1"
         v-model:opened="openedGroups"
       >
         <v-list-group value="group1" :fluid="true" group>
@@ -116,7 +114,7 @@
             <v-list-item v-bind="props" :title="'Sub Components' + id"></v-list-item>
           </template>
           <v-list-item
-            class="mt-2"
+            class="mt-1"
             v-for="item in subcomponents"
             :key="item.label"
             :title="item.label"
@@ -133,8 +131,37 @@
           </v-list-item>
         </v-list-group>
       </v-list>
+        <v-list
+        rounded="lg"
+        :lines="false"
+        density="compact"
+        nav
+        class="pa-1"
+        v-model:opened="TemplateopenedGroups"
+      >
+        <v-list-group value="group1" :fluid="true" group>
+          <template v-slot:activator="{ props }">
+            <v-list-item v-bind="props" :title="'Table and Template' + id"></v-list-item>
+          </template>
+          <v-list-item
+            class="mt-2"
+            v-for="item in table_and_template"
+            :key="item.label"
+            :title="item.label"
+            :value="item.label"
+            @click="computeTo(item.path, id)"
+            density="compact"
+            :exact="true"
+            :slim="true"
+          >
+            <template v-slot:prepend>
+              <v-btn class="mr-2 pa-1" size="medium" color="#6984FF" :icon="item.icon">
+              </v-btn>
+            </template>
+          </v-list-item>
+        </v-list-group>
+      </v-list>
     </v-navigation-drawer>
-
     <!-- MAIN CONTENT -->
     <v-main>
       <v-container :fluid="true">
@@ -160,10 +187,12 @@ const { authenticated } = storeToRefs(useAuthStore()); // make authenticated sta
 const { id } = storeToRefs(useSubcomponentIDStore()); //state id for subcomponents ?id=123
 const { logUserOut } = useAuthStore();
 const items = navigation_items;
-const open = ref([]);
+const open = ref(["0","1","2","3"]);
 const drawer = ref(null);
 const openedGroups = ref(["group1"]);
+const TemplateopenedGroups = ref(["group1"]);
 const subcomponents = ref([]);
+const table_and_template = ref([]);
 const token = useCookie("token");
 const rightSidebarDisplay = ref(false);
 const showWarning = ref(false);
@@ -198,6 +227,7 @@ const computeTo = (path, id) => {
 const displayRightOptions = (item) => {
   subcomponents.value = [];
   subcomponents.value = item.subcomponents;
+  table_and_template.value = item.table_and_template;
 };
 
 const can_browse = (item) => {
