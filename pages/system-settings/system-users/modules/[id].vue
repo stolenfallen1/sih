@@ -72,6 +72,7 @@
                                   v-if="browse_column(permission.key, tabData.name)"
                                 >
                                   <v-btn
+                                    :disabled="check_can_select_permission(permission.key,tabData.name) == false ? true: false"
                                     @click="openSubModule(permission)"
                                     size="small"
                                     density="compact"
@@ -291,6 +292,7 @@ const check_can_select_permission = (key, table) => {
   if (roleList.value.some((permission) => permission.key == browse)) {
     return true;
   }
+  return false;
 };
 
 const addPermission = async (permission, type) => {
