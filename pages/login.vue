@@ -7,7 +7,7 @@
                 <v-text-field
                 class="input"
                 clearable
-                append-icon="mdi-account"
+                append-inner-icon="mdi-account"
                 type="text"
                 :rules="[(v) => !!v || 'Username is required']"
                 label="Username"
@@ -20,13 +20,13 @@
                 clearable
                 label="Password"
                 placeholder="Enter your password"
-                :append-icon="showPassword ? 'mdi-eye-off':'mdi-eye'"
+                :append-inner-icon="showPassword ? 'mdi-eye-off':'mdi-eye'"
                 name="password"
                 :rules="[(v) => !!v || 'Password is required']"
                 :type="showPassword ? 'text':'password'"
                 v-model="user.password"
                 @keypress.enter="login"
-                @click:append="showPassword = !showPassword"
+                @click:append-inner="showPassword = !showPassword"
                 ></v-text-field>
                 <br />
                 <v-btn
