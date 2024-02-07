@@ -3,7 +3,6 @@
         <h2 class="header">Hospital Information System</h2>
         <v-card class="card">
             <v-form>
-
                 <v-text-field
                 class="input"
                 clearable
@@ -14,7 +13,7 @@
                 placeholder="Enter your id as username"
                 v-model="user.idnumber"
                 ></v-text-field>   
-
+                
                 <v-text-field
                 class="input"
                 clearable
