@@ -34,13 +34,14 @@ export const useAuthStore = defineStore('auth', {
         this.authenticated = true; // set authenticated  state value to true
         this.passcode = data.value.user.passcode;
         const {fetchUserDetails} = useUserDetailsStore();
-        const {fetchBranch,fetchRoles,fetchPositions,fetchSuffix,fetchSystems} = useDropdownOptionStore();
+        const {fetchBranch,fetchRoles,fetchPositions,fetchSuffix,fetchSystems,fetchBuildings} = useDropdownOptionStore();
         await fetchUserDetails(token.value); 
         await fetchBranch(token.value);
         await fetchRoles(token.value);
         await fetchPositions(token.value);
         await fetchSuffix(token.value);
         await fetchSystems(token.value);
+        await fetchBuildings(token.value);
       }
     },
     logUserOut() {

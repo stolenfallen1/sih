@@ -1,44 +1,23 @@
 <template>
   <v-card class="mb-2" elevation="2">
-    <v-toolbar color="#FFF">
-      <v-btn icon>
-        <v-icon>mdi-refresh</v-icon>
-      </v-btn>
-      <span>|</span>
-      <v-toolbar-title>Rooms and Beds</v-toolbar-title>
-      <v-spacer></v-spacer>
-      <v-text-field
-        class="mt-5 mr-2"
-        label="Search"
-        rounded
-        density="compact"
-        variant="outlined"
-        prepend-inner-icon="mdi-magnify"
-      >
-      </v-text-field>
-    </v-toolbar>
-    <v-divider></v-divider>
-    <div style="width: 100vw; overflow-x: scroll">
-      <div style="width:120vw">
-        <v-data-table-server
-          density="compact"
-          :fixed-header="true"
-          v-model:items-per-page="itemsPerPage"
-          :headers="headers"
-          :items-length="totalItems"
-          :items="serverItems"
-          :loading="loading"
-          :search="search"
-          item-value="name"
-          height="65vh"
-          @update:options="loadItems"
-        ></v-data-table-server>
-      </div>
-    </div>
+    <v-data-table-server
+      density="compact"
+      :fixed-header="true"
+      v-model:items-per-page="itemsPerPage"
+      :headers="headers"
+      :items-length="totalItems"
+      :items="desserts"
+      :loading="loading"
+      :search="search"
+      item-value="name"
+      height="65vh"
+      @update:options="loadItems"
+    ></v-data-table-server>
   </v-card>
 </template>
 
 <script setup>
+import ReusableTable from "~/components/system-settings/tables/ReusableTable.vue";
 definePageMeta({
   layout: "root-layout",
 });
