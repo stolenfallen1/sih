@@ -7,6 +7,7 @@ export const useDropdownOptionStore = defineStore('dropdownoption',{
     positions:[],
     sections:[],
     systems:[],
+    buildings:[],
   }),
   actions: {
     async fetchBranch(token:any) {
@@ -86,5 +87,19 @@ export const useDropdownOptionStore = defineStore('dropdownoption',{
       }
     },
     
+    async fetchBuildings(token:any) {
+      // useFetch from nuxt 3
+      const config = useRuntimeConfig();
+      const { data}: any = await useFetch(`${config.public.apiBase}` + `/buildings`, {
+        method: 'GET',
+        headers: { 
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+        },
+      });
+      if (data.value) {
+         nuxtStorage.localStorage.setData('buildings', JSON.stringify(data.value), 24, 'h');
+      }
+    },
   },
 })

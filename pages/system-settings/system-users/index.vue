@@ -14,7 +14,7 @@
       </v-btn>
       <v-btn
         @click="handleNew"
-        :disabled="tableData.length == 0 ? false : true"
+        :disabled="tableData.length > 0 ? true : false"
         prepend-icon="mdi-plus-outline"
         width="100"
         color="primary"
@@ -73,19 +73,20 @@
     <!-- Custom templates for each column -->
     <template v-for="column in columns" v-slot:[`column-${column.key}`]="{ item }">
       <!-- customize rendering for each column here -->
-      <span v-if="column.key === 'role'">{{ item.role ? item.role.name : "" }}</span>
-      <span v-if="column.key === 'branch'">{{
+      <span v-if="column.key === 'role'" :key="column.key">{{
+        item.role ? item.role.name : ""
+      }}</span>
+      <span v-if="column.key === 'branch'" :key="column.key">{{
         item.branch ? item.branch.abbreviation : ""
       }}</span>
 
-      <span v-if="column.key === 'warehouse'">
+      <span v-if="column.key === 'warehouse'" :key="column.key">
         {{ item.warehouse ? item.warehouse.warehouse_description : "" }}</span
       >
-      <span v-if="column.key === 'birthdate'">
+      <span v-if="column.key === 'birthdate'" :key="column.key">
         {{ item.birthdate ? formatDate(item.birthdate) : "" }}</span
       >
-
-      <span v-if="column.key === 'isactive'">
+      <span v-if="column.key === 'isactive'" :key="column.key">
         {{ item.isactive == 1 ? "Active" : "In Active" }}</span
       >
 
@@ -107,8 +108,12 @@
     @submit="updateUser"
   />
 
-
-  <ModuleForm :moduleDialog="moduleDialog" @close-dialog="closeModuleDialog" @submit-user-group="submitUserGroup" :usergroup_payload="usergroup_payload"></ModuleForm>
+  <ModuleForm
+    :moduleDialog="moduleDialog"
+    @close-dialog="closeModuleDialog"
+    @submit-user-group="submitUserGroup"
+    :usergroup_payload="usergroup_payload"
+  ></ModuleForm>
   <Snackbar :show="isShowSnackBar" :text="text"></Snackbar>
 </template>
 
@@ -119,9 +124,10 @@ import moment from "moment";
 moment.locale("en");
 import RegistrationForm from "~/components/system-settings/forms/system-users/RegistrationForm.vue";
 import ReusableTable from "~/components/system-settings/tables/ReusableTable.vue";
-import ModuleForm from './modules/ModuleForm.vue'
-const { id, isrefresh } = storeToRefs(useSubcomponentIDStore()); // state id for subcomponents ?id=123
+import ModuleForm from "./modules/ModuleForm.vue";
+const { selectedRowDetails, isrefresh } = storeToRefs(useSubcomponentSelectedRowDetailsStore()); // state id for subcomponents ?id=123
 let userdetails = JSON.parse(nuxtStorage.localStorage.getData("user_details"));
+const  {subcomponents}  = storeToRefs(useNavigationMenuStore());
 definePageMeta({
   layout: "root-layout",
 });
@@ -138,7 +144,7 @@ const payload = ref({
   type: "",
   isactive: "1",
   user_passcode: "",
-  systems:[]
+  systems: [],
 });
 
 //  Table refs and tab related
@@ -179,7 +185,7 @@ const tableTabs = ref([
     value: "two",
     endpoint: `${config.public.apiBase}` + `/roles`,
     columns: [
-      { title: "Group Code", key: "id", align: "start",  width: "17%", sortable: true },
+      { title: "Group Code", key: "id", align: "start", width: "17%", sortable: true },
       { title: "Group Name", key: "display_name", align: "start" },
       { title: "Status", key: "isactive", align: "start" },
     ],
@@ -187,7 +193,6 @@ const tableTabs = ref([
 ]);
 const pageTitle = ref(""); // This should be dynamic base on the current tab
 const params = ref("");
-
 
 const usergroup_payload = ref({});
 
@@ -200,10 +205,10 @@ const text = ref("");
 
 // States for opening and closing dialogs
 
+
 const closeDialog = () => {
   inputDialog.value = false;
 };
-
 
 const closeModuleDialog = () => {
   moduleDialog.value = false;
@@ -216,32 +221,30 @@ const openAddRecordDialog = () => {
 };
 
 const DeactiveUser = () => {
-  if (id.value) {
+  if (selectedRowDetails.value.id) {
     payload.value.type = "edit";
     inputDialog.value = true;
   }
 };
 
 const EditUserDetails = () => {
-  if (id.value) {
+  if (selectedRowDetails.value.id) {
     payload.value.type = "edit";
     inputDialog.value = true;
   }
 };
 
-
-
 const ViewUserDetails = () => {
-  if (id.value) {
+  if (selectedRowDetails.value.id) {
     payload.value.type = "view";
     inputDialog.value = true;
   }
 };
 
 const ViewUserGroups = () => {
-  if (id.value) {
+  if (selectedRowDetails.value.id) {
     moduleDialog.value = true;
-  }else{
+  } else {
     moduleDialog.value = true;
   }
 };
@@ -287,48 +290,81 @@ const updateServerItems = (newServerItems) => {
   tableData.value = newServerItems;
 };
 
-const handleNew = ()=>{
- if(currentTab.value == 'one'){
+const handleNew = () => {
+  if (currentTab.value == "one") {
     openAddRecordDialog();
-  }else{
+  } else {
     usergroup_payload.value = Object.assign({});
     usergroup_payload.value.type = "new";
     ViewUserGroups();
   }
-}
+};
 
-const handleView = ()=>{
-  if(currentTab.value == 'one'){
+const handleView = () => {
+  if (currentTab.value == "one") {
     ViewUserDetails();
-  }else{
+  } else {
     ViewUserGroups();
   }
-} 
+};
 
-const handleEdit = ()=>{
-  if(currentTab.value == 'one'){
+const handleEdit = () => {
+  if (currentTab.value == "one") {
     usergroup_payload.value.type = "view";
     EditUserDetails();
-  }else{
+  } else {
     usergroup_payload.value.type = "edit";
     ViewUserGroups();
   }
-} 
-
+};
 
 const handleTabChange = (tabValue) => {
-  id.value = '';
+  selectedRowDetails.value.id = "";
   payload.value = Object.assign({});
   usergroup_payload.value = Object.assign({});
   isSelectedUser.value = true;
   currentTab.value = tabValue;
   columns.value = tableTabs.value[0].columns;
+
   if (tabValue == "two") {
     columns.value = tableTabs.value[1].columns;
+    usergroup();
+  }else{
+    individualuser();
   }
   const currentTabInfo = tableTabs.value.find((tab) => tab.value === tabValue);
   fetchData();
   pageTitle.value = currentTabInfo?.title || "";
+};
+
+const individualuser = () => {
+    subcomponents.value = [
+      {
+          label: "Nurse Stations",
+          icon: "mdi-file-document",
+          path: "/system-settings/system-users/nurse-stations",
+      },
+      {
+          label: "Reports",
+          icon: "mdi-file-document",
+          path: "/system-settings/system-users/reports",
+      },
+    ]
+};
+
+const usergroup = () => {
+    subcomponents.value = [
+     {
+          label: "Modules",
+          icon: "mdi-table-large",
+          path: "/system-settings/system-users/modules",
+      },
+      {
+          label: "Reports",
+          icon: "mdi-file-document",
+          path: "/system-settings/system-users/reports",
+      },
+    ]
 };
 
 const handleSearch = (keyword) => {
@@ -343,8 +379,9 @@ const handleRefresh = () => {
 const selectedUser = (item) => {
   isSelectedUser.value = true;
   isrefresh.value = false;
-  id.value = ""; //clear state id for subcomponents ?id=''
-  if (item && currentTab.value == 'one') {
+  selectedRowDetails.value.id = ""; //clear state id for subcomponents ?id=''
+  selectedRowDetails.value.role_id = ""; //clear state id for subcomponents ?id=''
+  if (item && currentTab.value == "one") {
     item.birthdate = formatDate(item.birthdate);
     item.warehouse_id = parseInt(item.warehouse_id);
     item.position_id = item.position_id;
@@ -353,21 +390,21 @@ const selectedUser = (item) => {
     item.branch_id = parseInt(item.branch_id);
     item.suffix = parseInt(item.suffix);
     payload.value = Object.assign({}, item);
-    id.value = item.id; //set state id for subcomponents ?id=item.id value
+    selectedRowDetails.value =  Object.assign({}, item);; //set state id for subcomponents ?id=item.id value
+    isrefresh.value = true;
+    isSelectedUser.value = false;
+  } else if (item && currentTab.value == "two") {
+    selectedRowDetails.value =  Object.assign({}, item);
+    selectedRowDetails.value.role_id = item.id; //set state id for subcomponents ?id=item.id value
+    item.isactive = item.isactive == 1 ? true : false;
+    usergroup_payload.value = Object.assign({}, item);
+    console.log(usergroup_payload);
     isrefresh.value = true;
     isSelectedUser.value = false;
   }
-  else if(item && currentTab.value == 'two'){
-      id.value = item.id;
-      item.isactive = item.isactive == 1 ? true : false;
-      usergroup_payload.value = Object.assign({}, item);
-      console.log(usergroup_payload);   
-      isrefresh.value = true;
-      isSelectedUser.value = false;
-  }
+
+  console.log(selectedRowDetails.value.id,'1223')
 };
-
-
 
 const updateConfirmation = () => {
   updateconfirmationDialog.value = true;
@@ -436,47 +473,47 @@ const updateUser = async (payload) => {
   }
 };
 
-const submitUserGroup = async (payload)=>{
-    let method = 'post';
-    let id = '';
-    if(payload.id){
-       method = 'PUT';
-       id = '/'+payload.id
-    }
-    const { data } = await useFetch(`${config.public.apiBase}` + `/roles`+id, {
-      method: method,
-      headers: {
-        Authorization: `Bearer ${token.value}`,
-        "Content-Type": "application/json",
-      },
-      body: { payload: payload },
-    });
-   
-    if (data.value) {
-      snackbar(data.value.msg);
-      closeModuleDialog();
-      currentTab.value = 'two';
-      fetchData(null, payload.name);
-    }
-}
+const submitUserGroup = async (payload) => {
+  let method = "post";
+  let id = "";
+  if (payload.id) {
+    method = "PUT";
+    id = "/" + payload.id;
+  }
+  const { data } = await useFetch(`${config.public.apiBase}` + `/roles` + id, {
+    method: method,
+    headers: {
+      Authorization: `Bearer ${token.value}`,
+      "Content-Type": "application/json",
+    },
+    body: { payload: payload },
+  });
 
+  if (data.value) {
+    snackbar(data.value.msg);
+    closeModuleDialog();
+    currentTab.value = "two";
+    fetchData(null, payload.name);
+  }
+};
 
-const snackbar = (value) =>{
-    isShowSnackBar.value = true;
-    text.value = value;
-    setTimeout(() => {
-      isShowSnackBar.value = false;
-      text.value = '';
-    }, 3000);
+const snackbar = (value) => {
+  isShowSnackBar.value = true;
+  text.value = value;
+  setTimeout(() => {
+    isShowSnackBar.value = false;
+    text.value = "";
+  }, 3000);
 };
 
 // fetchData();
 handleTabChange(currentTab.value);
 onMounted(async () => {
-  id.value = "";
+  selectedRowDetails.value.id = "";
+  selectedRowDetails.value.role_id = "";
 });
 onUpdated(() => {
-  // id.value = '';
+  // selectedRowDetails.value.id = '';
 });
 const formatDate = (value) => {
   return moment(value).format("YYYY-MM-DD");

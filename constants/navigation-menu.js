@@ -227,11 +227,11 @@ export default [
                 path: "/system-settings/system-users",
                 rule: "browse_users",
                 subcomponents: [
-                    {
-                        label: "Modules",
-                        icon: "mdi-table-large",
-                        path: "/system-settings/system-users/modules",
-                    },
+                    // {
+                    //     label: "Modules",
+                    //     icon: "mdi-table-large",
+                    //     path: "/system-settings/system-users/modules",
+                    // },
                     {
                         label: "Nurse Stations",
                         icon: "mdi-file-document",
@@ -243,6 +243,7 @@ export default [
                         path: "/system-settings/system-users/reports",
                     },
                 ],
+                table_and_template:[]
             },
             {
                 label: "Report Manager",

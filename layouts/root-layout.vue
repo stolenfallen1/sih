@@ -111,7 +111,7 @@
       >
         <v-list-group value="group1" :fluid="true" group>
           <template v-slot:activator="{ props }">
-            <v-list-item v-bind="props" :title="'Sub Components' + id"></v-list-item>
+            <v-list-item v-bind="props" :title="'Sub Components' + selectedRowDetails.id"></v-list-item>
           </template>
           <v-list-item
             class="mt-1"
@@ -119,7 +119,7 @@
             :key="item.label"
             :title="item.label"
             :value="item.label"
-            @click="computeTo(item.path, id)"
+            @click="computeTo(item.path, selectedRowDetails)"
             density="compact"
             :exact="true"
             :slim="true"
@@ -131,7 +131,8 @@
           </v-list-item>
         </v-list-group>
       </v-list>
-        <v-list
+        
+      <v-list
         rounded="lg"
         :lines="false"
         density="compact"
@@ -139,9 +140,9 @@
         class="pa-1"
         v-model:opened="TemplateopenedGroups"
       >
-        <v-list-group value="group1" :fluid="true" group>
+        <v-list-group value="group1" :fluid="true" v-if="table_and_template.length > 0" group>
           <template v-slot:activator="{ props }">
-            <v-list-item v-bind="props" :title="'Table and Template' + id"></v-list-item>
+            <v-list-item v-bind="props" :title="'Table and Template' + selectedRowDetails.id"></v-list-item>
           </template>
           <v-list-item
             class="mt-2"
@@ -149,7 +150,7 @@
             :key="item.label"
             :title="item.label"
             :value="item.label"
-            @click="computeTo(item.path, id)"
+            @click="computeTo(item.path, selectedRowDetails)"
             density="compact"
             :exact="true"
             :slim="true"
@@ -161,6 +162,7 @@
           </v-list-item>
         </v-list-group>
       </v-list>
+      
     </v-navigation-drawer>
     <!-- MAIN CONTENT -->
     <v-main>
@@ -184,14 +186,15 @@ import navigation_items from "../constants/navigation-menu";
 const router = useRouter();
 const route = useRoute();
 const { authenticated } = storeToRefs(useAuthStore()); // make authenticated state reactive
-const { id } = storeToRefs(useSubcomponentIDStore()); //state id for subcomponents ?id=123
+const { selectedRowDetails } = storeToRefs(useSubcomponentSelectedRowDetailsStore()); //state id for subcomponents ?id=123
+const  {subcomponents}  = storeToRefs(useNavigationMenuStore()); //state id for subcomponents ?id=123
 const { logUserOut } = useAuthStore();
 const items = navigation_items;
 const open = ref(["0","1","2","3"]);
 const drawer = ref(null);
 const openedGroups = ref(["group1"]);
 const TemplateopenedGroups = ref(["group1"]);
-const subcomponents = ref([]);
+// const subcomponents = ref([]);
 const table_and_template = ref([]);
 const token = useCookie("token");
 const rightSidebarDisplay = ref(false);
@@ -202,22 +205,17 @@ const currentTime = ref(new Date().toLocaleTimeString());
 const updateTime = () => {
   currentTime.value = new Date().toLocaleTimeString();
 };
-onMounted(() => {
-  updateTime();
-  // Update the time every second
-  const intervalId = setInterval(updateTime, 1000);
-  // Stop the interval when the component is unmounted
-  watchEffect(() => {
-    onBeforeUnmount(() => {
-      clearInterval(intervalId);
-    });
-  });
-});
 
-const computeTo = (path, id) => {
-  if (id) {
-    return router.push({ path: `${path}/${id}` });
-  } else if(id.value == "" || id.value == null) {
+
+const computeTo = (path, detail) => {
+  console.log(path,'51qweqwe ');
+  if(detail.id && path == '/system-settings/system-users/modules'){
+    return router.push({ path: `${path}/${detail.role_id}` });
+  }
+
+  if (detail.id) {
+    return router.push({ path: `${path}/${detail.id}` });
+  } else if(detail.id == "" || detail.id == null) {
     showWarning.value = true;
     setTimeout(() => {
       showWarning.value = false;
@@ -242,9 +240,19 @@ onUpdated(() => {
   if (route.path !== "/dashboard") {
     rightSidebarDisplay.value = true;
   }
+  console.log(selectedRowDetails.value.id,'test asdasdasd');
 });
 
 onMounted(async () => {
+   updateTime();
+  // Update the time every second
+  const intervalId = setInterval(updateTime, 1000);
+  // Stop the interval when the component is unmounted
+  watchEffect(() => {
+    onBeforeUnmount(() => {
+      clearInterval(intervalId);
+    });
+  });
   if (route.path !== "/dashboard") {
     rightSidebarDisplay.value = true;
   }
@@ -253,7 +261,7 @@ onMounted(async () => {
     .filter((item) => item.active)
     .map((item, index) => index);
   open.value = defaultOpenGroups;
-  console.log(id.value);
+  console.log(selectedRowDetails.value.id,'test asdasdasd');
 });
 
 const logout = () => {

@@ -158,19 +158,24 @@
 <script setup>
 import SubModule from "./SubModule.vue";
 import { reactive, computed } from "vue";
+
 definePageMeta({
   layout: "root-layout",
 });
+
 const route = useRoute();
 const panel = ref([0]);
 const show = ref(false);
+
 // When accessing /posts/1, route.params.id will be 1
 const loading = ref(true);
 const dialog = ref(true);
 const router = useRouter();
+
 const subdialog = ref(false);
 const isrefresh = ref(false);
 const tab = ref(null);
+
 const selectedGroup = ref("");
 const submoduleTitle = ref('');
 
@@ -270,11 +275,10 @@ onMounted(async () => {
       groups: group_permission[name],
     }));
   });
-
   moduleList = moduleitems;
   panel.value = [0, 1, 2];
-
 });
+
 onUpdated(() => {
   panel.value = [0, 1, 2];
 });
@@ -317,6 +321,7 @@ const openSubModule = async (permission) => {
   submoduleTitle.value = permission.module;
   getsubmodule_permisson(permission.module_id);
 };
+
 const getsubmodule_permisson = async(id)=>{
   const response = await fetch(
     `${config.public.apiBase}` + `/get-permissions?id=` + id,
@@ -330,6 +335,7 @@ const getsubmodule_permisson = async(id)=>{
   subModuleData.value = data.data;
   isrefresh.value = false;
 }
+
 const closeSubModule = () => {
   subdialog.value = false;
 };
