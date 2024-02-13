@@ -150,7 +150,7 @@
             :key="item.label"
             :title="item.label"
             :value="item.label"
-            @click="computeTo(item.path, selectedRowDetails)"
+            :to="item.path"
             density="compact"
             :exact="true"
             :slim="true"
