@@ -73,10 +73,8 @@ const isLoading = ref(false);
 const tableTabs = ref([
     { label: "Drugs and Medicines", value: "one" },
     { label: "Supplies", value: "two" },
-    { label: "Examinations", value: "three" },
-    { label: "Procedures", value: "four" },
-    { label: "Assets. Equipments", value: "five" },
-    { label: "Others", value: "six" },
+    { label: "Assets. Equipments", value: "three" },
+    { label: "Others", value: "four" },
 ]);
 
 const handleSearch = () => {
