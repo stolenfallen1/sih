@@ -16,7 +16,40 @@ export default [
                 icon: "mdi-doctor",
                 path: "/master-file/consultants",
                 rule: "browse_consultants",
-                subcomponents: [],
+                subcomponents: [
+                    {
+                        label: "Consultant Profile",
+                        icon: "mdi-file-document-edit",
+                        path: "/system-settings/system-users/modules",
+                        rule: "browse_roomdetails",
+                    },
+                    {
+                        label: "Item Examinations",
+                        icon: "mdi-file-document-edit",
+                        path: "/system-settings/system-users/modules",
+                        rule: "browse_roomoccupants",
+                    },
+                    {
+                        label: "List of Patients",
+                        icon: "mdi-file-document-edit",
+                        path: "/system-settings/system-users/modules",
+                        rule: "browse_roomoccupants",
+                    },
+                ],
+                table_and_template:[
+                    {
+                        label: "Specializations",
+                        icon: "mdi-file-document-edit",
+                        path: "/system-settings/system-users/modules",
+                        rule: "browse_roomdetails",
+                    },
+                    {
+                        label: "Medical Service Types",
+                        icon: "mdi-file-document-edit",
+                        path: "/system-settings/system-users/modules",
+                        rule: "browse_roomoccupants",
+                    },
+                ]
             },
             {
                 label: "Rooms and Beds",

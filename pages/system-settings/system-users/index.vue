@@ -64,6 +64,7 @@
     :itemsPerPage="itemsPerPage"
     :tableTitle="pageTitle"
     :current-tab="currentTab"
+    :showTabs="showTabs"
     @selected-row="selectedUser"
     @tab-change="handleTabChange"
     @action-search="handleSearch"
@@ -132,10 +133,6 @@ definePageMeta({
   layout: "root-layout",
 });
 
-// Auth refs and config
-const config = useRuntimeConfig();
-const token = useCookie("token");
-
 // Dialog refs ( form )
 const inputDialog = ref(false);
 const moduleDialog = ref(false);
@@ -153,13 +150,14 @@ const columns = ref([]);
 const totalItems = ref(0);
 const itemsPerPage = ref(15);
 const isLoading = ref(false);
+const showTabs = ref(true);
 const currentTab = ref("one");
 const tableTabs = ref([
   {
     label: "Individual User",
     title: "List of system users",
     value: "one",
-    endpoint: `${config.public.apiBase}` + `/users`,
+    endpoint: useApiUrl() + `/users`,
     columns: [
       {
         title: "User ID",
@@ -183,7 +181,7 @@ const tableTabs = ref([
     label: "User Groups",
     title: "List of user Groups",
     value: "two",
-    endpoint: `${config.public.apiBase}` + `/roles`,
+    endpoint: useApiUrl() + `/roles`,
     columns: [
       { title: "Group Code", key: "id", align: "start", width: "17%", sortable: true },
       { title: "Group Name", key: "display_name", align: "start" },
@@ -193,9 +191,7 @@ const tableTabs = ref([
 ]);
 const pageTitle = ref(""); // This should be dynamic base on the current tab
 const params = ref("");
-
 const usergroup_payload = ref({});
-
 const isSelectedUser = ref(true);
 const confirmationDialog = ref(false);
 const updateconfirmationDialog = ref(false);
@@ -268,7 +264,7 @@ const fetchData = async (options = null, searchkeyword = null) => {
     const currentTabInfo = tableTabs.value.find((tab) => tab.value === currentTab.value);
     const response = await fetch(currentTabInfo?.endpoint + "?" + params.value || "", {
       headers: {
-        Authorization: `Bearer ${token.value}`,
+        Authorization: `Bearer `+ useToken(),
       },
     });
     const data = await response.json();
@@ -338,33 +334,11 @@ const handleTabChange = (tabValue) => {
 };
 
 const individualuser = () => {
-    subcomponents.value = [
-      {
-          label: "Nurse Stations",
-          icon: "mdi-file-document",
-          path: "/system-settings/system-users/nurse-stations",
-      },
-      {
-          label: "Reports",
-          icon: "mdi-file-document",
-          path: "/system-settings/system-users/reports",
-      },
-    ]
+  subcomponents.value = useSystemUserTab('one');
 };
 
 const usergroup = () => {
-    subcomponents.value = [
-     {
-          label: "Modules",
-          icon: "mdi-table-large",
-          path: "/system-settings/system-users/modules",
-      },
-      {
-          label: "Reports",
-          icon: "mdi-file-document",
-          path: "/system-settings/system-users/reports",
-      },
-    ]
+  subcomponents.value = useSystemUserTab('two');
 };
 
 const handleSearch = (keyword) => {
@@ -402,7 +376,6 @@ const selectedUser = (item) => {
     isrefresh.value = true;
     isSelectedUser.value = false;
   }
-
   console.log(selectedRowDetails.value.id,'1223')
 };
 
@@ -426,10 +399,10 @@ const registerUser = async (payload) => {
   console.log(payload);
   console.log(userdetails.passcode, "asd");
   if (userdetails.passcode == payload.user_passcode) {
-    const { data } = await useFetch(`${config.public.apiBase}` + `/users`, {
+    const { data } = await useFetch(useApiUrl() + `/users`, {
       method: "post",
       headers: {
-        Authorization: `Bearer ${token.value}`,
+        Authorization: `Bearer `+ useToken(),
         "Content-Type": "application/json",
       },
       body: { payload: payload },
@@ -451,10 +424,10 @@ const registerUser = async (payload) => {
 const updateUser = async (payload) => {
   console.log(payload);
   if (userdetails.passcode == payload.user_passcode) {
-    const { data } = await useFetch(`${config.public.apiBase}` + `/users/` + payload.id, {
+    const { data } = await useFetch(useApiUrl() + `/users/` + payload.id, {
       method: "PUT",
       headers: {
-        Authorization: `Bearer ${token.value}`,
+        Authorization: `Bearer `+ useToken(),
         "Content-Type": "application/json",
       },
       body: { payload: payload },
@@ -480,10 +453,10 @@ const submitUserGroup = async (payload) => {
     method = "PUT";
     id = "/" + payload.id;
   }
-  const { data } = await useFetch(`${config.public.apiBase}` + `/roles` + id, {
+  const { data } = await useFetch(useApiUrl() + `/roles` + id, {
     method: method,
     headers: {
-      Authorization: `Bearer ${token.value}`,
+      Authorization: `Bearer `+ useToken(),
       "Content-Type": "application/json",
     },
     body: { payload: payload },

@@ -7,6 +7,7 @@
         :loading="isLoading"
         :tabs="tableTabs"
         :show-select="false"
+        :showTabs="showTabs"
         @action-search="handleSearch"
         @action-refresh="handleRefresh"
         @action-dots="handleDots"
@@ -19,7 +20,7 @@ import ReusableTable from "~/components/system-settings/tables/ReusableTable.vue
 definePageMeta({
     layout: "root-layout",
 });
-
+const showTabs = ref(true);
 const tableColumns = ref([
     { title: "Name", key: "name", align: "start", sortable: true },
     { title: "Calories", key: "calories", align: "end" },

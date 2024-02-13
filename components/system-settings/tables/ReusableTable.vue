@@ -103,7 +103,7 @@ const props = defineProps({
     },
     showTabs: {
         type: Boolean,
-        default: true,
+        default: false,
     },
 });
 
