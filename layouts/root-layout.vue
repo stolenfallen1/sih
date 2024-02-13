@@ -226,10 +226,8 @@ const drawer = ref(null);
 const openedGroups = ref(["group1"]);
 const TemplateopenedGroups = ref(["group1"]);
 const ProccessingAndQueriesopenedGroups = ref(["group1"]);
-// const subcomponents = ref([]);
 const table_and_template = ref([]);
 const processing_and_queries = ref([]);
-const token = useCookie("token");
 const rightSidebarDisplay = ref(false);
 const showWarning = ref(false);
 
@@ -241,7 +239,6 @@ const updateTime = () => {
 
 
 const computeTo = (path, detail) => {
-  console.log(path,'51qweqwe ');
   if(detail.id && path == '/system-settings/system-users/modules'){
     return router.push({ path: `${path}/${detail.role_id}` });
   }
@@ -257,6 +254,7 @@ const computeTo = (path, detail) => {
 };
 const displayRightOptions = (item) => {
   subcomponents.value = [];
+  processing_and_queries.value = [];
   table_and_template.value = [];
   subcomponents.value = item.subcomponents;
   table_and_template.value = item.table_and_template;
@@ -334,4 +332,18 @@ const logout = () => {
     border-radius: 50%;
     padding: 4px;
 } */
+
+::-webkit-scrollbar {
+  width: 8px;               /* width of the entire scrollbar */
+}
+
+::-webkit-scrollbar-track {
+  background: #DDDD;        /* color of the tracking area */
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #DDDD;    /* color of the scroll thumb */
+  border-radius: 10px;       /* roundness of the scroll thumb */
+  border: 1px solid #DDDD;  /* creates padding around scroll thumb */
+}
 </style>

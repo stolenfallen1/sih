@@ -10,6 +10,8 @@ export default [
                 path: "/master-file/patients",
                 rule: "browse_patients",
                 subcomponents: [],
+                processing_and_queries:[],
+                table_and_template:[]
             },
             {
                 label: "Consultants",
@@ -36,6 +38,7 @@ export default [
                         rule: "browse_roomoccupants",
                     },
                 ],
+                processing_and_queries: [],
                 table_and_template:[
                     {
                         label: "Specializations",
@@ -639,6 +642,8 @@ export default [
                 path: "/services/out-patient",
                 rule: "browse_outpatients",
                 subcomponents: [],
+                processing_and_queries: [],
+                table_and_template: []
             },
             {
                 label: "Emergency",
@@ -646,6 +651,8 @@ export default [
                 path: "/services/emergency",
                 rule: "browse_emergencies",
                 subcomponents: [],
+                processing_and_queries: [],
+                table_and_template: []
             },
             {
                 label: "In Patients",
@@ -653,6 +660,8 @@ export default [
                 path: "/services/in-patient",
                 rule: "browse_inpatients",
                 subcomponents: [],
+                processing_and_queries: [],
+                table_and_template: []
             },
             {
                 label: "Ancillary Services",
@@ -660,6 +669,8 @@ export default [
                 path: "/services/ancillary-services",
                 // rule: "browse_ancillaryservices", no rule like this yet
                 subcomponents: [],
+                processing_and_queries: [],
+                table_and_template: []
             },
             {
                 label: "Dietary Services",
@@ -667,6 +678,8 @@ export default [
                 path: "/services/dietary-services",
                 rule: "browse_dietaryservices",
                 subcomponents: [],
+                processing_and_queries: [],
+                table_and_template: []
             },
             {
                 label: "Nursing Services",
@@ -674,6 +687,8 @@ export default [
                 path: "/services/nursing-services",
                 rule: "browse_nursingservices",
                 subcomponents: [],
+                processing_and_queries: [],
+                table_and_template: []
             },
             {
                 label: "Laboratory Services",
@@ -681,6 +696,8 @@ export default [
                 path: "/services/laboratory-services",
                 rule: "browse_laboratorservices",
                 subcomponents: [],
+                processing_and_queries: [],
+                table_and_template: []
             },
             {
                 label: "Radiology Services",
@@ -688,6 +705,8 @@ export default [
                 path: "/services/radiology-services",
                 rule: "browse_radiologyservices",
                 subcomponents: [],
+                processing_and_queries: [],
+                table_and_template: []
             },
         ],
     },
@@ -702,6 +721,8 @@ export default [
                 path: "/transactions/billing",
                 rule: "browse_billing",
                 subcomponents: [],
+                processing_and_queries: [],
+                table_and_template: []
             },
             {
                 label: "Cashier",
@@ -709,6 +730,8 @@ export default [
                 path: "/transactions/cashier",
                 rule: "browse_cashier",
                 subcomponents: [],
+                processing_and_queries: [],
+                table_and_template: []
             },
             {
                 label: "Guarantors Billing",
@@ -716,6 +739,8 @@ export default [
                 path: "/transactions/guarantors-billing",
                 rule: "browse_guarantorsbilling",
                 subcomponents: [],
+                processing_and_queries: [],
+                table_and_template: []
             },
             {
                 label: "Refunds",
@@ -723,6 +748,8 @@ export default [
                 path: "/transactions/refunds",
                 rule: "browse_refunds",
                 subcomponents: [],
+                processing_and_queries: [],
+                table_and_template: []
             },
         ],
     },
@@ -737,6 +764,8 @@ export default [
                 path: "/system-settings/setup-options",
                 rule: "browse_settingsandothers",
                 subcomponents: [],
+                processing_and_queries: [],
+                table_and_template: []
             },
             {
                 label: "System Users",
@@ -760,6 +789,7 @@ export default [
                         path: "/system-settings/system-users/reports",
                     },
                 ],
+                processing_and_queries: [],
                 table_and_template:[]
             },
             {
@@ -769,6 +799,8 @@ export default [
                 // rule: "browse_reports", no rule like this yet
                 rule: "browse_settings", // for now so that I can access the page
                 subcomponents: [],
+                processing_and_queries: [],
+            table_and_template: []
             },
         ],
     },
