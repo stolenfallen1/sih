@@ -131,6 +131,37 @@
           </v-list-item>
         </v-list-group>
       </v-list>
+
+      <v-list
+        rounded="lg"
+        :lines="false"
+        density="compact"
+        nav
+        class="pa-1"
+        v-model:opened="ProccessingAndQueriesopenedGroups"
+      >
+        <v-list-group value="group1" :fluid="true" v-if="processing_and_queries.length > 0" group>
+          <template v-slot:activator="{ props }">
+            <v-list-item v-bind="props" :title="'Processing and Queries' + selectedRowDetails.id"></v-list-item>
+          </template>
+          <v-list-item
+            class="mt-2"
+            v-for="item in processing_and_queries"
+            :key="item.label"
+            :title="item.label"
+            :value="item.label"
+            :to="item.path"
+            density="compact"
+            :exact="true"
+            :slim="true"
+          >
+            <template v-slot:prepend>
+              <v-btn class="mr-2 pa-1" size="medium" color="#6984FF" :icon="item.icon">
+              </v-btn>
+            </template>
+          </v-list-item>
+        </v-list-group>
+      </v-list>
         
       <v-list
         rounded="lg"
@@ -194,8 +225,10 @@ const open = ref(["0","1","2","3"]);
 const drawer = ref(null);
 const openedGroups = ref(["group1"]);
 const TemplateopenedGroups = ref(["group1"]);
+const ProccessingAndQueriesopenedGroups = ref(["group1"]);
 // const subcomponents = ref([]);
 const table_and_template = ref([]);
+const processing_and_queries = ref([]);
 const token = useCookie("token");
 const rightSidebarDisplay = ref(false);
 const showWarning = ref(false);
@@ -224,8 +257,10 @@ const computeTo = (path, detail) => {
 };
 const displayRightOptions = (item) => {
   subcomponents.value = [];
+  table_and_template.value = [];
   subcomponents.value = item.subcomponents;
   table_and_template.value = item.table_and_template;
+  processing_and_queries.value = item.processing_and_queries;
 };
 
 const can_browse = (item) => {
