@@ -4,6 +4,12 @@
         <v-card>
             <v-toolbar density="compact" >
                 <v-toolbar-title>System User Nurse Station</v-toolbar-title>
+                <v-spacer></v-spacer>
+                <v-toolbar-items>
+                <v-btn icon  >
+                    <v-icon @click="router.back()">mdi-close</v-icon>
+                </v-btn>
+                </v-toolbar-items>
             </v-toolbar>
             <v-divider></v-divider>
             <v-container class="mb-1">
@@ -85,10 +91,10 @@ const route = useRoute()
 
 const getAllAssignedStation = async()=>{
   const response = await fetch(
-    `${config.public.apiBase}` + `/assign-station?user_id=` + route.params.id,
+    useApiUrl()  + `/assign-station?user_id=` + route.params.id,
     {
       headers: {
-        Authorization: `Bearer ${token.value}`,
+        Authorization: `Bearer `+ useToken(),
       },
     }
   );
@@ -111,10 +117,10 @@ const addStation = async (item,type) => {
     item.station_id = item.id;
     item.user_id = route.params.id;
     item.type = type;
-    const { data } = await useFetch(`${config.public.apiBase}` + `/assigned-station`, {
+    const { data } = await useFetch(useApiUrl()  + `/assigned-station`, {
         method: "post",
         headers: {
-        Authorization: `Bearer ${token.value}`,
+        Authorization: `Bearer `+ useToken(),
         "Content-Type": "application/json",
         },
         body: { payload: item },

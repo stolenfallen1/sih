@@ -2,10 +2,18 @@
   <div>
     <v-dialog v-model="dialog" persistent hide-overlay width="950" scrollable>
       <v-card>
-        <v-card-title> System User Group {{ selectedGroup }} </v-card-title>
+        <v-toolbar density="compact">
+          <v-toolbar-title>System User Group {{ selectedGroup }}</v-toolbar-title>
+          <v-spacer></v-spacer>
+          <v-toolbar-items>
+            <v-btn icon>
+              <v-icon @click="router.back()">mdi-close</v-icon>
+            </v-btn>
+          </v-toolbar-items>
+        </v-toolbar>
         <v-divider></v-divider>
         <v-card-text>
-          <v-tabs v-model="tab" center-active>
+          <v-tabs v-model="tab" bg-color="primary" center-active>
             <v-tab v-for="(tabs, index) in moduleList" :value="index" :key="index">
               {{ tabs.name }}
             </v-tab>
@@ -72,7 +80,14 @@
                                   v-if="browse_column(permission.key, tabData.name)"
                                 >
                                   <v-btn
-                                    :disabled="check_can_select_permission(permission.key,tabData.name) == false ? true: false"
+                                    :disabled="
+                                      check_can_select_permission(
+                                        permission.key,
+                                        tabData.name
+                                      ) == false
+                                        ? true
+                                        : false
+                                    "
                                     @click="openSubModule(permission)"
                                     size="small"
                                     density="compact"
@@ -177,7 +192,7 @@ const isrefresh = ref(false);
 const tab = ref(null);
 
 const selectedGroup = ref("");
-const submoduleTitle = ref('');
+const submoduleTitle = ref("");
 
 const modules = ref([]);
 let moduleList = ref([]);
@@ -203,10 +218,11 @@ const check_permission = async () => {
   console.log(route.params);
   loading.value = true;
   const { data } = await useFetch(
-    `${config.public.apiBase}` + `/get-role-permission?role_id=` + route.params.id,
+    useApiUrl()  + `/get-role-permission?role_id=` + route.params.id,
     {
       headers: {
-        Authorization: `Bearer ${token.value}`,
+        
+      Authorization: `Bearer `+ useToken(),
         "Content-Type": "application/json",
       },
     }
@@ -302,10 +318,10 @@ const check_can_select_permission = (key, table) => {
 const addPermission = async (permission, type) => {
   permission.type = type;
   permission.role_id = route.params.id;
-  const { data } = await useFetch(`${config.public.apiBase}` + `/add-permission`, {
+  const { data } = await useFetch(useApiUrl()  + `/add-permission`, {
     method: "post",
     headers: {
-      Authorization: `Bearer ${token.value}`,
+      Authorization: `Bearer `+ useToken(),
       "Content-Type": "application/json",
     },
     body: { payload: permission },
@@ -322,19 +338,17 @@ const openSubModule = async (permission) => {
   getsubmodule_permisson(permission.module_id);
 };
 
-const getsubmodule_permisson = async(id)=>{
-  const response = await fetch(
-    `${config.public.apiBase}` + `/get-permissions?id=` + id,
-    {
-      headers: {
-        Authorization: `Bearer ${token.value}`,
-      },
-    }
-  );
+const getsubmodule_permisson = async (id) => {
+  const response = await fetch(useApiUrl()  + `/get-permissions?id=` + id, {
+    headers: {
+      
+      Authorization: `Bearer `+ useToken(),
+    },
+  });
   const data = await response.json();
   subModuleData.value = data.data;
   isrefresh.value = false;
-}
+};
 
 const closeSubModule = () => {
   subdialog.value = false;

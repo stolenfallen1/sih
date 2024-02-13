@@ -80,7 +80,6 @@
 
 <script setup>
 const route = useRoute();
-const config = useRuntimeConfig();
 const token = useCookie("token");
 const emits = defineEmits("getsubmodule_permisson");
 const props = defineProps({
@@ -111,10 +110,10 @@ let { isrefresh } = props;
 const addPermission = async (permission, type) => {
   permission.type = type;
   permission.role_id = route.params.id;
-  const { data } = await useFetch(`${config.public.apiBase}` + `/add-permission`, {
+  const { data } = await useFetch(useApiUrl() + `/add-permission`, {
     method: "post",
     headers: {
-      Authorization: `Bearer ${token.value}`,
+      Authorization: `Bearer `+ useToken(),
       "Content-Type": "application/json",
     },
     body: { payload: permission },

@@ -142,7 +142,7 @@
       >
         <v-list-group value="group1" :fluid="true" v-if="table_and_template.length > 0" group>
           <template v-slot:activator="{ props }">
-            <v-list-item v-bind="props" :title="'Table and Template' + selectedRowDetails.id"></v-list-item>
+            <v-list-item v-bind="props" :title="'Tables and Templates' + selectedRowDetails.id"></v-list-item>
           </template>
           <v-list-item
             class="mt-2"
@@ -166,7 +166,7 @@
     </v-navigation-drawer>
     <!-- MAIN CONTENT -->
     <v-main>
-      <v-container :fluid="true">
+      <v-container class="pa-2" :fluid="true">
         <NuxtPage />
       </v-container>
     </v-main>
@@ -224,6 +224,7 @@ const computeTo = (path, detail) => {
 };
 const displayRightOptions = (item) => {
   subcomponents.value = [];
+  table_and_template.value = [];
   subcomponents.value = item.subcomponents;
   table_and_template.value = item.table_and_template;
 };
@@ -271,6 +272,9 @@ const logout = () => {
 </script>
 
 <style>
+.v-navigation-drawer{
+  border-style: none !important;
+}
 .header {
   font-weight: bolder;
   text-align: center;
@@ -279,6 +283,7 @@ const logout = () => {
   margin-bottom: 4px;
   border: 1px solid #117dad;
   padding: 4px;
+  border-radius: 8px;
 }
 .v-list-item--nav .v-list-item-title {
   font-weight: bold;
