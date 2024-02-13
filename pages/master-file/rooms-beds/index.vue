@@ -1,18 +1,92 @@
 <template>
   <v-card class="mb-2" elevation="2">
-    <v-data-table-server
-      density="compact"
-      :fixed-header="true"
-      v-model:items-per-page="itemsPerPage"
-      :headers="headers"
-      :items-length="totalItems"
-      :items="desserts"
+    <v-card-actions>
+      <v-spacer></v-spacer>
+      <v-btn
+        @click="handleView"
+        :disabled="isSelectedUser"
+        prepend-icon="mdi-eye-outline"
+        width="100"
+        color="primary"
+        class="bg-info text-white"
+      >
+        View
+      </v-btn>
+      <v-btn
+        @click="handleNew"
+        :disabled="serverItems.length > 0 ? true : false"
+        prepend-icon="mdi-plus-outline"
+        width="100"
+        color="primary"
+        class="bg-primary text-white"
+      >
+        New
+      </v-btn>
+      <v-btn
+        @click="handleEdit"
+        prepend-icon="mdi-pencil"
+        :disabled="isSelectedUser"
+        width="100"
+        color="primary"
+        class="bg-success text-white"
+      >
+        Edit
+      </v-btn>
+      <v-btn
+        @click="DeactiveUser"
+        prepend-icon="mdi-toggle-switch"
+        :disabled="isSelectedUser"
+        width="150"
+        color="primary"
+        class="bg-error text-white"
+      >
+        Deactive</v-btn
+      >
+    </v-card-actions>
+  </v-card>
+  <v-card class="mb-2" elevation="2">
+    <ReusableTable
+      :items-per-page="10"
+      :serverItems="serverItems"
+      :totalItems="totalItems"
       :loading="loading"
-      :search="search"
-      item-value="name"
-      height="65vh"
-      @update:options="loadItems"
-    ></v-data-table-server>
+      :tabs="tableTabs"
+      :columns="headers"
+      :showTabs="showTabs"
+      :itemsPerPage="itemsPerPage"
+      :tableTitle="pageTitle"
+      :current-tab="currentTab"
+      @fetchPage="loadItems"
+      @selected-row="selectedUser"
+      @action-search="handleSearch"
+      @action-refresh="handleRefresh"
+    >
+      <!-- Custom templates for each column -->
+      <template v-for="column in headers" v-slot:[`column-${column.key}`]="{ item }">
+        <!-- customize rendering for each column here -->
+        <span v-if="column.key ==='building'" :key="column.key">{{
+          item.stations.floors ? item.stations.floors.building.description : ""
+        }}</span>
+        <span v-if="column.key === 'floor'" :key="column.key">{{
+          item.stations.floors ?  item.stations.floors.description : ""
+        }}</span>
+
+        <span v-if="column.key === 'roomstatus'" :key="column.key">
+          {{ item.room_status ? item.room_status.room_description : "" }}</span
+        >
+        <span v-if="column.key === 'roomClass'" :key="column.key">
+          {{ item.room_class ? item.room_class.room_class_description : "" }}</span
+        >
+        <span v-if="column.key === 'station'" :key="column.key">
+          {{ item.stations ? item.stations.station_description : "" }}</span
+        >
+        <span v-if="column.key === 'isactive'" :key="column.key">
+          {{ item.isactive == 1 ? "Active" : "In Active" }}</span
+        >
+
+        <!-- Add more custom logic for other columns -->
+      </template>
+    </ReusableTable>
   </v-card>
 </template>
 
@@ -21,212 +95,114 @@ import ReusableTable from "~/components/system-settings/tables/ReusableTable.vue
 definePageMeta({
   layout: "root-layout",
 });
-const itemsPerPage = ref(40);
-const search = ref("");
-const serverItems = ref([]);
-const loading = ref(true);
+
+const { selectedRowDetails, isrefresh } = storeToRefs(useSubcomponentSelectedRowDetailsStore());
+const isSelectedUser = ref(true);
+const pageTitle = ref("Rooms and Beds");
+const currentTab = ref(false);
+const showTabs = ref(false);
+const tableTabs = ref([]);
+
 const totalItems = ref(0);
+const itemsPerPage = ref(15);
+const search = ref("");
+const params = ref("");
+const loading = ref(true);
 const headers = [
   {
     title: "Building",
     align: "start",
     sortable: true,
-    key: "name",
+    key: "building",
     width: "10%",
   },
-  { title: "Branch", key: "calories", align: "center", width: "10%", sortable: false },
-  { title: "Floor Name", key: "fat", align: "center", width: "10%", sortable: false },
-  { title: "Room No.", key: "carbs", align: "center", width: "10%", sortable: false },
+  { title: "Floor Name", key: "floor", align: "center", width: "10%", sortable: false },
+  { title: "Room No.", key: "room_code", align: "center", width: "10%", sortable: false },
   {
     title: "No.Of Beds",
-    key: "protein",
+    key: "total_beds",
     align: "center",
     width: "10%",
     sortable: false,
   },
-  { title: "Room Status", key: "iron", align: "center", width: "10%", sortable: false },
-  { title: "Room Type", key: "iron", align: "center", width: "10%", sortable: false },
+  { title: "Room Status", key: "roomstatus", align: "center", width: "15%", sortable: false },
+  { title: "Room Type", key: "roomClass", align: "center", width: "15%", sortable: false },
   {
     title: "Nursing Station",
-    key: "iron",
+    key: "station",
     align: "center",
-    width: "10px",
+    width: "30%",
     sortable: false,
   },
 ];
-const desserts = [
-  {
-    name: "Frozen Yogurt",
-    calories: 159,
-    fat: 6.0,
-    carbs: 24,
-    protein: 4.0,
-    iron: "1",
-  },
-  {
-    name: "Jelly bean",
-    calories: 375,
-    fat: 0.0,
-    carbs: 94,
-    protein: 0.0,
-    iron: "0",
-  },
-  {
-    name: "KitKat",
-    calories: 518,
-    fat: 26.0,
-    carbs: 65,
-    protein: 7,
-    iron: "6",
-  },
-  {
-    name: "Eclair",
-    calories: 262,
-    fat: 16.0,
-    carbs: 23,
-    protein: 6.0,
-    iron: "7",
-  },
-  {
-    name: "Gingerbread",
-    calories: 356,
-    fat: 16.0,
-    carbs: 49,
-    protein: 3.9,
-    iron: "16",
-  },
-  {
-    name: "Ice cream sandwich",
-    calories: 237,
-    fat: 9.0,
-    carbs: 37,
-    protein: 4.3,
-    iron: "1",
-  },
-  {
-    name: "Lollipop",
-    calories: 392,
-    fat: 0.2,
-    carbs: 98,
-    protein: 0,
-    iron: "2",
-  },
-  {
-    name: "Cupcake",
-    calories: 305,
-    fat: 3.7,
-    carbs: 67,
-    protein: 4.3,
-    iron: "8",
-  },
-  {
-    name: "Honeycomb",
-    calories: 408,
-    fat: 3.2,
-    carbs: 87,
-    protein: 6.5,
-    iron: "45",
-  },
-  {
-    name: "Donut",
-    calories: 452,
-    fat: 25.0,
-    carbs: 51,
-    protein: 4.9,
-    iron: "22",
-  },
-  {
-    name: "Donut",
-    calories: 452,
-    fat: 25.0,
-    carbs: 51,
-    protein: 4.9,
-    iron: "22",
-  },
-  {
-    name: "Donut",
-    calories: 452,
-    fat: 25.0,
-    carbs: 51,
-    protein: 4.9,
-    iron: "22",
-  },
-  {
-    name: "Donut",
-    calories: 452,
-    fat: 25.0,
-    carbs: 51,
-    protein: 4.9,
-    iron: "22",
-  },
-  {
-    name: "Donut",
-    calories: 452,
-    fat: 25.0,
-    carbs: 51,
-    protein: 4.9,
-    iron: "22",
-  },
-  {
-    name: "Donut",
-    calories: 452,
-    fat: 25.0,
-    carbs: 51,
-    protein: 4.9,
-    iron: "22",
-  },
-  {
-    name: "Donut",
-    calories: 452,
-    fat: 25.0,
-    carbs: 51,
-    protein: 4.9,
-    iron: "22",
-  },
-  {
-    name: "Donut",
-    calories: 452,
-    fat: 25.0,
-    carbs: 51,
-    protein: 4.9,
-    iron: "22",
-  },
-];
+const serverItems = ref([]);
+const handleRefresh = () => {
+   loadItems();
+};
+const handleSearch = (keyword) => {
+  // Handle search action
+   loadItems(null, keyword);
+};
+const selectedUser = (item) => {
+  isSelectedUser.value = true;
+  isrefresh.value = false;
+  selectedRowDetails.value.id = ""; //clear state id for subcomponents ?id=''
+  selectedRowDetails.value.role_id = ""; //clear state id for subcomponents ?id=''
 
-const FakeAPI = {
-  async fetch({ page, itemsPerPage, sortBy }) {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        const start = (page - 1) * itemsPerPage;
-        const end = start + itemsPerPage;
-        const items = desserts.slice();
+  if(item){
+    selectedRowDetails.value =  Object.assign({}, item);; //set state id for subcomponents ?id=item.id value
+    isrefresh.value = true;
+    isSelectedUser.value = false;
+  }else{
+    isrefresh.value = false;
+    isSelectedUser.value = true;
+  }
+};
+const handleView = () => {
+  
+};
+const handleEdit = () => {
+  
+};
+const handleNew = () => {
+  
+};
+const DeactiveUser = () => {
+  
+};
 
-        if (sortBy.length) {
-          const sortKey = sortBy[0].key;
-          const sortOrder = sortBy[0].order;
-          items.sort((a, b) => {
-            const aValue = a[sortKey];
-            const bValue = b[sortKey];
-            return sortOrder === "desc" ? bValue - aValue : aValue - bValue;
-          });
-        }
+const loadItems = async (options = null, searchkeyword = null) => {
+  try {
+    loading.value = true;
 
-        const paginated = items.slice(start, end);
-
-        resolve({ items: paginated, total: items.length });
-      }, 500);
+    let keyword = searchkeyword || "";
+      params.value = options  ? "page=" + options.page + "&per_page=" + options.itemsPerPage + "&keyword=" + options.keyword
+    : "page=1&per_page=10&keyword=" + keyword;
+    const response = await fetch(useApiUrl()+'/rooms-and-beds'+ "?" + params.value || "", {
+      headers: {
+        Authorization: `Bearer `+ useToken(),
+      },
     });
-  },
+    const data = await response.json();
+    updateTotalItems(data.total);
+    updateServerItems(data.data);
+    loading.value = false;
+    // tableColumns.value = currentTabInfo?.columns || [];
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    loading.value = false;
+  } finally {
+    loading.value = false;
+  }
+};
+const updateTotalItems = (newTotalItems) => {
+  totalItems.value = newTotalItems;
 };
 
-const loadItems = async ({ page, itemsPerPage, sortBy }) => {
-  loading.value = true;
-  FakeAPI.fetch({ page, itemsPerPage, sortBy }).then(({ items, total }) => {
-    serverItems.value = items;
-    totalItems.value = total;
-    loading.value = false;
-  });
+const updateServerItems = (newServerItems) => {
+  serverItems.value = newServerItems;
 };
+
 </script>
 
 <style>

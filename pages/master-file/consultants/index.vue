@@ -46,7 +46,7 @@
   </v-card>
   <v-card class="mb-2" elevation="2">
     <ReusableTable
-      :items-per-page="10"
+      :items-per-page="itemsPerPage"
       :serverItems="doctorlist"
       :totalItems="totalItems"
       :loading="loading"
@@ -101,7 +101,7 @@ const showTabs = ref(false);
 const tableTabs = ref([]);
 
 const totalItems = ref(0);
-const itemsPerPage = ref(15);
+const itemsPerPage = ref(40);
 const search = ref("");
 const params = ref("");
 const loading = ref(true);

@@ -69,7 +69,7 @@ import "../../../styes/animation.css";
 
 const emits = defineEmits(['fetchPage', 'tab-change','selected-row','action-search']);
 const options = reactive({
-    itemsPerPage: 10,
+    itemsPerPage: 50,
     page:1
 })
 const props = defineProps({
