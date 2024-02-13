@@ -197,7 +197,7 @@
     </v-navigation-drawer>
     <!-- MAIN CONTENT -->
     <v-main>
-      <v-container class="pa-2" :fluid="true">
+      <v-container  :fluid="true">
         <NuxtPage />
       </v-container>
     </v-main>

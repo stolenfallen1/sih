@@ -168,7 +168,6 @@ const loadItems = async (options = null, searchkeyword = null) => {
     let keyword = searchkeyword || "";
       params.value = options  ? "page=" + options.page + "&per_page=" + options.itemsPerPage + "&keyword=" + options.keyword
     : "page=1&per_page=10&keyword=" + keyword;
-    // if ((options != null || options == null) && currentTab.value == 'two') return; // ge addan ra nko ani condition
     const response = await fetch(useApiUrl()+'/doctors'+ "?" + params.value || "", {
       headers: {
         Authorization: `Bearer `+ useToken(),
