@@ -15,7 +15,7 @@
 </template>
 
 <script setup>
-import ReusableTable from "~/components/system-settings/tables/ReusableTable.vue"; // This reusable table is from the system settings table component
+import ReusableTable from "~/components/reusables/ReusableTable.vue";
 
 definePageMeta({
     layout: "root-layout",
