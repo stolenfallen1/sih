@@ -273,19 +273,18 @@ onUpdated(() => {
   if (route.path !== "/dashboard") {
     rightSidebarDisplay.value = true;
   }
-  console.log(selectedRowDetails.value.id,'test asdasdasd');
 });
 
 onMounted(async () => {
-   updateTime();
-  // Update the time every second
-  const intervalId = setInterval(updateTime, 1000);
-  // Stop the interval when the component is unmounted
-  watchEffect(() => {
-    onBeforeUnmount(() => {
-      clearInterval(intervalId);
-    });
-  });
+  //  updateTime();
+  // // Update the time every second
+  // const intervalId = setInterval(updateTime, 1000);
+  // // Stop the interval when the component is unmounted
+  // watchEffect(() => {
+  //   onBeforeUnmount(() => {
+  //     clearInterval(intervalId);
+  //   });
+  // });
   if (route.path !== "/dashboard") {
     rightSidebarDisplay.value = true;
   }
@@ -294,7 +293,10 @@ onMounted(async () => {
     .filter((item) => item.active)
     .map((item, index) => index);
   open.value = defaultOpenGroups;
-  console.log(selectedRowDetails.value.id,'test asdasdasd');
+  if(authenticated){
+    useDropdownlist();
+  }
+
 });
 
 const logout = () => {
