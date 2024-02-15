@@ -13,8 +13,7 @@
         View
       </v-btn>
       <v-btn
-        @click="handleNew"
-        :disabled="serverItems.length > 0 ? true : false"
+        @click="openAddFormDialog"
         prepend-icon="mdi-plus-outline"
         width="100"
         color="primary"
@@ -22,6 +21,9 @@
       >
         New
       </v-btn>
+      <!-- FORM HERE -->
+      <Form @close-dialog="closeFormDialog" :form_dialog="form_dialog" />
+
       <v-btn
         @click="handleEdit"
         prepend-icon="mdi-pencil"
@@ -91,6 +93,7 @@
 </template>
 
 <script setup>
+import Form from "./Form.vue";
 import ReusableTable from "~/components/reusables/ReusableTable.vue";
 definePageMeta({
   layout: "root-layout",
@@ -102,6 +105,7 @@ const pageTitle = ref("Rooms and Beds");
 const currentTab = ref(false);
 const showTabs = ref(false);
 const tableTabs = ref([]);
+const form_dialog = ref(false);
 
 const totalItems = ref(0);
 const itemsPerPage = ref(15);
@@ -164,9 +168,14 @@ const handleView = () => {
 const handleEdit = () => {
   
 };
-const handleNew = () => {
-  
+const openAddFormDialog = () => {
+  form_dialog.value = true;
 };
+
+const closeFormDialog = () => {
+  form_dialog.value = false;
+};
+
 const DeactiveUser = () => {
   
 };
