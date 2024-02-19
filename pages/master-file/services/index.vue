@@ -84,6 +84,7 @@
 </template>
 
 <script setup>
+import { storeToRefs } from "pinia";
 import ReusableTable from "~/components/reusables/ReusableTable.vue";
 
 definePageMeta({
@@ -93,15 +94,15 @@ definePageMeta({
 const { selectedRowDetails, isrefresh } = storeToRefs(
     useSubcomponentSelectedRowDetailsStore()
 );
+const { subcomponents } = storeToRefs(useNavigationMenuStore())
 const isSelectedUser = ref(true);
 const pageTitle = ref("Services");
 const currentTab = ref(false);
 const showTabs = ref(true);
 const currentTabValue = ref(1);
 const tableTabs = ref([
-    { label: "Examinations", value: "1" },
-    { label: "Procedures", value: "4" },
-    { label: "Others", value: "3" },
+    { label: "Examinations", value: "one" },
+    { label: "Procedures", value: "two" }
 ]);
 const totalItems = ref(0);
 const itemsPerPage = ref(40);
@@ -148,8 +149,21 @@ const serverItems = ref([]);
 
 const handleTabChange = (tabValue) => {
     currentTabValue.value = tabValue;
-    loadItems(null, null, tabValue);
+    if (tabValue == "one") {
+        examinations();
+    } else if (tabValue == "two") {
+        procedures();
+    }
 };
+
+const examinations = () => {
+    subcomponents.value = useServicesTab("one");
+};
+
+const procedures = () => {
+    subcomponents.value = useServicesTab("two");
+};
+
 const handleRefresh = () => {
     loadItems();
 };

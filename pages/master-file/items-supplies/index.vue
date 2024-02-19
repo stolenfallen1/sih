@@ -87,6 +87,7 @@
 </template>
 
 <script setup>
+import { storeToRefs } from "pinia";
 import ReusableTable from "~/components/reusables/ReusableTable.vue";
 
 definePageMeta({
@@ -96,16 +97,17 @@ definePageMeta({
 const { selectedRowDetails, isrefresh } = storeToRefs(
     useSubcomponentSelectedRowDetailsStore()
 );
+const { subcomponents } = storeToRefs(useNavigationMenuStore())
 const isSelectedUser = ref(true);
 const pageTitle = ref("Item and Supplies");
 const currentTab = ref(false);
 const showTabs = ref(true);
 const currentTabValue = ref(2);
 const tableTabs = ref([
-    { label: "Drugs and Medicines", value: "2" },
-    { label: "Supplies", value: "5" },
-    { label: "Assets. Equipments", value: "6" },
-    { label: "Others", value: "3" },
+    { label: "Drugs and Medicines", value: "one" },
+    { label: "Supplies", value: "two" },
+    { label: "Assets. Equipments", value: "three" },
+    { label: "Others", value: "four" },
 ]);
 const totalItems = ref(0);
 const itemsPerPage = ref(40);
@@ -152,8 +154,33 @@ const serverItems = ref([]);
 
 const handleTabChange = (tabValue) => {
     currentTabValue.value = tabValue;
-    loadItems(null, null, tabValue);
+    if (tabValue == "one") {
+        drugsAndMedicines();
+    } else if (tabValue == "two") {
+        supplies();
+    } else if (tabValue == "three") {
+        assetsAndEquipments();
+    } else if (tabValue == "four") {
+        others();
+    }
 };
+
+const drugsAndMedicines = () => {
+    subcomponents.value = useItemsSuppliesTab('one');
+}
+
+const supplies = () => {
+    subcomponents.value = useItemsSuppliesTab('two');
+}
+
+const assetsAndEquipments = () => {
+    subcomponents.value = useItemsSuppliesTab('three');
+}
+
+const others = () => {
+    subcomponents.value = useItemsSuppliesTab('four');
+}
+
 const handleRefresh = () => {
     loadItems();
 };
