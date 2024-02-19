@@ -22,19 +22,12 @@
                 New
             </v-btn>
             <!-- Central Lookup Search Form -->
-            <v-dialog
-                v-model="central_form_dialog"
-                persistent
-                hide-overlay
-                width="800"
-                scrollable
-            >
-                <CentralLookUpForm
-                    @close-dialog="closeCentralFormDialog"
-                    :search_results="search_results"
-                    @open-form="openFormDialog"
-                />
-            </v-dialog>
+            <CentralLookUpForm
+                :central_form_dialog="central_form_dialog"
+                @close-dialog="closeCentralFormDialog"
+                :search_results="search_results"
+                @open-form="openFormDialog"
+            />
             <v-dialog
                 v-model="form_dialog"
                 fullscreen
