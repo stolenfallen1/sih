@@ -336,7 +336,8 @@ const logout = () => {
 } */
 
 ::-webkit-scrollbar {
-  width: 8px;               /* width of the entire scrollbar */
+  width: 5px;   
+  height: 5px;            /* width of the entire scrollbar */
 }
 
 ::-webkit-scrollbar-track {

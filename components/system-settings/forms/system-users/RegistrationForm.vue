@@ -97,7 +97,7 @@
                           item-value="id"
                           label="Branch"
                           v-model="payload.branch_id"
-                          @update:modelValue="handleBranch(payload)"
+                          @update:model-value="handleBranch(payload)"
                           required
                           :rules="[(v) => !!v || 'Branch is required']"
                           clearable
@@ -360,10 +360,15 @@ const checkUncheckAll = () => {
   }
   console.log(grantAdminAccess.value);
 };
+
 const suffix = JSON.parse(nuxtStorage.localStorage.getData("suffix")) || [];
 const position = JSON.parse(nuxtStorage.localStorage.getData("position")) || [];
 const branch = JSON.parse(nuxtStorage.localStorage.getData("branches")) || [];
 const usergroup = JSON.parse(nuxtStorage.localStorage.getData("roles")) || [];
+// const suffix = ref([]);
+// const position = ref([]);
+// const branch = ref([]);
+// const usergroup = ref([]);
 const department = ref([]);
 const section = ref([
   { id: 1, name: "Section 1", value: 1 },
@@ -465,6 +470,7 @@ onMounted(async () => {
   }
   handleBranch();
   tab.value = "one";
+  
 });
 </script>
 

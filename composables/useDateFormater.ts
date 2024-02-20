@@ -1,6 +1,5 @@
-export const useCurrencyFormatter = (value:any) => {
-    return value.toLocaleString('en-PH', {
-        style: 'currency',
-        currency: 'PHP'
-    });
+
+import moment from "moment";
+export const useDateMMDDYYY = (value:any) => {
+   return moment(value).format("YYYY-MM-DD");
 };

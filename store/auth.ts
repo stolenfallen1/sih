@@ -34,7 +34,9 @@ export const useAuthStore = defineStore('auth', {
         this.authenticated = true; // set authenticated  state value to true
         this.passcode = data.value.user.passcode;
         const {fetchUserDetails} = useUserDetailsStore();
+        const { fetchPositions} = useDropdownOptionStore();
         await fetchUserDetails(token.value); 
+        await fetchPositions(token.value); 
       }
     },
     logUserOut() {

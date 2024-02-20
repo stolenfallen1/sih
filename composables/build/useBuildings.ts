@@ -1,7 +1,7 @@
 import nuxtStorage from 'nuxt-storage';
-export const useSuffix = async () => {
+export const useBuildings = async () => {
     const config = useRuntimeConfig();
-    const { data}: any = await useFetch(useApiUrl() + `/get-suffix`, {
+    const { data}: any = await useFetch(useApiUrl() + `/buildings`, {
     method: 'GET',
     headers: { 
         'Content-Type': 'application/json',
@@ -9,6 +9,6 @@ export const useSuffix = async () => {
     },
     });
     if (data.value) {
-        nuxtStorage.localStorage.setData('suffix', JSON.stringify(data.value.data), 24, 'h');
+        nuxtStorage.localStorage.setData('buildings', JSON.stringify(data.value), 24, 'h');
     }
 }
