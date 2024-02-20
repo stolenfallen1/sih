@@ -124,7 +124,7 @@ import { storeToRefs } from "pinia";
 import moment from "moment";
 moment.locale("en");
 import RegistrationForm from "~/components/system-settings/forms/system-users/RegistrationForm.vue";
-import ReusableTable from "~/components/system-settings/tables/ReusableTable.vue";
+import ReusableTable from "~/components/reusables/ReusableTable.vue";
 import ModuleForm from "./modules/ModuleForm.vue";
 const { selectedRowDetails, isrefresh } = storeToRefs(useSubcomponentSelectedRowDetailsStore()); // state id for subcomponents ?id=123
 let userdetails = JSON.parse(nuxtStorage.localStorage.getData("user_details"));

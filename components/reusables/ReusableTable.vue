@@ -1,6 +1,6 @@
 <template>
     <v-card rounded="lg" elevation="3">
-        <v-tabs v-model="tab"  v-if="showTabs">
+        <v-tabs v-model="tab" v-if="showTabs">
             <v-tab
                 v-for="tabItem in tabs"
                 :key="tabItem.value"
@@ -10,7 +10,7 @@
                 {{ tabItem.label }}
             </v-tab>
         </v-tabs>
-        <v-divider  v-if="showTabs"></v-divider>
+        <v-divider v-if="showTabs"></v-divider>
         <v-toolbar color="#FFF">
             <v-btn icon @click="handleActionClick('refresh')">
                 <v-icon>mdi-refresh</v-icon>
@@ -43,7 +43,7 @@
             :items-per-page="options.itemsPerPage"
             :loading="loading"
             @update:options="refetch"
-            :show-select="showSelect ?  true : false"
+            :show-select="showSelect ? true : false"
             select-strategy="single"
             @click:row="handleSelectedRow"
             item-value="id"
@@ -67,11 +67,16 @@
 <script setup>
 import "../../../styes/animation.css";
 
-const emits = defineEmits(['fetchPage', 'tab-change','selected-row','action-search']);
+const emits = defineEmits([
+    "fetchPage",
+    "tab-change",
+    "selected-row",
+    "action-search",
+]);
 const options = reactive({
     itemsPerPage: 50,
-    page:1
-})
+    page: 1,
+});
 const props = defineProps({
     serverItems: {
         type: Array,
@@ -109,27 +114,26 @@ const props = defineProps({
 
 const tab = ref("");
 const selectedRows = ref([]);
-const keyword = ref('');
+const keyword = ref("");
 
-const refetch =(options) =>{
+const refetch = (options) => {
     selectedRows.value = [];
     options.keyword = keyword.value;
-    emits('fetchPage', options)
-}
+    emits("fetchPage", options);
+};
 
-
-const handleSelectedRow = (event,selectedRow)=>{
+const handleSelectedRow = (event, selectedRow) => {
     const index = selectedRows.value.indexOf(selectedRow?.item.id);
     selectedRows.value = [];
     let item = selectedRow.item;
     if (index === -1) {
-      selectedRows.value.push(selectedRow?.item.id);
+        selectedRows.value.push(selectedRow?.item.id);
     } else {
-      item = '';
-      selectedRows.value.splice(index, 1);
+        item = "";
+        selectedRows.value.splice(index, 1);
     }
-    emits('selected-row', item)
-}
+    emits("selected-row", item);
+};
 
 const handleActionClick = (action) => {
     // Handle action button clicks (search, refresh)
@@ -137,18 +141,18 @@ const handleActionClick = (action) => {
     emits(`action-${action}`);
 };
 
-const handleTabClick = (tabValue) => {  
+const handleTabClick = (tabValue) => {
     selectedRows.value = [];
     emits("tab-change", tabValue);
 };
 
 const search = () => {
-    emits("action-search", '');
+    emits("action-search", "");
 };
 
 const handleSearch = () => {
     emits("action-search", keyword.value);
-}
+};
 // options.itemsPerPage.value = props
 
 onMounted(() => {

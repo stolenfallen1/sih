@@ -91,7 +91,8 @@
 </template>
 
 <script setup>
-import ReusableTable from "~/components/system-settings/tables/ReusableTable.vue";
+import ReusableTable from "~/components/reusables/ReusableTable.vue";
+
 definePageMeta({
   layout: "root-layout",
 });
