@@ -107,6 +107,7 @@ let tab = ref("1");
 
 const closeDialog = () => {
     emits("close-dialog");
+    tab.value = "1";
 };
 
 const submit = () => {

@@ -2,7 +2,7 @@
     <v-row>
         <v-col lg="12">
             <v-card elevation="2">
-                <v-card-title>Dispensary Registration History</v-card-title>
+                <v-card-title class="text-center">Dispensary Registration History</v-card-title>
                 <v-card-text>
                     <v-table density="compact">
                         <thead>
@@ -40,7 +40,7 @@
         </v-col>
         <v-col lg="12">
             <v-card elevation="2">
-                <v-card-title>Medical Cases</v-card-title>
+                <v-card-title class="text-center">Medical Cases</v-card-title>
                 <v-card-text>
                     <v-table density="compact">
                         <thead>

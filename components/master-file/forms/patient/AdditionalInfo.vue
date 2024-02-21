@@ -2,7 +2,7 @@
     <v-row>
         <v-col lg="12">
             <v-card elevation="2">
-                <v-card-title>Other ID Information</v-card-title>
+                <v-card-title class="text-center">Other ID Information</v-card-title>
                 <v-card-text>
                     <v-table density="compact">
                         <thead>
@@ -43,7 +43,7 @@
     <v-row>
         <v-col lg="12">
             <v-card elevation="2">
-                <v-card-title>Other Patient Information</v-card-title>
+                <v-card-title class="text-center">Other Patient Information</v-card-title>
                 <v-card-text>
                     <v-table density="compact">
                         <thead>

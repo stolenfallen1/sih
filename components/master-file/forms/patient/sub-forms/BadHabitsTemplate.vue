@@ -60,7 +60,7 @@
             <v-card-actions>
                 <v-btn color="blue-darken-1" @click="closeDialog">Close</v-btn>
                 <v-spacer></v-spacer>
-                <v-btn class="bg-primary text-white" type="submit">Select</v-btn>
+                <v-btn class="bg-primary text-white" type="submit" @click="handleSelectingHabits">Select</v-btn>
             </v-card-actions>
         </v-card>
     </v-dialog>
@@ -85,6 +85,10 @@ const vices = [
 const closeDialog = () => {
     emits("close-dialog");
 };
+
+const handleSelectingHabits = () => {
+    emits("select-habits");
+}
 
 </script>
 
