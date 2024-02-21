@@ -1,77 +1,77 @@
 <template>
     <v-card class="px-4" elevation="2">
-        <v-row>
-            <v-card-title class="mt-1">Spouse Information</v-card-title>
-            <v-col cols="12">
-                <v-row>
-                    <v-col cols="6">
-                        <v-text-field
-                            label="Spouse Name"
-                            type="text"
-                            density="compact"
-                            variant="outlined"
-                        ></v-text-field>
-                    </v-col>
-                    <v-col cols="3">
-                        <v-text-field
-                            label="Spouse Occupation"
-                            type="text"
-                            density="compact"
-                            variant="outlined"
-                        ></v-text-field>
-                    </v-col>
-                    <v-col cols="3">
-                        <v-text-field
-                            label="Birth Date"
-                            density="compact"
-                            type="date"
-                            variant="outlined"
-                        ></v-text-field>
-                    </v-col>
-                    <v-col cols="3">
-                        <v-text-field
-                            label="Contact No."
-                            type="text"
-                            density="compact"
-                            variant="outlined"
-                        ></v-text-field>
-                    </v-col>
-                    <v-col cols="3">
-                        <v-text-field
-                            label="Email"
-                            type="text"
-                            density="compact"
-                            variant="outlined"
-                        ></v-text-field>
-                    </v-col>
-                    <v-col cols="3">
-                        <v-text-field
-                            label="Date of Marriage"
-                            density="compact"
-                            type="date"
-                            variant="outlined"
-                        ></v-text-field>
-                    </v-col>
-                    <v-col cols="3">
-                        <v-text-field
-                            label="TIN"
-                            type="text"
-                            density="compact"
-                            variant="outlined"
-                        ></v-text-field>
-                    </v-col>
-                    <v-col lg="12">
-                        <v-textarea
-                            class="cursor-pointer"
-                            label="Full Address"
-                            prepend-icon="mdi-plus-box"
-                            @click.prepend="handleOpenAddressForm(1)"
-                            variant="outlined"
-                        ></v-textarea>
-                    </v-col>
-                </v-row>
-            </v-col>
-        </v-row>
+        <v-card-title class="text-center">Spouse Information</v-card-title>
+            <v-card-text>
+                <v-col cols="12">
+                    <v-row>
+                        <v-col cols="6">
+                            <v-text-field
+                                label="Spouse Name"
+                                type="text"
+                                density="compact"
+                                variant="outlined"
+                            ></v-text-field>
+                        </v-col>
+                        <v-col cols="3">
+                            <v-text-field
+                                label="Spouse Occupation"
+                                type="text"
+                                density="compact"
+                                variant="outlined"
+                            ></v-text-field>
+                        </v-col>
+                        <v-col cols="3">
+                            <v-text-field
+                                label="Birth Date"
+                                density="compact"
+                                type="date"
+                                variant="outlined"
+                            ></v-text-field>
+                        </v-col>
+                        <v-col cols="3">
+                            <v-text-field
+                                label="Contact No."
+                                type="text"
+                                density="compact"
+                                variant="outlined"
+                            ></v-text-field>
+                        </v-col>
+                        <v-col cols="3">
+                            <v-text-field
+                                label="Email"
+                                type="text"
+                                density="compact"
+                                variant="outlined"
+                            ></v-text-field>
+                        </v-col>
+                        <v-col cols="3">
+                            <v-text-field
+                                label="Date of Marriage"
+                                density="compact"
+                                type="date"
+                                variant="outlined"
+                            ></v-text-field>
+                        </v-col>
+                        <v-col cols="3">
+                            <v-text-field
+                                label="TIN"
+                                type="text"
+                                density="compact"
+                                variant="outlined"
+                            ></v-text-field>
+                        </v-col>
+                        <v-col lg="12">
+                            <v-textarea
+                                class="cursor-pointer"
+                                label="Full Address"
+                                prepend-icon="mdi-plus-box"
+                                @click.prepend="handleOpenAddressForm(1)"
+                                variant="outlined"
+                            ></v-textarea>
+                        </v-col>
+                    </v-row>
+                </v-col>
+            </v-card-text>
     </v-card>
     <v-card class="mt-1" elevation="2">
         <v-card-title>
