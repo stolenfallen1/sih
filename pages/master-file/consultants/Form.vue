@@ -18,8 +18,8 @@
               <v-row>
                 <v-col cols="12" sm="8" md="9">
                   <v-list-subheader inset> Personal Information </v-list-subheader>
-                  <v-row>
-                    <v-col lg="4">
+                  <v-row  class="pa-2">
+                    <v-col lg="4"   class="pa-1"> 
                       <v-text-field
                         label="Lastname*"
                         type="text"
@@ -29,7 +29,7 @@
                         variant="outlined"
                       ></v-text-field>
                     </v-col>
-                    <v-col lg="4">
+                    <v-col lg="4"   class="pa-1">
                       <v-text-field
                         label="Firstname*"
                         type="text"
@@ -39,7 +39,7 @@
                         variant="outlined"
                       ></v-text-field>
                     </v-col>
-                    <v-col lg="4">
+                    <v-col lg="4"   class="pa-1">
                       <v-text-field
                         label="Middlename"
                         type="text"
@@ -50,8 +50,8 @@
                       ></v-text-field>
                     </v-col>
                   </v-row>
-                  <v-row class="mt-1">
-                    <v-col lg="4">
+                  <v-row class="mt-1 pa-2">
+                    <v-col lg="2"  class="pa-1">
                       <v-autocomplete
                         item-title="abbreviations"
                         item-value="id"
@@ -64,7 +64,7 @@
                         variant="outlined"
                       ></v-autocomplete>
                     </v-col>
-                    <v-col cols="4">
+                    <v-col cols="2" class="pa-1">
                       <v-text-field
                         label="Birth Date"
                         density="compact"
@@ -73,13 +73,34 @@
                         variant="outlined"
                       ></v-text-field>
                     </v-col>
-                    <v-col cols="4">
+                    <v-col cols="2" class="pa-1">
                       <v-autocomplete
                         item-title="sex_description"
                         item-value="id"
                         :items="gender"
                         v-model="payload.sex_id"
                         label="Gender"
+                        hide-details
+                        density="compact"
+                        variant="outlined"
+                      ></v-autocomplete>
+                    </v-col>
+                    <v-col cols="2" class="pa-1">
+                      <v-text-field
+                        label="Age"
+                        density="compact"
+                        readonly
+                        v-model="payload.age"
+                        variant="outlined"
+                      ></v-text-field>
+                    </v-col>
+                    <v-col cols="4" class="pa-1">
+                      <v-autocomplete
+                        item-title="CivilStatus_name"
+                        item-value="id"
+                        :items="civil_status"
+                        v-model="payload.civil_status_id"
+                        label="Civil Status"
                         hide-details
                         density="compact"
                         variant="outlined"
@@ -143,10 +164,11 @@
                   <v-row class="mt-1">
                     <v-col lg="4">
                       <v-autocomplete
-                        item-title="abbreviations"
+                        item-title="value"
                         item-value="id"
                         label="PRC License Type"
-                        v-model="payload.bank_account_no"
+                        :items="prcType"
+                        v-model="payload.prc_type_id"
                         hide-details
                         clearable
                         density="compact"
@@ -190,8 +212,10 @@
                     </v-col>
                     <v-col cols="3">
                       <v-autocomplete
-                        item-title="abbreviations"
+                        item-title="value"
                         item-value="id"
+                        :items="phicGroup"
+                        v-model="payload.phic_group_id"
                         label="PHIC Group"
                         hide-details
                         clearable
@@ -260,8 +284,9 @@
                         item-value="id"
                         label="EWT Tax Description"
                         :items="EWTTax"
-                        v-model="payload.WithHolding__tax_rate"
+                        v-model="payload.EWTTax"
                         hide-details
+                        @update:model-value="ComputeEWTTax"
                         clearable
                         density="compact"
                         variant="outlined"
@@ -272,6 +297,8 @@
                         label="Expanded WTax Rate"
                         type="text"
                         hide-details
+                        readonly
+                        v-model="payload.WithHolding__tax_rate"
                         density="compact"
                         variant="outlined"
                       ></v-text-field>
@@ -281,21 +308,17 @@
                 <v-col cols="12" sm="4" md="3">
                   <v-row>
                     <!-- Digital Signature -->
-                    <!-- <v-col cols="12" align="center">
-                                        <v-card class="pa-1">
-                                            <v-avatar rounded="0" size="155">
-                                                <v-img
-                                                    cover
-                                                    width="100%"
-                                                    alt="Selected Image"
-                                                ></v-img>
-                                            </v-avatar>
-                                        </v-card>
-                                    </v-col> -->
+                   
                     <v-col cols="12" align="center">
                       <v-card class="pa-1">
                         <v-avatar rounded="0" size="155">
-                          <v-img cover width="100%" alt="Selected Image"></v-img>
+                           <v-img
+                              cover
+                              width="100%"
+                              v-if="imageUrl"
+                              :src="imageUrl"
+                              alt="Selected Image"
+                            ></v-img>
                         </v-avatar>
                       </v-card>
                     </v-col>
@@ -303,6 +326,9 @@
                       <v-file-input
                         class="mt-3"
                         type="file"
+                        v-model="image"
+                        @update:model-value="checkfile"
+                        @change="onFileChange"
                         variant="outlined"
                         bg-color="primary"
                         clearable
@@ -349,6 +375,7 @@
                         item-title="value"
                         item-value="id"
                         :items="serviceClass"
+                        v-model="payload.service_class_id"
                         label="Service Class"
                         hide-details
                         clearable
@@ -387,6 +414,7 @@
                         item-title="value"
                         item-value="id"
                         :items="classCode"
+                        v-model="payload.class_code_id"
                         label="Class Codes"
                         hide-details
                         clearable
@@ -431,6 +459,7 @@
                   <v-text-field
                     label="Telephone Number"
                     hide-details
+                    v-model="payload.telephoneno"
                     density="compact"
                     variant="outlined"
                   ></v-text-field>
@@ -451,6 +480,7 @@
                     class="cursor-pointer"
                     label="Residential Address"
                     prepend-icon="mdi-plus-box"
+                    v-model="payload.residentialaddress"
                     @click:prepend="handleOpenAddressForm"
                     variant="outlined"
                   ></v-textarea>
@@ -462,6 +492,7 @@
                     class="cursor-pointer"
                     label="Clinic Address"
                     prepend-icon="mdi-plus-box"
+                    v-model="payload.clinicaddress"
                     @click:prepend="handleOpenAddressForm"
                     variant="outlined"
                   ></v-textarea>
@@ -473,7 +504,7 @@
         <v-divider></v-divider>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn class="bg-primary text-white" type="submit">Add Consultant</v-btn>
+          <v-btn class="bg-primary text-white" type="submit" v-if="payload.type != 'view'">Save and Close</v-btn>
         </v-card-actions>
       </form>
       <v-dialog
@@ -483,6 +514,7 @@
         width="650"
       >
         <AddressForm
+          :payload="payload"
           @close-dialog="closeAddressForm"
           @handle-submit="handleAddressSubmission"
         />
@@ -500,11 +532,20 @@ const props = defineProps({
     default: () => {},
   },
 });
+
+const image = ref("");
+const imageUrl = ref("");
 const phicNo = ref([
     {id:0,value:'Not Applicable'},
-    {id:1,value:'1111'},
+    {id:1,value:'1111',},
     {id:2,value:'0123'},
 ])
+const phicGroup = ref([
+    {id:0,value:'Not Applicable'},
+    {id:1,value:'1111',},
+    {id:2,value:'0123'},
+])
+
 
 const prcType = ref([
     {id:0,value:'Not Applicable'},
@@ -531,19 +572,44 @@ const vatCondition = ref([
 ])
 const EWTTax = ref([
     {id:1,value:'1%'},
-    {id:2,value:'10%'},
-    {id:3,value:'2%'},
-    {id:4,value:'5%'},
-    {id:0,value:'Not Applicable%'},
+    {id:10,value:'10%'},
+    {id:2,value:'2%'},
+    {id:5,value:'5%'},
+    {id:0,value:'Not Applicable'},
 ])
+
 const address_form_dialog = ref(false);
 const gender = JSON.parse(nuxtStorage.localStorage.getData("sex"));
 const suffix = JSON.parse(nuxtStorage.localStorage.getData("suffix"));
 const service_type = JSON.parse(nuxtStorage.localStorage.getData("services-type"));
 const doctor_category = JSON.parse(nuxtStorage.localStorage.getData("doctorscategory"));
+const civil_status = JSON.parse(nuxtStorage.localStorage.getData("civil-status"));
 const specializations = JSON.parse(
   nuxtStorage.localStorage.getData("doctor-specialization")
 );
+const createImage = (file) => {
+  if (!file || !(file instanceof Blob)) {
+    console.error("Invalid file");
+    return;
+  }
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    imageUrl.value = e.target.result;
+  };
+
+  reader.readAsDataURL(file);
+};
+const onFileChange = (event) => {
+  const file = event.target.files[0];
+  if (!file) {
+    return (imageUrl.value = "");
+  }
+  createImage(file);
+};
+const ComputeEWTTax= () => {
+  let ewttax = props.payload.EWTTax;
+  props.payload.WithHolding__tax_rate = ewttax;
+};
 
 const submit = () => {
   emits("submit-form", props.payload);
@@ -561,8 +627,8 @@ const closeAddressForm = () => {
   address_form_dialog.value = false;
 };
 
-const handleAddressSubmission = () => {
-  alert("Address Submitted");
+const handleAddressSubmission = (payload) => {
+  console.log(payload)
 };
 
 const tab = ref(null);

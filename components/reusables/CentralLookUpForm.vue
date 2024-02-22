@@ -120,6 +120,11 @@ const props = defineProps({
     type: Boolean,
     default: () => false,
   },
+   search_payload: {
+    type: Object,
+    default: () => {},
+  },
+  
 });
 const selectedRows = ref([]);
 const headers = ref([
@@ -173,7 +178,6 @@ const handleSelectedRow = (event, selectedRow) => {
   emits("selected-row", item);
 };
 
-const search_payload = ref({});
 const emits = defineEmits();
 
 const handleSearch = () => {
