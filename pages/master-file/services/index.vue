@@ -101,8 +101,8 @@ const currentTab = ref(false);
 const showTabs = ref(true);
 const currentTabValue = ref(1);
 const tableTabs = ref([
-    { label: "Examinations", value: "one" },
-    { label: "Procedures", value: "two" }
+    { label: "Examinations", value: "1" },
+    { label: "Procedures", value: "4" }
 ]);
 const totalItems = ref(0);
 const itemsPerPage = ref(40);
@@ -149,11 +149,12 @@ const serverItems = ref([]);
 
 const handleTabChange = (tabValue) => {
     currentTabValue.value = tabValue;
-    if (tabValue == "one") {
+    if (tabValue == "1") {
         examinations();
-    } else if (tabValue == "two") {
+    } else if (tabValue == "2") {
         procedures();
     }
+    loadItems(null, null, tabValue);
 };
 
 const examinations = () => {

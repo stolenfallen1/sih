@@ -91,14 +91,14 @@
 </template>
 
 <script setup>
-import ReusableTable from "~/components/system-settings/tables/ReusableTable.vue";
+import ReusableTable from "~/components/reusables/ReusableTable.vue";
 definePageMeta({
   layout: "root-layout",
 });
 
 const { selectedRowDetails, isrefresh } = storeToRefs(useSubcomponentSelectedRowDetailsStore());
 const isSelectedUser = ref(true);
-const pageTitle = ref("Cashier");
+const pageTitle = ref("Ancillary Services");
 const currentTab = ref(false);
 const showTabs = ref(false);
 const tableTabs = ref([]);
