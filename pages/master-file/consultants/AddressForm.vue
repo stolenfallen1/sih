@@ -62,7 +62,7 @@
                             item-title="barangay_name"
                             item-value="id"
                             label="Barangay"
-                            v-model="address_payload.brangay"
+                            v-model="address_payload.barangay"
                             :items="barangay"
                             @update:model-value="getZipCode"
                             hide-details
@@ -76,12 +76,11 @@
                         <v-autocomplete
                             item-title="zip_code"
                             item-value="id"
-                            v-model="zicode_id"
+                            v-model="address_payload.zicode_id"
                             :items="zipcode"
                             label="Zipcode"
                             hide-details
                             clearable
-                            return-object
                             density="compact"
                             variant="outlined"
                         ></v-autocomplete>
@@ -185,11 +184,11 @@ const getBarangay = async()=>{
     });
     const data = await response.json();
     barangay.value = data.data;
-    address_payload.value.full_address +=', '+address_payload.value.municipality.municipality_name;
+    address_payload.value.full_address +=', '+address_payload.value.municipality.municipality_name+ ', '+address_payload.value.barangay.barangay_name;
 }
 
 const getZipCode = async()=>{
-    if(!zipcode.value) return;
+    if(!address_payload.value.zicode_id) return;
      const response = await fetch(useApiUrl() + "/zip-code-list?region_code=" + address_payload.value.region.region_code + "&province_code=" + address_payload.value.province.province_code + "&municipality_code=" + address_payload.value.municipality.municipality_code, {
       headers: {
         Authorization: `Bearer ` + useToken(),
