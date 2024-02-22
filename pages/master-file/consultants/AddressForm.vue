@@ -184,11 +184,11 @@ const getBarangay = async()=>{
     });
     const data = await response.json();
     barangay.value = data.data;
-    address_payload.value.full_address +=', '+address_payload.value.municipality.municipality_name+ ', '+address_payload.value.barangay.barangay_name;
+    address_payload.value.full_address +=', '+address_payload.value.municipality.municipality_name;
 }
 
 const getZipCode = async()=>{
-    if(!address_payload.value.zicode_id) return;
+    if(!address_payload.value.barangay) return;
      const response = await fetch(useApiUrl() + "/zip-code-list?region_code=" + address_payload.value.region.region_code + "&province_code=" + address_payload.value.province.province_code + "&municipality_code=" + address_payload.value.municipality.municipality_code, {
       headers: {
         Authorization: `Bearer ` + useToken(),
