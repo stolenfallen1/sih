@@ -12,7 +12,7 @@
                 View
             </v-btn>
             <v-btn
-                @click="openCentralFormDialog"
+                @click="handleNew"
                 prepend-icon="mdi-plus-outline"
                 width="100"
                 color="primary"
@@ -212,21 +212,19 @@ const handleView = () => {
     // handle View action
 };
 
-const openCentralFormDialog = () => {
+const handleNew = () => {
     central_form_dialog.value = true;
 };
-
 const closeCentralFormDialog = () => {
     central_form_dialog.value = false;
 };
-
 const openAddFormDialog = () => {
     form_dialog.value = true;
 };
-
 const closeFormContainer = () => {
     form_dialog.value = false;
 };
+
 const handleEdit = () => {
     // handle Edit action
 };
