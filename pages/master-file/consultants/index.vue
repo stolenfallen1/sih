@@ -16,6 +16,7 @@
         @click="handleNew"
         prepend-icon="mdi-plus-outline"
         width="100"
+        :disabled="totalItems == 0 ? false: true"
         color="primary"
         class="bg-primary text-white"
       >
@@ -28,6 +29,7 @@
         @selected-row="selectedDoctor"
         :central_form_dialog="central_form_dialog"
         :search_results="search_results"
+        :search_payload="search_payload"
         @open-form="openFormDialog"
       />
       <v-dialog
@@ -137,10 +139,11 @@ const tableTabs = ref([]);
 
 const totalItems = ref(0);
 const itemsPerPage = ref(40);
-const search = ref("");
+const search = ref({});
 const params = ref("");
 const loading = ref(true);
 
+const search_payload = ref({});
 const form_dialog = ref(false);
 const central_form_dialog = ref(false);
 const search_results = ref([]);
@@ -216,7 +219,7 @@ const selectedDoctor = (item) => {
 const handleRefresh = () => {
   loadItems();
 };
-const SearchConsultant = async (search_payload) => {
+const SearchConsultant = async () => {
   let lastname = search_payload.lastname || "";
   let firstname = search_payload.firstname || "";
   let middlename = search_payload.middlename || "";
@@ -243,8 +246,12 @@ const SearchConsultant = async (search_payload) => {
 
 const handleSearch = (keyword) => {
   // Handle search action
+  search_payload.value.lastname = useSeperateName(keyword,'lastname');
+  search_payload.value.firstname = useSeperateName(keyword,'firstname');
   loadItems(null, keyword);
 };
+
+
 const selectedUser = (item) => {
   isSelectedUser.value = true;
   isrefresh.value = false;
@@ -272,30 +279,34 @@ const details = () => {
     payload.value.category_id = parseInt(payload.value.category_id);
     payload.value.suffix_id = parseInt(payload.value.suffix_id);
     payload.value.sex_id = parseInt(payload.value.sex_id);
+    payload.value.civil_status_id = parseInt(payload.value.civil_status_id);
+    payload.value.prc_type_id = parseInt(payload.value.prc_type_id);
+    payload.value.phic_group_id = parseInt(payload.value.phic_group_id);
+    payload.value.service_class_id = parseInt(payload.value.service_class_id);
+    payload.value.isVatable = parseInt(payload.value.isVatable);
     payload.value.birthdate = useDateMMDDYYY(payload.value.birthdate);
-    payload.value.prc_license_expiry_date = useDateMMDDYYY(
-      payload.value.prc_license_expiry_date
-    );
-    payload.value.philhealth_accreditation_expiry_date = useDateMMDDYYY(
-      payload.value.philhealth_accreditation_expiry_date
-    );
+    payload.value.EWTTax = parseInt(payload.value.WithHolding__tax_rate);
+    payload.value.age = useCalculateAge(useDateMMDDYYY(payload.value.birthdate));
+    payload.value.prc_license_expiry_date = useDateMMDDYYY(payload.value.prc_license_expiry_date);
+    payload.value.philhealth_accreditation_expiry_date = useDateMMDDYYY(payload.value.philhealth_accreditation_expiry_date);
     payload.value.isactive = parseInt(payload.value.isactive) == 1 ? true : false;
     form_dialog.value = true;
   }
 };
 const handleView = () => {
   details();
+  payload.value.type = 'view';
 };
 const handleEdit = () => {
   details();
+  payload.value.type = 'edit';
 };
 
 const handleNew = () => {
+  payload.value.type = 'new';
   central_form_dialog.value = true;
 };
 const DeactiveUser = () => {};
-
-const openCentralFormDialog = () => {};
 
 const closeCentralFormDialog = () => {
   central_form_dialog.value = false;
@@ -306,13 +317,15 @@ const openFormDialog = () => {
     search_results.value = [];
   } else {
     payload.value = Object.assign({});
+    payload.value.lastname = search_payload.value.lastname;
+    payload.value.firstname = search_payload.value.firstname;
   }
   form_dialog.value = true;
 };
 const closeFormDialog = () => {
   form_dialog.value = false;
   payload.value = Object.assign({});
-  // selectedUser(null);
+  selectedUser(null);
 };
 
 const loadItems = async (options = null, searchkeyword = null) => {
@@ -375,6 +388,7 @@ const submitDoctorsForm = async () => {
       body: { payload: payload },
     });
     if (data.value) {
+      closeFormDialog();
     }
   }
 };
