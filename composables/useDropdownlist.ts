@@ -6,7 +6,10 @@ export const useDropdownlist = () => {
   useBuildings();
   useSex();
   useSuffix();
+  useCivilstatus();
   useDoctorCategory();
   useServiceType();
   useDoctorSpecialization();
+  useRegion();
+  useCountry();
 }

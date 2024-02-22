@@ -104,10 +104,10 @@ const currentTab = ref(false);
 const showTabs = ref(true);
 const currentTabValue = ref(2);
 const tableTabs = ref([
-    { label: "Drugs and Medicines", value: "one" },
-    { label: "Supplies", value: "two" },
-    { label: "Assets. Equipments", value: "three" },
-    { label: "Others", value: "four" },
+    { label: "Drugs and Medicines", value: "2" },
+    { label: "Supplies", value: "5" },
+    { label: "Assets. Equipments", value: "6" },
+    { label: "Others", value: "3" },
 ]);
 const totalItems = ref(0);
 const itemsPerPage = ref(40);
@@ -154,15 +154,16 @@ const serverItems = ref([]);
 
 const handleTabChange = (tabValue) => {
     currentTabValue.value = tabValue;
-    if (tabValue == "one") {
+    if (tabValue == "2") {
         drugsAndMedicines();
-    } else if (tabValue == "two") {
+    } else if (tabValue == "5") {
         supplies();
-    } else if (tabValue == "three") {
+    } else if (tabValue == "6") {
         assetsAndEquipments();
-    } else if (tabValue == "four") {
+    } else if (tabValue == "3") {
         others();
     }
+    loadItems(null, null, tabValue);
 };
 
 const drugsAndMedicines = () => {
