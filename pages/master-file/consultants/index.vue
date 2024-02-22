@@ -13,7 +13,7 @@
         View
       </v-btn>
       <v-btn
-        @click="openCentralFormDialog"
+        @click="handleNew"
         prepend-icon="mdi-plus-outline"
         width="100"
         color="primary"
@@ -37,7 +37,11 @@
         transition="dialog-bottom-transition"
         scrollable
       >
-        <Form @close-dialog="closeFormDialog" @submit-form="submitDoctorsForm" :payload="payload" />
+        <Form
+          @close-dialog="closeFormDialog"
+          @submit-form="submitDoctorsForm"
+          :payload="payload"
+        />
       </v-dialog>
       <v-btn
         @click="handleEdit"
@@ -101,6 +105,15 @@
         <!-- Add more custom logic for other columns -->
       </template>
     </ReusableTable>
+
+
+    <Confirmation
+    :show="confirmationDialog"
+    :payload="payload"
+    :error_msg="error_msg"
+    @close="closeConfirmation"
+    @submit="registerUser"
+  />
   </v-card>
 </template>
 
@@ -111,7 +124,8 @@ import Form from "./Form.vue";
 definePageMeta({
   layout: "root-layout",
 });
-
+const confirmationDialog = ref(false);
+const error_msg = ref('');
 const { selectedRowDetails, isrefresh } = storeToRefs(
   useSubcomponentSelectedRowDetailsStore()
 );
@@ -185,12 +199,17 @@ const selectedDoctor = (item) => {
   payload.value = Object.assign({});
   if (item) {
     payload.value = Object.assign({}, item); //set state id for subcomponents ?id=item.id value
-    payload.value.specialization_primary_id = parseInt(item.specialization_primary_id)
-    payload.value.service_type = parseInt(item.service_type)
-    payload.value.category_id = parseInt(item.category_id)
-    payload.value.suffix_id = parseInt(item.suffix_id)
-    payload.value.sex_id = parseInt(item.sex_id)
-    payload.value.birthdate = useDateMMDDYYY(item.birthdate)
+    payload.value.specialization_primary_id = parseInt(item.specialization_primary_id);
+    payload.value.service_type = parseInt(item.service_type);
+    payload.value.category_id = parseInt(item.category_id);
+    payload.value.suffix_id = parseInt(item.suffix_id);
+    payload.value.sex_id = parseInt(item.sex_id);
+    payload.value.birthdate = useDateMMDDYYY(item.birthdate);
+    payload.value.prc_license_expiry_date = useDateMMDDYYY(item.prc_license_expiry_date);
+    payload.value.philhealth_accreditation_expiry_date = useDateMMDDYYY(
+      item.philhealth_accreditation_expiry_date
+    );
+    payload.value.isactive = parseInt(item.isactive) == 1 ? true : false;
   }
 };
 
@@ -231,9 +250,11 @@ const selectedUser = (item) => {
   isrefresh.value = false;
   selectedRowDetails.value.id = ""; //clear state id for subcomponents ?id=''
   selectedRowDetails.value.role_id = ""; //clear state id for subcomponents ?id=''
+  payload.value = Object.assign({});
 
   if (item) {
     selectedRowDetails.value = Object.assign({}, item); //set state id for subcomponents ?id=item.id value
+    payload.value = Object.assign({}, item);
     isrefresh.value = true;
     isSelectedUser.value = false;
   } else {
@@ -242,25 +263,56 @@ const selectedUser = (item) => {
   }
 };
 
-const handleView = () => {};
-const handleEdit = () => {};
-const handleNew = () => {};
-const DeactiveUser = () => {};
+const details = () => {
+  if (payload) {
+    payload.value.specialization_primary_id = parseInt(
+      payload.value.specialization_primary_id
+    );
+    payload.value.service_type = parseInt(payload.value.service_type);
+    payload.value.category_id = parseInt(payload.value.category_id);
+    payload.value.suffix_id = parseInt(payload.value.suffix_id);
+    payload.value.sex_id = parseInt(payload.value.sex_id);
+    payload.value.birthdate = useDateMMDDYYY(payload.value.birthdate);
+    payload.value.prc_license_expiry_date = useDateMMDDYYY(
+      payload.value.prc_license_expiry_date
+    );
+    payload.value.philhealth_accreditation_expiry_date = useDateMMDDYYY(
+      payload.value.philhealth_accreditation_expiry_date
+    );
+    payload.value.isactive = parseInt(payload.value.isactive) == 1 ? true : false;
+    form_dialog.value = true;
+  }
+};
+const handleView = () => {
+  details();
+};
+const handleEdit = () => {
+  details();
+};
 
-const openCentralFormDialog = () => {
+const handleNew = () => {
   central_form_dialog.value = true;
 };
+const DeactiveUser = () => {};
+
+const openCentralFormDialog = () => {};
 
 const closeCentralFormDialog = () => {
   central_form_dialog.value = false;
 };
 
 const openFormDialog = () => {
-  search_results.value = [];
+  if (payload.value.id) {
+    search_results.value = [];
+  } else {
+    payload.value = Object.assign({});
+  }
   form_dialog.value = true;
 };
 const closeFormDialog = () => {
   form_dialog.value = false;
+  payload.value = Object.assign({});
+  // selectedUser(null);
 };
 
 const loadItems = async (options = null, searchkeyword = null) => {
@@ -306,18 +358,24 @@ const updateSearchItems = (items) => {
   console.log(search_results.value, "search");
 };
 
-
 const submitDoctorsForm = async () => {
-   const { data } = await useFetch(useApiUrl() + `/consultants`, {
-    method: 'POST',
-    headers: {
-      Authorization: `Bearer `+ useToken(),
-      "Content-Type": "application/json",
-    },
-    body: { payload: payload },
-  });
-  if(data.value){
-    
+  let method = "POST";
+  let id = "";
+  if (payload.value.id) {
+    id = payload.value.id;
+    method = "PUT";
+  }
+  if (payload.value) {
+    const { data } = await useFetch(useApiUrl() + `/consultants/` + id, {
+      method: method,
+      headers: {
+        Authorization: `Bearer ` + useToken(),
+        "Content-Type": "application/json",
+      },
+      body: { payload: payload },
+    });
+    if (data.value) {
+    }
   }
 };
 
