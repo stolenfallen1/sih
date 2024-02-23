@@ -14,7 +14,6 @@
             </v-btn>
             <v-btn
                 @click="handleNew"
-                :disabled="serverItems.length > 0 ? true : false"
                 prepend-icon="mdi-plus-outline"
                 width="100"
                 color="primary"
@@ -22,6 +21,8 @@
             >
                 New
             </v-btn>
+            <!-- Form Container here -->
+            <FormContainer :form_container="form_container" :currentTabValue="currentTabValue" @close-dialog="closeFormContainer" />
             <v-btn
                 @click="handleEdit"
                 prepend-icon="mdi-pencil"
@@ -89,6 +90,7 @@
 <script setup>
 import { storeToRefs } from "pinia";
 import ReusableTable from "~/components/reusables/ReusableTable.vue";
+import FormContainer from "~/components/master-file/forms/items-supplies/FormContainer.vue";
 
 definePageMeta({
     layout: "root-layout",
@@ -102,7 +104,7 @@ const isSelectedUser = ref(true);
 const pageTitle = ref("Item and Supplies");
 const currentTab = ref(false);
 const showTabs = ref(true);
-const currentTabValue = ref(2);
+const currentTabValue = ref("2");
 const tableTabs = ref([
     { label: "Drugs and Medicines", value: "2" },
     { label: "Supplies", value: "5" },
@@ -151,6 +153,7 @@ const headers = [
     },
 ];
 const serverItems = ref([]);
+const form_container = ref(false);
 
 const handleTabChange = (tabValue) => {
     currentTabValue.value = tabValue;
@@ -205,8 +208,14 @@ const selectedUser = (item) => {
 };
 const handleView = () => {};
 const handleEdit = () => {};
-const handleNew = () => {};
+const handleNew = () => {
+    form_container.value = true;
+};
 const DeactiveUser = () => {};
+
+const closeFormContainer = () => {
+    form_container.value = false;
+};
 
 const loadItems = async (
     options = null,

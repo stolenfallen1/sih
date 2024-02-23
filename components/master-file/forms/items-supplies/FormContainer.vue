@@ -9,7 +9,7 @@
         <v-card>
             <v-card-title>
                 <v-toolbar density="compact" color="#FFF">
-                    <v-toolbar-title>Manage Services Details</v-toolbar-title>
+                    <v-toolbar-title>Manage Item and Supply Details</v-toolbar-title>
                     <v-spacer></v-spacer>
                     <v-btn color="black" @click="closeDialog">
                         <v-icon>mdi-close</v-icon>
@@ -18,7 +18,7 @@
                 <v-tabs v-model="tab" bg-color="#6984FF" center-active>
                     <v-tab value="1">General</v-tab>
                     <v-tab value="2">Other Information</v-tab>
-                    <v-tab value="3">CPT Specs</v-tab>
+                    <v-tab v-if="currentTabValue === '2'" value="3">Prescription Details</v-tab>
                 </v-tabs>
             </v-card-title>
             <v-card-text>
@@ -29,7 +29,7 @@
                     <other-information />
                 </div>
                 <div v-if="tab === '3'">
-                    <cpt-specs />
+                    <prescription-details />
                 </div>
             </v-card-text>
             <v-divider></v-divider>
@@ -48,29 +48,33 @@
 </template>
 
 <script setup>
-import GeneralForm from "./GeneralForm.vue";
-import OtherInformation from "./OtherInformation.vue";
-import CptSpecs from "./CptSpecs.vue";
+import GeneralForm from './GeneralForm.vue';
+import OtherInformation from './OtherInformation.vue';
+import PrescriptionDetails from './PrescriptionDetails.vue';
 
 const props = defineProps({
     form_container: {
         type: Boolean,
         default: () => false,
     },
+    currentTabValue: {
+        type: String,
+        required: true,
+    },
 })
 
-const tab = ref("1")
+let tab = ref("1")
 
 const emits = defineEmits()
 
 const closeDialog = () => {
     emits("close-dialog")
-    tab.value = "1"
 }
 
 const submit = () => {
     alert("Submitted")
 }
+
 </script>
 
 <style scoped>
