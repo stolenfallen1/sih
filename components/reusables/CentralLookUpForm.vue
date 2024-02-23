@@ -2,7 +2,13 @@
   <v-dialog :model-value="central_form_dialog" persistent hide-overlay width="800" scrollable>
     <form @submit.prevent="handleSearch">
       <v-card>
-        <v-card-title>Central Database Lookup Window</v-card-title>
+         <v-toolbar density="compact" color="#FFF">
+            <v-toolbar-title>Central Database Lookup Window</v-toolbar-title>
+            <v-spacer></v-spacer>
+             <v-btn color="black" @click="closeDialog">
+              <v-icon>mdi-close</v-icon>
+            </v-btn>
+        </v-toolbar>
         <v-divider></v-divider>
         <v-card-text>
           <v-container>
@@ -41,12 +47,13 @@
                   label="Birth Date"
                   density="compact"
                   hide-details
+                  :max="new Date().toISOString().substr(0, 10)"
                   v-model="search_payload.birthdate"
                   type="date"
                   variant="outlined"
                 ></v-text-field>
               </v-col>
-              <v-btn class="bg-info text-white mb-4 ml-1" type="submit" density="compact"
+              <v-btn class="bg-info text-white mb-4 ml-1" type="submit" :loading="search_payload.isloading" density="compact"
                 ><v-icon>mdi-magnify</v-icon>Search</v-btn
               >
               <v-divider></v-divider>
@@ -55,6 +62,7 @@
                   :fixed-header="true"
                   :items-length="40"
                   density="compact"
+                  :loading="search_payload.isloading"
                   height="40vh"
                   v-model="selectedRows"
                   @click:row="handleSelectedRow"
@@ -94,14 +102,14 @@
             class="bg-primary text-white"
             type="submit"
             :disabled="search_results.length == 0 ? true : false"
-            @click="handleClickForOpeningForm"
+            @click="handleClickForOpeningForm('active')"
             >Select Active Record</v-btn
           >
           <v-btn
             class="bg-primary text-white"
             type="submit"
             :disabled="search_results.length == 0 ? false : true"
-            @click="handleClickForOpeningForm"
+            @click="handleClickForOpeningForm('new')"
             >Add New</v-btn
           >
         </v-card-actions>
@@ -181,15 +189,17 @@ const handleSelectedRow = (event, selectedRow) => {
 const emits = defineEmits();
 
 const handleSearch = () => {
-  emits("search", search_payload.value);
+  emits("search", props.search_payload);
+
+  console.log(props.search_payload)
 };
 
 const closeDialog = () => {
   emits("close-dialog");
 };
 
-const handleClickForOpeningForm = () => {
-  emits("open-form");
+const handleClickForOpeningForm = (type) => {
+  emits("open-form",type);
 };
 </script>
 

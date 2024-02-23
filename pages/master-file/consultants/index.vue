@@ -16,35 +16,12 @@
         @click="handleNew"
         prepend-icon="mdi-plus-outline"
         width="100"
-        :disabled="totalItems == 0 ? false: true"
         color="primary"
         class="bg-primary text-white"
       >
         New
       </v-btn>
-      <!-- Central Lookup Search Form -->
-      <CentralLookUpForm
-        @close-dialog="closeCentralFormDialog"
-        @search="SearchConsultant"
-        @selected-row="selectedDoctor"
-        :central_form_dialog="central_form_dialog"
-        :search_results="search_results"
-        :search_payload="search_payload"
-        @open-form="openFormDialog"
-      />
-      <v-dialog
-        v-model="form_dialog"
-        fullscreen
-        :scrim="false"
-        transition="dialog-bottom-transition"
-        scrollable
-      >
-        <Form
-          @close-dialog="closeFormDialog"
-          @submit-form="submitDoctorsForm"
-          :payload="payload"
-        />
-      </v-dialog>
+     
       <v-btn
         @click="handleEdit"
         prepend-icon="mdi-pencil"
@@ -103,18 +80,34 @@
         <span v-if="column.key === 'isactive'" :key="column.key">
           {{ item.isactive == 1 ? "Active" : "In Active" }}</span
         >
-
         <!-- Add more custom logic for other columns -->
       </template>
     </ReusableTable>
 
-
+    <!-- Central Lookup Search Form -->
+    <CentralLookUpForm
+      @close-dialog="closeCentralFormDialog"
+      @search="SearchConsultant"
+      @selected-row="selectedDoctor"
+      :central_form_dialog="central_form_dialog"
+      :search_results="search_results"
+      :search_payload="search_payload"
+      @open-form="openFormDialog"
+    />
+    
+    <ConsultantForm
+      :form_dialog="form_dialog"
+      @close-dialog="closeFormDialog"
+      @submit-form="confirmation"
+      :payload="payload"
+    />
     <Confirmation
     :show="confirmationDialog"
     :payload="payload"
     :error_msg="error_msg"
+    :loading="loading"
     @close="closeConfirmation"
-    @submit="registerUser"
+    @submit="submitDoctorsForm"
   />
   </v-card>
 </template>
@@ -122,7 +115,12 @@
 <script setup>
 import ReusableTable from "~/components/reusables/ReusableTable.vue";
 import CentralLookUpForm from "~/components/reusables/CentralLookUpForm.vue";
-import Form from "./Form.vue";
+import ConsultantForm from "./Form.vue";
+import nuxtStorage from "nuxt-storage";
+let userdetails = JSON.parse(nuxtStorage.localStorage.getData("user_details"));
+// import { storeToRefs } from "pinia";
+// import { useSnackBarStore } from "~/store/SnackBar";
+// const { setSnackbar } = useSnackBarStore();
 definePageMeta({
   layout: "root-layout",
 });
@@ -143,7 +141,9 @@ const search = ref({});
 const params = ref("");
 const loading = ref(true);
 
-const search_payload = ref({});
+const search_payload = ref({
+  isloading:false
+});
 const form_dialog = ref(false);
 const central_form_dialog = ref(false);
 const search_results = ref([]);
@@ -191,10 +191,19 @@ const headers = [
     width: "30%",
     sortable: false,
   },
+   {
+    title: "Status",
+    key: "isactive",
+    align: "start",
+    width: "30%",
+    sortable: false,
+  },
 ];
 
 const doctorlist = ref([]);
-const payload = ref({});
+const payload = ref({
+  isloading:false
+});
 
 const selectedDoctor = (item) => {
   payload.value.id = ""; //clear state id for subcomponents ?id=''
@@ -219,11 +228,13 @@ const selectedDoctor = (item) => {
 const handleRefresh = () => {
   loadItems();
 };
-const SearchConsultant = async () => {
-  let lastname = search_payload.lastname || "";
-  let firstname = search_payload.firstname || "";
-  let middlename = search_payload.middlename || "";
-  let birthdate = search_payload.birthdate || "";
+
+const SearchConsultant = async (payload) => {
+  search_payload.value.isloading = true;
+  let lastname = payload.lastname || "";
+  let firstname = payload.firstname || "";
+  let middlename = payload.middlename || "";
+  let birthdate = payload.birthdate || "";
   let params =
     "page=1&per_page=10&lastname=" +
     lastname +
@@ -241,6 +252,7 @@ const SearchConsultant = async () => {
   if (response) {
     const data = await response.json();
     updateSearchItems(data);
+    search_payload.value.isloading = false;
   }
 };
 
@@ -290,6 +302,8 @@ const details = () => {
     payload.value.prc_license_expiry_date = useDateMMDDYYY(payload.value.prc_license_expiry_date);
     payload.value.philhealth_accreditation_expiry_date = useDateMMDDYYY(payload.value.philhealth_accreditation_expiry_date);
     payload.value.isactive = parseInt(payload.value.isactive) == 1 ? true : false;
+    payload.value.residentialaddress = payload.value.doctor_address.full_address;
+    payload.value.clinicaddress = payload.value.doctor_clinic_address.full_address;
     form_dialog.value = true;
   }
 };
@@ -312,16 +326,22 @@ const closeCentralFormDialog = () => {
   central_form_dialog.value = false;
 };
 
-const openFormDialog = () => {
+const openFormDialog = (type) => {
+  if(type == 'new'){
+    payload.value = Object.assign({});
+  }
   if (payload.value.id) {
     search_results.value = [];
+    details();
+    payload.value.type = 'edit';
   } else {
-    payload.value = Object.assign({});
     payload.value.lastname = search_payload.value.lastname;
     payload.value.firstname = search_payload.value.firstname;
   }
   form_dialog.value = true;
 };
+
+
 const closeFormDialog = () => {
   form_dialog.value = false;
   payload.value = Object.assign({});
@@ -366,30 +386,52 @@ const updateTotalItems = (newTotalItems) => {
 const updateServerItems = (newServerItems) => {
   doctorlist.value = newServerItems;
 };
+
 const updateSearchItems = (items) => {
   search_results.value = items;
   console.log(search_results.value, "search");
 };
 
-const submitDoctorsForm = async () => {
-  let method = "POST";
-  let id = "";
-  if (payload.value.id) {
-    id = payload.value.id;
-    method = "PUT";
-  }
-  if (payload.value) {
-    const { data } = await useFetch(useApiUrl() + `/consultants/` + id, {
-      method: method,
-      headers: {
-        Authorization: `Bearer ` + useToken(),
-        "Content-Type": "application/json",
-      },
-      body: { payload: payload },
-    });
-    if (data.value) {
-      closeFormDialog();
-    }
+
+const closeConfirmation = ()=>{
+  confirmationDialog.value = false;
+}
+const confirmation = ()=>{
+  confirmationDialog.value = true;
+}
+
+const submitDoctorsForm = async (details) => {
+  if (userdetails.passcode == details.user_passcode) {
+      if (payload.value) {
+
+        loading.value = true;
+        let method = "POST";
+        let id = "";
+        if (payload.value.id) {
+          id = payload.value.id;
+          method = "PUT";
+        }
+        const response = await $fetch(useApiUrl() + `/consultants/` + id, {
+          method: method,
+          headers: {
+            Authorization: `Bearer ` + useToken(),
+            "Content-Type": "application/json",
+          },
+          body: { payload: payload.value },
+        });
+        if (response.msg) {
+          confirmationDialog.value = false;
+          loading.value = false;
+          loadItems(null, payload.value.lastname);
+          closeFormDialog();
+          return useSnackbar(true,"success",response.msg);
+        }
+      }
+   }else {
+    error_msg.value = "Incorrect Passcode";
+    setTimeout(() => {
+      error_msg.value = "";
+    }, 3000);
   }
 };
 

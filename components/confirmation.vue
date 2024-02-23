@@ -38,7 +38,7 @@
           <v-card-actions>
             <v-btn variant="outlined" @click="handleclose" color="green"> Close </v-btn>
             <v-spacer></v-spacer>
-            <v-btn variant="outlined" bg-color="primary" color="primary" type="submit">
+            <v-btn variant="outlined" :loading="loading" bg-color="primary" color="primary" type="submit">
               Submit
             </v-btn>
           </v-card-actions>
@@ -50,6 +50,10 @@
 <script setup>
 const props = defineProps({
   show: {
+    type: Boolean,
+    default: () => false,
+  },
+  loading: {
     type: Boolean,
     default: () => false,
   },
