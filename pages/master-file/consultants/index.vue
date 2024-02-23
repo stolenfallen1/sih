@@ -16,35 +16,12 @@
         @click="handleNew"
         prepend-icon="mdi-plus-outline"
         width="100"
-        :disabled="totalItems == 0 ? false: true"
         color="primary"
         class="bg-primary text-white"
       >
         New
       </v-btn>
-      <!-- Central Lookup Search Form -->
-      <CentralLookUpForm
-        @close-dialog="closeCentralFormDialog"
-        @search="SearchConsultant"
-        @selected-row="selectedDoctor"
-        :central_form_dialog="central_form_dialog"
-        :search_results="search_results"
-        :search_payload="search_payload"
-        @open-form="openFormDialog"
-      />
-      <v-dialog
-        v-model="form_dialog"
-        fullscreen
-        :scrim="false"
-        transition="dialog-bottom-transition"
-        scrollable
-      >
-        <Form
-          @close-dialog="closeFormDialog"
-          @submit-form="submitDoctorsForm"
-          :payload="payload"
-        />
-      </v-dialog>
+     
       <v-btn
         @click="handleEdit"
         prepend-icon="mdi-pencil"
@@ -108,7 +85,23 @@
       </template>
     </ReusableTable>
 
-
+    <!-- Central Lookup Search Form -->
+    <CentralLookUpForm
+      @close-dialog="closeCentralFormDialog"
+      @search="SearchConsultant"
+      @selected-row="selectedDoctor"
+      :central_form_dialog="central_form_dialog"
+      :search_results="search_results"
+      :search_payload="search_payload"
+      @open-form="openFormDialog"
+    />
+    
+      <ConsultantForm
+        :form_dialog="form_dialog"
+        @close-dialog="closeFormDialog"
+        @submit-form="submitDoctorsForm"
+        :payload="payload"
+      />
     <Confirmation
     :show="confirmationDialog"
     :payload="payload"
@@ -122,7 +115,11 @@
 <script setup>
 import ReusableTable from "~/components/reusables/ReusableTable.vue";
 import CentralLookUpForm from "~/components/reusables/CentralLookUpForm.vue";
-import Form from "./Form.vue";
+import ConsultantForm from "./Form.vue";
+
+// import { storeToRefs } from "pinia";
+// import { useSnackBarStore } from "~/store/SnackBar";
+// const { setSnackbar } = useSnackBarStore();
 definePageMeta({
   layout: "root-layout",
 });
@@ -290,6 +287,8 @@ const details = () => {
     payload.value.prc_license_expiry_date = useDateMMDDYYY(payload.value.prc_license_expiry_date);
     payload.value.philhealth_accreditation_expiry_date = useDateMMDDYYY(payload.value.philhealth_accreditation_expiry_date);
     payload.value.isactive = parseInt(payload.value.isactive) == 1 ? true : false;
+    payload.value.residentialaddress = payload.value.doctor_address.full_address;
+    payload.value.clinicaddress = payload.value.doctor_clinic_address.full_address;
     form_dialog.value = true;
   }
 };
@@ -303,6 +302,7 @@ const handleEdit = () => {
 };
 
 const handleNew = () => {
+  
   payload.value.type = 'new';
   central_form_dialog.value = true;
 };
@@ -371,24 +371,26 @@ const updateSearchItems = (items) => {
   console.log(search_results.value, "search");
 };
 
-const submitDoctorsForm = async () => {
-  let method = "POST";
-  let id = "";
-  if (payload.value.id) {
-    id = payload.value.id;
-    method = "PUT";
-  }
+const submitDoctorsForm = async (e) => {
+ 
   if (payload.value) {
-    const { data } = await useFetch(useApiUrl() + `/consultants/` + id, {
+    let method = "POST";
+    let id = "";
+    if (payload.value.id) {
+      id = payload.value.id;
+      method = "PUT";
+    }
+    const response = await $fetch(useApiUrl() + `/consultants/` + id, {
       method: method,
       headers: {
         Authorization: `Bearer ` + useToken(),
         "Content-Type": "application/json",
       },
-      body: { payload: payload },
+      body: { payload: payload.value },
     });
-    if (data.value) {
+    if (response.msg) {
       closeFormDialog();
+      return useSnackbar(true,"success",response.msg);
     }
   }
 };

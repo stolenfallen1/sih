@@ -25,6 +25,7 @@
                 :central_form_dialog="central_form_dialog"
                 @close-dialog="closeCentralFormDialog"
                 :search_results="search_results"
+                :search_payload="search_payload"
                 @open-form="openAddFormDialog"
             />
             <FormContainer
@@ -119,7 +120,7 @@ definePageMeta({
 
 const central_form_dialog = ref(false);
 const form_dialog = ref(false);
-
+const search_payload = ref({});
 const { selectedRowDetails, isrefresh } = storeToRefs(
     useSubcomponentSelectedRowDetailsStore()
 );

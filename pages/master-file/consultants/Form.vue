@@ -1,11 +1,20 @@
 <template>
+  <v-dialog
+        :model-value="form_dialog"
+        fullscreen
+        :scrim="false"
+        transition="dialog-bottom-transition"
+        scrollable
+      >
   <v-card>
-      <form @submit.prevent="submit">
+      <form @submit.prevent="handleSubmit">
         <v-card-title>
           <v-card-actions>
             <p>Consultant Information Form</p>
             <v-spacer></v-spacer>
-            <v-btn color="black" @click="closeDialog">X</v-btn>
+            <v-btn color="black" @click="closeDialog">
+              <v-icon>mdi-close</v-icon>
+            </v-btn>
           </v-card-actions>
           <v-tabs v-model="tab" bg-color="primary">
             <v-tab value="one">General Information</v-tab>
@@ -69,6 +78,7 @@
                         label="Birth Date"
                         density="compact"
                         v-model="payload.birthdate"
+                        @update:model-value="updatebirthdate"
                         type="date"
                         variant="outlined"
                       ></v-text-field>
@@ -481,7 +491,8 @@
                     label="Residential Address"
                     prepend-icon="mdi-plus-box"
                     v-model="payload.residentialaddress"
-                    @click:prepend="handleOpenAddressForm"
+                    readonly
+                    @click:prepend="handleOpenAddressForm('residential')"
                     variant="outlined"
                   ></v-textarea>
                 </v-col>
@@ -493,7 +504,8 @@
                     label="Clinic Address"
                     prepend-icon="mdi-plus-box"
                     v-model="payload.clinicaddress"
-                    @click:prepend="handleOpenAddressForm"
+                    readonly
+                    @click:prepend="handleOpenAddressForm('clinic')"
                     variant="outlined"
                   ></v-textarea>
                 </v-col>
@@ -520,6 +532,8 @@
         />
       </v-dialog>
   </v-card>
+  </v-dialog>
+
 </template>
 
 <script setup>
@@ -531,6 +545,10 @@ const props = defineProps({
     type: Object,
     default: () => {},
   },
+  form_dialog:{
+    type:Boolean,
+    default:()=>false
+  }
 });
 
 const image = ref("");
@@ -587,6 +605,12 @@ const civil_status = JSON.parse(nuxtStorage.localStorage.getData("civil-status")
 const specializations = JSON.parse(
   nuxtStorage.localStorage.getData("doctor-specialization")
 );
+const updatebirthdate = ()=>{
+  props.payload.age = 0;
+  if(props.payload.birthdate){
+    props.payload.age = useCalculateAge(useDateMMDDYYY(props.payload.birthdate));
+  }
+}
 const createImage = (file) => {
   if (!file || !(file instanceof Blob)) {
     console.error("Invalid file");
@@ -606,20 +630,29 @@ const onFileChange = (event) => {
   }
   createImage(file);
 };
+const checkfile = () => {
+  if (image.value == "") {
+    imageUrl.value = "";
+  }
+};
 const ComputeEWTTax= () => {
   let ewttax = props.payload.EWTTax;
   props.payload.WithHolding__tax_rate = ewttax;
 };
 
-const submit = () => {
-  emits("submit-form", props.payload);
+const handleSubmit = (e) => {
+  e.preventDefault();
+  if(props.payload){
+    emits("submit-form", props.payload);
+  }
 };
 
 const closeDialog = () => {
   emits("close-dialog");
 };
 
-const handleOpenAddressForm = () => {
+const handleOpenAddressForm = (type) => {
+  props.payload.type = type;
   address_form_dialog.value = true;
 };
 
@@ -628,6 +661,27 @@ const closeAddressForm = () => {
 };
 
 const handleAddressSubmission = (payload) => {
+  // if(props.payload.type == 'residential'){
+    props.payload.residentialaddress = payload.value.full_address;
+    props.payload.residential_barangay_id = payload.value.barangay.id;
+    props.payload.residential_municipality_id = payload.value.municipality.id;
+    props.payload.residential_province_id = payload.value.province.id;
+    props.payload.residential_region_id = payload.value.region.id;
+    props.payload.residential_zicode_id = payload.value.zicode_id.id;
+    props.payload.residential_country_id = payload.value.country.id;
+    props.payload.residential_building = payload.value.building;
+  // }
+  // else if(props.payload.type == 'clinic'){
+    props.payload.clinicaddress = payload.value.full_address;
+    props.payload.clinic_barangay_id = payload.value.barangay.id;
+    props.payload.clinic_municipality_id = payload.value.municipality.id;
+    props.payload.clinic_province_id = payload.value.province.id;
+    props.payload.clinic_region_id = payload.value.region.id;
+    props.payload.clinic_zicode_id = payload.value.zicode_id.id;
+    props.payload.clinic_country_id = payload.value.country.id;
+    props.payload.clinic_building = payload.value.building;
+  // }
+  address_form_dialog.value = false;
   console.log(payload)
 };
 

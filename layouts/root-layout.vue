@@ -201,14 +201,14 @@
         <NuxtPage />
       </v-container>
     </v-main>
-
-    <Snackbar :show="showWarning" color="red" text="Please select a record first" />
+    <Snackbar />
   </v-app>
 </template>
 
 <script setup>
 import nuxtStorage from "nuxt-storage";
 import { storeToRefs } from "pinia";
+import { useSnackBarStore } from "~/store/SnackBar";
 import { useAuthStore } from "~/store/auth";
 import { ref, onUpdated, onMounted } from "vue";
 import ModalSettings from "~/components/system-settings/forms/global-settings/ModalSettings.vue";
@@ -220,6 +220,7 @@ const { authenticated } = storeToRefs(useAuthStore()); // make authenticated sta
 const { selectedRowDetails } = storeToRefs(useSubcomponentSelectedRowDetailsStore()); //state id for subcomponents ?id=123
 const  {subcomponents}  = storeToRefs(useNavigationMenuStore()); //state id for subcomponents ?id=123
 const { logUserOut } = useAuthStore();
+const { setSnackbar } = useSnackBarStore();
 const items = navigation_items;
 const open = ref(["0","1","2","3"]);
 const drawer = ref(null);
@@ -246,10 +247,7 @@ const computeTo = (path, detail) => {
   if (detail.id) {
     return router.push({ path: `${path}/${detail.id}` });
   } else if(detail.id == "" || detail.id == null) {
-    showWarning.value = true;
-    setTimeout(() => {
-      showWarning.value = false;
-    }, 1000);
+    useSnackbar(true,'red','Please select a record first');
   }
 };
 const displayRightOptions = (item) => {

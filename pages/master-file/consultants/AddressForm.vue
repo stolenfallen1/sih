@@ -9,6 +9,8 @@
                             variant="outlined"
                             label="Building No. / Street"
                             hide-details
+                            v-model="address_payload.building"
+                            @update:model-value="building"
                             density="compact"
                         ></v-text-field>
                     </v-col>
@@ -80,8 +82,10 @@
                             :items="zipcode"
                             label="Zipcode"
                             hide-details
+                            @update:model-value="getZipcodeValue"
                             clearable
                             density="compact"
+                            return-object
                             variant="outlined"
                         ></v-autocomplete>
                     </v-col>
@@ -89,9 +93,12 @@
                         <v-autocomplete
                             item-title="country_name"
                             item-value="id"
+                            v-model="address_payload.country"
                             :items="country"
                             label="Country"
                             hide-details
+                            return-object
+                            @update:model-value="getCountry"
                             clearable
                             density="compact"
                             variant="outlined"
@@ -153,6 +160,10 @@ const barangay = ref([]);
 const zipcode = ref([]);
 const address = ref("");
 const address_payload = ref({});
+const building = ()=>{
+    address_payload.value.building = address_payload.value.building;
+    address_payload.value.full_address = address_payload.value.building;
+};
 const getProvince = async()=>{
     if(!address_payload.value.region) return;
     const response = await fetch(useApiUrl() + "/get-province?region_code=" + address_payload.value.region.region_code, {
@@ -162,7 +173,8 @@ const getProvince = async()=>{
     });
     const data = await response.json();
     province.value = data.data;
-    address_payload.value.full_address = address_payload.value.region.region_name;
+    address_payload.value.regionname = address_payload.value.region.region_name;
+    address_payload.value.full_address =  address_payload.value.building+' '+address_payload.value.region.region_name;
 }
 const getMunicipality = async()=>{
       if(!address_payload.value.province) return;
@@ -173,7 +185,8 @@ const getMunicipality = async()=>{
     });
     const data = await response.json();
     municipality.value = data.data;
-    address_payload.value.full_address +=', '+address_payload.value.province.province_name;
+    address_payload.value.provincename = address_payload.value.province.province_name;
+    address_payload.value.full_address = address_payload.value.building+' '+address_payload.value.province.province_name + ', '+ address_payload.value.regionname;
 }
 const getBarangay = async()=>{
       if(!address_payload.value.municipality) return;
@@ -184,7 +197,8 @@ const getBarangay = async()=>{
     });
     const data = await response.json();
     barangay.value = data.data;
-    address_payload.value.full_address +=', '+address_payload.value.municipality.municipality_name;
+    address_payload.value.municipalityname =address_payload.value.municipality.municipality_name;
+    address_payload.value.full_address =  address_payload.value.building+' '+address_payload.value.municipality.municipality_name + ', '+ address_payload.value.provincename + ', '+ address_payload.value.regionname;
 }
 
 const getZipCode = async()=>{
@@ -196,7 +210,20 @@ const getZipCode = async()=>{
     });
     const data = await response.json();
     zipcode.value = data.data;
-    address_payload.value.full_address +=', '+address_payload.value.barangay.barangay_name;
+    address_payload.value.barangayname = address_payload.value.barangay.barangay_name;
+    address_payload.value.full_address = address_payload.value.building+' '+address_payload.value.barangay.barangay_name+ ', '+ address_payload.value.municipalityname + ', '+ address_payload.value.provincename + ', '+ address_payload.value.regionname;
+}
+
+const getZipcodeValue = ()=>{
+ if(!address_payload.value.zicode_id) return;
+ address_payload.value.zicodevalue = address_payload.value.zicode_id.zip_code;
+ address_payload.value.full_address = address_payload.value.building+' '+address_payload.value.barangayname+ ', '+ address_payload.value.municipalityname +', '+ address_payload.value.zicode_id.zip_code+', '+address_payload.value.provincename + ', '+ address_payload.value.regionname;
+}
+
+const getCountry = ()=>{
+ if(!address_payload.value.country) return;
+ address_payload.value.countryname = address_payload.value.country.country_name;
+ address_payload.value.full_address = address_payload.value.building+' '+address_payload.value.barangayname+ ', '+ address_payload.value.municipalityname +', '+ address_payload.value.zicodevalue+', '+address_payload.value.provincename + ', '+ address_payload.value.regionname+ ', '+ address_payload.value.country.country_name;
 }
 const handleSubmit = () => {
     emits("handle-submit",address_payload);

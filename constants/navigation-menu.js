@@ -366,7 +366,7 @@ export default [
                     {
                         label: "Item .Service Details",
                         icon: "mdi-file-document-edit",
-                        // path: "/system-settings/system-users/modules",
+                        path: "/system-settings/system-users/modules",
                         rule: "",
                     },
                     {
