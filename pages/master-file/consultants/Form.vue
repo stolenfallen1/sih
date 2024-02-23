@@ -81,6 +81,16 @@
                         @update:model-value="updatebirthdate"
                         type="date"
                         variant="outlined"
+                        :max="new Date().toISOString().substr(0, 10)"
+                      ></v-text-field>
+                    </v-col>
+                    <v-col cols="2" class="pa-1">
+                      <v-text-field
+                        label="Age"
+                        density="compact"
+                        readonly
+                        v-model="payload.age"
+                        variant="outlined"
                       ></v-text-field>
                     </v-col>
                     <v-col cols="2" class="pa-1">
@@ -95,15 +105,7 @@
                         variant="outlined"
                       ></v-autocomplete>
                     </v-col>
-                    <v-col cols="2" class="pa-1">
-                      <v-text-field
-                        label="Age"
-                        density="compact"
-                        readonly
-                        v-model="payload.age"
-                        variant="outlined"
-                      ></v-text-field>
-                    </v-col>
+                    
                     <v-col cols="4" class="pa-1">
                       <v-autocomplete
                         item-title="CivilStatus_name"
@@ -198,6 +200,7 @@
                       <v-text-field
                         label="PRC Expiry Date"
                         v-model="payload.prc_license_expiry_date"
+                        :min="new Date().toISOString().substr(0, 10)"
                         density="compact"
                         type="date"
                         variant="outlined"
@@ -237,6 +240,7 @@
                       <v-text-field
                         v-model="payload.philhealth_accreditation_expiry_date"
                         label="PHIC Expiry Date"
+                        :min="new Date().toISOString().substr(0, 10)"
                         density="compact"
                         type="date"
                         variant="outlined"
