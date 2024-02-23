@@ -665,7 +665,7 @@ const closeAddressForm = () => {
 };
 
 const handleAddressSubmission = (payload) => {
-  // if(props.payload.type == 'residential'){
+  if(props.payload.type == 'residential'){
     props.payload.residentialaddress = payload.value.full_address;
     props.payload.residential_barangay_id = payload.value.barangay.id;
     props.payload.residential_municipality_id = payload.value.municipality.id;
@@ -674,8 +674,8 @@ const handleAddressSubmission = (payload) => {
     props.payload.residential_zicode_id = payload.value.zicode_id.id;
     props.payload.residential_country_id = payload.value.country.id;
     props.payload.residential_building = payload.value.building;
-  // }
-  // else if(props.payload.type == 'clinic'){
+  }
+  else if(props.payload.type == 'clinic'){
     props.payload.clinicaddress = payload.value.full_address;
     props.payload.clinic_barangay_id = payload.value.barangay.id;
     props.payload.clinic_municipality_id = payload.value.municipality.id;
@@ -684,7 +684,7 @@ const handleAddressSubmission = (payload) => {
     props.payload.clinic_zicode_id = payload.value.zicode_id.id;
     props.payload.clinic_country_id = payload.value.country.id;
     props.payload.clinic_building = payload.value.building;
-  // }
+  }
   address_form_dialog.value = false;
   console.log(payload)
 };

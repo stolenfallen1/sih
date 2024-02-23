@@ -12,4 +12,5 @@ export const useDropdownlist = () => {
   useDoctorSpecialization();
   useRegion();
   useCountry();
+  useRoomAccomodation();
 }

@@ -80,7 +80,6 @@
         <span v-if="column.key === 'isactive'" :key="column.key">
           {{ item.isactive == 1 ? "Active" : "In Active" }}</span
         >
-
         <!-- Add more custom logic for other columns -->
       </template>
     </ReusableTable>
@@ -188,6 +187,13 @@ const headers = [
   {
     title: "Email",
     key: "email",
+    align: "start",
+    width: "30%",
+    sortable: false,
+  },
+   {
+    title: "Status",
+    key: "isactive",
     align: "start",
     width: "30%",
     sortable: false,
@@ -416,6 +422,7 @@ const submitDoctorsForm = async (details) => {
         if (response.msg) {
           confirmationDialog.value = false;
           loading.value = false;
+          loadItems(null, payload.value.lastname);
           closeFormDialog();
           return useSnackbar(true,"success",response.msg);
         }

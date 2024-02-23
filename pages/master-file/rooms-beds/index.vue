@@ -22,7 +22,7 @@
         New
       </v-btn>
       <!-- FORM HERE -->
-      <Form @close-dialog="closeFormDialog" :form_dialog="form_dialog" />
+      <Form @close-dialog="closeFormDialog" :form_dialog="form_dialog" :form_payload="form_payload" />
 
       <v-btn
         @click="handleEdit"
@@ -85,7 +85,6 @@
         <span v-if="column.key === 'isactive'" :key="column.key">
           {{ item.isactive == 1 ? "Active" : "In Active" }}</span
         >
-
         <!-- Add more custom logic for other columns -->
       </template>
     </ReusableTable>
@@ -106,11 +105,11 @@ const currentTab = ref(false);
 const showTabs = ref(false);
 const tableTabs = ref([]);
 const form_dialog = ref(false);
-
 const totalItems = ref(0);
 const itemsPerPage = ref(15);
 const search = ref("");
 const params = ref("");
+const form_payload = ref({});
 const loading = ref(true);
 const headers = [
   {
@@ -139,14 +138,17 @@ const headers = [
     sortable: false,
   },
 ];
+
 const serverItems = ref([]);
 const handleRefresh = () => {
    loadItems();
 };
+
 const handleSearch = (keyword) => {
   // Handle search action
    loadItems(null, keyword);
 };
+
 const selectedUser = (item) => {
   isSelectedUser.value = true;
   isrefresh.value = false;
@@ -165,9 +167,11 @@ const selectedUser = (item) => {
 const handleView = () => {
   
 };
+
 const handleEdit = () => {
   
 };
+
 const openAddFormDialog = () => {
   form_dialog.value = true;
 };
@@ -204,6 +208,7 @@ const loadItems = async (options = null, searchkeyword = null) => {
     loading.value = false;
   }
 };
+
 const updateTotalItems = (newTotalItems) => {
   totalItems.value = newTotalItems;
 };

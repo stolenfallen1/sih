@@ -347,4 +347,14 @@ const logout = () => {
   border-radius: 10px;       /* roundness of the scroll thumb */
   border: 1px solid #DDDD;  /* creates padding around scroll thumb */
 }
+.v-overlay__scrim {
+    pointer-events: auto;
+    background: #fbfbfb !important;
+    bottom: 0;
+    left: 0;
+    opacity: 1 !important;
+    position: fixed;
+    right: 0;
+    top: 0;
+}
 </style>
