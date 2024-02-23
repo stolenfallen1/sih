@@ -13,4 +13,6 @@ export const useDropdownlist = () => {
   useRegion();
   useCountry();
   useRoomAccomodation();
+  useRoomClass();
+  useRoomStatus();
 }

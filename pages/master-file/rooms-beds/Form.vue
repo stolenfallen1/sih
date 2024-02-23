@@ -91,10 +91,12 @@
                   v-model="form_payload.accomodation_id"
                 ></v-autocomplete>
               </v-col>
-              <v-col lg="6">
+              <v-col lg="7">
                 <v-autocomplete
                   label="Room Type Class"
                   :items="room_type"
+                  item-title="room_class_description"
+                  item-value="id"
                   required
                   :rules="[(v) => !!v || 'Room type is required']"
                   variant="outlined"
@@ -103,7 +105,7 @@
                   v-model="form_payload.room_class_id"
                 ></v-autocomplete>
               </v-col>
-              <v-col lg="6">
+              <v-col lg="5">
                 <v-text-field
                   label="Price Scheme"
                   type="text"
@@ -113,7 +115,7 @@
                   variant="outlined"
                 ></v-text-field>
               </v-col>
-              <v-col cols="6">
+              <v-col cols="7">
                 <v-text-field
                   label="Room No."
                   type="text"
@@ -127,6 +129,8 @@
                 <v-autocomplete
                   label="Room Status"
                   :items="room_status"
+                  item-title="room_description"
+                  item-value="id"
                   required
                   :rules="[(v) => !!v || 'Room Status is required']"
                   variant="outlined"
@@ -135,7 +139,7 @@
                   v-model="form_payload.room_status_id"
                 ></v-autocomplete>
               </v-col>
-              <v-col cols="6">
+              <v-col cols="5">
                 <v-text-field
                   label="No. of Beds"
                   type="text"
@@ -148,7 +152,6 @@
                   type="text"
                   density="compact"
                   variant="outlined"
-                  v-model="form_payload.branch_id"
                   hide-details
                 ></v-text-field>
               </v-col>
@@ -198,10 +201,10 @@ const buildings = JSON.parse(nuxtStorage.localStorage.getData("buildings"));
 const room_accomodation = JSON.parse(
   nuxtStorage.localStorage.getData("room_accomodations")
 );
+const room_type = JSON.parse(nuxtStorage.localStorage.getData("room_class"));
+const room_status = JSON.parse(nuxtStorage.localStorage.getData("room_status"));
 const floors = ref([]);
 const nursing_ward_stations = ref([]);
-const room_type = ["Private", "Luxury", "Public"];
-const room_status = ["Available", "Not Available"];
 
 const bed_status = [
   {
