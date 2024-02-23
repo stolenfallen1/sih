@@ -76,8 +76,8 @@
                             </v-col>
                             <v-col lg="6">
                                 <v-select
-                                    disabled
-                                    :items="['Industry 1', 'Industry 2', 'Industry 3']"
+                                    label="Generic Name"
+                                    :items="generic_name"
                                     variant="outlined"
                                     density="compact"
                                 ></v-select>
@@ -90,11 +90,11 @@
                                 ></v-textarea>
                             </v-col>
                             <v-col lg="12">
-                                <v-checkbox label="Inventory?" density="compact" color="#117dad"></v-checkbox>
+                                <v-checkbox v-model="invetory_check" label="Inventory?" density="compact" color="#117dad"></v-checkbox>
                             </v-col>
                         </v-row>
                         <v-row>
-                            <!-- Default here is: Examinations / Procedures -->
+                            <!-- Default here is: Drugs and Medicines / Supplies / Assets / Others I think base sa tab -->
                             <v-col lg="4">
                                 <v-select
                                     disabled
@@ -145,27 +145,23 @@
                                     variant="outlined"
                                 ></v-text-field>
                             </v-col>
-                            <!-- Default here is: Not applicable -->
                             <v-col lg="4">
                                 <v-select
-                                    disabled
                                     label="Drug Admin Group"
-                                    :items="['Not Applicable', 'Applicable']" 
+                                    :items="drug_admin_group" 
                                     variant="outlined"
                                     density="compact"
                                 ></v-select>
                             </v-col>
-                            <!-- Default here is: None -->
                             <v-col lg="4">
                                 <v-select
-                                    disabled
                                     label="Small Unit"
-                                    :items="['None']" 
+                                    :items="small_unit" 
                                     variant="outlined"
                                     density="compact"
                                 ></v-select>
                             </v-col>
-                            <!-- Default here is: 0 -->
+                            <!-- Default here is: 1 -->
                             <v-col lg="4">
                                 <v-text-field
                                     label="Conversion"
@@ -175,12 +171,10 @@
                                     variant="outlined"
                                 ></v-text-field>
                             </v-col>
-                            <!-- Default here is: None -->
                             <v-col lg="4">
                                 <v-select
-                                    disabled
                                     label="Big Unit"
-                                    :items="['None']" 
+                                    :items="big_unit" 
                                     variant="outlined"
                                     density="compact"
                                 ></v-select>
@@ -427,6 +421,11 @@
 
 <script setup>
 
+const generic_name = ref([
+    'cilostazol',
+    'cetirizine',
+    'cinnarizine',
+])
 const item_category = ref([
     'Medical Supplies',
     'X-ray Examination',
@@ -441,6 +440,22 @@ const nhip_category = ref([
     'Laboratory Examination',
     'Others',
 ]);
+const drug_admin_group = ref([
+    'Not Applicable',
+    'Active',
+    'Stats',
+])
+const small_unit = ref([
+    'ML',
+    'CC',
+    'Pieces',
+    'Tablet',
+])
+const big_unit = ref([
+    'Gallon',
+    'Container'
+])
+const invetory_check = ref(true);
 const is_active = ref(true)
 const is_vat_exempt = ref(true)
 
