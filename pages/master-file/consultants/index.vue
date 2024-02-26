@@ -302,8 +302,8 @@ const details = () => {
     payload.value.prc_license_expiry_date = useDateMMDDYYY(payload.value.prc_license_expiry_date);
     payload.value.philhealth_accreditation_expiry_date = useDateMMDDYYY(payload.value.philhealth_accreditation_expiry_date);
     payload.value.isactive = parseInt(payload.value.isactive) == 1 ? true : false;
-    payload.value.residentialaddress = payload.value.doctor_address.full_address;
-    payload.value.clinicaddress = payload.value.doctor_clinic_address.full_address;
+    payload.value.residentialaddress = payload.value.doctor_address ? payload.value.doctor_address.full_address : '';
+    payload.value.clinicaddress =payload.value.doctor_clinic_address ? payload.value.doctor_clinic_address.full_address : '';
     form_dialog.value = true;
   }
 };
