@@ -138,13 +138,14 @@
                                 </v-list-subheader>
                                 <v-text-field
                                     label="Expenses"
+                                    disabled
                                     type="text"
                                     density="compact"
                                     variant="outlined"
                                 ></v-text-field>
                                 <v-select
                                     label="Reader's Fee"
-                                    disabled
+                                    :disabled="currentTabValue === '4' ? true : false"
                                     variant="outlined"
                                     density="compact"
                                 ></v-select>
@@ -165,7 +166,7 @@
                         Item Group Specific Information
                     </v-list-subheader>
                     <v-card-text>
-                        <v-row>
+                        <v-row v-if="currentTabValue === '1'">
                             <v-col lg="4">
                                 <v-checkbox
                                     v-model="allowMultiTestCodes"
@@ -181,7 +182,7 @@
                                 ></v-checkbox>
                             </v-col>
                         </v-row>
-                        <v-row>
+                        <v-row v-if="currentTabValue === '1'">
                             <v-col lg="4">
                                 <v-list-subheader inset>
                                     Render's fee charge type
@@ -213,7 +214,7 @@
                                 ></v-select>
                             </v-col>
                         </v-row>
-                        <v-row>
+                        <v-row v-if="currentTabValue === '1'">
                             <v-col lg="6">
                                 <v-select
                                     label="Modality"
@@ -229,11 +230,20 @@
                                 ></v-select>
                             </v-col>
                         </v-row>
+                        <v-row v-if="currentTabValue === '4'">
+                            <v-col lg="8">
+                                <v-select
+                                    label="Surgical Case Item Type"
+                                    variant="outlined"
+                                    density="compact"
+                                ></v-select>
+                            </v-col>
+                        </v-row>
                         <v-divider></v-divider>
                         <v-row class="mt-2">
                             <v-col lg="3">
                                 <v-checkbox
-                                    label="Sorting"
+                                    label="Sorting Priority"
                                 ></v-checkbox>
                             </v-col>
                             <v-col lg="3">
@@ -295,6 +305,13 @@
 
 <script setup>
 import TestCodeList from "./sub-forms/TestCodeList.vue";
+
+const props = defineProps({
+    currentTabValue: {
+        type: String,
+        default: () => "1",
+    },
+})
 
 const billing_category = [
     'CT_Scan',

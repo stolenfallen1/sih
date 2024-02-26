@@ -9,7 +9,12 @@
         <v-card>
             <v-card-title>
                 <v-toolbar density="compact" color="#FFF">
-                    <v-toolbar-title>Manage Item and Supply Details</v-toolbar-title>
+                    <v-toolbar-title>
+                        {{ currentTabValue === "2" ? "Manage Drugs and Medicines Details" : "" }}
+                        {{ currentTabValue === "5" ? "Manage Supplies Details" : "" }}
+                        {{ currentTabValue === "6" ? "Manage Assets. Equipments Details" : "" }}
+                        {{ currentTabValue === "3" ? "Manage Other Item Details" : "" }}
+                    </v-toolbar-title>
                     <v-spacer></v-spacer>
                     <v-btn color="black" @click="closeDialog">
                         <v-icon>mdi-close</v-icon>
@@ -26,7 +31,7 @@
                     <general-form />
                 </div>
                 <div v-if="tab === '2'">
-                    <other-information />
+                    <other-information :currentTabValue="currentTabValue" />
                 </div>
                 <div v-if="tab === '3'">
                     <prescription-details />
@@ -69,6 +74,7 @@ const emits = defineEmits()
 
 const closeDialog = () => {
     emits("close-dialog")
+    tab.value = "1"
 }
 
 const submit = () => {
