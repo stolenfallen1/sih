@@ -23,6 +23,7 @@
             </v-btn>
             <FormContainer 
                 :form_container="form_container"
+                :currentTabValue="currentTabValue"
                 @close-dialog="closeFormDialog"
             />
             <v-btn
@@ -103,7 +104,7 @@ const isSelectedUser = ref(true);
 const pageTitle = ref("Services");
 const currentTab = ref(false);
 const showTabs = ref(true);
-const currentTabValue = ref(1);
+const currentTabValue = ref("1");
 const tableTabs = ref([
     { label: "Examinations", value: "1" },
     { label: "Procedures", value: "4" }

@@ -10,7 +10,10 @@
             <v-card-title>
                 <v-toolbar density="compact" color="#FFF">
                     <v-toolbar-title>
-                        {{ currentTabValue === "1" ? "Manage Examination Details" : "Manage Procedures Details" }}
+                        {{ currentTabValue === "2" ? "Manage Drugs and Medicines Details" : "" }}
+                        {{ currentTabValue === "5" ? "Manage Supplies Details" : "" }}
+                        {{ currentTabValue === "6" ? "Manage Assets. Equipments Details" : "" }}
+                        {{ currentTabValue === "3" ? "Manage Other Item Details" : "" }}
                     </v-toolbar-title>
                     <v-spacer></v-spacer>
                     <v-btn color="black" @click="closeDialog">
@@ -20,7 +23,7 @@
                 <v-tabs v-model="tab" bg-color="#6984FF" center-active>
                     <v-tab value="1">General</v-tab>
                     <v-tab value="2">Other Information</v-tab>
-                    <v-tab value="3">CPT Specs</v-tab>
+                    <v-tab v-if="currentTabValue === '2'" value="3">Prescription Details</v-tab>
                 </v-tabs>
             </v-card-title>
             <v-card-text>
@@ -31,7 +34,7 @@
                     <other-information :currentTabValue="currentTabValue" />
                 </div>
                 <div v-if="tab === '3'">
-                    <cpt-specs />
+                    <prescription-details />
                 </div>
             </v-card-text>
             <v-divider></v-divider>
@@ -50,9 +53,9 @@
 </template>
 
 <script setup>
-import GeneralForm from "./GeneralForm.vue";
-import OtherInformation from "./OtherInformation.vue";
-import CptSpecs from "./CptSpecs.vue";
+import GeneralForm from './GeneralForm.vue';
+import OtherInformation from './OtherInformation.vue';
+import PrescriptionDetails from './PrescriptionDetails.vue';
 
 const props = defineProps({
     form_container: {
@@ -61,11 +64,11 @@ const props = defineProps({
     },
     currentTabValue: {
         type: String,
-        default: () => "1",
+        required: true,
     },
 })
 
-const tab = ref("1")
+let tab = ref("1")
 
 const emits = defineEmits()
 
@@ -77,6 +80,7 @@ const closeDialog = () => {
 const submit = () => {
     alert("Submitted")
 }
+
 </script>
 
 <style scoped>

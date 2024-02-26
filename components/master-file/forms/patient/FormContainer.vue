@@ -8,11 +8,13 @@
         >
             <v-card>
                 <v-card-title>
-                    <v-card-actions>
-                        <p>Patient Information Form</p>
+                    <v-toolbar density="compact" color="#FFF">
+                        <v-toolbar-title>Patient Information Form</v-toolbar-title>
                         <v-spacer></v-spacer>
-                        <v-btn color="black" @click="closeDialog">X</v-btn>
-                    </v-card-actions>
+                        <v-btn color="black" @click="closeDialog">
+                            <v-icon>mdi-close</v-icon>
+                        </v-btn>
+                    </v-toolbar>
                     <v-tabs v-model="tab" bg-color="#6984FF" center-active>
                         <v-tab value="1">General</v-tab>
                         <v-tab value="2">Additional Info</v-tab>
@@ -74,7 +76,7 @@
                         class="bg-primary text-white"
                         type="submit"
                         @click.prevent="submit"
-                        >Add Patient</v-btn
+                        >Save and Close</v-btn
                     >
                 </v-card-actions>
             </v-card>

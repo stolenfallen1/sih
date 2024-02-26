@@ -12,7 +12,8 @@
                             type="text"
                             density="compact"
                             prepend-icon="mdi-plus-box"
-                            disabled
+                            @click.prepend="openSupplierDialog"
+                            class="cursor-pointer"
                             variant="outlined"
                         ></v-text-field>
                     </v-col>
@@ -87,7 +88,7 @@
                                 ></v-text-field>
                                 <v-select
                                     label="Cost of Sales"
-                                    disabled
+                                    :disabled="currentTabValue === '3'"
                                     variant="outlined"
                                     density="compact"
                                 ></v-select>
@@ -106,7 +107,7 @@
                                 ></v-text-field>
                                 <v-select
                                     label="Cost of Sales"
-                                    disabled
+                                    :disabled="currentTabValue === '3'"
                                     variant="outlined"
                                     density="compact"
                                 ></v-select>
@@ -125,7 +126,7 @@
                                 ></v-text-field>
                                 <v-select
                                     label="Cost of Sales"
-                                    disabled
+                                    :disabled="currentTabValue === '3'"
                                     variant="outlined"
                                     density="compact"
                                 ></v-select>
@@ -138,20 +139,20 @@
                                 </v-list-subheader>
                                 <v-text-field
                                     label="Expenses"
-                                    disabled
+                                    :disabled="currentTabValue === '3'"
                                     type="text"
                                     density="compact"
                                     variant="outlined"
                                 ></v-text-field>
                                 <v-select
                                     label="Reader's Fee"
-                                    :disabled="currentTabValue === '4' ? true : false"
+                                    :disabled="currentTabValue === '3' ? false : true"
                                     variant="outlined"
                                     density="compact"
                                 ></v-select>
                                 <v-select
                                     label="Inventories"
-                                    disabled
+                                    :disabled="currentTabValue === '3'"
                                     variant="outlined"
                                     density="compact"
                                 ></v-select>
@@ -166,97 +167,190 @@
                         Item Group Specific Information
                     </v-list-subheader>
                     <v-card-text>
-                        <v-row v-if="currentTabValue === '1'">
+                        <v-row>
                             <v-col lg="4">
-                                <v-checkbox
-                                    v-model="allowMultiTestCodes"
-                                    label="Allow Multi Test Codes"
-                                ></v-checkbox>
-                            </v-col>
-                            <v-col lg="4">
-                                <v-btn class="mt-2" :disabled="!allowMultiTestCodes" @click="openTemplateDialog">Test Codes</v-btn>
-                            </v-col>
-                            <v-col lg="4">
-                                <v-checkbox
-                                    label="Is pathology?"
-                                ></v-checkbox>
-                            </v-col>
-                        </v-row>
-                        <v-row v-if="currentTabValue === '1'">
-                            <v-col lg="4">
-                                <v-list-subheader inset>
-                                    Render's fee charge type
-                                </v-list-subheader>
-                                <v-select
-                                    :items="charge_type"
-                                    variant="outlined"
-                                    density="compact"
-                                ></v-select>
-                            </v-col>
-                            <v-col lg="4">
-                                <v-list-subheader inset>
-                                    Render's fee charge base
-                                </v-list-subheader>
                                 <v-text-field
-                                    type="number"
+                                    label="Minimum Inventory"
+                                    type="text"
                                     density="compact"
                                     variant="outlined"
                                 ></v-text-field>
                             </v-col>
                             <v-col lg="4">
-                                <v-list-subheader inset>
-                                    Other hospital services
-                                </v-list-subheader>
-                                <v-select
-                                    :items="other_hospital_services"
-                                    variant="outlined"
+                                <v-text-field
+                                    label="Maximum Inventory"
+                                    type="text"
                                     density="compact"
-                                ></v-select>
+                                    variant="outlined"
+                                ></v-text-field>
+                            </v-col>
+                            <v-col lg="4">
+                                <v-text-field
+                                    label="Lead Time"
+                                    type="text"
+                                    density="compact"
+                                    variant="outlined"
+                                ></v-text-field>
                             </v-col>
                         </v-row>
-                        <v-row v-if="currentTabValue === '1'">
+                        <v-row>
                             <v-col lg="6">
-                                <v-select
-                                    label="Modality"
-                                    variant="outlined"
+                                <v-text-field
+                                    label="On Transit"
+                                    disabled
+                                    type="text"
                                     density="compact"
-                                ></v-select>
+                                    variant="outlined"
+                                ></v-text-field>
                             </v-col>
                             <v-col lg="6">
-                                <v-select
-                                    label="Specimen"
-                                    variant="outlined"
+                                <v-text-field
+                                    label="On Pruchase Order"
+                                    disabled
+                                    type="text"
                                     density="compact"
-                                ></v-select>
-                            </v-col>
-                        </v-row>
-                        <v-row v-if="currentTabValue === '4'">
-                            <v-col lg="8">
-                                <v-select
-                                    label="Surgical Case Item Type"
                                     variant="outlined"
-                                    density="compact"
-                                ></v-select>
+                                ></v-text-field>
                             </v-col>
                         </v-row>
                         <v-divider></v-divider>
-                        <v-row class="mt-2">
-                            <v-col lg="3">
+                        <v-row v-if="currentTabValue === '2'" class="mt-2">
+                            <v-col lg="4">
+                                <v-checkbox
+                                    label="For Production"
+                                ></v-checkbox>
+                            </v-col>
+                            <v-col lg="4">
+                                <v-checkbox
+                                    label="Reagents"
+                                ></v-checkbox>
+                            </v-col>
+                            <v-col lg="4">
+                                <v-checkbox
+                                    label="PNF"
+                                ></v-checkbox>
+                            </v-col>
+                            <v-col lg="4">
+                                <v-checkbox
+                                    label="Consignment?"
+                                ></v-checkbox>
+                            </v-col>
+                            <v-col lg="4">
+                                <v-checkbox
+                                    label="Control Drug"
+                                ></v-checkbox>
+                            </v-col>
+                            <v-col lg="4">
                                 <v-checkbox
                                     label="Sorting Priority"
                                 ></v-checkbox>
                             </v-col>
-                            <v-col lg="3">
+                        </v-row>
+                        <v-row v-if="currentTabValue === '5'" class="mt-2">
+                            <v-col lg="6">
+                                <v-checkbox
+                                    label="For Production"
+                                ></v-checkbox>
+                            </v-col>
+                            <v-col lg="6">
+                                <v-checkbox
+                                    label="Reagents"
+                                ></v-checkbox>
+                            </v-col>
+                            <v-col lg="6">
+                                <v-checkbox
+                                    label="Consignment?"
+                                ></v-checkbox>
+                            </v-col>
+                            <v-col lg="6">
+                                <v-checkbox
+                                    label="Sorting Priority"
+                                ></v-checkbox>
+                            </v-col>
+                        </v-row>
+                        <v-row v-if="currentTabValue === '6'" class="mt-2">
+                            <v-col lg="12">
+                                <v-checkbox
+                                    v-model="fixed_asset"
+                                    label="Fixed Asset"
+                                ></v-checkbox>
+                            </v-col>
+                            <v-col lg="4">
+                                <v-checkbox
+                                    label="For Production"
+                                ></v-checkbox>
+                            </v-col>
+                            <v-col lg="4">
+                                <v-checkbox
+                                    label="Reagents"
+                                ></v-checkbox>
+                            </v-col>
+                            <v-col lg="4">
+                                <v-checkbox
+                                    label="PNF"
+                                ></v-checkbox>
+                            </v-col>
+                            <v-col lg="4">
+                                <v-checkbox
+                                    label="Immunization"
+                                ></v-checkbox>
+                            </v-col>
+                            <v-col lg="4">
+                                <v-checkbox
+                                    label="Consignment?"
+                                ></v-checkbox>
+                            </v-col>
+                            <v-col lg="4">
+                                <v-checkbox
+                                    label="Sorting Priority"
+                                ></v-checkbox>
+                            </v-col>
+                        </v-row>
+                        <v-row v-if="currentTabValue === '3'" class="mt-2">
+                            <v-col lg="4">
+                                <v-checkbox
+                                    label="For Production"
+                                ></v-checkbox>
+                            </v-col>
+                            <v-col lg="4">
+                                <v-checkbox
+                                    label="Reagents"
+                                ></v-checkbox>
+                            </v-col>
+                            <v-col lg="4">
+                                <v-checkbox
+                                    label="PNF"
+                                ></v-checkbox>
+                            </v-col>
+                            <v-col lg="4">
+                                <v-checkbox
+                                    label="Immunization"
+                                ></v-checkbox>
+                            </v-col>
+                            <v-col lg="4">
+                                <v-checkbox
+                                    label="Consignment?"
+                                ></v-checkbox>
+                            </v-col>
+                            <v-col lg="4">
+                                <v-checkbox
+                                    label="Sorting Priority"
+                                ></v-checkbox>
+                            </v-col>
+                        </v-row>
+                        <v-divider></v-divider>
+                        <v-row class="mt-2">
+                            <v-col lg="4">
                                 <v-checkbox
                                     label="Include in For Reorder Report?"
                                 ></v-checkbox>
                             </v-col>
-                            <v-col lg="3">
+                            <v-col lg="4">
                                 <v-checkbox
                                     label="Primary Medical Team"
                                 ></v-checkbox>
                             </v-col>
-                            <v-col lg="3">
+                            <v-col lg="4">
                                 <v-checkbox
                                     label="Ortho Spine"
                                 ></v-checkbox>
@@ -300,18 +394,20 @@
             </v-col>
         </v-row>
     </v-col>
-    <test-code-list :template_dialog="template_dialog" @close-dialog="closeTemplateDialog" />
+    <primary-supplier :template_dialog="template_dialog" @close-dialog="closeSupplierDialog" @select-supplier="handleSelectingSupplier" />
 </template>
 
 <script setup>
-import TestCodeList from "./sub-forms/TestCodeList.vue";
+import PrimarySupplier from "./sub-forms/PrimarySupplier.vue";
 
 const props = defineProps({
     currentTabValue: {
         type: String,
-        default: () => "1",
+        default: () => "2",
     },
 })
+
+const fixed_asset = ref(true)
 
 const billing_category = [
     'CT_Scan',
@@ -330,12 +426,16 @@ const other_hospital_services = [
 const allowMultiTestCodes = ref(false)
 const template_dialog = ref(false)
 
-const openTemplateDialog = () => {
+const openSupplierDialog = () => {
     template_dialog.value = true
 }
 
-const closeTemplateDialog = () => {
+const closeSupplierDialog = () => {
     template_dialog.value = false
+}
+
+const handleSelectingSupplier = () => {
+    alert('Supplier selected')
 }
 
 </script>
