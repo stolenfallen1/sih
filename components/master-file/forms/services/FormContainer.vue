@@ -9,7 +9,9 @@
         <v-card>
             <v-card-title>
                 <v-toolbar density="compact" color="#FFF">
-                    <v-toolbar-title>Manage Services Details</v-toolbar-title>
+                    <v-toolbar-title>
+                        {{ currentTabValue === "1" ? "Manage Examination Details" : "Manage Procedures Details" }}
+                    </v-toolbar-title>
                     <v-spacer></v-spacer>
                     <v-btn color="black" @click="closeDialog">
                         <v-icon>mdi-close</v-icon>
@@ -26,7 +28,7 @@
                     <general-form />
                 </div>
                 <div v-if="tab === '2'">
-                    <other-information />
+                    <other-information :currentTabValue="currentTabValue" />
                 </div>
                 <div v-if="tab === '3'">
                     <cpt-specs />
@@ -56,6 +58,10 @@ const props = defineProps({
     form_container: {
         type: Boolean,
         default: () => false,
+    },
+    currentTabValue: {
+        type: String,
+        default: () => "1",
     },
 })
 
