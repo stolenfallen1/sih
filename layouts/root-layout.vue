@@ -208,7 +208,6 @@
 <script setup>
 import nuxtStorage from "nuxt-storage";
 import { storeToRefs } from "pinia";
-import { useSnackBarStore } from "~/store/SnackBar";
 import { useAuthStore } from "~/store/auth";
 import { ref, onUpdated, onMounted } from "vue";
 import ModalSettings from "~/components/system-settings/forms/global-settings/ModalSettings.vue";
@@ -220,7 +219,6 @@ const { authenticated } = storeToRefs(useAuthStore()); // make authenticated sta
 const { selectedRowDetails } = storeToRefs(useSubcomponentSelectedRowDetailsStore()); //state id for subcomponents ?id=123
 const  {subcomponents}  = storeToRefs(useNavigationMenuStore()); //state id for subcomponents ?id=123
 const { logUserOut } = useAuthStore();
-const { setSnackbar } = useSnackBarStore();
 const items = navigation_items;
 const open = ref(["0","1","2","3"]);
 const drawer = ref(null);

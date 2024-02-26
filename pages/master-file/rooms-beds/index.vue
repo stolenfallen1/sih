@@ -21,8 +21,6 @@
       >
         New
       </v-btn>
-      <!-- FORM HERE -->
-      <Form @close-dialog="closeFormDialog" :form_dialog="form_dialog" :form_payload="form_payload" />
 
       <v-btn
         @click="handleEdit"
@@ -67,10 +65,10 @@
       <template v-for="column in headers" v-slot:[`column-${column.key}`]="{ item }">
         <!-- customize rendering for each column here -->
         <span v-if="column.key ==='building'" :key="column.key">{{
-          item.stations.floors ? item.stations.floors.building.description : ""
+          item.stations ? item.stations.floors.building.description : ""
         }}</span>
         <span v-if="column.key === 'floor'" :key="column.key">{{
-          item.stations.floors ?  item.stations.floors.description : ""
+          item.stations ?  item.stations.floors.description : ""
         }}</span>
 
         <span v-if="column.key === 'roomstatus'" :key="column.key">
@@ -89,15 +87,31 @@
       </template>
     </ReusableTable>
   </v-card>
+
+  <!-- FORM HERE -->
+  <RoomsandBedsForm @close-dialog="closeFormDialog" @submit="confirmation" :form_dialog="form_dialog" :form_payload="form_payload" />
+
+  <Confirmation
+    :show="confirmationDialog"
+    :payload="form_payload"
+    :error_msg="error_msg"
+    :loading="loading"
+    @close="closeConfirmation"
+    @submit="submitRoomsandBedForm"
+  />
 </template>
 
 <script setup>
-import Form from "./Form.vue";
+import RoomsandBedsForm from "./Form.vue";
 import ReusableTable from "~/components/reusables/ReusableTable.vue";
 definePageMeta({
   layout: "root-layout",
 });
-
+import nuxtStorage from "nuxt-storage";
+let userdetails = JSON.parse(nuxtStorage.localStorage.getData("user_details"));
+const confirmationDialog = ref(false);
+const error_msg = ref('');
+const loading = ref(true);
 const { selectedRowDetails, isrefresh } = storeToRefs(useSubcomponentSelectedRowDetailsStore());
 const isSelectedUser = ref(true);
 const pageTitle = ref("Rooms and Beds");
@@ -110,7 +124,6 @@ const itemsPerPage = ref(15);
 const search = ref("");
 const params = ref("");
 const form_payload = ref({});
-const loading = ref(true);
 const headers = [
   {
     title: "Building",
@@ -154,9 +167,10 @@ const selectedUser = (item) => {
   isrefresh.value = false;
   selectedRowDetails.value.id = ""; //clear state id for subcomponents ?id=''
   selectedRowDetails.value.role_id = ""; //clear state id for subcomponents ?id=''
-
+  form_payload.value =  Object.assign({}); 
   if(item){
-    selectedRowDetails.value =  Object.assign({}, item);; //set state id for subcomponents ?id=item.id value
+    selectedRowDetails.value =  Object.assign({}, item); //set state id for subcomponents ?id=item.id value
+    form_payload.value =  Object.assign({}, item); 
     isrefresh.value = true;
     isSelectedUser.value = false;
   }else{
@@ -165,14 +179,17 @@ const selectedUser = (item) => {
   }
 };
 const handleView = () => {
-  
+  form_payload.value.type = 'view';
+  form_dialog.value = true;
 };
 
-const handleEdit = () => {
-  
+const handleEdit = () => { 
+  form_payload.value.type = 'edit';
+  form_dialog.value = true;
 };
 
 const openAddFormDialog = () => {
+  form_payload.value.type = 'new';
   form_dialog.value = true;
 };
 
@@ -181,8 +198,54 @@ const closeFormDialog = () => {
 };
 
 const DeactiveUser = () => {
-  
+  form_payload.value.type = 'edit';
+  form_dialog.value = true;
 };
+
+const closeConfirmation = ()=>{
+  confirmationDialog.value = false;
+}
+
+const confirmation = ()=>{
+  confirmationDialog.value = true;
+}
+
+const submitRoomsandBedForm = async(details)=>{
+  if (userdetails.passcode == details.user_passcode) {
+    if (form_payload.value) {
+        loading.value = true;
+        let method = "POST";
+        let id = "";
+        if (form_payload.value.id) {
+          id = form_payload.value.id;
+          method = "PUT";
+        }
+        const response = await $fetch(useApiUrl() + `/submit-rooms-and-beds/` + id, {
+          method: method,
+          headers: {
+            Authorization: `Bearer ` + useToken(),
+            "Content-Type": "application/json",
+          },
+          body: { form_payload: form_payload.value },
+        });
+        if (response.msg) {
+          confirmationDialog.value = false;
+          form_dialog.value = false;
+          loading.value = false;
+          loadItems(null, null);
+          closeFormDialog();
+          return useSnackbar(true,"success",response.msg);
+        }else{
+          loading.value = false;
+        }
+    }
+  }else{
+    error_msg.value = "Incorrect Passcode";
+    setTimeout(() => {
+      error_msg.value = "";
+    }, 3000);
+  }
+}
 
 const loadItems = async (options = null, searchkeyword = null) => {
   try {
