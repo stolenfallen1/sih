@@ -352,29 +352,29 @@
                         </v-row>
                         <v-row>
                             <v-col cols="6">
-                                <v-radio-group>
-                                    <v-checkbox label="is Supplies" hide-detals density="compact"></v-checkbox>
-                                    <v-checkbox label="is Medicine" hide-detals density="compact"></v-checkbox>
-                                    <v-checkbox label="is Fixed Asset" hide-detals density="compact"></v-checkbox>
-                                    <v-checkbox label="is Reagents" hide-detals density="compact"></v-checkbox>
-                                    <v-checkbox label="is MDRP" hide-detals density="compact"></v-checkbox>
-                                    <v-checkbox label="is Consignment" hide-detals density="compact"></v-checkbox>
-                                    <v-checkbox label="is Serial No. Required" hide-detals density="compact"></v-checkbox>
-                                    <v-checkbox label="is Expiry Date Required" hide-detals density="compact"></v-checkbox>
-                                    <v-checkbox label="is For Production" hide-detals density="compact"></v-checkbox>
+                                <v-radio-group hide-details density="compact">
+                                    <v-checkbox label="is Supplies" hide-details density="compact"></v-checkbox>
+                                    <v-checkbox label="is Medicine" hide-details density="compact"></v-checkbox>
+                                    <v-checkbox label="is Fixed Asset" hide-details density="compact"></v-checkbox>
+                                    <v-checkbox label="is Reagents" hide-details density="compact"></v-checkbox>
+                                    <v-checkbox label="is MDRP" hide-details density="compact"></v-checkbox>
+                                    <v-checkbox label="is Consignment" hide-details density="compact"></v-checkbox>
+                                    <v-checkbox label="is Serial No. Required" hide-details density="compact"></v-checkbox>
+                                    <v-checkbox label="is Expiry Date Required" hide-details density="compact"></v-checkbox>
+                                    <v-checkbox label="is For Production" hide-details density="compact"></v-checkbox>
                                 </v-radio-group>
                             </v-col>
                             <v-col cols="6">
-                                <v-radio-group>
-                                    <v-checkbox label="is Perishable" hide-detals density="compact"></v-checkbox>
-                                    <v-checkbox label="is Vatable" hide-detals density="compact"></v-checkbox>
-                                    <v-checkbox label="is Vat Exempt" hide-detals density="compact"></v-checkbox>
-                                    <v-checkbox label="is Allow Discount" hide-detals density="compact"></v-checkbox>
-                                    <v-checkbox label="is Zero Rated" hide-detals density="compact"></v-checkbox>
-                                    <v-checkbox label="is Open Price" hide-detals density="compact"></v-checkbox>
-                                    <v-checkbox label="is Allow Stat Order" hide-detals density="compact"></v-checkbox>
-                                    <v-checkbox label="is Stat" hide-detals density="compact"></v-checkbox>
-                                    <v-checkbox label="is Include in Statement" hide-detals density="compact"></v-checkbox>
+                                <v-radio-group  hide-details  density="compact">
+                                    <v-checkbox label="is Perishable" hide-details density="compact"></v-checkbox>
+                                    <v-checkbox label="is Vatable" hide-details density="compact"></v-checkbox>
+                                    <v-checkbox label="is Vat Exempt" hide-details density="compact"></v-checkbox>
+                                    <v-checkbox label="is Allow Discount" hide-details density="compact"></v-checkbox>
+                                    <v-checkbox label="is Zero Rated" hide-details density="compact"></v-checkbox>
+                                    <v-checkbox label="is Open Price" hide-details density="compact"></v-checkbox>
+                                    <v-checkbox label="is Allow Stat Order" hide-details density="compact"></v-checkbox>
+                                    <v-checkbox label="is Stat" hide-details density="compact"></v-checkbox>
+                                    <v-checkbox label="is Include in Statement" hide-details density="compact"></v-checkbox>
                                 </v-radio-group>
                             </v-col>
                         </v-row>

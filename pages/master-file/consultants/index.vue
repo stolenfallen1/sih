@@ -307,11 +307,14 @@ const details = () => {
     form_dialog.value = true;
   }
 };
+
 const handleView = () => {
+  if(Object.keys(payload.value).length === 0) return useSnackbar(true,"error","Select Doctor");
   details();
   payload.value.type = 'view';
 };
 const handleEdit = () => {
+  if(Object.keys(payload.value).length === 0) return useSnackbar(true,"error","Select Doctor");
   details();
   payload.value.type = 'edit';
 };

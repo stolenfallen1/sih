@@ -1,13 +1,19 @@
 <template>
-  <v-dialog :model-value="central_form_dialog" persistent hide-overlay width="800" scrollable>
+  <v-dialog
+    :model-value="central_form_dialog"
+    persistent
+    hide-overlay
+    width="800"
+    scrollable
+  >
     <form @submit.prevent="handleSearch">
       <v-card>
-         <v-toolbar density="compact" color="#FFF">
-            <v-toolbar-title>Central Database Lookup Window</v-toolbar-title>
-            <v-spacer></v-spacer>
-             <v-btn color="black" @click="closeDialog">
-              <v-icon>mdi-close</v-icon>
-            </v-btn>
+        <v-toolbar density="compact" color="#FFF">
+          <v-toolbar-title>Central Database Lookup Window</v-toolbar-title>
+          <v-spacer></v-spacer>
+          <v-btn color="black" @click="closeDialog">
+            <v-icon>mdi-close</v-icon>
+          </v-btn>
         </v-toolbar>
         <v-divider></v-divider>
         <v-card-text>
@@ -53,7 +59,11 @@
                   variant="outlined"
                 ></v-text-field>
               </v-col>
-              <v-btn class="bg-info text-white mb-4 ml-1" type="submit" :loading="search_payload.isloading" density="compact"
+              <v-btn
+                class="bg-info text-white mb-4 ml-1"
+                type="submit"
+                :loading="search_payload.isloading"
+                density="compact"
                 ><v-icon>mdi-magnify</v-icon>Search</v-btn
               >
               <v-divider></v-divider>
@@ -73,19 +83,19 @@
                   select-strategy="single"
                   item-value="id"
                 >
-                    <template
-                        v-for="(head, index) of headers"
-                        v-slot:[`item.${head.value}`]="props"
-                    >
-                        <td class="test" :props="`props`" :key="head.id">
-                        <slot :name="head.value" :item="props.item">
-                            {{ props.item[head.value] || "..." }}
-                        </slot>
-                        </td>
-                    </template>
-                    <template v-slot:item.birthdate="{ item }">
-                        {{ useDateMMDDYYY(item.birthdate) }}
-                    </template>
+                  <template
+                    v-for="(head, index) of headers"
+                    v-slot:[`item.${head.value}`]="props"
+                  >
+                    <td class="test" :props="`props`" :key="head.id">
+                      <slot :name="head.value" :item="props.item">
+                        {{ props.item[head.value] || "..." }}
+                      </slot>
+                    </td>
+                  </template>
+                  <template v-slot:item.birthdate="{ item }">
+                    {{ useDateMMDDYYY(item.birthdate) }}
+                  </template>
 
                   <template #bottom></template>
                 </v-data-table-server>
@@ -108,7 +118,7 @@
           <v-btn
             class="bg-primary text-white"
             type="submit"
-            :disabled="search_results.length == 0 ? false : true"
+            :disabled="(search_results.length == 0 && !search_payload) ? false : true"
             @click="handleClickForOpeningForm('new')"
             >Add New</v-btn
           >
@@ -124,15 +134,14 @@ const props = defineProps({
     type: Array,
     default: () => [],
   },
-   central_form_dialog: {
+  central_form_dialog: {
     type: Boolean,
     default: () => false,
   },
-   search_payload: {
+  search_payload: {
     type: Object,
     default: () => {},
   },
-  
 });
 const selectedRows = ref([]);
 const headers = ref([
@@ -191,7 +200,7 @@ const emits = defineEmits();
 const handleSearch = () => {
   emits("search", props.search_payload);
 
-  console.log(props.search_payload)
+  console.log(props.search_payload);
 };
 
 const closeDialog = () => {
@@ -199,7 +208,7 @@ const closeDialog = () => {
 };
 
 const handleClickForOpeningForm = (type) => {
-  emits("open-form",type);
+  emits("open-form", type);
 };
 </script>
 

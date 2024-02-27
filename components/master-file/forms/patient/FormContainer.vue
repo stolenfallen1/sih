@@ -44,48 +44,47 @@
                         <v-col cols="10">
                         <v-window v-model="tab">
                             <v-window-item value="option-0" class="pa-1">
-                              <general-form />
+                              <general-form :form_payload="form_payload" />
                             </v-window-item>
                             <v-window-item style="width:100%;" value="option-1" class="pa-1">
-                                <additional-info />
+                                <additional-info :form_payload="form_payload"  />
                             </v-window-item>
                             <v-window-item value="option-2"  class="pa-1">
-                                <contacts-address />
+                                <contacts-address :form_payload="form_payload" />
                             </v-window-item>
-
                              <v-window-item value="option-3" class="pa-1">
-                                <family-info />
+                                <family-info :form_payload="form_payload" />
                             </v-window-item>
                              <v-window-item value="option-4" class="pa-1">
-                                 <medical-cases />
+                                 <medical-cases :form_payload="form_payload" />
                             </v-window-item>
                              <v-window-item value="option-4" class="pa-1">
-                                <bad-habits />
+                                <bad-habits :form_payload="form_payload" />
                             </v-window-item>
                              <v-window-item value="option-4" class="pa-1">
-                                <drugs-medicines />
+                                <drugs-medicines :form_payload="form_payload" />
                             </v-window-item>
                              <v-window-item value="option-4" class="pa-1">
-                                  <procedures />
+                                  <procedures :form_payload="form_payload" />
                             </v-window-item>
                             <v-window-item value="option-4" class="pa-1">
-                               <allergies />
+                               <allergies :form_payload="form_payload" />
                             </v-window-item>
                              <v-window-item value="option-4" class="pa-1">
-                              <family-medical />
-                            </v-window-item>
+                              <family-medical :form_payload="form_payload" />
+                            </v-window-item >
                              <v-window-item value="option-4" class="pa-1">
-                                <social-history />
+                                <social-history :form_payload="form_payload" />
                             </v-window-item>
                             <v-window-item value="option-4" class="pa-1">
-                                <hmo-guantors-history />
+                                <hmo-guantors-history :form_payload="form_payload" />
                             </v-window-item>
                         </v-window>
                         </v-col>
                     </v-row>
                 </v-card-text>
                 <v-divider></v-divider>
-                <v-card-actions>
+                <!-- <v-card-actions>
                     <v-spacer></v-spacer>
                     <v-btn
                         class="bg-primary text-white"
@@ -93,7 +92,7 @@
                         @click.prevent="submit"
                         >Save and Close</v-btn
                     >
-                </v-card-actions>
+                </v-card-actions> -->
             </v-card>
     </v-dialog>
 </template>
@@ -117,6 +116,10 @@ const props = defineProps({
         type: Boolean,
         default: () => false,
     },
+    form_payload:{
+        type:Object,
+        default:()=>{}
+    }
 })
 const emits = defineEmits()
 
@@ -124,7 +127,7 @@ let tab = ref("0");
 
 const closeDialog = () => {
     emits("close-dialog");
-    tab.value = "1";
+    tab.value = "0";
 };
 
 const submit = () => {
