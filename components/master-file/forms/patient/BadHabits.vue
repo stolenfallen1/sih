@@ -1,71 +1,22 @@
 <template>
-    <v-row>
-        <v-col cols="12">
-            <v-card elevation="2">
-                <v-card-title class="text-center">Bad Habits</v-card-title>
-                <v-card-text>
-                    <v-table density="compact">
-                        <thead>
-                            <tr>
-                                <th
-                                    v-for="(header, index) in badHabitsHeader"
-                                    :key="index"
-                                >
-                                    {{ header }}
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td
-                                    v-for="(header, index) in badHabitsHeader"
-                                    :key="index"
-                                >
-                                    <template v-if="showDispensaryTextFields">
-                                        <v-text-field
-                                            v-model="dispensaryFields[index]"
-                                            type="text"
-                                            density="compact"
-                                            variant="outlined"
-                                        ></v-text-field>
-                                    </template>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </v-table>
-                </v-card-text>
-                <v-card-actions>
-                    <v-btn
-                        class="bg-info text-white"
-                        type="submit"
-                        @click="openTemplateDialog"
-                    >
-                        Add New Template
-                    </v-btn>
-                    <v-btn
-                        class="bg-primary text-white"
-                        type="submit"
-                        @click="addDispensaryField"
-                    >
-                        {{ showDispensaryTextFields ? "Save" : "Add" }}
-                    </v-btn>
-                    <v-btn
-                        class="bg-error text-white"
-                        type="submit"
-                        @click="deleteDispensaryField"
-                        v-if="showDispensaryTextFields"
-                    >
-                        Delete
-                    </v-btn>
-                </v-card-actions>
-            </v-card>
-        </v-col>
-    </v-row>
-    <bad-habits-template
-        :template_dialog="template_dialog"
-        @select-habits="handleSelectingHabits"
-        @close-dialog="closeTemplateDialog"
-    />
+  <v-row>
+    <v-col lg="12">
+      <v-card>
+        <v-toolbar density="compact" color="primary">
+          <v-card-title class="d-flex align-center pe-2">
+            <v-icon icon="mdi-form-select"></v-icon> &nbsp; Bad Habits Information
+            <v-spacer></v-spacer>
+          </v-card-title>
+        </v-toolbar>
+        <v-divider></v-divider>
+        <v-card-text>
+          <v-data-table density="compact" height="70vh" :headers="headers" :items="items">
+            <template #bottom></template>
+          </v-data-table>
+        </v-card-text>
+      </v-card>
+    </v-col>
+  </v-row>
 </template>
 
 <script setup>
@@ -77,33 +28,49 @@ const template_dialog = ref(false);
 
 const showDispensaryTextFields = ref(false);
 const dispensaryFields = ref([]);
-
+const items = ref([]);
+const headers = [
+  {
+    title: "Description",
+    align: "start",
+    sortable: true,
+    key: "doctor_code",
+    width: "70%",
+  },
+  {
+    title: "Remarks",
+    key: "category",
+    align: "start",
+    width: "30%",
+    sortable: false,
+  },
+];
 const addDispensaryField = () => {
-    if (!showDispensaryTextFields.value) {
-        showDispensaryTextFields.value = true;
-        dispensaryFields.value = Array(dispensaryHeader.length).fill("");
-    } else {
-        // Save the data or perform any other action needed
-        console.log("Saving Patient Information:", dispensaryFields.value);
-        showDispensaryTextFields.value = false;
-    }
+  if (!showDispensaryTextFields.value) {
+    showDispensaryTextFields.value = true;
+    dispensaryFields.value = Array(dispensaryHeader.length).fill("");
+  } else {
+    // Save the data or perform any other action needed
+    console.log("Saving Patient Information:", dispensaryFields.value);
+    showDispensaryTextFields.value = false;
+  }
 };
 const deleteDispensaryField = () => {
-    showDispensaryTextFields.value = false;
-    dispensaryFields.value = [];
+  showDispensaryTextFields.value = false;
+  dispensaryFields.value = [];
 };
 
 const openTemplateDialog = () => {
-    template_dialog.value = true;
+  template_dialog.value = true;
 };
 
 const closeTemplateDialog = () => {
-    template_dialog.value = false;
+  template_dialog.value = false;
 };
 
 const handleSelectingHabits = () => {
-    alert("This habit is Selected");
-}
+  alert("This habit is Selected");
+};
 </script>
 
 <style scoped></style>

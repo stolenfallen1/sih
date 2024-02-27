@@ -73,32 +73,8 @@
             v-for="column in headers"
             v-slot:[`column-${column.key}`]="{ item }"
         >
-            <!-- customize rendering for each column here -->
-            <span v-if="column.key === 'building'" :key="column.key"
-                >{{
-                    item.stations.floors
-                        ? item.stations.floors.building.description
-                        : ""
-                }}
-            </span>
-            <span v-if="column.key === 'floor'" :key="column.key"
-                >{{
-                    item.stations.floors ? item.stations.floors.description : ""
-                }}
-            </span>
-
-            <span v-if="column.key === 'roomstatus'" :key="column.key">
-                {{ item.room_status ? item.room_status.room_description : "" }}
-            </span>
-            <span v-if="column.key === 'roomClass'" :key="column.key">
-                {{
-                    item.room_class
-                        ? item.room_class.room_class_description
-                        : ""
-                }}
-            </span>
-            <span v-if="column.key === 'station'" :key="column.key">
-                {{ item.stations ? item.stations.station_description : "" }}
+            <span v-if="column.key === 'birthdate'" :key="column.key">
+                {{ useDateMMDDYYY(item.birthdate)}}
             </span>
             <span v-if="column.key === 'isactive'" :key="column.key">
                 {{ item.isactive == 1 ? "Active" : "In Active" }}
@@ -137,54 +113,40 @@ const params = ref("");
 const loading = ref(true);
 const headers = [
     {
-        title: "Building",
+        title: "Patient ID",
         align: "start",
         sortable: true,
-        key: "building",
-        width: "10%",
+        key: "patient_id",
+        width: "9%",
     },
     {
-        title: "Floor Name",
-        key: "floor",
-        align: "center",
-        width: "10%",
-        sortable: false,
-    },
-    {
-        title: "Room No.",
-        key: "room_code",
-        align: "center",
-        width: "10%",
-        sortable: false,
-    },
-    {
-        title: "No.Of Beds",
-        key: "total_beds",
-        align: "center",
-        width: "10%",
-        sortable: false,
-    },
-    {
-        title: "Room Status",
-        key: "roomstatus",
-        align: "center",
-        width: "15%",
-        sortable: false,
-    },
-    {
-        title: "Room Type",
-        key: "roomClass",
-        align: "center",
-        width: "15%",
-        sortable: false,
-    },
-    {
-        title: "Nursing Station",
-        key: "station",
-        align: "center",
+        title: "Patient Name",
+        key: "patient_name",
+        align: "start",
         width: "30%",
         sortable: false,
     },
+    {
+        title: "Birthdate",
+        key: "birthdate",
+        align: "start",
+        width: "15%",
+        sortable: false,
+    },
+    {
+        title: "Address",
+        key: "bldgstreet",
+        align: "start",
+        width: "25%",
+        sortable: false,
+    },
+    {
+        title: "Mobile No.",
+        key: "mobile_number",
+        align: "start",
+        width: "15%",
+        sortable: false,
+    }
 ];
 const serverItems = ref([]);
 const handleRefresh = () => {
@@ -248,7 +210,7 @@ const loadItems = async (options = null, searchkeyword = null) => {
               options.keyword
             : "page=1&per_page=10&keyword=" + keyword;
         const response = await fetch(
-            useApiUrl() + "/rooms-and-beds" + "?" + params.value || "",
+            useApiUrl() + "/patient-master" + "?" + params.value || "",
             {
                 headers: {
                     Authorization: `Bearer ` + useToken(),

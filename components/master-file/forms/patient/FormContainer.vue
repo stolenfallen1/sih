@@ -15,59 +15,74 @@
                             <v-icon>mdi-close</v-icon>
                         </v-btn>
                     </v-toolbar>
-                    <v-tabs v-model="tab" bg-color="#6984FF" center-active>
-                        <v-tab value="1">General</v-tab>
-                        <v-tab value="2">Additional Info</v-tab>
-                        <v-tab value="3">Contacts .Addresses</v-tab>
-                        <v-tab value="4">Family Info</v-tab>
-                        <v-tab value="5">Medical Cases</v-tab>
-                        <v-tab value="6">Bad Habits</v-tab>
-                        <v-tab value="7">Drugs .Medicines Taken</v-tab>
-                        <v-tab value="8">Procedures</v-tab>
-                        <v-tab value="9">Allergies</v-tab>
-                        <v-tab value="10">Family Medical History</v-tab>
-                        <v-tab value="11">Social History</v-tab>
-                        <v-tab value="12">HMO. Guarantors History</v-tab>
-                    </v-tabs>
                 </v-card-title>
+                <v-divider></v-divider>
                 <v-card-text>
-                    <!-- Conditionally render content based on the selected tab -->
-                    <div v-if="tab === '1'">
-                        <general-form />
-                    </div>
-                    <div v-if="tab === '2'">
-                        <additional-info />
-                    </div>
-                    <div v-if="tab === '3'">
-                        <contacts-address />
-                    </div>
-                    <div v-if="tab === '4'">
-                        <family-info />
-                    </div>
-                    <div v-if="tab === '5'">
-                        <medical-cases />
-                    </div>
-                    <div v-if="tab === '6'">
-                        <bad-habits />
-                    </div>
-                    <div v-if="tab === '7'">
-                        <drugs-medicines />
-                    </div>
-                    <div v-if="tab === '8'">
-                        <procedures />
-                    </div>
-                    <div v-if="tab === '9'">
-                        <allergies />
-                    </div>
-                    <div v-if="tab === '10'">
-                        <family-medical />
-                    </div>
-                    <div v-if="tab === '11'">
-                        <social-history />
-                    </div>
-                    <div v-if="tab === '12'">
-                        <hmo-guantors-history />
-                    </div>
+                    <v-row>
+                        <v-col cols="2" >
+                        <v-tabs
+                            v-model="tab"
+                            direction="vertical"
+                            color="primary"
+                            center-active
+                            density="compact"
+                        >
+                            <v-tab value="0"><v-icon start>mdi-form-select</v-icon> General</v-tab>
+                            <v-tab value="1"><v-icon start>mdi-form-select</v-icon>Additional Info</v-tab>
+                            <v-tab value="2"><v-icon start>mdi-form-select</v-icon>Contacts .Addresses</v-tab>
+                            <v-tab value="3"><v-icon start>mdi-form-select</v-icon>Family Info</v-tab>
+                            <v-tab value="4"><v-icon start>mdi-form-select</v-icon>Medical Cases</v-tab>
+                            <v-tab value="5"><v-icon start>mdi-form-select</v-icon>Bad Habits</v-tab>
+                            <v-tab value="6"><v-icon start>mdi-form-select</v-icon>Drugs .Medicines Taken</v-tab>
+                            <v-tab value="7"><v-icon start>mdi-form-select</v-icon>Procedures</v-tab>
+                            <v-tab value="8"><v-icon start>mdi-form-select</v-icon>Allergies</v-tab>
+                            <v-tab value="9"><v-icon start>mdi-form-select</v-icon>Family Medical History</v-tab>
+                            <v-tab value="10"><v-icon start>mdi-form-select</v-icon>Social History</v-tab>
+                            <v-tab value="11"><v-icon start>mdi-form-select</v-icon>HMO. Guarantors History</v-tab>
+                        </v-tabs>
+                        </v-col>
+                        <v-col cols="10">
+                        <v-window v-model="tab">
+                            <v-window-item value="option-0" class="pa-1">
+                              <general-form />
+                            </v-window-item>
+                            <v-window-item style="width:100%;" value="option-1" class="pa-1">
+                                <additional-info />
+                            </v-window-item>
+                            <v-window-item value="option-2"  class="pa-1">
+                                <contacts-address />
+                            </v-window-item>
+
+                             <v-window-item value="option-3" class="pa-1">
+                                <family-info />
+                            </v-window-item>
+                             <v-window-item value="option-4" class="pa-1">
+                                 <medical-cases />
+                            </v-window-item>
+                             <v-window-item value="option-4" class="pa-1">
+                                <bad-habits />
+                            </v-window-item>
+                             <v-window-item value="option-4" class="pa-1">
+                                <drugs-medicines />
+                            </v-window-item>
+                             <v-window-item value="option-4" class="pa-1">
+                                  <procedures />
+                            </v-window-item>
+                            <v-window-item value="option-4" class="pa-1">
+                               <allergies />
+                            </v-window-item>
+                             <v-window-item value="option-4" class="pa-1">
+                              <family-medical />
+                            </v-window-item>
+                             <v-window-item value="option-4" class="pa-1">
+                                <social-history />
+                            </v-window-item>
+                            <v-window-item value="option-4" class="pa-1">
+                                <hmo-guantors-history />
+                            </v-window-item>
+                        </v-window>
+                        </v-col>
+                    </v-row>
                 </v-card-text>
                 <v-divider></v-divider>
                 <v-card-actions>
@@ -105,7 +120,7 @@ const props = defineProps({
 })
 const emits = defineEmits()
 
-let tab = ref("1");
+let tab = ref("0");
 
 const closeDialog = () => {
     emits("close-dialog");
