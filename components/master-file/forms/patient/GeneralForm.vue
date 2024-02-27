@@ -1,8 +1,13 @@
 <template>
   <v-row>
     <v-col cols="9" xl="9">
-      <v-card class="pa-2">
-        <div>Personal Information</div>
+      <v-card density="compact">
+        <v-toolbar density="compact" color="primary">
+          <v-card-title class="d-flex align-center pe-2">
+            <v-icon icon="mdi-form-select"></v-icon> &nbsp;Personal Information
+            <v-spacer></v-spacer>
+          </v-card-title>
+        </v-toolbar>
         <v-divider class="mt-2"></v-divider>
         <v-row no-gutters class="pa-1">
           <v-col lg="2" class="pa-1">
@@ -299,24 +304,31 @@
         </v-row>
       </v-card>
     </v-col>
-    <v-col cols="3" xl="3">
-        <v-col cols="12" class="justify-center" align-self="center">
-          <v-card class="pa-1">
-            <v-avatar rounded="0" size="200">
-              <v-img cover width="100%" alt="Selected Image"></v-img>
-            </v-avatar>
-          </v-card>
-        </v-col>
-        <v-file-input
-          class="mt-2"
-          type="file"
-          variant="outlined"
-          bg-color="primary"
-          clearable
-          label="Manage Picture"
-          density="compact"
-          hide-details
-        ></v-file-input>
+    <v-col cols="3" xl="3" class="pa-0">
+      <v-col cols="12">
+        <v-card >
+          <v-toolbar density="compact" color="primary">
+            <v-card-title class="d-flex align-center pe-2">
+              <v-icon icon="mdi-account-circle-outline"></v-icon> &nbsp;Profile
+              <v-spacer></v-spacer>
+            </v-card-title>
+          </v-toolbar>
+          <v-divider></v-divider>
+          <v-avatar rounded="0" size="200">
+            <v-img cover width="100%" alt="Selected Image"></v-img>
+          </v-avatar>
+        </v-card>
+      </v-col>
+      <v-file-input
+        class="mt-2"
+        type="file"
+        variant="outlined"
+        bg-color="primary"
+        clearable
+        label="Manage Picture"
+        density="compact"
+        hide-details
+      ></v-file-input>
     </v-col>
   </v-row>
 </template>

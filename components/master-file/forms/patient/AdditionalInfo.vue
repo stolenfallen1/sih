@@ -1,90 +1,48 @@
 <template>
-    <v-row>
-        <v-col lg="12">
-            <v-card elevation="2">
-                <v-card-title class="text-center">Other ID Information</v-card-title>
-                <v-card-text>
-                    <v-table density="compact">
-                        <thead>
-                            <tr>
-                                <th v-for="(header, index) in idHeaders" :key="index">
-                                    {{ header }}
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td v-for="(header, index) in idHeaders" :key="index">
-                                    <template v-if="showIdTextFields">
-                                        <v-text-field
-                                            v-model="idFields[index]"
-                                            type="text"
-                                            density="compact"
-                                            variant="outlined"
-                                        ></v-text-field>
-                                    </template>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </v-table>
-                </v-card-text>
-                <v-card-actions>
-                    <v-btn class="bg-primary text-white" type="submit" @click="addIdField">
-                        {{ showIdTextFields ? 'Save' : 'Add' }}
-                    </v-btn>
-                    <v-btn class="bg-error text-white" type="submit" @click="deleteIdField" v-if="showIdTextFields">
-                        Delete
-                    </v-btn>
-                </v-card-actions>
-            </v-card>
-        </v-col>
-    </v-row>
-
-    <v-row>
-        <v-col lg="12">
-            <v-card elevation="2">
-                <v-card-title class="text-center">Other Patient Information</v-card-title>
-                <v-card-text>
-                    <v-table density="compact">
-                        <thead>
-                            <tr>
-                                <th v-for="(header, index) in patientHeaders" :key="index">
-                                    {{ header }}
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td v-for="(header, index) in patientHeaders" :key="index">
-                                    <template v-if="showPatientTextFields">
-                                        <v-text-field
-                                            v-model="patientFields[index]"
-                                            type="text"
-                                            density="compact"
-                                            variant="outlined"
-                                        ></v-text-field>
-                                    </template>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </v-table>
-                </v-card-text>
-                <v-card-actions>
-                    <v-btn class="bg-primary text-white" type="submit" @click="addPatientField">
-                        {{ showPatientTextFields ? 'Save' : 'Add' }}
-                    </v-btn>
-                    <v-btn class="bg-error text-white" type="submit" @click="deletePatientField" v-if="showPatientTextFields">
-                        Delete
-                    </v-btn>
-                </v-card-actions>
-            </v-card>
-        </v-col>
-    </v-row>
+  <v-row>
+    <v-col lg="12">
+      <v-card>
+        <v-toolbar density="compact" color="primary">
+          <v-card-title class="d-flex align-center pe-2">
+            <v-icon icon="mdi-form-select"></v-icon> &nbsp; Other ID Information
+            <v-spacer></v-spacer>
+          </v-card-title>
+        </v-toolbar>
+        <v-divider></v-divider>
+        <v-card-text>
+          <v-data-table density="compact" height="23vh" :headers="headers" :items="items">
+            <template #bottom></template>
+          </v-data-table>
+        </v-card-text>
+      </v-card>
+    </v-col>
+    <v-col lg="12">
+      <v-card>
+        <v-card-title class="d-flex align-center pe-2">
+          <v-icon icon="mdi-form-select"></v-icon> &nbsp;Other Patient Information
+          <v-spacer></v-spacer>
+        </v-card-title>
+        <v-divider></v-divider>
+        <v-card-text>
+          <v-data-table density="compact" height="23vh" :headers="headers" :items="items">
+            <template #bottom></template>
+          </v-data-table>
+        </v-card-text>
+      </v-card>
+    </v-col>
+  </v-row>
 </template>
 
 <script setup>
-const idHeaders = ['ID Type', 'ID Number', 'Date Issue', 'Date Expiry', 'Serial Number', 'Authority'];
-const patientHeaders = ['Description', 'Value'];
+const idHeaders = [
+  "ID Type",
+  "ID Number",
+  "Date Issue",
+  "Date Expiry",
+  "Serial Number",
+  "Authority",
+];
+const patientHeaders = ["Description", "Value"];
 
 const showIdTextFields = ref(false);
 const idFields = ref([]);
@@ -93,37 +51,90 @@ const showPatientTextFields = ref(false);
 const patientFields = ref([]);
 
 const addIdField = () => {
-if (!showIdTextFields.value) {
+  if (!showIdTextFields.value) {
     showIdTextFields.value = true;
-    idFields.value = Array(idHeaders.length).fill('');
-} else {
+    idFields.value = Array(idHeaders.length).fill("");
+  } else {
     // Save the data or perform any other action needed
-    console.log('Saving ID Information:', idFields.value);
+    console.log("Saving ID Information:", idFields.value);
     showIdTextFields.value = false;
-}
+  }
 };
 
 const deleteIdField = () => {
-    showIdTextFields.value = false;
-    idFields.value = [];
+  showIdTextFields.value = false;
+  idFields.value = [];
 };
 
 const addPatientField = () => {
-    if (!showPatientTextFields.value) {
-        showPatientTextFields.value = true;
-        patientFields.value = Array(patientHeaders.length).fill('');
-    } else {
-        // Save the data or perform any other action needed
-        console.log('Saving Patient Information:', patientFields.value);
-        showPatientTextFields.value = false;
-    }
+  if (!showPatientTextFields.value) {
+    showPatientTextFields.value = true;
+    patientFields.value = Array(patientHeaders.length).fill("");
+  } else {
+    // Save the data or perform any other action needed
+    console.log("Saving Patient Information:", patientFields.value);
+    showPatientTextFields.value = false;
+  }
 };
 
 const deletePatientField = () => {
-    showPatientTextFields.value = false;
-    patientFields.value = [];
+  showPatientTextFields.value = false;
+  patientFields.value = [];
 };
+
+const search = ref({});
+const items = ref([]);
+const headers = [
+  {
+    title: "Code",
+    align: "start",
+    sortable: true,
+    key: "doctor_code",
+    width: "5%",
+  },
+  {
+    title: "Category",
+    key: "category",
+    align: "start",
+    width: "5%",
+    sortable: false,
+  },
+  {
+    title: "Specialization",
+    key: "specialization_id",
+    align: "start",
+    width: "5%",
+    sortable: false,
+  },
+  {
+    title: "Consultant Name",
+    key: "doctor_name",
+    align: "start",
+    width: "40%",
+    sortable: false,
+  },
+  {
+    title: "PHIC No.",
+    key: "philhealth_accreditation_no",
+    align: "start",
+    width: "10%",
+    sortable: false,
+  },
+  {
+    title: "Email",
+    key: "email",
+    align: "start",
+    width: "30%",
+    sortable: false,
+  },
+  {
+    title: "Status",
+    key: "isactive",
+    align: "start",
+    width: "30%",
+    sortable: false,
+  },
+];
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

@@ -18,7 +18,8 @@
                 </v-card-title>
                 <v-divider></v-divider>
                 <v-card-text>
-                    <div class="d-flex flex-row">
+                    <v-row>
+                        <v-col cols="2" >
                         <v-tabs
                             v-model="tab"
                             direction="vertical"
@@ -38,11 +39,13 @@
                             <v-tab value="10"><v-icon start>mdi-form-select</v-icon>Social History</v-tab>
                             <v-tab value="11"><v-icon start>mdi-form-select</v-icon>HMO. Guarantors History</v-tab>
                         </v-tabs>
+                        </v-col>
+                        <v-col cols="10">
                         <v-window v-model="tab">
                             <v-window-item value="option-0" class="pa-1">
-                                <general-form />
+                              <general-form />
                             </v-window-item>
-                            <v-window-item value="option-1" class="pa-1">
+                            <v-window-item style="width:100%;" value="option-1" class="pa-1">
                                 <additional-info />
                             </v-window-item>
                             <v-window-item value="option-2"  class="pa-1">
@@ -56,10 +59,10 @@
                                  <medical-cases />
                             </v-window-item>
                              <v-window-item value="option-4" class="pa-1">
-                                <drugs-medicines />
+                                <bad-habits />
                             </v-window-item>
                              <v-window-item value="option-4" class="pa-1">
-                                 <bad-habits />
+                                <drugs-medicines />
                             </v-window-item>
                              <v-window-item value="option-4" class="pa-1">
                                   <procedures />
@@ -77,7 +80,8 @@
                                 <hmo-guantors-history />
                             </v-window-item>
                         </v-window>
-                    </div>
+                        </v-col>
+                    </v-row>
                 </v-card-text>
                 <v-divider></v-divider>
                 <v-card-actions>

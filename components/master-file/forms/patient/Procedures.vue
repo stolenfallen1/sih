@@ -1,23 +1,43 @@
 <!-- In bizbox it is just a empty table only the header was visible -->
 <template>
-    <v-card>
-        <v-card-title class="text-center">List of Procedures</v-card-title>
+  <v-row>
+    <v-col lg="12">
+      <v-card>
+        <v-toolbar density="compact" color="primary">
+          <v-card-title class="d-flex align-center pe-2">
+            <v-icon icon="mdi-form-select"></v-icon> &nbsp; List of Procedures
+            <v-spacer></v-spacer>
+          </v-card-title>
+        </v-toolbar>
+        <v-divider></v-divider>
         <v-card-text>
-            <v-table density="compact">
-                <thead>
-                    <tr>
-                        <th width="12">Quantity</th>
-                        <th class="text-center">Description</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- Body here -->
-                </tbody>
-            </v-table>
+          <v-data-table density="compact" height="70vh" :headers="headers" :items="items">
+            <template #bottom></template>
+          </v-data-table>
         </v-card-text>
-    </v-card>
+      </v-card>
+    </v-col>
+  </v-row>
 </template>
 
-<script setup></script>
+<script setup>
+const items = ref([]);
+const headers = [
+  {
+    title: "Quantity",
+    key: "category",
+    align: "start",
+    width: "10%",
+    sortable: false,
+  },
+  {
+    title: "Description",
+    align: "start",
+    sortable: true,
+    key: "doctor_code",
+    width: "70%",
+  },
+];
+</script>
 
 <style scoped></style>
