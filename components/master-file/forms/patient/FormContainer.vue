@@ -25,6 +25,7 @@
                             direction="vertical"
                             color="primary"
                             center-active
+                            density="compact"
                         >
                             <v-tab value="0"><v-icon start>mdi-form-select</v-icon> General</v-tab>
                             <v-tab value="1"><v-icon start>mdi-form-select</v-icon>Additional Info</v-tab>
