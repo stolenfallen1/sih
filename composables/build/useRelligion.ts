@@ -1,7 +1,7 @@
 import nuxtStorage from 'nuxt-storage';
 export const useReligion = async () => {
     const config = useRuntimeConfig();
-    const { data}: any = await useFetch(useApiUrl() + `/positions`, {
+    const { data}: any = await useFetch(useApiUrl() + `/get-religions`, {
     method: 'GET',
     headers: { 
         'Content-Type': 'application/json',
@@ -9,6 +9,6 @@ export const useReligion = async () => {
     },
     });
     if (data.value) {
-        nuxtStorage.localStorage.setData('religion', JSON.stringify(data.value.data), 24, 'h');
+        nuxtStorage.localStorage.setData('religion', JSON.stringify(data.value), 24, 'h');
     }
 }

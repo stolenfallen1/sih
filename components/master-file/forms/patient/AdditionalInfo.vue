@@ -34,6 +34,7 @@
 </template>
 
 <script setup>
+
 const idHeaders = [
   "ID Type",
   "ID Number",

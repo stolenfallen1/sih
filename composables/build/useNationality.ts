@@ -1,6 +1,6 @@
 import nuxtStorage from 'nuxt-storage';
 export const useNationality = async () => {
-    const { data}: any = await useFetch(useApiUrl() + `/nationalities`, {
+    const { data}: any = await useFetch(useApiUrl() + `/get-nationalities`, {
     method: 'GET',
     headers: { 
         'Content-Type': 'application/json',
@@ -8,6 +8,6 @@ export const useNationality = async () => {
     },
     });
     if (data.value) {
-        nuxtStorage.localStorage.setData('nationality', JSON.stringify(data.value.data), 24, 'h');
+        nuxtStorage.localStorage.setData('nationality', JSON.stringify(data.value), 24, 'h');
     }
 }

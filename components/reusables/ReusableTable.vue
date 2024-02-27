@@ -45,6 +45,7 @@
             @update:options="refetch"
             :show-select="showSelect ? true : false"
             select-strategy="single"
+            @update:modelValue="handleSelectedInput"
             @click:row="handleSelectedRow"
             item-value="id"
         >
@@ -121,8 +122,23 @@ const refetch = (options) => {
     options.keyword = keyword.value;
     emits("fetchPage", options);
 };
+const handleSelectedInput = (selected) => {
+    let seletedrow = props.serverItems.find(item=>item.id === selected[0]);
+    selectedRows.value = [];
+    const index = selectedRows.value.indexOf(selected[0]);
+    selectedRows.value = [];
+    let item = seletedrow;
+    if (index === -1) {
+        selectedRows.value.push(selected[0]);
+    } else {
+        item = "";
+        selectedRows.value.splice(index, 1);
+    }
+    emits("selected-row", item);
+};
 
 const handleSelectedRow = (event, selectedRow) => {
+    
     const index = selectedRows.value.indexOf(selectedRow?.item.id);
     selectedRows.value = [];
     let item = selectedRow.item;

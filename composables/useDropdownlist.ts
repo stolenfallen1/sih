@@ -15,4 +15,6 @@ export const useDropdownlist = () => {
   useRoomAccomodation();
   useRoomClass();
   useRoomStatus();
+  useReligion();
+  useNationality();
 }

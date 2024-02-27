@@ -17,6 +17,7 @@
                 label="Email"
                 type="text"
                 hide-details
+                v-model="form_payload.email_address"
                 density="compact"
                 variant="outlined"
               ></v-text-field>
@@ -26,6 +27,7 @@
                 label="Telephone No"
                 type="text"
                 hide-details
+                v-model="form_payload.telephone_number"
                 density="compact"
                 variant="outlined"
               ></v-text-field>
@@ -35,6 +37,7 @@
                 label="Mobile No"
                 type="text"
                 hide-details
+                v-model="form_payload.mobile_number"
                 density="compact"
                 variant="outlined"
               ></v-text-field>
@@ -49,6 +52,7 @@
               <v-text-field
                 label="Address"
                 type="text"
+                v-model="form_payload.bldgstreet"
                 hide-details
                 density="compact"
                 variant="outlined"
@@ -307,7 +311,12 @@
 
 <script setup>
 import AddressForm from "./sub-forms/AddressForm.vue";
-
+const props = defineProps({
+    form_payload:{
+        type:Object,
+        default:()=>{}
+    }
+});
 let tab_option1 = ref("1");
 let tab_option2 = ref("1");
 const address_form_dialog = ref(false);
