@@ -1,5 +1,5 @@
 export const useItemsSuppliesTab = (type:any) => {
-    if (type == 'one') {
+    if (type == '1') {
         const items = [
             {
                 label: "Item .Service Details",
@@ -45,7 +45,7 @@ export const useItemsSuppliesTab = (type:any) => {
             },
         ]
         return items;
-    } else if (type == 'two') {
+    } else if (type == '2') {
         const items = [
             {
                 label: "Item .Service Details",
@@ -91,7 +91,7 @@ export const useItemsSuppliesTab = (type:any) => {
             },
         ]
         return items;
-    } else if (type == 'three') {
+    } else if (type == '3') {
         const items = [
             {
                 label: "Item .Service Details",
@@ -131,7 +131,7 @@ export const useItemsSuppliesTab = (type:any) => {
             },
         ]
         return items;
-    } else if (type == 'four') {
+    } else if (type == '6') {
         const items = [
             {
                 label: "Item .Service Details",

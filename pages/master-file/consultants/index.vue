@@ -404,7 +404,7 @@ const confirmation = ()=>{
 }
 
 const submitDoctorsForm = async (details) => {
-  if (userdetails.passcode == details.user_passcode) {
+  if (usePasscode() == details.user_passcode) {
       if (payload.value) {
 
         loading.value = true;

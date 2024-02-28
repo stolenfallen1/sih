@@ -28,7 +28,6 @@
                 @open-form="openAddFormDialog"
             />
             <!-- Form here -->
-            <ItemSuppliesForm :item_supplies_form="item_supplies_form" :currentTabValue="currentTabValue" @close-dialog="closeFormDialog" />
             <v-btn
                 @click="handleEdit"
                 prepend-icon="mdi-pencil"
@@ -53,7 +52,7 @@
     </v-card>
     <v-card class="mb-2" elevation="2">
         <ReusableTable
-            :items-per-page="10"
+            :items-per-page="itemsPerPage"
             :serverItems="serverItems"
             :totalItems="totalItems"
             :loading="loading"
@@ -90,6 +89,15 @@
                 <!-- Add more custom logic for other columns -->
             </template>
         </ReusableTable>
+        <ItemSuppliesForm :form_payload="form_payload" @submit-form="confirmation" :item_supplies_form="item_supplies_form" :currentTabValue="currentTabValue" @close-dialog="closeFormDialog" />
+        <Confirmation
+            :show="confirmationDialog"
+            :payload="form_payload"
+            :error_msg="error_msg"
+            :loading="loading"
+            @close="closeConfirmation"
+            @submit="submitItemandSuppliesForm"
+        />
     </v-card>
 </template>
 
@@ -102,7 +110,8 @@ import ItemSuppliesForm from "~/components/master-file/forms/items-supplies/Form
 definePageMeta({
     layout: "root-layout",
 });
-
+const confirmationDialog = ref(false);
+const error_msg = ref('');
 const { selectedRowDetails, isrefresh } = storeToRefs(
     useSubcomponentSelectedRowDetailsStore()
 );
@@ -114,9 +123,9 @@ const showTabs = ref(true);
 const currentTabValue = ref("2");
 const tableTabs = ref([
     { label: "Drugs and Medicines", value: "2" },
-    { label: "Supplies", value: "5" },
-    { label: "Assets. Equipments", value: "6" },
-    { label: "Others", value: "3" },
+    { label: "Supplies", value: "1" },
+    { label: "Assets. Equipments", value: "3" },
+    { label: "Others", value: "6" },
 ]);
 const totalItems = ref(0);
 const itemsPerPage = ref(40);
@@ -127,7 +136,7 @@ const headers = [
         title: "Code",
         align: "start",
         sortable: true,
-        key: "map_item_id",
+        key: "id",
         width: "5%",
     },
     {
@@ -162,39 +171,26 @@ const headers = [
 const serverItems = ref([]);
 const central_form_dialog = ref(false);
 const item_supplies_form = ref(false);
+const form_payload = ref({
+    item_InventoryGroup_Id:parseInt(2)
+});
+
+const closeConfirmation = ()=>{
+  confirmationDialog.value = false;
+}
+const confirmation = ()=>{
+  confirmationDialog.value = true;
+}
 
 const handleTabChange = (tabValue) => {
     currentTabValue.value = tabValue;
-    if (tabValue == "2") {
-        drugsAndMedicines();
-    } else if (tabValue == "5") {
-        supplies();
-    } else if (tabValue == "6") {
-        assetsAndEquipments();
-    } else if (tabValue == "3") {
-        others();
-    }
+    form_payload.value.item_InventoryGroup_Id = parseInt(tabValue);
+    subcomponents.value = useItemsSuppliesTab(tabValue);
     loadItems(null, null, tabValue);
 };
 
-const drugsAndMedicines = () => {
-    subcomponents.value = useItemsSuppliesTab('one');
-}
-
-const supplies = () => {
-    subcomponents.value = useItemsSuppliesTab('two');
-}
-
-const assetsAndEquipments = () => {
-    subcomponents.value = useItemsSuppliesTab('three');
-}
-
-const others = () => {
-    subcomponents.value = useItemsSuppliesTab('four');
-}
-
 const handleRefresh = () => {
-    loadItems();
+    loadItems(null, null, currentTabValue.value);
 };
 const handleSearch = (keyword) => {
     // Handle search action
@@ -205,7 +201,9 @@ const selectedUser = (item) => {
     isrefresh.value = false;
     selectedRowDetails.value.id = ""; //clear state id for subcomponents ?id=''
     selectedRowDetails.value.role_id = ""; //clear state id for subcomponents ?id=''
-    if (item) {
+    form_payload.value = Object.assign({});
+    if (item) {  
+        form_payload.value = Object.assign({}, item);
         selectedRowDetails.value = Object.assign({}, item); //set state id for subcomponents ?id=item.id value
         isrefresh.value = true;
         isSelectedUser.value = false;
@@ -214,19 +212,64 @@ const selectedUser = (item) => {
         isSelectedUser.value = true;
     }
 };
-const handleView = () => {};
-const handleEdit = () => {};
+
+const details = () => {
+  if (form_payload.value) {
+    form_payload.value.item_InventoryGroup_Id = parseInt(form_payload.value.item_InventoryGroup_Id) ? parseInt(form_payload.value.item_InventoryGroup_Id) : "";
+    form_payload.value.item_Med_AntibioticClass_Id = parseInt(form_payload.value.item_Med_AntibioticClass_Id) ? parseInt(form_payload.value.item_Med_AntibioticClass_Id) : "";
+    form_payload.value.item_Med_Classification_Id = parseInt(form_payload.value.item_Med_Classification_Id) ? parseInt(form_payload.value.item_Med_Classification_Id) : "";
+    form_payload.value.item_Manufacturer_Id = parseInt(form_payload.value.item_Manufacturer_Id) ? parseInt(form_payload.value.item_Manufacturer_Id) : "";
+    form_payload.value.item_Med_Drug_Administration_Route_Id = parseInt(form_payload.value.item_Med_Drug_Administration_Route_Id) ? parseInt(form_payload.value.item_Med_Drug_Administration_Route_Id) :"";
+    form_payload.value.item_Med_GenericName_Id = parseInt(form_payload.value.item_Med_GenericName_Id) ? parseInt(form_payload.value.item_Med_GenericName_Id) : "";
+    form_payload.value.item_Med_TherapeuticClass_Id = parseInt(form_payload.value.item_Med_TherapeuticClass_Id) ? parseInt(form_payload.value.item_Med_TherapeuticClass_Id) : "";
+    form_payload.value.item_Category_Id = parseInt(form_payload.value.item_Category_Id);
+    form_payload.value.item_SubCategory_Id = parseInt(form_payload.value.item_SubCategory_Id) ? parseInt(form_payload.value.item_SubCategory_Id) : "";
+    form_payload.value.item_UnitOfMeasure_Id = parseInt(form_payload.value.item_UnitOfMeasure_Id) ? parseInt(form_payload.value.item_UnitOfMeasure_Id) : "";
+    form_payload.value.item_Med_Dosage_Form_id = parseInt(form_payload.value.item_Med_Dosage_Form_id) ? parseInt(form_payload.value.item_Med_Dosage_Form_id) : "";
+    form_payload.value.item_Brand_Id = parseInt(form_payload.value.item_Brand_Id) ? parseInt(form_payload.value.item_Brand_Id) : "";
+
+
+    form_payload.value.isSupplies = parseInt(form_payload.value.isSupplies) ? true : false;
+    form_payload.value.isMedicines = parseInt(form_payload.value.isMedicines) ? true : false;
+    form_payload.value.isFixedAsset = parseInt(form_payload.value.isFixedAsset) ? true : false;
+    form_payload.value.isReagents = parseInt(form_payload.value.isReagents) ? true : false;
+    form_payload.value.isMDRP = parseInt(form_payload.value.isMDRP) ? true : false;
+    form_payload.value.isConsignment = parseInt(form_payload.value.isConsignment) ? true : false;
+    form_payload.value.isSerialNo_Required = parseInt(form_payload.value.isSerialNo_Required) ? true : false;
+    form_payload.value.isLotNo_Required = parseInt(form_payload.value.isLotNo_Required) ? true : false;
+    form_payload.value.isExpiryDate_Required = parseInt(form_payload.value.isExpiryDate_Required) ? true : false;
+    form_payload.value.isForProduction = parseInt(form_payload.value.isForProduction) ? true : false;
+    form_payload.value.isPerishable = parseInt(form_payload.value.isPerishable) ? true : false;
+    form_payload.value.isVatable = parseInt(form_payload.value.isVatable) ? true : false;
+    form_payload.value.isVatExempt = parseInt(form_payload.value.isVatExempt) ? true : false;
+    form_payload.value.isAllowDiscount = parseInt(form_payload.value.isAllowDiscount) ? true : false;
+    form_payload.value.isZeroRated = parseInt(form_payload.value.isZeroRated) ? true : false;
+    form_payload.value.isOpenPrice = parseInt(form_payload.value.isOpenPrice) ? true : false;
+    form_payload.value.isAllowStatOrder = parseInt(form_payload.value.isAllowStatOrder) ? true : false;
+    form_payload.value.isIncludeInStatement = parseInt(form_payload.value.isIncludeInStatement) ? true : false;
+  }
+};
+
+const handleView = () => {
+    
+    if (Object.keys(form_payload.value).length === 0)
+    return useSnackbar(true, "error", "Select Patient");
+    details();
+    item_supplies_form.value = true;
+};
+const handleEdit = () => {
+     if (Object.keys(form_payload.value).length === 0)
+    return useSnackbar(true, "error", "Select Patient");
+    details();
+    item_supplies_form.value = true;
+};
 const handleNew = () => {
-    central_form_dialog.value = true;
-};
-const closeCentralFormDialog = () => {
-    central_form_dialog.value = false;
-};
-const openAddFormDialog = () => {
+    form_payload.value = Object.assign({});
     item_supplies_form.value = true;
 };
 const closeFormDialog = () => {
     item_supplies_form.value = false;
+    isSelectedUser.value = true;
 };
 
 const DeactiveUser = () => {};
@@ -238,7 +281,7 @@ const loadItems = async (
 ) => {
     try {
         loading.value = true;
-        let itemgroup = item_group_id || 2;
+        let itemgroup = item_group_id || currentTabValue.value;
         let keyword = searchkeyword || "";
         params.value = options
             ? "page=" +
@@ -249,7 +292,7 @@ const loadItems = async (
               itemgroup +
               "&keyword=" +
               options.keyword
-            : "page=1&per_page=10&item_group_id=" +
+            : "page=1&per_page=50&item_group_id=" +
               itemgroup +
               "&keyword=" +
               keyword;
@@ -272,6 +315,42 @@ const loadItems = async (
     } finally {
         loading.value = false;
     }
+};
+
+
+const submitItemandSuppliesForm = async (details) => {
+  if (usePasscode() == details.user_passcode) {
+      if (form_payload.value) {
+
+        loading.value = true;
+        let method = "POST";
+        let id = "";
+        if (form_payload.value.id) {
+          id = form_payload.value.id;
+          method = "PUT";
+        }
+        const response = await $fetch(useApiUrl() + `/item-and-supplies/` + id, {
+          method: method,
+          headers: {
+            Authorization: `Bearer ` + useToken(),
+            "Content-Type": "application/json",
+          },
+          body: { payload: form_payload.value },
+        });
+        if (response.message) {
+          confirmationDialog.value = false;
+          loading.value = false;
+          loadItems(null, form_payload.value.itemname);
+          closeFormDialog();
+          return useSnackbar(true,"success",response.message);
+        }
+      }
+   }else {
+    error_msg.value = "Incorrect Passcode";
+    setTimeout(() => {
+      error_msg.value = "";
+    }, 3000);
+  }
 };
 const updateTotalItems = (newTotalItems) => {
     totalItems.value = newTotalItems;
