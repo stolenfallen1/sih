@@ -77,6 +77,7 @@
     :central_form_dialog="central_form_dialog"
     @close-dialog="closeCentralFormDialog"
     @search="SearchPatient"
+    @selected-row="selectedPatient"
     :search_results="search_results"
     :search_payload="search_payload"
     @open-form="openAddFormDialog"
@@ -102,7 +103,6 @@ const form_dialog = ref(false);
 const search_payload = ref({});
 const search_results = ref([]);
 const form_payload = ref({});
-
 const { selectedRowDetails, isrefresh } = storeToRefs(
   useSubcomponentSelectedRowDetailsStore()
 );
@@ -162,7 +162,20 @@ const handleSearch = (keyword) => {
   loadItems(null, keyword);
 };
 
-
+const selectedPatient = (item) => {
+  form_payload.value.id = ""; //clear state id for subcomponents ?id=''
+  form_payload.value.role_id = ""; //clear state id for subcomponents ?id=''
+  form_payload.value = Object.assign({});
+  if (item) {
+    form_payload.value = Object.assign({}, item); //set state id for subcomponents ?id=item.id value
+    form_payload.value.suffix_id = parseInt(item.suffix_id);
+    form_payload.value.sex_id = item.sex_id ? parseInt(item.sex_id) : 0;
+    form_payload.value.civilstatus_id = parseInt(item.civilstatus_id);
+    form_payload.value.nationality_id = parseInt(item.nationality_id);
+    form_payload.value.religion_id = parseInt(item.religion_id);
+    form_payload.value.birthdate = useDateMMDDYYY(item.birthdate);
+  }
+};
 const selectedUser = (item) => {
   isSelectedUser.value = true;
   isrefresh.value = false;
@@ -194,15 +207,16 @@ const details = () => {
 
 const handleView = () => {
   // handle View action
-  if(Object.keys(form_payload.value).length === 0) return useSnackbar(true,"error","Select Patient");
-    details();
-    form_dialog.value = true;
-    form_payload.value.type = 'view';
+  if (Object.keys(form_payload.value).length === 0)
+    return useSnackbar(true, "error", "Select Patient");
+  details();
+  form_dialog.value = true;
+  form_payload.value.type = "view";
 };
 
 const handleNew = () => {
   form_payload.value = Object.assign({});
-  form_payload.value.type = 'new';
+  form_payload.value.type = "new";
   central_form_dialog.value = true;
 };
 const closeCentralFormDialog = () => {
@@ -210,8 +224,18 @@ const closeCentralFormDialog = () => {
   central_form_dialog.value = false;
 };
 const openAddFormDialog = (type) => {
+  if (type == "new") {
+    form_payload.value = Object.assign({});
+  }
+  if (form_payload.value.id) {
+    search_results.value = [];
+    details();
+    form_payload.value.type = "edit";
+  } else {
+    form_payload.value.lastname = search_payload.value.lastname;
+    form_payload.value.firstname = search_payload.value.firstname;
+  }
   form_dialog.value = true;
-  form_payload.value.type = 'new';
 };
 const closeFormContainer = () => {
   form_payload.value = Object.assign({});
@@ -219,17 +243,19 @@ const closeFormContainer = () => {
 };
 
 const handleEdit = () => {
-  if(Object.keys(form_payload.value).length === 0) return useSnackbar(true,"error","Select Patient");
+  if (Object.keys(form_payload.value).length === 0)
+    return useSnackbar(true, "error", "Select Patient");
   details();
   form_dialog.value = true;
-  form_payload.value.type = 'edit';
+  form_payload.value.type = "edit";
 };
 
 const DeactiveUser = () => {
-  if(Object.keys(form_payload.value).length === 0) return useSnackbar(true,"error","Select Patient");
+  if (Object.keys(form_payload.value).length === 0)
+    return useSnackbar(true, "error", "Select Patient");
   // handle Deactive action
   form_dialog.value = true;
-  form_payload.value.type = 'edit';
+  form_payload.value.type = "edit";
 };
 
 const SearchPatient = async (payload) => {
