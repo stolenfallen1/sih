@@ -89,7 +89,7 @@
                 <!-- Add more custom logic for other columns -->
             </template>
         </ReusableTable>
-        <ItemSuppliesForm :form_payload="form_payload" @submit-form="confirmation" :item_supplies_form="item_supplies_form" :currentTabValue="currentTabValue" @close-dialog="closeItemsSuppliesForm" />
+        <ItemSuppliesForm :form_payload="form_payload" @submit-form="confirmation" :item_supplies_form="item_supplies_form" :currentTabValue="currentTabValue" @close-dialog="closeFormDialog" />
         <Confirmation
             :show="confirmationDialog"
             :payload="form_payload"
