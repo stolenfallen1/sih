@@ -384,7 +384,7 @@ const props = defineProps({
   },
 });
 const image = ref("");
-const imageUrl = ref("/patient.jpg");
+const imageUrl = ref("");
 const gender = JSON.parse(nuxtStorage.localStorage.getData("sex"));
 const suffix = JSON.parse(nuxtStorage.localStorage.getData("suffix"));
 const nationality = JSON.parse(nuxtStorage.localStorage.getData("nationality"));
