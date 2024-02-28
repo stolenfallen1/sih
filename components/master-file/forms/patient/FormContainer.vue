@@ -43,16 +43,16 @@
                         </v-col>
                         <v-col cols="10">
                         <v-window v-model="tab">
-                            <v-window-item value="option-0" class="pa-1">
+                            <v-window-item class="pa-1">
                               <general-form :form_payload="form_payload" />
                             </v-window-item>
-                            <v-window-item style="width:100%;" value="option-1" class="pa-1">
+                            <v-window-item style="width:100%;" class="pa-1">
                                 <additional-info :form_payload="form_payload"  />
                             </v-window-item>
-                            <v-window-item value="option-2"  class="pa-1">
+                            <v-window-item  class="pa-1">
                                 <contacts-address :form_payload="form_payload" />
                             </v-window-item>
-                             <v-window-item value="option-3" class="pa-1">
+                             <v-window-item  class="pa-1">
                                 <family-info :form_payload="form_payload" />
                             </v-window-item>
                              <v-window-item value="option-4" class="pa-1">
