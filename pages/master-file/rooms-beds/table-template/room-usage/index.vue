@@ -1,7 +1,13 @@
 <template>
     <v-dialog v-model="dialog" persistent hide-overlay width="800" scrollable>
+        <v-toolbar density="compact" color="#6984ff" hide-details>
+            <v-toolbar-title>Room Usage Types</v-toolbar-title>
+            <v-spacer></v-spacer>
+            <v-btn color="white" @click="router.back()">
+                <v-icon>mdi-close</v-icon>
+            </v-btn>
+        </v-toolbar>
         <v-card>
-            <v-card-title>Room Usage Types</v-card-title>
             <v-card-text>
                 <v-container>
                     <v-table density="compact">

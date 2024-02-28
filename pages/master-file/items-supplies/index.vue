@@ -21,6 +21,12 @@
             >
                 New
             </v-btn>
+            <!-- Central Lookup Search Form -->
+            <CentralSupplyLookUp 
+                :central_form_dialog="central_form_dialog"
+                @close-dialog="closeCentralFormDialog"
+                @open-form="openAddFormDialog"
+            />
             <!-- Form here -->
             <v-btn
                 @click="handleEdit"
@@ -98,6 +104,7 @@
 <script setup>
 import { storeToRefs } from "pinia";
 import ReusableTable from "~/components/reusables/ReusableTable.vue";
+import CentralSupplyLookUp from "~/components/reusables/CentralSupplyLookUp.vue";
 import ItemSuppliesForm from "~/components/master-file/forms/items-supplies/Form.vue";
 
 definePageMeta({
@@ -162,6 +169,7 @@ const headers = [
     },
 ];
 const serverItems = ref([]);
+const central_form_dialog = ref(false);
 const item_supplies_form = ref(false);
 const form_payload = ref({
     item_InventoryGroup_Id:parseInt(2)
@@ -259,12 +267,12 @@ const handleNew = () => {
     form_payload.value = Object.assign({});
     item_supplies_form.value = true;
 };
-const DeactiveUser = () => {};
-
-const closeItemsSuppliesForm = () => {
+const closeFormDialog = () => {
     item_supplies_form.value = false;
     isSelectedUser.value = true;
 };
+
+const DeactiveUser = () => {};
 
 const loadItems = async (
     options = null,
@@ -333,7 +341,7 @@ const submitItemandSuppliesForm = async (details) => {
           confirmationDialog.value = false;
           loading.value = false;
           loadItems(null, form_payload.value.itemname);
-          closeItemsSuppliesForm();
+          closeFormDialog();
           return useSnackbar(true,"success",response.message);
         }
       }
