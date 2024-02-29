@@ -151,7 +151,6 @@ const handleSelectedInput = (selected) => {
     emits("selected-row", item);
 };
 
-
 const handleSelectedRow = (event, selectedRow) => {
     const index = selectedRows.value.indexOf(selectedRow?.item.id);
     selectedRows.value = [];
