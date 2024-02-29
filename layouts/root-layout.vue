@@ -140,7 +140,7 @@
         class="pa-1"
         v-model:opened="ProccessingAndQueriesopenedGroups"
       >
-        <v-list-group value="group1" :fluid="true" v-if="processing_and_queries.length > 0" group>
+        <v-list-group value="group2" :fluid="true" v-if="processing_and_queries.length > 0" group>
           <template v-slot:activator="{ props }">
             <v-list-item v-bind="props" :title="'Processing and Queries' + selectedRowDetails.id"></v-list-item>
           </template>
@@ -171,7 +171,7 @@
         class="pa-1"
         v-model:opened="TemplateopenedGroups"
       >
-        <v-list-group value="group1" :fluid="true" v-if="table_and_template.length > 0" group>
+        <v-list-group value="group3" :fluid="true" v-if="table_and_template.length > 0" group>
           <template v-slot:activator="{ props }">
             <v-list-item v-bind="props" :title="'Tables and Templates' + selectedRowDetails.id"></v-list-item>
           </template>
@@ -223,8 +223,8 @@ const items = navigation_items;
 const open = ref(["0","1","2","3"]);
 const drawer = ref(null);
 const openedGroups = ref(["group1"]);
-const TemplateopenedGroups = ref(["group1"]);
-const ProccessingAndQueriesopenedGroups = ref(["group1"]);
+const TemplateopenedGroups = ref(["group2"]);
+const ProccessingAndQueriesopenedGroups = ref(["group3"]);
 const table_and_template = ref([]);
 const processing_and_queries = ref([]);
 const rightSidebarDisplay = ref(false);

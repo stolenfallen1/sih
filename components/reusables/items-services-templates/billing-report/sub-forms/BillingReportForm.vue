@@ -1,0 +1,80 @@
+<template>
+    <v-dialog :model-value="open_billing_form" rounded="lg" persistent scrollable max-width="700px">
+        <v-toolbar color="#6984ff" hide-details density="compact">
+            <v-toolbar-title>Billing Report Category Details</v-toolbar-title>
+        </v-toolbar>
+        <v-card>
+            <v-card-text>
+                <v-container>
+                    <v-row>
+                        <v-col cols="6">
+                            <v-text-field
+                                class="mt-3"
+                                variant="outlined"
+                                label="Code"
+                                hide-details
+                                density="compact"
+                            ></v-text-field>
+                        </v-col>
+                        <v-col cols="12">
+                            <v-text-field
+                                class="mt-3"
+                                variant="outlined"
+                                hide-details
+                                label="Description"
+                                density="compact"
+                            ></v-text-field>
+                        </v-col>
+                        <v-col cols="12">
+                            <v-autocomplete
+                                item-title="name"
+                                item-value="id"
+                                label="A/R Collection Report Group"
+                                :items="collection_report_group"
+                                hide-details
+                                density="compact"
+                                variant="outlined"
+                            ></v-autocomplete>
+                        </v-col>
+                    </v-row>
+                </v-container>
+            </v-card-text>
+            <v-divider></v-divider>
+            <v-card-actions>
+                <v-btn color="blue-darken-1" @click="closeDialog"> Close </v-btn>
+                <v-spacer></v-spacer>
+                <v-btn class="bg-primary text-white" type="submit" @click="handleSubmit">Submit</v-btn>
+            </v-card-actions>
+        </v-card>
+    </v-dialog>
+</template>
+
+<script setup>
+
+const props = defineProps({
+    open_billing_form: {
+        type: Boolean,
+        default: () => false,
+        required: true,
+    },
+})
+
+const emits = defineEmits()
+
+const collection_report_group = ref([
+    { id: 1, name: 'Collection Report Group 1' },
+    { id: 2, name: 'Collection Report Group 2' },
+    { id: 3, name: 'Collection Report Group 3' },
+])
+
+const handleSubmit = () => {
+    emits('handle-submit')
+}
+
+const closeDialog = () => {
+    emits('close-dialog')
+}
+</script>
+
+<style scoped>
+</style>
