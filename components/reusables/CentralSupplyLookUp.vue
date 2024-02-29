@@ -1,5 +1,5 @@
 <template>
-<v-dialog :model-value="central_form_dialog" persistent hide-overlay width="800" scrollable>
+<v-dialog :model-value="central_form_dialog" persistent hide-overlay width="700" scrollable>
     <form @submit.prevent="handleSearch">
     <v-card>
         <v-toolbar density="compact" color="#FFF">
@@ -13,26 +13,31 @@
         <v-card-text>
         <v-container>
             <v-row>
-                <v-col cols="3" class="pa-1">
+                <!-- <v-col cols="3" class="pa-1">
                     <v-text-field
                         variant="outlined"
                         label="Item Code"
                         hide-details
+                        v-model="search_payload.itemcode"
                         density="compact"
                     ></v-text-field>
-                </v-col>
-                <v-col cols="9" class="pa-1">
+                </v-col> -->
+                <v-col cols="10" class="pa-1">
                     <v-text-field
                         variant="outlined"
-                        label="Description"
+                        label="Item Name / Description"
+                        v-model="search_payload.itemname"
                         required
                         hide-details
                         density="compact"
                     ></v-text-field>
                 </v-col>
-                <v-btn class="bg-info text-white my-3 ml-1" type="submit" density="compact"
-                    ><v-icon>mdi-magnify</v-icon>Search
-                </v-btn>
+                <v-col cols="2" class="pa-1">
+                        <v-btn class="bg-info text-white " type="submit" 
+                        ><v-icon>mdi-magnify</v-icon>Search
+                    </v-btn>
+                </v-col>
+                
                 <v-divider></v-divider>
                 <v-col cols="12">
                     <v-data-table-server
@@ -40,9 +45,14 @@
                         :items-length="40"
                         density="compact"
                         height="40vh"
+                        :items="search_results"
                         :show-select="true"
                         class="animated animatedFadeInUp fadeInUp"
                         :headers="headers"
+                        :loading="search_payload.isloading"
+                        v-model="selectedRows"
+                        @click:row="handleSelectedRow"
+                        @update:modelValue="handleSelectedInput"
                         select-strategy="single"
                         item-value="id"
                     >
@@ -71,13 +81,15 @@
         <v-btn
             class="bg-primary text-white"
             type="submit"
-            @click="handleClickForOpeningForm"
+            :disabled="search_results.length == 0 ? true : false"
+            @click="handleClickForOpeningForm('active')"
             >Select Active Record</v-btn
         >
         <v-btn
             class="bg-primary text-white"
             type="submit"
-            @click="handleClickForOpeningForm"
+            :disabled="(search_results.length == 0 && isAllowAddNew) ? false : true"
+            @click="handleClickForOpeningForm('new')"
             >Add New</v-btn
         >
         </v-card-actions>
@@ -96,43 +108,62 @@ const props = defineProps({
         type: Boolean,
         default: () => false,
     },
-    // search_payload: {
-    //     type: Object,
-    //     default: () => ({}),
-    // },
+    search_payload: {
+        type: Object,
+        default: () => ({}),
+    },
 });
 const selectedRows = ref([]);
+const isAllowAddNew = ref(false);
 const headers = ref([
 {
     title: "Item Code",
     align: "start",
-    sortable: true,
-    key: "item_code",
+    sortable: false,
+    width:"18%",
+    key: "id",
 },
 {
     title: "Description",
     align: "start",
-    sortable: true,
-    key: "description",
+    sortable: false,
+    key: "item_name",
 },
 ]);
 
 const handleSearch = () => {
-    alert("Searching...");
+    isAllowAddNew.value = true;
+    emits("search", props.search_payload);
 }
 
-// const handleSelectedRow = (event, selectedRow) => {
-//     const index = selectedRows.value.indexOf(selectedRow?.item.id);
-//     selectedRows.value = [];
-//     let item = selectedRow.item;
-//     if (index === -1) {
-//         selectedRows.value.push(selectedRow?.item.id);
-//     } else {
-//         item = "";
-//         selectedRows.value.splice(index, 1);
-//     }
-//     emits("selected-row", item);
-// };
+const handleSelectedInput = (selected) => {
+    let seletedrow = props.search_results.find(item=>item.id === selected[0]);
+    selectedRows.value = [];
+    const index = selectedRows.value.indexOf(selected[0]);
+    selectedRows.value = [];
+    let item = seletedrow;
+    if (index === -1) {
+        selectedRows.value.push(selected[0]);
+    } else {
+        item = "";
+        selectedRows.value.splice(index, 1);
+    }
+    emits("selected-row", item);
+};
+
+
+const handleSelectedRow = (event, selectedRow) => {
+    const index = selectedRows.value.indexOf(selectedRow?.item.id);
+    selectedRows.value = [];
+    let item = selectedRow.item;
+    if (index === -1) {
+        selectedRows.value.push(selectedRow?.item.id);
+    } else {
+        item = "";
+        selectedRows.value.splice(index, 1);
+    }
+    emits("selected-row", item);
+};
 
 const emits = defineEmits();
 

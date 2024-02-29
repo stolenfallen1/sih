@@ -21,12 +21,7 @@
             >
                 New
             </v-btn>
-            <!-- Central Lookup Search Form -->
-            <CentralSupplyLookUp 
-                :central_form_dialog="central_form_dialog"
-                @close-dialog="closeCentralFormDialog"
-                @open-form="openAddFormDialog"
-            />
+          
             <!-- Form here -->
             <v-btn
                 @click="handleEdit"
@@ -98,6 +93,17 @@
             @close="closeConfirmation"
             @submit="submitItemandSuppliesForm"
         />
+
+          <!-- Central Lookup Search Form -->
+            <CentralSupplyLookUp 
+                :central_form_dialog="central_form_dialog"
+                @close-dialog="closeCentralFormDialog"
+                @search="SearchItemandSupplies"
+                @selected-row="selectedItemAndSupplies"
+                :search_results="search_results"
+                :search_payload="search_payload"
+                @open-form="openAddFormDialog"
+            />
     </v-card>
 </template>
 
@@ -131,6 +137,8 @@ const totalItems = ref(0);
 const itemsPerPage = ref(40);
 const params = ref("");
 const loading = ref(true);
+const search_results = ref([]);
+const search_payload = ref({});
 const headers = [
     {
         title: "Code",
@@ -196,6 +204,51 @@ const handleSearch = (keyword) => {
     // Handle search action
     loadItems(null, keyword, currentTabValue.value);
 };
+
+
+const selectedItemAndSupplies = (item) => {
+  form_payload.value.id = ""; //clear state id for subcomponents ?id=''
+  form_payload.value.role_id = ""; //clear state id for subcomponents ?id=''
+  form_payload.value = Object.assign({});
+  if (item) {
+    form_payload.value = Object.assign({},item);
+    form_payload.value.item_InventoryGroup_Id = parseInt(item.item_InventoryGroup_Id) ? parseInt(item.item_InventoryGroup_Id) : "";
+    form_payload.value.item_Med_AntibioticClass_Id = parseInt(item.item_Med_AntibioticClass_Id) ? parseInt(item.item_Med_AntibioticClass_Id) : "";
+    form_payload.value.item_Med_Classification_Id = parseInt(item.item_Med_Classification_Id) ? parseInt(item.item_Med_Classification_Id) : "";
+    form_payload.value.item_Manufacturer_Id = parseInt(item.item_Manufacturer_Id) ? parseInt(item.item_Manufacturer_Id) : "";
+    form_payload.value.item_Med_Drug_Administration_Route_Id = parseInt(item.item_Med_Drug_Administration_Route_Id) ? parseInt(item.item_Med_Drug_Administration_Route_Id) :"";
+    form_payload.value.item_Med_GenericName_Id = parseInt(item.item_Med_GenericName_Id) ? parseInt(item.item_Med_GenericName_Id) : "";
+    form_payload.value.item_Med_TherapeuticClass_Id = parseInt(item.item_Med_TherapeuticClass_Id) ? parseInt(item.item_Med_TherapeuticClass_Id) : "";
+    form_payload.value.item_Category_Id = parseInt(item.item_Category_Id);
+    form_payload.value.item_SubCategory_Id = parseInt(item.item_SubCategory_Id) ? parseInt(item.item_SubCategory_Id) : "";
+    form_payload.value.item_UnitOfMeasure_Id = parseInt(item.item_UnitOfMeasure_Id) ? parseInt(item.item_UnitOfMeasure_Id) : "";
+    form_payload.value.item_Med_Dosage_Form_id = parseInt(item.item_Med_Dosage_Form_id) ? parseInt(item.item_Med_Dosage_Form_id) : "";
+    form_payload.value.item_Brand_Id = parseInt(item.item_Brand_Id) ? parseInt(item.item_Brand_Id) : "";
+
+
+    form_payload.value.isSupplies = parseInt(item.isSupplies) ? true : false;
+    form_payload.value.isMedicines = parseInt(item.isMedicines) ? true : false;
+    form_payload.value.isFixedAsset = parseInt(item.isFixedAsset) ? true : false;
+    form_payload.value.isReagents = parseInt(item.isReagents) ? true : false;
+    form_payload.value.isMDRP = parseInt(item.isMDRP) ? true : false;
+    form_payload.value.isConsignment = parseInt(item.isConsignment) ? true : false;
+    form_payload.value.isSerialNo_Required = parseInt(item.isSerialNo_Required) ? true : false;
+    form_payload.value.isLotNo_Required = parseInt(item.isLotNo_Required) ? true : false;
+    form_payload.value.isExpiryDate_Required = parseInt(item.isExpiryDate_Required) ? true : false;
+    form_payload.value.isForProduction = parseInt(item.isForProduction) ? true : false;
+    form_payload.value.isPerishable = parseInt(item.isPerishable) ? true : false;
+    form_payload.value.isVatable = parseInt(item.isVatable) ? true : false;
+    form_payload.value.isVatExempt = parseInt(item.isVatExempt) ? true : false;
+    form_payload.value.isAllowDiscount = parseInt(item.isAllowDiscount) ? true : false;
+    form_payload.value.isZeroRated = parseInt(item.isZeroRated) ? true : false;
+    form_payload.value.isOpenPrice = parseInt(item.isOpenPrice) ? true : false;
+    form_payload.value.isAllowStatOrder = parseInt(item.isAllowStatOrder) ? true : false;
+    form_payload.value.isIncludeInStatement = parseInt(item.isIncludeInStatement) ? true : false;
+
+  }
+};
+
+
 const selectedUser = (item) => {
     isSelectedUser.value = true;
     isrefresh.value = false;
@@ -263,16 +316,62 @@ const handleEdit = () => {
     details();
     item_supplies_form.value = true;
 };
+
 const handleNew = () => {
     form_payload.value = Object.assign({});
+    central_form_dialog.value = true;
+};
+// const openAddFormDialog = () => {
+//     form_payload.value = Object.assign({});
+//     item_supplies_form.value = true;
+// };
+
+const openAddFormDialog = (type) => {
+  if(type == 'new'){
+    form_payload.value = Object.assign({});
+  }
+  if (form_payload.value.id) {
+    search_results.value = [];
+    form_payload.value.type = 'edit';
+  } else {
+    form_payload.value.item_name = search_payload.value.itemname;
+  }
     item_supplies_form.value = true;
 };
+const closeCentralFormDialog = () => {
+    form_payload.value = Object.assign({});
+    central_form_dialog.value = false;
+    search_payload.value =  Object.assign({});
+};
+
 const closeFormDialog = () => {
     item_supplies_form.value = false;
     isSelectedUser.value = true;
 };
 
 const DeactiveUser = () => {};
+
+
+
+const SearchItemandSupplies = async (payload) => {
+ 
+  let itemcode = payload.itemcode || "";
+  let itemname = payload.itemname || "";
+  if(itemname.length <= 3)  return useSnackbar(true,"error",'Search atleast 3 characters');
+  search_payload.value.isloading = true;
+  let params ="itemcode=" +itemcode +"&itemname=" +itemname;
+  const response = await $fetch(useApiUrl() + "/search-item-and-supplies" + "?" + params || "", {
+    headers: {
+      Authorization: `Bearer ` + useToken(),
+    },
+  });
+
+  console.log(response);
+  if (response) {
+    search_payload.value.isloading = false;
+    search_results.value = response;
+  }
+};
 
 const loadItems = async (
     options = null,

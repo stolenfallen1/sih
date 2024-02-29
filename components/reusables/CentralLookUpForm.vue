@@ -118,7 +118,7 @@
           <v-btn
             class="bg-primary text-white"
             type="submit"
-            :disabled="(search_results.length == 0 && !search_payload) ? false : true"
+            :disabled="search_results.length == 0 ? false : true"
             @click="handleClickForOpeningForm('new')"
             >Add New</v-btn
           >

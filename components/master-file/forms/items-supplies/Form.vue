@@ -42,7 +42,6 @@
                                         item-title="name"
                                         item-value="id"
                                         label="Item Group"
-                                        required
                                         hide-details
                                         clearable
                                         :items="itemGroups"
@@ -58,7 +57,6 @@
                                         item-value="id"
                                         label="Category Group"
                                         hide-details
-                                        required
                                         v-model="form_payload.item_Category_Id"
                                         @update:model-value="getsubcategory"
                                         :items="category_list"
