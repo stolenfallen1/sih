@@ -1,6 +1,8 @@
 <template>
+    <v-toolbar color="#6984ff" hide-details density="compact">
+        <v-toolbar-title>Bed Status Template Details</v-toolbar-title>
+    </v-toolbar>
     <v-card>
-        <v-card-title>Bed Status Template Details</v-card-title>
         <v-card-text>
             <v-container>
                 <v-row>

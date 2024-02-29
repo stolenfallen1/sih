@@ -1,7 +1,7 @@
 <template>
     <form @submit.prevent="handleSubmit">
         <v-card>
-            <v-toolbar color="white" flat density="compact">
+            <v-toolbar color="#6984ff" hide-details density="compact">
                 <v-toolbar-title>{{ form_title }}</v-toolbar-title>
             </v-toolbar>
             <v-divider></v-divider>
