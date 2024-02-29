@@ -16,7 +16,7 @@
                                 <v-col cols="12">
                                     <v-text-field
                                         label="Name"
-                                        
+                                        required
                                         v-model="form_payload.item_name"
                                         hide-details
                                         density="compact"
@@ -28,7 +28,7 @@
                                 <v-col cols="12">
                                     <v-text-field
                                         label="Description"
-                                        
+                                        required
                                         v-model="form_payload.item_Description"
                                         hide-details
                                         density="compact"
@@ -42,10 +42,11 @@
                                         item-title="name"
                                         item-value="id"
                                         label="Item Group"
+                                        hide-details
+                                        clearable
+                                        :items="itemGroups"
                                         v-model="form_payload.item_InventoryGroup_Id"
                                         @update:model-value="getcategory"
-                                        :items="itemGroups"
-                                        hide-details
                                         density="compact"
                                         variant="outlined"
                                     ></v-autocomplete>
@@ -59,7 +60,6 @@
                                         v-model="form_payload.item_Category_Id"
                                         @update:model-value="getsubcategory"
                                         :items="category_list"
-                                        
                                         density="compact"
                                         variant="outlined"
                                     ></v-autocomplete>
@@ -418,7 +418,6 @@
                     <v-btn
                         class="bg-primary text-white"
                         type="submit"
-                        @click="submitForm"
                         >Submit</v-btn
                     >
                 </v-card-actions>
@@ -447,7 +446,7 @@ const props = defineProps({
 
 const emits = defineEmits()
 const defaultValue = ref("");
-
+const payload = ref({});
 const itemGroups = JSON.parse(nuxtStorage.localStorage.getData("items-group"))|| [];
 const brand_list = JSON.parse(nuxtStorage.localStorage.getData("brands"))|| [];
 const drug_administration = JSON.parse(nuxtStorage.localStorage.getData("drug_administration"))|| [];
@@ -468,6 +467,7 @@ watch(() => props.currentTabValue, () => {
 });
 const getcategory = async ()=>{
     category_list.value = [];
+    if(!props.form_payload.item_InventoryGroup_Id) return;
     let response = await $fetch(useApiUrl()+'/categories?invgroup_id='+props.form_payload.item_InventoryGroup_Id,
     {
         headers: {
