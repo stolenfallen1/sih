@@ -1,29 +1,14 @@
 <template>
-    <v-dialog v-model="show" rounded="lg" persistent scrollable max-width="600px">
-        <v-toolbar density="compact" color="#6984ff" hide-details>
-            <v-toolbar-title>Item Price Groups</v-toolbar-title>
-            <v-spacer></v-spacer>
-            <v-btn color="white" @click="router.back()">
-                <v-icon>mdi-close</v-icon>
-            </v-btn>
-        </v-toolbar>
-        <v-card>
-            <v-card-text>
-                <h1>TEST</h1>
-            </v-card-text>
-            <v-card-actions>
-                <v-btn color="blue-darken-1" @click="router.back()"> Close </v-btn>
-                <v-spacer></v-spacer>
-            </v-card-actions>
-        </v-card>
-    </v-dialog>
+    <item-price-groups :show="show" @close-dialog="router.back()" />
 </template>
 
 <script setup>
+import ItemPriceGroups from '../../../../../components/reusables/items-services-templates/item-price-groups/ItemPriceGroups.vue';
 
 const show = ref(true);
 
-const router = useRouter()
+const router = useRouter();
+
 </script>
 
 <style scoped>
