@@ -5,6 +5,7 @@
     hide-overlay
     width="800"
     scrollable
+    height="90vh"
   >
     <form @submit.prevent="handleSearch">
       <v-card>
@@ -73,7 +74,7 @@
                   :items-length="40"
                   density="compact"
                   :loading="search_payload.isloading"
-                  height="40vh"
+                  height="60vh"
                   v-model="selectedRows"
                   @click:row="handleSelectedRow"
                   :show-select="true"
