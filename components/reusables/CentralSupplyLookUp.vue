@@ -1,5 +1,5 @@
 <template>
-<v-dialog :model-value="central_form_dialog" persistent hide-overlay width="700" scrollable>
+<v-dialog :model-value="central_form_dialog" persistent hide-overlay width="700" height="90vh" scrollable>
     <form @submit.prevent="handleSearch">
     <v-card>
         <v-toolbar density="compact" color="#FFF">
@@ -44,7 +44,7 @@
                         :fixed-header="true"
                         :items-length="40"
                         density="compact"
-                        height="40vh"
+                        height="60vh"
                         :items="search_results"
                         :show-select="true"
                         class="animated animatedFadeInUp fadeInUp"
@@ -112,24 +112,28 @@ const props = defineProps({
         type: Object,
         default: () => ({}),
     },
+    headers:{
+        type:Array,
+        default:()=>[]
+    }
 });
 const selectedRows = ref([]);
 const isAllowAddNew = ref(false);
-const headers = ref([
-{
-    title: "Item Code",
-    align: "start",
-    sortable: false,
-    width:"18%",
-    key: "id",
-},
-{
-    title: "Description",
-    align: "start",
-    sortable: false,
-    key: "item_name",
-},
-]);
+// const headers = ref([
+// {
+//     title: "Item Code",
+//     align: "start",
+//     sortable: false,
+//     width:"18%",
+//     key: "id",
+// },
+// {
+//     title: "Description",
+//     align: "start",
+//     sortable: false,
+//     key: "item_name",
+// },
+// ]);
 
 const handleSearch = () => {
     isAllowAddNew.value = true;

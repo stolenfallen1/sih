@@ -1,5 +1,5 @@
 export const useServicesTab = (type:any) => {
-    if (type == 'one') {
+    if (type == '1') {
         const items = [
             {
                 label: "Item .Service Details",
@@ -69,7 +69,7 @@ export const useServicesTab = (type:any) => {
             },
         ]
         return items;
-    } else if (type == 'two') {
+    } else if (type == '2') {
         const items = [
             {
                 label: "Item .Service Details",

@@ -98,6 +98,7 @@
             <CentralSupplyLookUp 
                 :central_form_dialog="central_form_dialog"
                 @close-dialog="closeCentralFormDialog"
+                :headers="center_form_headers"
                 @search="SearchItemandSupplies"
                 @selected-row="selectedItemAndSupplies"
                 :search_results="search_results"
@@ -133,12 +134,35 @@ const tableTabs = ref([
     { label: "Assets. Equipments", value: "3" },
     { label: "Others", value: "6" },
 ]);
+const serverItems = ref([]);
+const central_form_dialog = ref(false);
+const item_supplies_form = ref(false);
+const form_payload = ref({
+    item_InventoryGroup_Id:parseInt(2)
+});
 const totalItems = ref(0);
 const itemsPerPage = ref(40);
 const params = ref("");
 const loading = ref(true);
 const search_results = ref([]);
 const search_payload = ref({});
+
+const center_form_headers = ref([
+   {
+        title: "Code",
+        align: "start",
+        sortable: true,
+        key: "id",
+        width: "5%",
+    },
+    {
+        title: "Item Description",
+        key: "item_name",
+        align: "start",
+        width: "80%",
+        sortable: false,
+    },
+]);
 const headers = [
     {
         title: "Code",
@@ -176,12 +200,7 @@ const headers = [
         sortable: false,
     },
 ];
-const serverItems = ref([]);
-const central_form_dialog = ref(false);
-const item_supplies_form = ref(false);
-const form_payload = ref({
-    item_InventoryGroup_Id:parseInt(2)
-});
+
 
 const closeConfirmation = ()=>{
   confirmationDialog.value = false;
