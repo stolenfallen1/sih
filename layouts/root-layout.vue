@@ -181,7 +181,7 @@
             :key="item.label"
             :title="item.label"
             :value="item.label"
-            :to="item.path"
+            @click="computeTableAndTemplate(item.form)"
             density="compact"
             :exact="true"
             :slim="true"
@@ -236,6 +236,11 @@ const updateTime = () => {
   currentTime.value = new Date().toLocaleTimeString();
 };
 
+const computeTableAndTemplate = (dialog)=>{
+    if(dialog){
+      useTableAndTemplate(dialog)
+    }
+}
 
 const computeTo = (path, detail) => {
   if(detail.id && path == '/system-settings/system-users/modules'){
@@ -248,6 +253,7 @@ const computeTo = (path, detail) => {
     useSnackbar(true,'red','Please select a record first');
   }
 };
+
 const displayRightOptions = (item) => {
   subcomponents.value = [];
   processing_and_queries.value = [];

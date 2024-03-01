@@ -1,8 +1,9 @@
 <template>
   <v-dialog
         :model-value="form_dialog"
-        fullscreen
-        :scrim="false"
+        width="1220"
+        persistent
+        hide-overlay
         transition="dialog-bottom-transition"
         scrollable
       >

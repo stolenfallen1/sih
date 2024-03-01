@@ -90,12 +90,14 @@ export default [
                         label: "Discount Schemes",
                         icon: "mdi-file-document-edit",
                         path: "/system-settings/system-users/modules",
+                        form:"BillingReportCategoryDialog",
                         rule: "",
                     },
                     {
                         label: "Medical Service Types",
                         icon: "mdi-file-document-edit",
                         path: "/system-settings/system-users/modules",
+                        form: "BillingReportCategoryDialog1",
                         rule: "",
                     },
                     {
