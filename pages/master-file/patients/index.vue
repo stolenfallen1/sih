@@ -87,6 +87,16 @@
     :form_payload="form_payload"
     @close-dialog="closeFormContainer"
   />
+
+
+  <v-dialog persistent v-model="BillingReportCategoryDialog">
+    <v-card @click="BillingReportCategoryDialog = false">test</v-card>
+    
+  </v-dialog>
+
+  <v-dialog v-model="BillingReportCategoryDialog1">
+    <v-card>test from 1</v-card>
+  </v-dialog>
 </template>
 
 <script setup>
@@ -98,14 +108,16 @@ definePageMeta({
   layout: "root-layout",
 });
 
+// import TableAndTemplateFormDialog state 
+const { BillingReportCategoryDialog,BillingReportCategoryDialog1 } = storeToRefs(TableAndTemplateFormDialog());
+
+
 const central_form_dialog = ref(false);
 const form_dialog = ref(false);
 const search_payload = ref({});
 const search_results = ref([]);
 const form_payload = ref({});
-const { selectedRowDetails, isrefresh } = storeToRefs(
-  useSubcomponentSelectedRowDetailsStore()
-);
+const { selectedRowDetails, isrefresh } = storeToRefs(useSubcomponentSelectedRowDetailsStore());
 const isSelectedUser = ref(true);
 const pageTitle = ref("Patient Master");
 const currentTab = ref(false);
