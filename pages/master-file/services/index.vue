@@ -306,10 +306,9 @@ const handleTabChange = (tabValue) => {
 const details = () => {
   if (form_payload.value) {
     form_payload.value.msc_item_group = parseInt(form_payload.value.msc_item_group) ? parseInt(form_payload.value.msc_item_group) : "";
-    form_payload.value.msc_item_category_ID = parseInt(form_payload.value.msc_item_category_ID) ? parseInt(form_payload.value.msc_item_category_ID) : "";
+    form_payload.value.msc_item_category_ID = Object.assign({},form_payload.value.category);
     form_payload.value.msc_modalities_id = parseInt(form_payload.value.msc_modalities_id) ? parseInt(form_payload.value.msc_modalities_id) : "";
     form_payload.value.exam_section = parseInt(form_payload.value.exam_section) ? parseInt(form_payload.value.exam_section) : "";
-
     form_payload.value.isCharging = parseInt(form_payload.value.isCharging) ? true : false;
     form_payload.value.isConsultation = parseInt(form_payload.value.isConsultation) ? true : false;
     form_payload.value.isDoctorfee = parseInt(form_payload.value.isDoctorfee) ? true : false;
