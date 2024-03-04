@@ -106,6 +106,82 @@
                 @open-form="openAddFormDialog"
             />
     </v-card>
+    <BillingReportCategoryDialog
+        :show="BillingReportCategory"
+        @close-dialog="closeBillingReportCategory"
+    />
+    <CollectionReportMainDialog 
+        :show="CollectionReportMainHeader" 
+        @close-dialog="closeCollectionReportMain" 
+    />
+    <CollectionReportGroupDialog 
+        :show="CollectionReportGroupHeader"  
+        @close-dialog="closeCollectionReportGroup"
+    />
+    <CptModifierDialog 
+        :show="CptModifiers" 
+        @close-dialog="closeCptModifier"
+    />
+    <CptSectionDialog 
+        :show="CptSections"
+        @close-dialog="closeCptSections"
+    />
+    <CptSubSectionDialog 
+        :show="CptSubSections"
+        @close-dialog="closeCptSubSections"
+    />
+    <DepartmentGroupDialog 
+        :show="DepartmentGroups"
+        @close-dialog="closeDepartmentGroups"
+    />
+    <DosageDialog 
+        :show="Dosages"
+        @close-dialog="closeDosages"
+    />
+    <DrugAdminGroupDialog 
+        :show="DrugAdminGroups"
+        @close-dialog="closeDrugAdminGroups"
+    />
+    <DohDrugListDialog 
+        :show="DohDrugLists"
+        @close-dialog="closeDohDrugLists"
+    />
+    <GenericNameDialog 
+        :show="GenericNames"
+        @close-dialog="closeGenericNames"
+    />
+    <IndicationDialog 
+        :show="Indications"
+        @close-dialog="closeIndications"
+    />
+    <ItemPriceGroupsDialog 
+        :show="ItemPriceGroups"
+        @close-dialog="closeItemPriceGroups"
+    />
+    <ItemPricingSchemeDialog 
+        :show="ItemPricingSchemes"
+        @close-dialog="closeItemPricingSchemes"
+    />
+    <ItemUnitsDialog 
+        :show="ItemUnits"
+        @close-dialog="closeItemUnits"
+    />
+    <MedicationDurationsDialog 
+        :show="MedicationDurations"
+        @close-dialog="closeMedicationDurations"
+    />
+    <MedicationFrequenciesDialog 
+        :show="MedicationFrequencies"
+        @close-dialog="closeMedicationFrequencies"
+    />
+    <MedicationPreparationsDialog 
+        :show="MedicationPreparations"
+        @close-dialog="closeMedicationPreparations"
+    />
+    <RoutesDialog 
+        :show="Routes"
+        @close-dialog="closeRoutes"
+    />
 </template>
 
 <script setup>
@@ -113,6 +189,57 @@ import { storeToRefs } from "pinia";
 import ReusableTable from "~/components/reusables/ReusableTable.vue";
 import CentralSupplyLookUp from "~/components/reusables/CentralSupplyLookUp.vue";
 import ItemSuppliesForm from "~/components/master-file/forms/items-supplies/Form.vue";
+// Table and templates store
+const {
+    BillingReportCategory, 
+    CollectionReportMainHeader, 
+    CollectionReportGroupHeader, 
+    CptModifiers, 
+    CptSections, 
+    CptSubSections, 
+    DepartmentGroups, 
+    DepartmentWarehouses, 
+    Dosages, 
+    DrugAdminGroups, 
+    DohDrugLists, 
+    DxMedicalPackages, 
+    GenericNames, 
+    Indications, 
+    ItemCategories, 
+    ItemPriceGroups, 
+    ItemPricingSchemes, 
+    ItemTemplates, 
+    ItemUnits, 
+    MedicationDurations, 
+    MedicationFrequencies, 
+    MedicationPreparations, 
+    Routes, 
+    Others, 
+    PhicItemCategories, 
+    UnitOfMeasures, 
+    Modalities, 
+    Specimens, 
+} = storeToRefs(TableAndTemplateFormDialog());
+// Table and templates component
+import BillingReportCategoryDialog from "~/components/reusables/items-services-templates/billing-report/BillingReportCategoryDialog.vue";
+import CollectionReportMainDialog from "~/components/reusables/items-services-templates/collection-report-main/CollectionReportMainDialog.vue";
+import CollectionReportGroupDialog from "~/components/reusables/items-services-templates/collection-report-group/CollectionReportGroupDialog.vue";
+import CptModifierDialog from "~/components/reusables/items-services-templates/cpt-modifiers/CptModifierDialog.vue";
+import CptSectionDialog from "~/components/reusables/items-services-templates/cpt-sections/CptSectionDialog.vue";
+import CptSubSectionDialog from "~/components/reusables/items-services-templates/cpt-sub-sections/CptSubSectionDialog.vue";
+import DepartmentGroupDialog from "~/components/reusables/items-services-templates/department-groups/DepartmentGroupDialog.vue";
+import DosageDialog from "~/components/reusables/items-services-templates/dosages/DosageDialog.vue";
+import DrugAdminGroupDialog from "~/components/reusables/items-services-templates/drug-admin-group/DrugAdminGroupDialog.vue";
+import DohDrugListDialog from "~/components/reusables/items-services-templates/doh-drug-list/DohDrugListDialog.vue";
+import GenericNameDialog from "~/components/reusables/items-services-templates/generic-names/GenericNameDialog.vue";
+import IndicationDialog from "~/components/reusables/items-services-templates/indications/IndicationDialog.vue";
+import ItemPriceGroupsDialog from "~/components/reusables/items-services-templates/item-price-groups/ItemPriceGroupsDialog.vue";
+import ItemPricingSchemeDialog from "~/components/reusables/items-services-templates/item-pricing-schemes/ItemPricingSchemesDialog.vue";
+import ItemUnitsDialog from "~/components/reusables/items-services-templates/item-units/ItemUnitsDialog.vue";
+import MedicationDurationsDialog from "~/components/reusables/items-services-templates/medication-durations/MedicationDurationsDialog.vue";
+import MedicationFrequenciesDialog from "~/components/reusables/items-services-templates/medication-frequencies/MedicationFrequenciesDialog.vue";
+import MedicationPreparationsDialog from "~/components/reusables/items-services-templates/medication-preparations/MedicationPreparationsDialog.vue";
+import RoutesDialog from "~/components/reusables/items-services-templates/routes/RoutesDialog.vue";
 
 definePageMeta({
     layout: "root-layout",
@@ -474,6 +601,65 @@ const updateTotalItems = (newTotalItems) => {
 
 const updateServerItems = (newServerItems) => {
     serverItems.value = newServerItems;
+};
+
+// Tables and Dialogs Methods
+const closeBillingReportCategory = () => {
+    BillingReportCategory.value = false;
+};
+const closeCollectionReportMain = () => {
+    CollectionReportMainHeader.value = false;
+};
+const closeCollectionReportGroup = () => {
+    CollectionReportGroupHeader.value = false;
+};
+const closeCptModifier = () => {
+    CptModifiers.value = false;
+};
+const closeCptSections = () => {
+    CptSections.value = false;
+};
+const closeCptSubSections = () => {
+    CptSubSections.value = false;
+};
+const closeDepartmentGroups = () => {
+    DepartmentGroups.value = false;
+};
+const closeDosages = () => {
+    Dosages.value = false;
+};
+const closeDrugAdminGroups = () => {
+    DrugAdminGroups.value = false;
+};
+const closeDohDrugLists = () => {
+    DohDrugLists.value = false;
+};
+const closeGenericNames = () => {
+    GenericNames.value = false;
+};
+const closeIndications = () => {
+    Indications.value = false;
+};
+const closeItemPriceGroups = () => {
+    ItemPriceGroups.value = false;
+};
+const closeItemPricingSchemes = () => {
+    ItemPricingSchemes.value = false;
+};
+const closeItemUnits = () => {
+    ItemUnits.value = false;
+};
+const closeMedicationDurations = () => {
+    MedicationDurations.value = false;
+};
+const closeMedicationFrequencies = () => {
+    MedicationFrequencies.value = false;
+};
+const closeMedicationPreparations = () => {
+    MedicationPreparations.value = false;
+};
+const closeRoutes = () => {
+    Routes.value = false;
 };
 </script>
 

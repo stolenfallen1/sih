@@ -1,7 +1,7 @@
 <template>
-    <v-dialog :model-value="drug_admin_group" rounded="lg" persistent scrollable max-width="700px">
+    <v-dialog :model-value="open_modalities_form" rounded="lg" persistent scrollable max-width="700px">
         <v-toolbar color="#6984ff" hide-details density="compact">
-            <v-toolbar-title>Drug Admin Group Details</v-toolbar-title>
+            <v-toolbar-title>Modalities Details</v-toolbar-title>
         </v-toolbar>
         <v-card>
             <v-card-text>
@@ -9,22 +9,18 @@
                     <v-row>
                         <v-col cols="12">
                             <v-text-field
-                                class="mt-3"
-                                variant="outlined"
+                                label="Modalitiy"
                                 hide-details
-                                label="Description"
                                 density="compact"
+                                variant="outlined"
                             ></v-text-field>
                         </v-col>
                         <v-col cols="12">
                             <v-text-field
-                                class="mt-3 cursor-pointer"
-                                variant="outlined"
+                                label="Description"
                                 hide-details
-                                label="Printer Path"
                                 density="compact"
-                                append-icon="mdi-printer"
-                                @click:append="openPrinterPath"
+                                variant="outlined"
                             ></v-text-field>
                         </v-col>
                     </v-row>
@@ -37,15 +33,13 @@
                 <v-btn class="bg-primary text-white" type="submit" @click="handleSubmit">Submit</v-btn>
             </v-card-actions>
         </v-card>
-        <print-details :printer_details="printer_details" @close-dialog="closePrinterPath" @handle-submit="handleSubmit" />
     </v-dialog>
 </template>
 
 <script setup>
-import PrintDetails from './PrintDetails.vue';
 
 const props = defineProps({
-    drug_admin_group: {
+    open_modalities_form: {
         type: Boolean,
         default: () => false,
         required: true,
@@ -54,22 +48,12 @@ const props = defineProps({
 
 const emits = defineEmits()
 
-const printer_details = ref(false)
-
 const handleSubmit = () => {
     emits('handle-submit')
 }
 
 const closeDialog = () => {
     emits('close-dialog')
-}
-
-const openPrinterPath = () => {
-    printer_details.value = true
-}
-
-const closePrinterPath = () => {
-    printer_details.value = false
 }
 </script>
 

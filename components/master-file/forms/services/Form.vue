@@ -84,7 +84,7 @@
                             </v-row>
                             <v-row>
                                 
-                                <v-col cols="6">
+                                <!-- <v-col cols="6">
                                     <v-autocomplete
                                         item-title="category_description"
                                         item-value="id"
@@ -97,7 +97,7 @@
                                         density="compact"
                                         variant="outlined"
                                     ></v-autocomplete>
-                                </v-col>
+                                </v-col> -->
                                 <v-col cols="6">
                                     <v-autocomplete
                                         item-title="name"
@@ -244,20 +244,20 @@ const getcategory = async ()=>{
         category_list.value = response;
     }
 }
-const getSection = async ()=>{
-    section_list.value = [];
-    props.form_payload.exam_section = '';
-    if(!props.form_payload.msc_item_category_ID.fms_transaction_id) return;
-    let response = await $fetch(useApiUrl()+'/services-section?revenue_id='+props.form_payload.msc_item_category_ID.fms_transaction_id,
-    {
-        headers: {
-            Authorization: `Bearer ` + useToken(),
-        },
-    })
-    if(response){
-        section_list.value = response;
-    }
-}
+// const getSection = async ()=>{
+//     section_list.value = [];
+//     props.form_payload.exam_section = '';
+//     if(!props.form_payload.msc_item_category_ID.fms_transaction_id) return;
+//     let response = await $fetch(useApiUrl()+'/services-section?revenue_id='+props.form_payload.msc_item_category_ID.fms_transaction_id,
+//     {
+//         headers: {
+//             Authorization: `Bearer ` + useToken(),
+//         },
+//     })
+//     if(response){
+//         section_list.value = response;
+//     }
+// }
 
 onMounted(() => {
     useServicesItemGroup();
@@ -268,7 +268,7 @@ onMounted(() => {
 onUpdated(()=>{
     useServicesItemGroup();
     getcategory(); 
-    getSection();   
+    // getSection();   
     useModality();
 })
 const closeDialog = () => {
