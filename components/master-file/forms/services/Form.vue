@@ -246,9 +246,10 @@ const getcategory = async ()=>{
 }
 const getSection = async ()=>{
     section_list.value = [];
-    props.form_payload.exam_section = '';
-    if(!props.form_payload.msc_item_category_ID.fms_transaction_id) return;
-    let response = await $fetch(useApiUrl()+'/services-section?revenue_id='+props.form_payload.msc_item_category_ID.fms_transaction_id,
+    
+    if(!props.form_payload.msc_item_category_ID) return;
+    var categoryid = props.form_payload.msc_item_category_ID.fms_transaction_id || props.form_payload.msc_item_category_ID
+    let response = await $fetch(useApiUrl()+'/services-section?revenue_id='+categoryid,
     {
         headers: {
             Authorization: `Bearer ` + useToken(),
@@ -262,8 +263,8 @@ const getSection = async ()=>{
 onMounted(() => {
     useServicesItemGroup();
     getcategory();  
+    getSection();   
     useModality();
-   
 });
 onUpdated(()=>{
     useServicesItemGroup();
