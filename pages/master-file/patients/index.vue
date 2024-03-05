@@ -94,9 +94,7 @@
     
   </v-dialog>
 
-  <v-dialog v-model="BillingReportCategoryDialog1">
-    <v-card>test from 1</v-card>
-  </v-dialog>
+
 </template>
 
 <script setup>
@@ -109,7 +107,10 @@ definePageMeta({
 });
 
 // import TableAndTemplateFormDialog state 
-const { BillingReportCategoryDialog,BillingReportCategoryDialog1 } = storeToRefs(TableAndTemplateFormDialog());
+const { 
+  BillingReportCategoryDialog,
+  BillingReportCategoryDialog1 
+} = storeToRefs(TableAndTemplateFormDialog());
 
 
 const central_form_dialog = ref(false);

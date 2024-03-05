@@ -287,8 +287,8 @@ const currentTab = ref(false);
 const showTabs = ref(true);
 const currentTabValue = ref("2");
 const tableTabs = ref([
-  { label: "Examinations", value: "2" },
-  { label: "Procedures", value: "3" },
+  { label: "Examinations", value: 2 },
+  { label: "Procedures", value: 3 },
 ]);
 const totalItems = ref(0);
 const itemsPerPage = ref(40);
@@ -323,14 +323,14 @@ const headers = ref([
     title: "Code",
     align: "start",
     sortable: true,
-    key: "map_item_id",
+    key: "id",
     width: "5%",
   },
   {
     title: "Revenue Code",
     key: "map_revenue_code",
     align: "start",
-    width: "20%",
+    width: "10%",
     sortable: false,
   },
   {
@@ -452,9 +452,9 @@ const openAddFormDialog = (type) => {
 
 const handleTabChange = (tabValue) => {
   currentTabValue.value = tabValue;
-  if (tabValue == "1") {
+  if (tabValue == "2") {
     examinations();
-  } else if (tabValue == "2") {
+  } else if (tabValue == "3") {
     procedures();
   }
   loadItems(null, null, tabValue);
@@ -464,10 +464,9 @@ const handleTabChange = (tabValue) => {
 const details = () => {
   if (form_payload.value) {
     form_payload.value.msc_item_group = parseInt(form_payload.value.msc_item_group) ? parseInt(form_payload.value.msc_item_group) : "";
-    form_payload.value.msc_item_category_ID = parseInt(form_payload.value.msc_item_category_ID) ? parseInt(form_payload.value.msc_item_category_ID) : "";
+    form_payload.value.msc_item_category_ID = Object.assign({},form_payload.value.category);
     form_payload.value.msc_modalities_id = parseInt(form_payload.value.msc_modalities_id) ? parseInt(form_payload.value.msc_modalities_id) : "";
     form_payload.value.exam_section = parseInt(form_payload.value.exam_section) ? parseInt(form_payload.value.exam_section) : "";
-
     form_payload.value.isCharging = parseInt(form_payload.value.isCharging) ? true : false;
     form_payload.value.isConsultation = parseInt(form_payload.value.isConsultation) ? true : false;
     form_payload.value.isDoctorfee = parseInt(form_payload.value.isDoctorfee) ? true : false;
@@ -506,6 +505,7 @@ const selectedUser = (item) => {
   isrefresh.value = false;
   selectedRowDetails.value.id = ""; //clear state id for subcomponents ?id=''
   selectedRowDetails.value.role_id = ""; //clear state id for subcomponents ?id=''
+   form_payload.value = Object.assign({});
   if (item) {
     selectedRowDetails.value = Object.assign({}, item); //set state id for subcomponents ?id=item.id value
     form_payload.value = Object.assign({}, item); //set state id for subcomponents ?id=item.id value
@@ -537,7 +537,7 @@ const DeactiveUser = () => {};
 const loadItems = async (options = null, searchkeyword = null, item_group_id = null) => {
   try {
     loading.value = true;
-    let itemgroup = item_group_id || 1;
+    let itemgroup = item_group_id ||  currentTabValue.value;
     let keyword = searchkeyword || "";
     params.value = options
       ? "page=" +
@@ -576,6 +576,7 @@ const updateServerItems = (newServerItems) => {
 
 const closeFormDialog = () => {
   form_container.value = false;
+  form_payload.value = Object.assign({});
 };
 
 // Tables and Dialogs Methods

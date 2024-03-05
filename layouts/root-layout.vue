@@ -119,7 +119,7 @@
             :key="item.label"
             :title="item.label"
             :value="item.label"
-            @click="computeTo(item.path, selectedRowDetails)"
+            @click="computeTableAndTemplate(item.form, selectedRowDetails)"
             density="compact"
             :exact="true"
             :slim="true"
@@ -181,7 +181,7 @@
             :key="item.label"
             :title="item.label"
             :value="item.label"
-            @click="computeTableAndTemplate(item.form)"
+            @click="computeTableAndTemplate(item.form, selectedRowDetails)"
             density="compact"
             :exact="true"
             :slim="true"
@@ -236,7 +236,9 @@ const updateTime = () => {
   currentTime.value = new Date().toLocaleTimeString();
 };
 
-const computeTableAndTemplate = (dialog)=>{
+const computeTableAndTemplate = (dialog,type)=>{
+    console.log(selectedRowDetails.value.id);
+    if(!selectedRowDetails.value.id) return  useSnackbar(true,'red','Please select a record first');
     if(dialog){
       useTableAndTemplate(dialog)
     }
