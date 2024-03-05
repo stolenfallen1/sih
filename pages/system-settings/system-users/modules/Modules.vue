@@ -32,6 +32,7 @@
                 <v-expansion-panels v-model="panel" variant="accordion" multiple>
                   <v-expansion-panel
                     class="mb-1"
+                    color="primary"
                     v-for="group in module.groups"
                     :key="group.name"
                   >
@@ -123,6 +124,8 @@
         :subModuleData="subModuleData"
         :roleList="roleList"
         :isrefresh="isrefresh"
+        :isloading="isloading"
+        @submit="submitsubModule"
         :submoduleTitle="submoduleTitle"
         @getsubmodule_permisson="check_permission"
         @close-dialog="closeSubModule"
@@ -309,11 +312,21 @@ const check_can_select_permission = (key, table) => {
 };
 
 const submit = ()=>{
+    
     payload.value.selectedModule = selectedModule.value;
     payload.value.removeModule = removeModule.value;
+    payload.value.type = 'module';
     emits('submit',payload.value);
 }
-
+const submitsubModule = (payload)=>{
+    payload.type = 'submodule';
+    emits('submit',payload);
+    setTimeout(()=>{
+        if(!props.isloading){
+           subdialog.value = false; 
+        }
+    },1000);
+}
 onMounted(()=>{
   selectedModule.value = [];
   removeModule.value = [];

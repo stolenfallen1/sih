@@ -502,6 +502,7 @@ const formatDate = (value) => {
 };
 
 const submitModules = async(payload)=>{
+   
     isLoading.value = true;
     const response = await $fetch(useApiUrl()  + `/submit-selected-permission`, {
         method: "post",
@@ -517,7 +518,9 @@ const submitModules = async(payload)=>{
     });
     if(response){
       useSnackbar(true, "green", response.message);
-      ModuleDialog.value = false;
+      if(payload.type == 'module'){
+        ModuleDialog.value = false;
+      }
       isLoading.value = false;
       fetchData(null, null);
     }
