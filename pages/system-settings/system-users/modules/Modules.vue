@@ -12,7 +12,7 @@
           </v-toolbar-items>
         </v-toolbar>
         <v-divider></v-divider>
-        <v-card-text>
+        <v-card-text style="min-height:600px;">
           <v-tabs v-model="tab" bg-color="primary" center-active>
             <v-tab v-for="(tabs, index) in moduleList" :value="index" :key="index">
               {{ tabs.name }}
@@ -182,7 +182,6 @@ const can_select_permission = (key,tablename)=>{
     }
 }
 
-
 const openSubModule = async (permission) => {
   subdialog.value = true;
   isrefresh.value = true;
@@ -312,7 +311,6 @@ const check_can_select_permission = (key, table) => {
 };
 
 const submit = ()=>{
-    
     payload.value.selectedModule = selectedModule.value;
     payload.value.removeModule = removeModule.value;
     payload.value.type = 'module';
@@ -329,15 +327,18 @@ const submitsubModule = (payload)=>{
 }
 onMounted(()=>{
   selectedModule.value = [];
-  removeModule.value = [];
+  removeModule.value = [];// 
 })
 onUpdated(()=>{
   selectedModule.value = [];
   removeModule.value = [];
 })
 watch(async () => {
-    check_permission();
-    console.log(selectedRowDetails.value.id,'asdasda');
+    
+if(selectedRowDetails.value.id){
+
+  check_permission();
+  console.log(selectedRowDetails.value.id,'asdasda');
     const moduleitems = computed(() => {
     const group_permission = {};
     modules.value.forEach((item) => {
@@ -392,5 +393,6 @@ watch(async () => {
   });
   moduleList = moduleitems;
   panel.value = [0, 1, 2,3];
+}
 });
 </script>

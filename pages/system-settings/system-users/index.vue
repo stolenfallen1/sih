@@ -111,24 +111,34 @@
   
 
   <Modules @submit="submitModules" :isloading="isLoading" :show="ModuleDialog" :id="selectedRowDetails.id" @close="closeModule"></Modules>
+ 
+
   <ModuleForm
     :moduleDialog="moduleDialog"
     @close-dialog="closeModuleDialog"
     @submit-user-group="submitUserGroup"
     :usergroup_payload="usergroup_payload"
   ></ModuleForm>
+
+
+  <NurseStations
+    :show="NurseStationDialog"
+    @close="closeNurseStation"
+  ></NurseStations>
+
   <Snackbar :show="isShowSnackBar" :text="text"></Snackbar>
 </template>
 
 <script setup>
 import Modules from "./modules/Modules";
+import NurseStations from "./nurse-stations/NurseStations";
 
 import nuxtStorage from "nuxt-storage";
 import { storeToRefs } from "pinia";
 import moment from "moment";
 moment.locale("en");
 // import TableAndTemplateFormDialog state 
-const { ModuleDialog} = storeToRefs(TableAndTemplateFormDialog());
+const { ModuleDialog, NurseStationDialog} = storeToRefs(TableAndTemplateFormDialog());
 
 import RegistrationForm from "~/components/system-settings/forms/system-users/RegistrationForm.vue";
 import ReusableTable from "~/components/reusables/ReusableTable.vue";
@@ -525,7 +535,9 @@ const submitModules = async(payload)=>{
       fetchData(null, null);
     }
 }
-
+const closeNurseStation = ()=>{
+  NurseStationDialog.value = false;
+}
 </script>
 
 <style scoped></style>
