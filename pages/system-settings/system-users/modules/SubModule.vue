@@ -25,7 +25,17 @@
                   :key="permission.id"
                   v-if="browse_column(permission.key, item.module)"
                 >
-                  <v-icon
+
+                    <v-icon size="24" @click="SelectedModule(permission, permission.eventype,checkpermission(permission.key))">
+                      <template v-if="!checkpermission(permission.key)">
+                          {{ permission.eventype ? 'mdi-checkbox-outline' : 'mdi-checkbox-blank-outline' }}
+                      </template>
+                      <template v-else>
+                          {{ permission.eventype ? 'mdi-checkbox-blank-outline' : 'mdi-checkbox-outline' }}
+                      </template>
+                    </v-icon>
+
+                  <!-- <v-icon
                     size="24"
                     @click="addPermission(permission, true)"
                     v-if="!checkpermission(permission.key)"
@@ -33,7 +43,7 @@
                   >
                   <v-icon size="24" @click="addPermission(permission, false)" v-else
                     >mdi-checkbox-outline</v-icon
-                  >
+                  > -->
                 </td>
               </template>
               <td width="280">
@@ -74,11 +84,14 @@
     <v-card-actions>
       <v-spacer></v-spacer>
       <v-btn @click="closeDialog">Close</v-btn>
+      <v-btn color="primary" class="primary" :loading="isloading" @click="submit">Save and Close</v-btn>
     </v-card-actions>
   </v-card>
 </template>
 
 <script setup>
+import { storeToRefs } from "pinia";
+const { selectedRowDetails } = storeToRefs(useSubcomponentSelectedRowDetailsStore()); 
 const route = useRoute();
 const token = useCookie("token");
 const emits = defineEmits("getsubmodule_permisson");
@@ -106,6 +119,69 @@ const closeDialog = () => {
 };
 
 let { isrefresh } = props;
+
+const selectedModule = ref([]);
+const removeModule = ref([]);
+const selectedModuleDetails = ref({});
+
+const SelectedModule = (permission,type,access,test,items)=>{
+    selectedModuleDetails.value = Object.assign({});
+    selectedModuleDetails.value.id = permission.id;
+    selectedModuleDetails.value.role_id = selectedRowDetails.value.id;
+
+    console.log(permission.key,'1231231 123',access)
+    if(access){
+        if(permission.eventype == false){
+            let selectedkey = selectedModule.value.filter(item=>item.id !== permission.id);
+            selectedModule.value = selectedkey.map(item => ({ id: item.id, role_id: item.role_id }));
+            permission.eventype = true;
+            removeModule.value.push(selectedModuleDetails.value);
+        }else if(permission.eventype == true){
+            let selectedkey = removeModule.value.filter(item=>item.id !== permission.id);
+            removeModule.value = selectedkey.map(item => ({ id: item.id, role_id: item.role_id }));
+            permission.eventype = false;
+            selectedModule.value.push(selectedModuleDetails.value);
+        }else{
+            if(access){
+                removeModule.value.push(selectedModuleDetails.value);
+            }else{
+                selectedModule.value.push(selectedModuleDetails.value);
+            }
+            permission.eventype = true;
+        }
+    }else{
+        if(permission.eventype == false){
+            let selectedkey = selectedModule.value.filter(item=>item.id !== permission.id);
+            selectedModule.value = selectedkey.map(item => ({ id: item.id, role_id: item.role_id }));
+            permission.eventype = true;
+            
+            removeModule.value.push(selectedModuleDetails.value);
+        }else if(permission.eventype == true){
+            let selectedkey = selectedModule.value.filter(item=>item.id !== permission.id);
+            selectedModule.value = selectedkey.map(item => ({ id: item.id, role_id: item.role_id }));
+
+            let removeselectedkey = removeModule.value.filter(item=>item.id !== permission.id);
+            removeModule.value = removeselectedkey.map(item => ({ id: item.id, role_id: item.role_id }));
+            permission.eventype = false;
+        }else{
+            if(access){
+                removeModule.value.push(selectedModuleDetails.value);
+            }else{
+                selectedModule.value.push(selectedModuleDetails.value);
+            }
+            permission.eventype = true;
+        }
+    }
+
+    console.log(removeModule.value,'1231231 123',selectedModule.value)
+   
+}
+
+const submit = ()=>{
+    payload.value.selectedModule = selectedModule.value;
+    payload.value.removeModule = removeModule.value;
+    emits('submit',payload.value);
+}
 
 const addPermission = async (permission, type) => {
   permission.type = type;
