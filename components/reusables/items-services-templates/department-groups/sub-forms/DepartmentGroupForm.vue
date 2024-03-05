@@ -9,7 +9,6 @@
                     <v-row>
                         <v-col cols="12">
                             <v-text-field
-                                class="mt-3"
                                 variant="outlined"
                                 hide-details
                                 label="Description"

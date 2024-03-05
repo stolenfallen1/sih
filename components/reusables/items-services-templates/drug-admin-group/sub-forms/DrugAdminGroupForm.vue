@@ -1,7 +1,7 @@
 <template>
     <v-dialog :model-value="drug_admin_group" rounded="lg" persistent scrollable max-width="700px">
         <v-toolbar color="#6984ff" hide-details density="compact">
-            <v-toolbar-title>Dosage Template Details</v-toolbar-title>
+            <v-toolbar-title>Drug Admin Group Details</v-toolbar-title>
         </v-toolbar>
         <v-card>
             <v-card-text>
@@ -9,7 +9,6 @@
                     <v-row>
                         <v-col cols="12">
                             <v-text-field
-                                class="mt-3"
                                 variant="outlined"
                                 hide-details
                                 label="Description"
@@ -18,7 +17,7 @@
                         </v-col>
                         <v-col cols="12">
                             <v-text-field
-                                class="mt-3 cursor-pointer"
+                                class="cursor-pointer"
                                 variant="outlined"
                                 hide-details
                                 label="Printer Path"

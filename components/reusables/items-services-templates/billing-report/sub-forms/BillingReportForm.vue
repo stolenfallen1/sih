@@ -9,7 +9,6 @@
                     <v-row>
                         <v-col cols="6">
                             <v-text-field
-                                class="mt-3"
                                 variant="outlined"
                                 label="Code"
                                 hide-details
@@ -18,7 +17,6 @@
                         </v-col>
                         <v-col cols="12">
                             <v-text-field
-                                class="mt-3"
                                 variant="outlined"
                                 hide-details
                                 label="Description"
