@@ -108,7 +108,9 @@
     @close="closeupdateConfirmation"
     @submit="updateUser"
   />
+  
 
+  <Modules @submit="submitModules" :isloading="isLoading" :show="ModuleDialog" :id="selectedRowDetails.id" @close="closeModule"></Modules>
   <ModuleForm
     :moduleDialog="moduleDialog"
     @close-dialog="closeModuleDialog"
@@ -119,10 +121,15 @@
 </template>
 
 <script setup>
+import Modules from "./modules/Modules";
+
 import nuxtStorage from "nuxt-storage";
 import { storeToRefs } from "pinia";
 import moment from "moment";
 moment.locale("en");
+// import TableAndTemplateFormDialog state 
+const { ModuleDialog} = storeToRefs(TableAndTemplateFormDialog());
+
 import RegistrationForm from "~/components/system-settings/forms/system-users/RegistrationForm.vue";
 import ReusableTable from "~/components/reusables/ReusableTable.vue";
 import ModuleForm from "./modules/ModuleForm.vue";
@@ -201,7 +208,9 @@ const text = ref("");
 
 // States for opening and closing dialogs
 
-
+const closeModule = () => {
+  ModuleDialog.value = false;
+};
 const closeDialog = () => {
   inputDialog.value = false;
 };
@@ -491,6 +500,29 @@ onUpdated(() => {
 const formatDate = (value) => {
   return moment(value).format("YYYY-MM-DD");
 };
+
+const submitModules = async(payload)=>{
+    isLoading.value = true;
+    const response = await $fetch(useApiUrl()  + `/submit-selected-permission`, {
+        method: "post",
+        headers: {
+        Authorization: `Bearer `+ useToken(),
+        "Content-Type": "application/json",
+        },
+        body: {
+            payload: payload.selectedModule,
+            remove_permission: payload.removeModule,
+            id:selectedRowDetails.value.id
+        },
+    });
+    if(response){
+      useSnackbar(true, "green", response.message);
+      ModuleDialog.value = false;
+      isLoading.value = false;
+      fetchData(null, null);
+    }
+}
+
 </script>
 
 <style scoped></style>
