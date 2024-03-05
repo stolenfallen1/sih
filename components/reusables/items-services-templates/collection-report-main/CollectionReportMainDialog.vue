@@ -21,7 +21,17 @@
                 </v-text-field>
             </v-card-title>
             <v-card-text>
-                <v-data-table density="compact" height="60vh" :headers="headers">
+                <v-data-table density="compact" height="60vh" :headers="headers" :items="data" hide-details>
+                    <template v-slot:item="{ item }">
+                        <tr>
+                            <td>{{ item.code }}</td>
+                            <td>{{ item.description }}</td>
+                            <td >
+                                <v-icon color="green mr-3" @click="onEdit">mdi-pencil</v-icon>
+                                <v-icon color="red" @click="onDelete">mdi-trash-can</v-icon>
+                            </td>
+                        </tr>
+                    </template>
                     <template #bottom></template>
                 </v-data-table>
             </v-card-text>
@@ -30,8 +40,6 @@
                 <v-btn color="blue-darken-1" @click="closeDialog"> Close </v-btn>
                 <v-spacer></v-spacer>
                 <v-btn class="bg-primary text-white" type="submit" @click="openCollectionReportMain">Add</v-btn>
-                <v-btn class="bg-info text-white" type="submit">Edit</v-btn>
-                <v-btn class="bg-error text-white" type="submit">Delete</v-btn>
             </v-card-actions>
         </v-card>
     </v-dialog>
@@ -64,7 +72,14 @@ const headers = [
         title: "Description",
         align: "start",
         sortable: false,
+        width: "60%",
     },
+];
+
+const data = [
+    { code: 'Code1', description: 'Description1' },
+    { code: 'Code2', description: 'Description2' },
+    { code: 'Code3', description: 'Description3' },
 ];
 
 const openCollectionReportMain = () => {
@@ -73,6 +88,14 @@ const openCollectionReportMain = () => {
 
 const closeCollectionReportMain = () => {
     open_collection_report_form.value = false;
+}
+
+const onEdit = () => {
+    alert("Edit")
+}
+
+const onDelete = () => {
+    alert("Delete")
 }
 
 const onSubmit = () => {

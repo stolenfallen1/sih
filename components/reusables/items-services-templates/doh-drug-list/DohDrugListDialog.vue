@@ -35,7 +35,19 @@
                 </v-row>
             </v-card-title>
             <v-card-text>
-                <v-data-table density="compact" height="60vh" :headers="headers">
+                <v-data-table density="compact" height="60vh" :headers="headers" :items="data" hide-details>
+                    <template v-slot:item="{ item }">
+                        <tr>
+                            <td><v-checkbox v-model="item.systemDefault" density="compact" hide-details/></td>
+                            <td>{{ item.code }}</td>
+                            <td>{{ item.description }}</td>
+                            <td>{{ item.status === true ? "Active" : "Inactive" }}</td>
+                            <td>
+                                <v-icon color="green mr-3" @click="onEdit">mdi-pencil</v-icon>
+                                <v-icon color="red" @click="onDelete">mdi-trash-can</v-icon>
+                            </td>
+                        </tr>
+                    </template>
                     <template #bottom></template>
                 </v-data-table>
             </v-card-text>
@@ -44,8 +56,6 @@
                 <v-btn color="blue-darken-1" @click="closeDialog"> Close </v-btn>
                 <v-spacer></v-spacer>
                 <v-btn class="bg-primary text-white" type="submit" @click="openDohDrugListForm">Add</v-btn>
-                <v-btn class="bg-info text-white" type="submit">Edit</v-btn>
-                <v-btn class="bg-error text-white" type="submit">Delete</v-btn>
             </v-card-actions>
         </v-card>
     </v-dialog>
@@ -92,12 +102,26 @@ const headers = [
     },
 ];
 
+const data = [
+    { systemDefault: true, code: 'Code1', description: 'Description1', status: true },
+    { systemDefault: false, code: 'Code2', description: 'Description2', status: false },
+    { systemDefault: true, code: 'Code3', description: 'Description3' , status: true },
+];
+
 const openDohDrugListForm = () => {
     doh_drug_list_form.value = true;
 }
 
 const closeDohDrugListForm = () => {
     doh_drug_list_form.value = false;
+}
+
+const onEdit = () => {
+    alert("Edit")
+}
+
+const onDelete = () => {
+    alert("Delete")
 }
 
 const onSubmit = () => {

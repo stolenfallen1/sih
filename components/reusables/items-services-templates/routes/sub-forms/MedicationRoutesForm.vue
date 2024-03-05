@@ -1,7 +1,7 @@
 <template>
-  <v-dialog :model-value="open_phic_item_category_form" rounded="lg" persistent scrollable max-width="700px">
+  <v-dialog :model-value="open_medication_routes_form" rounded="lg" persistent scrollable max-width="700px">
       <v-toolbar color="#6984ff" hide-details density="compact">
-          <v-toolbar-title>PHIC Item Category Template Details</v-toolbar-title>
+          <v-toolbar-title>Routes Details</v-toolbar-title>
       </v-toolbar>
       <v-card>
           <v-card-text>
@@ -31,7 +31,7 @@
 <script setup>
 
 const props = defineProps({
-  open_phic_item_category_form: {
+  open_medication_routes_form: {
       type: Boolean,
       default: () => false,
       required: true,

@@ -145,6 +145,10 @@
     :show="DohDrugLists"
     @close-dialog="closeDohDrugLists"
   />
+  <DxMedicalPackagesDialog 
+    :show="DxMedicalPackages"
+    @close-dialog="closeDxMedicalPackages"
+  />
   <GenericNameDialog 
     :show="GenericNames"
     @close-dialog="closeGenericNames"
@@ -177,9 +181,29 @@
       :show="MedicationPreparations"
       @close-dialog="closeMedicationPreparations"
   />
-  <RoutesDialog 
+  <MedicationRoutesDialog 
       :show="Routes"
-      @close-dialog="closeRoutes"
+      @close-dialog="closeMedicationRoutes"
+  />
+  <OthersDialog 
+    :show="Others"
+    @close-dialog="closeOthersDialog"
+  />  
+  <PhicItemCategoriesDialog 
+    :show="PhicItemCategories"
+    @close-dialog="closePhicItemCategories"
+  /> 
+  <UnitOfMeasuresDialog 
+    :show="UnitOfMeasures"
+    @close-dialog="closeUnitOfMeasures"
+  />
+  <ModalitiesDialog 
+    :show="Modalities"
+    @close-dialog="closeModalities"
+  />
+  <SpecimensDialog 
+    :show="Specimens"
+    @close-dialog="closeSpecimens"
   />
 </template>
 
@@ -230,6 +254,7 @@ import DepartmentGroupDialog from "~/components/reusables/items-services-templat
 import DosageDialog from "~/components/reusables/items-services-templates/dosages/DosageDialog.vue";
 import DrugAdminGroupDialog from "~/components/reusables/items-services-templates/drug-admin-group/DrugAdminGroupDialog.vue";
 import DohDrugListDialog from "~/components/reusables/items-services-templates/doh-drug-list/DohDrugListDialog.vue";
+import DxMedicalPackagesDialog from "~/components/reusables/items-services-templates/dx-medical-packages/DxMedicalPackagesDialog.vue";
 import GenericNameDialog from "~/components/reusables/items-services-templates/generic-names/GenericNameDialog.vue";
 import IndicationDialog from "~/components/reusables/items-services-templates/indications/IndicationDialog.vue";
 import ItemPriceGroupsDialog from "~/components/reusables/items-services-templates/item-price-groups/ItemPriceGroupsDialog.vue";
@@ -238,7 +263,12 @@ import ItemUnitsDialog from "~/components/reusables/items-services-templates/ite
 import MedicationDurationsDialog from "~/components/reusables/items-services-templates/medication-durations/MedicationDurationsDialog.vue";
 import MedicationFrequenciesDialog from "~/components/reusables/items-services-templates/medication-frequencies/MedicationFrequenciesDialog.vue";
 import MedicationPreparationsDialog from "~/components/reusables/items-services-templates/medication-preparations/MedicationPreparationsDialog.vue";
-import RoutesDialog from "~/components/reusables/items-services-templates/routes/RoutesDialog.vue";
+import MedicationRoutesDialog from "~/components/reusables/items-services-templates/routes/MedicationRoutesDialog.vue";
+import OthersDialog from "~/components/reusables/items-services-templates/others/OthersDialog.vue";
+import PhicItemCategoriesDialog from "~/components/reusables/items-services-templates/phic-item-categories/PhicItemCategoriesDialog.vue";
+import UnitOfMeasuresDialog from "~/components/reusables/items-services-templates/unit-of-measures/UnitOfMeasuresDialog.vue";
+import ModalitiesDialog from "~/components/reusables/items-services-templates/modalities/ModalitiesDialog.vue";
+import SpecimensDialog from "~/components/reusables/items-services-templates/specimens/SpecimensDialog.vue";
 
 definePageMeta({
   layout: "root-layout",
@@ -579,6 +609,9 @@ const closeDrugAdminGroups = () => {
 const closeDohDrugLists = () => {
     DohDrugLists.value = false;
 };
+const closeDxMedicalPackages = () => {
+    DxMedicalPackages.value = false;
+}
 const closeGenericNames = () => {
     GenericNames.value = false;
 };
@@ -603,9 +636,24 @@ const closeMedicationFrequencies = () => {
 const closeMedicationPreparations = () => {
     MedicationPreparations.value = false;
 };
-const closeRoutes = () => {
+const closeMedicationRoutes = () => {
     Routes.value = false;
 };
+const closeOthersDialog = () => {
+    Others.value = false;
+}
+const closePhicItemCategories = () => {
+    PhicItemCategories.value = false;
+}
+const closeUnitOfMeasures = () => {
+  UnitOfMeasures.value = false;
+}
+const closeModalities = () => {
+  Modalities.value = false;
+}
+const closeSpecimens = () => {
+  Specimens.value = false;
+}
 </script>
 
 <style>

@@ -21,7 +21,17 @@
                 </v-text-field>
             </v-card-title>
             <v-card-text>
-                <v-data-table density="compact" height="60vh" :headers="headers">
+                <v-data-table density="compact" height="60vh" :headers="headers" :items="data" hide-details>
+                    <template v-slot:item="{ item }">
+                        <tr>
+                            <td><v-checkbox v-model="item.systemDefault" density="compact" hide-details/></td>
+                            <td>{{ item.description }}</td>
+                            <td>
+                                <v-icon color="green mr-3" @click="onEdit">mdi-pencil</v-icon>
+                                <v-icon color="red" @click="onDelete">mdi-trash-can</v-icon>
+                            </td>
+                        </tr>
+                    </template>
                     <template #bottom></template>
                 </v-data-table>
             </v-card-text>
@@ -30,8 +40,6 @@
                 <v-btn color="blue-darken-1" @click="closeDialog"> Close </v-btn>
                 <v-spacer></v-spacer>
                 <v-btn class="bg-primary text-white" type="submit" @click="openIndicationsForm">Add</v-btn>
-                <v-btn class="bg-info text-white" type="submit">Edit</v-btn>
-                <v-btn class="bg-error text-white" type="submit">Delete</v-btn>
             </v-card-actions>
         </v-card>
     </v-dialog>
@@ -64,7 +72,14 @@ const headers = [
         title: "Description",
         align: "start",
         sortable: false,
+        width: "60%",
     },
+];
+
+const data = [
+    { systemDefault: true, description: 'Description1' },
+    { systemDefault: false, description: 'Description2' },
+    { systemDefault: true, description: 'Description3' },
 ];
 
 const openIndicationsForm = () => {
@@ -73,6 +88,14 @@ const openIndicationsForm = () => {
 
 const closeIndicationsForm = () => {
     open_indications_form.value = false;
+}
+
+const onEdit = () => {
+    alert("Edit")
+}
+
+const onDelete = () => {
+    alert("Delete")
 }
 
 const onSubmit = () => {
