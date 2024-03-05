@@ -1,7 +1,8 @@
 export const TableAndTemplateFormDialog = defineStore('TableAndTemplateFormDialog',{
   state: () => ({
      BillingReportCategoryDialog:false,
-     BillingReportCategoryDialog1:false
+     ModuleDialog:false,
+     NurseStationDialog:false
   }),
    actions:{
      setDialog(dialog:any) {

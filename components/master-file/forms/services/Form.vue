@@ -17,7 +17,7 @@
                                     <v-text-field
                                         label="Item Code . ID"
                                         readonly
-                                        v-model="form_payload.map_item_id"
+                                        v-model="form_payload.id"
                                         hide-details
                                         density="compact"
                                         variant="outlined"
@@ -115,6 +115,7 @@
                                         item-value="id"
                                         label="Section"
                                         hide-details
+                                        :loading="sectionLoading"
                                         v-model="form_payload.exam_section"
                                         :items="section_list"
                                         density="compact"
@@ -224,6 +225,7 @@ const modality_list =JSON.parse(nuxtStorage.localStorage.getData("modalities"))|
 
 const category_list = ref([]);
 const section_list = ref([]);
+const sectionLoading = ref(false);
 const setInitialValue = () => {
    
 };
@@ -246,8 +248,8 @@ const getcategory = async ()=>{
 }
 const getSection = async ()=>{
     section_list.value = [];
-    
     if(!props.form_payload.msc_item_category_ID) return;
+    sectionLoading.value = true;
     var categoryid = props.form_payload.msc_item_category_ID.fms_transaction_id || props.form_payload.msc_item_category_ID
     let response = await $fetch(useApiUrl()+'/services-section?revenue_id='+categoryid,
     {
@@ -256,6 +258,7 @@ const getSection = async ()=>{
         },
     })
     if(response){
+        sectionLoading.value = false;
         section_list.value = response;
     }
 }
@@ -270,7 +273,6 @@ onUpdated(()=>{
     useServicesItemGroup();
     getcategory(); 
     getSection();   
-    useModality();
 })
 const closeDialog = () => {
     emits('close-dialog')

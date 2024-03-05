@@ -2388,6 +2388,7 @@ export default [
                     {
                         label: "Nurse Stations",
                         icon: "mdi-file-document",
+                        form: "NurseStationDialog",
                         path: "/system-settings/system-users/nurse-stations",
                     },
                     {

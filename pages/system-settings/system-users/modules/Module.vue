@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-dialog v-model="dialog" persistent hide-overlay width="950" scrollable>
+    <v-dialog v-model="show" persistent hide-overlay width="950" scrollable>
       <v-card>
         <v-toolbar density="compact">
           <v-toolbar-title>System User Group {{ selectedGroup }}</v-toolbar-title>
@@ -178,6 +178,12 @@ definePageMeta({
   layout: "root-layout",
 });
 
+const props = defineProps({
+  show:{
+    type:Boolean,
+    default:()=>false
+  }
+});
 const route = useRoute();
 const panel = ref([0]);
 const show = ref(false);
@@ -198,8 +204,6 @@ const modules = ref([]);
 let moduleList = ref([]);
 let subModuleData = ref([]);
 let roleList = ref([]);
-const config = useRuntimeConfig();
-const token = useCookie("token");
 
 const browse_column = (item, table) => {
   if (item.split("_")[0] == "browse" && table != null) {
@@ -334,14 +338,13 @@ const addPermission = async (permission, type) => {
 const openSubModule = async (permission) => {
   subdialog.value = true;
   isrefresh.value = true;
-  submoduleTitle.value = permission.module;
-  getsubmodule_permisson(permission.module_id);
+  // submoduleTitle.value = permission.module;
+  // getsubmodule_permisson(permission.module_id);
 };
 
 const getsubmodule_permisson = async (id) => {
   const response = await fetch(useApiUrl()  + `/get-permissions?id=` + id, {
     headers: {
-      
       Authorization: `Bearer `+ useToken(),
     },
   });
