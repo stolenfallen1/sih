@@ -1,5 +1,5 @@
 <template>
-    <v-dialog :model-value="open_medication_duration_form" rounded="lg" persistent scrollable max-width="700px">
+    <v-dialog :model-value="open_medication_frequency_form" rounded="lg" persistent scrollable max-width="700px">
         <v-toolbar color="#6984ff" hide-details density="compact">
             <v-toolbar-title>Medication Frequency Details</v-toolbar-title>
         </v-toolbar>
@@ -24,7 +24,9 @@
                                 variant="outlined"
                             ></v-text-field>
                         </v-col>
-                        <v-checkbox v-model="is_inactive" label="Inactive"></v-checkbox>
+                        <v-col cols="12">
+                            <v-checkbox v-model="is_inactive" label="Inactive" density="compact"></v-checkbox>
+                        </v-col>
                     </v-row>
                 </v-container>
             </v-card-text>
@@ -41,7 +43,7 @@
 <script setup>
 
 const props = defineProps({
-    open_medication_duration_form: {
+    open_medication_frequency_form: {
         type: Boolean,
         default: () => false,
         required: true,

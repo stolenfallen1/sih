@@ -1,7 +1,7 @@
 <template>
     <v-dialog :model-value="printer_details" rounded="lg" persistent scrollable max-width="650px">
         <v-toolbar density="compact" color="#6984ff" hide-details>
-            <v-toolbar-title>Dosages</v-toolbar-title>
+            <v-toolbar-title>Print</v-toolbar-title>
             <v-spacer></v-spacer>
             <v-btn color="white" @click="closeDialog">
                 <v-icon>mdi-close</v-icon>

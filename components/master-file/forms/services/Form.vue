@@ -84,7 +84,7 @@
                             </v-row>
                             <v-row>
                                 
-                                <v-col cols="6">
+                                <!-- <v-col cols="6">
                                     <v-autocomplete
                                         item-title="category_description"
                                         item-value="id"
@@ -97,7 +97,7 @@
                                         density="compact"
                                         variant="outlined"
                                     ></v-autocomplete>
-                                </v-col>
+                                </v-col> -->
                                 <v-col cols="6">
                                     <v-autocomplete
                                         item-title="name"

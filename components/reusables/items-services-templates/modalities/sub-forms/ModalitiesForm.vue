@@ -1,27 +1,26 @@
 <template>
-    <v-dialog :model-value="open_cpt_section_form" rounded="lg" persistent scrollable max-width="700px">
+    <v-dialog :model-value="open_modalities_form" rounded="lg" persistent scrollable max-width="700px">
         <v-toolbar color="#6984ff" hide-details density="compact">
-            <v-toolbar-title>CPT Section Details</v-toolbar-title>
+            <v-toolbar-title>Modalities Details</v-toolbar-title>
         </v-toolbar>
         <v-card>
             <v-card-text>
                 <v-container>
                     <v-row>
-                        <v-col cols="6">
+                        <v-col cols="12">
                             <v-text-field
-                                disabled
-                                variant="outlined"
-                                label="Section Code"
+                                label="Modalitiy"
                                 hide-details
                                 density="compact"
+                                variant="outlined"
                             ></v-text-field>
                         </v-col>
                         <v-col cols="12">
                             <v-text-field
-                                variant="outlined"
-                                hide-details
                                 label="Description"
+                                hide-details
                                 density="compact"
+                                variant="outlined"
                             ></v-text-field>
                         </v-col>
                     </v-row>
@@ -40,7 +39,7 @@
 <script setup>
 
 const props = defineProps({
-    open_cpt_section_form: {
+    open_modalities_form: {
         type: Boolean,
         default: () => false,
         required: true,
