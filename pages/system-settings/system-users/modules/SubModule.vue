@@ -1,6 +1,15 @@
 <template>
   <v-card>
-    <v-card-title> System User Group Sub Modules {{ title }}</v-card-title>
+     <v-toolbar density="compact">
+      <v-toolbar-title>System User Group Sub Modules {{ title }}</v-toolbar-title>
+      <v-spacer></v-spacer>
+      <v-toolbar-items>
+        <v-btn icon>
+          <v-icon @click="closeDialog">mdi-close</v-icon>
+        </v-btn>
+      </v-toolbar-items>
+    </v-toolbar>
+
     <v-divider></v-divider>
     <v-card-text style="height: 500px">
       <v-table density="compact">
@@ -82,8 +91,8 @@
     </v-card-text>
     <v-divider></v-divider>
     <v-card-actions>
-      <v-spacer></v-spacer>
       <v-btn @click="closeDialog">Close</v-btn>
+      <v-spacer></v-spacer>
       <v-btn color="primary" class="primary" :loading="isloading" @click="submit">Save and Close</v-btn>
     </v-card-actions>
   </v-card>
@@ -108,6 +117,10 @@ const props = defineProps({
     type: Boolean,
     default: () => false,
   },
+  isloading: {
+    type: Boolean,
+    default: () => false,
+  },
   submoduleTitle:{
     type: String,
     default: () => '',
@@ -117,9 +130,8 @@ const props = defineProps({
 const closeDialog = () => {
   emits("close-dialog");
 };
-
+const payload = ref({});
 let { isrefresh } = props;
-
 const selectedModule = ref([]);
 const removeModule = ref([]);
 const selectedModuleDetails = ref({});
@@ -128,7 +140,6 @@ const SelectedModule = (permission,type,access,test,items)=>{
     selectedModuleDetails.value = Object.assign({});
     selectedModuleDetails.value.id = permission.id;
     selectedModuleDetails.value.role_id = selectedRowDetails.value.id;
-
     console.log(permission.key,'1231231 123',access)
     if(access){
         if(permission.eventype == false){

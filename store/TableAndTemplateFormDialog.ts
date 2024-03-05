@@ -29,9 +29,12 @@ export const TableAndTemplateFormDialog = defineStore('TableAndTemplateFormDialo
     UnitOfMeasures: false,
     Modalities: false,
     Specimens: false,
-     BillingReportCategoryDialog:false,
-     ModuleDialog:false,
-     NurseStationDialog:false
+    BillingReportCategoryDialog:false,
+
+    
+    // This states are for system users 
+    ModuleDialog:false,
+    NurseStationDialog:false
   }),
    actions:{
      setDialog(dialog:any) {

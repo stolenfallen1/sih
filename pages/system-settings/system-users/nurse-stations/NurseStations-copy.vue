@@ -1,6 +1,6 @@
 <template>
     <!-- <div>{{ route.params}}</div> -->
-    <v-dialog v-model="dialog" persistent hide-overlay width="800" scrollable>
+    <v-dialog :model-value="show" persistent hide-overlay width="800" scrollable>
         <v-card>
             <v-toolbar density="compact" >
                 <v-toolbar-title>System User Nurse Station</v-toolbar-title>
@@ -75,6 +75,13 @@ import nuxtStorage from "nuxt-storage";
 definePageMeta({
     layout: "root-layout",
 });
+const props = defineProps({
+  show: {
+    type: Boolean,
+    default: () => false,
+  },
+});
+
 const { selectedRowDetails } = storeToRefs(useSubcomponentSelectedRowDetailsStore()); //state id for subcomponents ?id=123
 let buildings = JSON.parse(nuxtStorage.localStorage.getData("buildings"));
 // Auth refs and config
@@ -131,7 +138,6 @@ const addStation = async (item,type) => {
 };
 // When accessing /posts/1, route.params.id will be 1
 console.log(route.params.id)
-const dialog = ref(true);
 </script>
 <style >
 .v-expansion-panel--active > .v-expansion-panel-title:not(.v-expansion-panel-title--static){

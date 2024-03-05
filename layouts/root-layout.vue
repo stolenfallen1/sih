@@ -363,4 +363,7 @@ const logout = () => {
     right: 0;
     top: 0;
 }
+.v-expansion-panel--active > .v-expansion-panel-title:not(.v-expansion-panel-title--static){
+    height: 45px !important;
+}
 </style>
