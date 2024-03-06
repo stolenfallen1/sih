@@ -37,6 +37,7 @@
                             </v-tabs>
                             <v-divider class="mb-2"></v-divider>
                             <v-window v-model="tab">
+                                    
                                 <v-window-item v-for="(building, sectionIndex) in buildings" :key="sectionIndex" :value="index" class="pa-1">
                                     <v-expansion-panels v-model="panel"  :disabled="disabled" multiple>
                                             <v-expansion-panel  class="mb-1" v-for="(floor, floorIndex) in building.floors" :key="floorIndex" >
@@ -46,20 +47,18 @@
                                                         <tbody>
                                                             <tr v-for="(item, itemIndex) in floor.stations" :key="itemIndex">
                                                                 <td width="20" :key="itemIndex"> 
-                                                                    <v-icon size="26" @click="SelectedNurseStation(item,item.eventype)">
-                                                                       <template v-if="!isrefresh">
+                                                                    <v-icon size="26" @click="SelectedNurseStation(item,checkAssignedStation(item.id))">
+                                                                    <template v-if="!isrefresh">
                                                                             <template v-if="!checkAssignedStation(item.id)">
                                                                                 {{ item.eventype ? 'mdi-checkbox-outline' : 'mdi-checkbox-blank-outline' }}
                                                                             </template>
                                                                             <template v-else>
                                                                                 {{ item.eventype ? 'mdi-checkbox-blank-outline' : 'mdi-checkbox-outline' }}
                                                                             </template>
-                                                                       </template>
+                                                                    </template>
                                                                     </v-icon>
-                                                                    <!-- <v-icon size="26" @click="SelectedNurseStation(item,true)" v-if="!checkAssignedStation(item.id)">mdi-checkbox-blank-outline</v-icon>
-                                                                    <v-icon size="26" @click="SelectedNurseStation(item,false)" v-else-if="checkAssignedStation(item.id)" >mdi-checkbox-outline</v-icon> -->
                                                                 </td>
-                                                                <td @click="SelectedNurseStation(item,item.eventype)">{{item.station_description}}</td>
+                                                                <td @click="SelectedNurseStation(item,checkAssignedStation(item.id))">{{item.station_description}}</td>
                                                             </tr>
                                                         </tbody>
                                                     </v-table>
@@ -67,18 +66,29 @@
                                             </v-expansion-panel>
                                     </v-expansion-panels>
                                 </v-window-item>
+                                
                             </v-window>
                         </v-col>
                     </v-row>
             </v-card-text>
+         
             <v-divider></v-divider>
             <v-card-actions>
                 <v-btn  class="bg-primary text-white" @click="closedialog"> Close </v-btn>
                 <v-spacer></v-spacer>
-                <v-btn  class="bg-primary text-white" @click="submit"> Save and Close </v-btn>
+                <v-btn  class="bg-primary text-white" @click="saveandclose"> Save and Close </v-btn>
             </v-card-actions>
         </v-card>
     </v-dialog>
+    <Confirmation
+        :show="confirmationNurseStation"
+        :payload="payload"
+        :loading="isloading"
+        :error_msg="error_msg"
+        @close="closeNurseStationeConfirmation"
+        @submit="submit"
+    />
+    
 </template>
 
 <script setup>
@@ -96,35 +106,79 @@ const props = defineProps({
     default: () => false,
   },
 });
+const confirmationNurseStation = ref(false);
+const payload = ref({});
+const error_msg = ref('');
 const tab = ref(null)
 const isrefresh = ref(false)
+const isloading = ref(false)
 const assign_station_payload = ref({})
 const panel = ref([0,1,2,3,4,5,6]);
 const assign_station = ref([]);
 const router = useRouter()
 const route = useRoute()
 
+const selectedNurseStation = ref([]);
+const removeNurseStation = ref([]);
+const selectedNurseStationDetails = ref({});
 
 const getAllAssignedStation = async()=>{
-  const response = await fetch(
-    useApiUrl()  + `/assign-station?user_id=` + route.params.id,
-    {
-      headers: {
-        Authorization: `Bearer `+ useToken(),
-      },
+    if(selectedRowDetails.value.tab == 1){
+    if(selectedRowDetails.value.id == "") return;
+        isloading.value = true;
+        assign_station.value = [];
+        const response = await $fetch(
+            useApiUrl()  + `/assign-station?user_id=` + selectedRowDetails.value.id,
+            {
+            headers: {
+                Authorization: `Bearer `+ useToken(),
+            },
+            }
+        );
+        if(response){
+            isloading.value = false;
+            assign_station.value = response; 
+           
+        }
     }
-  );
-  const data = await response.json();
-  assign_station.value = data;
 }
-const SelectedNurseStation = (item,type) => {
+
+
+watch(()=>{
+    getAllAssignedStation();
+});
+
+const SelectedNurseStation = (item,access) => {
+    selectedNurseStationDetails.value = Object.assign({});
+    selectedNurseStationDetails.value.station_id = item.id;
+    selectedNurseStationDetails.value.user_id = selectedRowDetails.value.id;
+
     if(item.eventype == true) {
+        if(access){
+            let selectedkey = removeNurseStation.value.filter(items=>items.station_id !== item.id);
+            removeNurseStation.value = selectedkey.map(items => ({ station_id: items.station_id, user_id: items.user_id }));
+        }else{
+           let selectedkey = selectedNurseStation.value.filter(items=>items.station_id !== item.id);
+           selectedNurseStation.value = selectedkey.map(items => ({ station_id: items.station_id, user_id: items.user_id }));
+        }
         item.eventype = false;
+        
     }else if(item.eventype == false){
+        if(access){
+            removeNurseStation.value.push(selectedNurseStationDetails.value);
+        }else{
+            selectedNurseStation.value.push(selectedNurseStationDetails.value);
+        }
         item.eventype = true;
     }else{
+        if(access){
+            removeNurseStation.value.push(selectedNurseStationDetails.value);
+        }else{
+            selectedNurseStation.value.push(selectedNurseStationDetails.value);
+        }
         item.eventype = true;
     }
+    console.log(removeNurseStation.value,' 1234 ',selectedNurseStation.value)
     isrefresh.value = true;
     setTimeout(()=>{
         isrefresh.value = false;
@@ -132,27 +186,46 @@ const SelectedNurseStation = (item,type) => {
   console.log(item.eventype);
    // Returning null if id is falsy or if assign_station or assign_station.value doesn't exist
 };
-onMounted(()=>{
-    getAllAssignedStation();
-});
+
+
+const closeNurseStationeConfirmation = () => {
+    confirmationNurseStation.value = false;
+}
+const saveandclose = () => {
+    confirmationNurseStation.value = true;
+}
 
 const closedialog = () => {
+    assign_station.value = [];
     emits("close")
 }
-const submit = async (item,type) => {
-    item.station_id = item.id;
-    item.user_id = route.params.id;
-    item.type = type;
-    const { data } = await useFetch(useApiUrl()  + `/assigned-station`, {
+const submit = async (payload) => {
+    if(selectedNurseStation.value.length == 0 && removeNurseStation.value.length == 0)  return useSnackbar(true, "error", "Select Atleast one Station");
+        if (usePasscode() == payload.user_passcode) {
+        const response = await $fetch(useApiUrl()  + `/assigned-station`, {
         method: "post",
         headers: {
         Authorization: `Bearer `+ useToken(),
         "Content-Type": "application/json",
         },
-        body: { payload: item },
+        body: { 
+            user_id:selectedRowDetails.value.id, 
+            remove_station: removeNurseStation.value,
+            selected_station: selectedNurseStation.value
+        },
     });
-    if (data.value) {
-        getAllAssignedStation();
+        if (response) {
+            getAllAssignedStation();
+            confirmationNurseStation.value = false;
+            removeNurseStation.value = [];
+            selectedNurseStation.value = [];
+           
+        }
+    }else{
+        error_msg.value = 'Incorrect Passcode';
+        setTimeout(()=>{
+            error_msg.value = '';
+        },1000);
     }
 };
 
@@ -162,8 +235,6 @@ const checkAssignedStation = (id) => {
   }
   return false; // Returning null if id is falsy or if assign_station or assign_station.value doesn't exist
 };
-
-
 
 </script>
 <style >

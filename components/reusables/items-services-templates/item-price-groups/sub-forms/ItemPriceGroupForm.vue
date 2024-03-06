@@ -1,33 +1,41 @@
 <template>
-    <v-dialog :model-value="open_item_price_group_form" rounded="lg" persistent scrollable max-width="700px">
-        <v-toolbar color="#6984ff" hide-details density="compact">
-            <v-toolbar-title>Price Group Details</v-toolbar-title>
-        </v-toolbar>
-        <v-card>
+    <v-dialog :model-value="open_item_price_group_form" rounded="lg" persistent scrollable max-width="500px">
+       
+        <v-card rounded="lg">
+             <v-toolbar color="#6984ff" hide-details density="compact">
+                <v-toolbar-title>Price Group Details</v-toolbar-title>
+            </v-toolbar>
+            <v-divider></v-divider>
             <v-card-text>
-                <v-container>
-                    <v-row>
-                        <v-col cols="12">
-                            <v-text-field
-                                label="Description"
-                                hide-details
-                                density="compact"
-                                variant="outlined"
-                            ></v-text-field>
-                        </v-col>
-                        <v-col cols="12">
-                            <v-autocomplete
-                                label="Hospitalization Plan"
-                                disabled
-                                hide-details
-                                clearable
-                                :items="hospitalization_plans"
-                                density="compact"
-                                variant="outlined"
-                            ></v-autocomplete>       
-                        </v-col>
-                    </v-row>
-                </v-container>
+                <v-row>
+                    <v-col cols="12">
+                        <v-text-field
+                            label="Description"
+                            hide-details
+                            v-model="payload.description"
+                            density="compact"
+                            variant="outlined"
+                        ></v-text-field>
+                    </v-col>
+                    <v-col cols="5">
+                        <v-text-field
+                            label="Item ID"
+                            hide-details
+                            readonly
+                            v-model="payload.id"
+                            density="compact"
+                            variant="outlined"
+                        ></v-text-field>
+                    </v-col>
+                        <v-col cols="7">
+                        <v-checkbox
+                        class="mt-0 mb-0"
+                        v-model="payload.isactive"
+                        hide-details
+                        label="Is Active"
+                        ></v-checkbox>
+                    </v-col>
+                </v-row>
             </v-card-text>
             <v-divider></v-divider>
             <v-card-actions>
@@ -47,16 +55,23 @@ const props = defineProps({
         default: () => false,
         required: true,
     },
+    payload:{
+        type:Object,
+        default:()=>{}
+    },
+    isloading:{
+        type:Boolean,
+        default:()=>false
+    }
 })
 
 const hospitalization_plans = []
 
-const emits = defineEmits()
-
+const emits = defineEmits(["handle-submit","close-dialog"])
 const handleSubmit = () => {
-    emits('handle-submit')
+    console.log(props.payload);
+    emits('handle-submit',props.payload)
 }
-
 const closeDialog = () => {
     emits('close-dialog')
 }
