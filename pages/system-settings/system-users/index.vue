@@ -340,7 +340,7 @@ const handleTabChange = (tabValue) => {
   isSelectedUser.value = true;
   currentTab.value = tabValue;
   columns.value = tableTabs.value[0].columns;
-
+  console.log(tabValue)
   if (tabValue == "two") {
     columns.value = tableTabs.value[1].columns;
     usergroup();
@@ -383,12 +383,14 @@ const selectedUser = (item) => {
     item.branch_id = parseInt(item.branch_id);
     item.suffix = parseInt(item.suffix);
     payload.value = Object.assign({}, item);
-    selectedRowDetails.value =  Object.assign({}, item);; //set state id for subcomponents ?id=item.id value
+    selectedRowDetails.value =  Object.assign({}, item); //set state id for subcomponents ?id=item.id value
+    selectedRowDetails.value.tab = 1;
     isrefresh.value = true;
     isSelectedUser.value = false;
   } else if (item && currentTab.value == "two") {
     selectedRowDetails.value =  Object.assign({}, item);
     selectedRowDetails.value.role_id = item.id; //set state id for subcomponents ?id=item.id value
+    selectedRowDetails.value.tab = 2;
     item.isactive = item.isactive == 1 ? true : false;
     usergroup_payload.value = Object.assign({}, item);
     console.log(usergroup_payload);
@@ -512,7 +514,6 @@ const formatDate = (value) => {
 };
 
 const submitModules = async(payload)=>{
-   
     isLoading.value = true;
     const response = await $fetch(useApiUrl()  + `/submit-selected-permission`, {
         method: "post",
@@ -528,9 +529,9 @@ const submitModules = async(payload)=>{
     });
     if(response){
       useSnackbar(true, "green", response.message);
-      if(payload.type == 'module'){
-        ModuleDialog.value = false;
-      }
+      // if(payload.type == 'submodule'){
+      //   ModuleDialog.value = false;
+      // }
       isLoading.value = false;
       fetchData(null, null);
     }
@@ -538,6 +539,7 @@ const submitModules = async(payload)=>{
 const closeNurseStation = ()=>{
   NurseStationDialog.value = false;
 }
+
 </script>
 
 <style scoped></style>

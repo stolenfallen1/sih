@@ -12,7 +12,7 @@
           </v-toolbar-items>
         </v-toolbar>
         <v-divider></v-divider>
-        <v-card-text style="min-height:600px;">
+        <v-card-text style="height:600px;">
           <v-tabs v-model="tab" bg-color="primary" center-active>
             <v-tab v-for="(tabs, index) in moduleList" :value="index" :key="index">
               {{ tabs.name }}
@@ -115,7 +115,7 @@
         <v-card-actions>
           <v-btn @click="handleClose">Close</v-btn>
           <v-spacer></v-spacer>
-          <v-btn color="primary" class="primary" :loading="isloading" @click="submit">Save and Close</v-btn>
+          <v-btn color="primary" class="primary" :loading="isloading" @click="saveandclose">Save and Close</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -131,6 +131,15 @@
         @close-dialog="closeSubModule"
       ></sub-module>
     </v-dialog>
+
+    <Confirmation
+        :show="confirmationDialog"
+        :payload="payload"
+        :loading="loading"
+        :error_msg="error_msg"
+        @close="closeConfirmation"
+        @submit="submit"
+    />
   </div>
 </template>
 <script setup>
@@ -155,6 +164,9 @@ const props = defineProps({
   }
 });
 
+const confirmationDialog = ref(false);
+const error_msg = ref('');
+
 const selectedGroup = ref("");
 const submoduleTitle = ref("");
 const modules = ref([]);
@@ -162,7 +174,8 @@ let moduleList = ref([]);
 let roleList = ref([]);
 let subModuleData = ref([]);
 const panel = ref([0]);
-const loading = ref(true);
+const loading = ref(false);
+const isloading = ref(false);
 const subdialog = ref(false);
 
 const tab = ref(null);
@@ -173,6 +186,16 @@ const handleClose = ()=>{
 const selectedModule = ref([]);
 const removeModule = ref([]);
 const selectedModuleDetails = ref({});
+
+const saveandclose = ()=>{
+  confirmationDialog.value = true;
+}
+
+const closeConfirmation = ()=>{
+  confirmationDialog.value = false;
+}
+
+
 
 const can_select_permission = (key,tablename)=>{
     if(!checkpermission(key) && !check_can_select_permission(key,tablename)){
@@ -189,14 +212,16 @@ const openSubModule = async (permission) => {
   getsubmodule_permisson(permission.module_id);
 };
 const getsubmodule_permisson = async (id) => {
-  const response = await fetch(useApiUrl()  + `/get-permissions?id=` + id, {
+  isloading.value = true;
+  const response = await $fetch(useApiUrl()  + `/get-permissions?id=` + id, {
     headers: {
       Authorization: `Bearer `+ useToken(),
     },
   });
-  const data = await response.json();
-  subModuleData.value = data.data;
-  isrefresh.value = false;
+  if(response.data){
+    subModuleData.value = response.data;
+    isloading.value = false;
+  }
 };
 
 const closeSubModule = () => {
@@ -273,24 +298,27 @@ const other_column = (item, table) => {
 };
 
 const check_permission = async () => {
-  loading.value = true;
-  const response = await $fetch(
-    useApiUrl()  + `/get-role-permission?role_id=` + selectedRowDetails.value.id,
-    {
-      headers: {
-        
-      Authorization: `Bearer `+ useToken(),
-        "Content-Type": "application/json",
-      },
+  if(selectedRowDetails.value.tab == 2){
+    if(selectedRowDetails.value.id == "") return;
+    loading.value = true;
+    const response = await $fetch(
+      useApiUrl()  + `/get-role-permission?role_id=` + selectedRowDetails.value.id,
+      {
+        headers: {
+          
+        Authorization: `Bearer `+ useToken(),
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    if (response) {
+      loading.value = false;
+      modules.value = response.permission;
+      roleList.value = response.role.permissions;
+      selectedGroup.value = " (" + response.role.display_name + ")";
+      tab.value = 0;
     }
-  );
-  if (response) {
-    loading.value = false;
-    modules.value = response.permission;
-    roleList.value = response.role.permissions;
-    selectedGroup.value = " (" + response.role.display_name + ")";
-    tab.value = 0;
-  }
+  };
 };
 
 const checkpermission = (key) => {
@@ -310,19 +338,30 @@ const check_can_select_permission = (key, table) => {
   return false;
 };
 
-const submit = ()=>{
+const submit = (details)=>{
+   if(selectedModule.value.length == 0 && removeModule.value.length == 0)  return useSnackbar(true, "error", "Select Atleast one Module");
+   if (usePasscode() == details.user_passcode) {
     payload.value.selectedModule = selectedModule.value;
     payload.value.removeModule = removeModule.value;
     payload.value.type = 'module';
+    loading.value = true;
     emits('submit',payload.value);
+    if(!props.isloading){
+      loading.value = false;
+      confirmationDialog.value = false;
+    }
+   }else{
+        error_msg.value = 'Incorrect Passcode';
+        setTimeout(()=>{
+            error_msg.value = '';
+        },1000);
+    }
 }
 const submitsubModule = (payload)=>{
     payload.type = 'submodule';
     emits('submit',payload);
     setTimeout(()=>{
-        if(!props.isloading){
-           subdialog.value = false; 
-        }
+      subdialog.value = false; 
     },1000);
 }
 onMounted(()=>{
@@ -330,12 +369,9 @@ onMounted(()=>{
   removeModule.value = [];// 
 })
 onUpdated(()=>{
-  selectedModule.value = [];
-  removeModule.value = [];
 })
 watch(async () => {
     
-if(selectedRowDetails.value.id){
 
   check_permission();
   console.log(selectedRowDetails.value.id,'asdasda');
@@ -393,6 +429,6 @@ if(selectedRowDetails.value.id){
   });
   moduleList = moduleitems;
   panel.value = [0, 1, 2,3];
-}
+
 });
 </script>

@@ -34,7 +34,6 @@
                   :key="permission.id"
                   v-if="browse_column(permission.key, item.module)"
                 >
-
                     <v-icon size="24" @click="SelectedModule(permission, permission.eventype,checkpermission(permission.key))">
                       <template v-if="!checkpermission(permission.key)">
                           {{ permission.eventype ? 'mdi-checkbox-outline' : 'mdi-checkbox-blank-outline' }}
@@ -43,16 +42,6 @@
                           {{ permission.eventype ? 'mdi-checkbox-blank-outline' : 'mdi-checkbox-outline' }}
                       </template>
                     </v-icon>
-
-                  <!-- <v-icon
-                    size="24"
-                    @click="addPermission(permission, true)"
-                    v-if="!checkpermission(permission.key)"
-                    >mdi-checkbox-blank-outline</v-icon
-                  >
-                  <v-icon size="24" @click="addPermission(permission, false)" v-else
-                    >mdi-checkbox-outline</v-icon
-                  > -->
                 </td>
               </template>
               <td width="280">
@@ -60,28 +49,16 @@
               </td>
               <template v-for="(permission, keyindex) in item.items">
                 <td :key="keyindex" v-if="other_column(permission.key, item.module)">
-                  <v-icon
-                    size="24"
-                    @click="addPermission(permission, true)"
-                    v-if="
-                      !checkpermission(permission.key) &&
-                      check_can_select_permission(permission.key, item.module)
-                    "
-                    >mdi-checkbox-blank-outline</v-icon
-                  >
-                  <v-icon
-                    size="24"
-                    color="grey"
-                    v-else-if="!checkpermission(permission.key) && !check_can_select_permission(permission.key, item.module)"
-                    >mdi-checkbox-blank-outline</v-icon
-                  >
-                  <v-icon
-                    size="24"
-                    color="grey"
-                    v-else-if="checkpermission(permission.key) && !check_can_select_permission(permission.key, item.module)">mdi-checkbox-blank-outline</v-icon>
-                  <v-icon size="24" @click="addPermission(permission, false)" v-else
-                    >mdi-checkbox-outline</v-icon
-                  >
+                  <template v-if="!loading">
+                   <v-icon size="24" @click="SelectedModule(permission, permission.eventype,checkpermission(permission.key))">
+                      <template v-if="!checkpermission(permission.key)">
+                          {{ permission.eventype ? 'mdi-checkbox-outline' : 'mdi-checkbox-blank-outline' }}
+                      </template>
+                      <template v-else>
+                          {{ permission.eventype ? 'mdi-checkbox-blank-outline' : 'mdi-checkbox-outline' }}
+                      </template>
+                    </v-icon>
+                  </template>
                 </td>
               </template>
             </tr>
@@ -103,7 +80,7 @@ import { storeToRefs } from "pinia";
 const { selectedRowDetails } = storeToRefs(useSubcomponentSelectedRowDetailsStore()); 
 const route = useRoute();
 const token = useCookie("token");
-const emits = defineEmits("getsubmodule_permisson");
+const emits = defineEmits("getsubmodule_permisson","close-dialog");
 const props = defineProps({
   subModuleData: {
     type: Array,
@@ -118,6 +95,10 @@ const props = defineProps({
     default: () => false,
   },
   isloading: {
+    type: Boolean,
+    default: () => false,
+  },
+  loading: {
     type: Boolean,
     default: () => false,
   },
@@ -140,7 +121,6 @@ const SelectedModule = (permission,type,access,test,items)=>{
     selectedModuleDetails.value = Object.assign({});
     selectedModuleDetails.value.id = permission.id;
     selectedModuleDetails.value.role_id = selectedRowDetails.value.id;
-    console.log(permission.key,'1231231 123',access)
     if(access){
         if(permission.eventype == false){
             let selectedkey = selectedModule.value.filter(item=>item.id !== permission.id);
@@ -183,8 +163,6 @@ const SelectedModule = (permission,type,access,test,items)=>{
             permission.eventype = true;
         }
     }
-
-    console.log(removeModule.value,'1231231 123',selectedModule.value)
    
 }
 
@@ -229,8 +207,31 @@ const submoduleitems = computed(() => {
   return result;
 });
 isrefresh = true;
-list = submoduleitems;
-
+watch(()=>{
+  if(!props.loading){
+    list = submoduleitems;
+  }
+})
+onUpdated(()=>{
+  const submoduleitems = computed(() => {
+    const group_permission = {};
+    props.subModuleData.forEach((item) => {
+      if (!group_permission[item.module]) {
+        group_permission[item.module] = [];
+      }
+      group_permission[item.module].push(item);
+    });
+    const result = [];
+    for (const module in group_permission) {
+      result.push({
+        module,
+        items: group_permission[module],
+      });
+    }
+    return result;
+  });
+  list = submoduleitems;
+});
 const browse_column = (item, table) => {
   if (item.split("_")[0] == "browse" && table != null) {
     return true;
@@ -259,7 +260,6 @@ const check_can_select_permission = (key, table) => {
   }
 };
 
-console.log(props.roleList);
 </script>
 
 <style scoped></style>

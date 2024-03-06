@@ -2,7 +2,8 @@ export const useSubcomponentSelectedRowDetailsStore = defineStore('selectedRowDe
   state: () => ({
     selectedRowDetails:{
       role_id:'',
-      id:''
+      id:'',
+      tab:1
     },
     isrefresh:false
   }),

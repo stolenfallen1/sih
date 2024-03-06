@@ -1,5 +1,4 @@
 export const useSystemUserTab = (type:any) => {
-  
     if(type == 'one'){
         const items = [
             {
@@ -12,7 +11,7 @@ export const useSystemUserTab = (type:any) => {
                 label: "Reports",
                 icon: "mdi-file-document",
                 path: "/system-settings/system-users/reports",
-                form: "NurseStationDialog",
+                form: "document",
             },
         ]
         return items;
