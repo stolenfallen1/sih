@@ -58,7 +58,7 @@ const props = defineProps({
     },
 })
 
-const emits = defineEmits()
+const emits = defineEmits(['close-dialog'])
 
 const open_billing_form = ref(false)
 
@@ -77,6 +77,11 @@ const headers = [
     },
     {
         title: "Description",
+        align: "start",
+        sortable: false,
+    },
+    {
+        title: "Actions",
         align: "start",
         sortable: false,
     },

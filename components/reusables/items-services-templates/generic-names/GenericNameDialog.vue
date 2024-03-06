@@ -57,7 +57,7 @@ const props = defineProps({
     },
 })
 
-const emits = defineEmits()
+const emits = defineEmits(['close-dialog'])
 
 const open_generic_names_form = ref(false)
 
@@ -73,6 +73,11 @@ const headers = [
         align: "start",
         sortable: false,
         width: "60%",
+    },
+    {
+        title: "Actions",
+        align: "start",
+        sortable: false,
     },
 ];
 

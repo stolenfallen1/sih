@@ -59,7 +59,7 @@ const props = defineProps({
   },
 })
 
-const emits = defineEmits()
+const emits = defineEmits(['close-dialog'])
 
 const open_medical_package_details = ref(false)
 
@@ -84,6 +84,11 @@ const headers = [
   },
   {
       title: "Status",
+      align: "start",
+      sortable: false,
+  },
+  {
+      title: "Actions",
       align: "start",
       sortable: false,
   },

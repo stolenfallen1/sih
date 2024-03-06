@@ -27,6 +27,7 @@
                             <td><v-checkbox v-model="item.systemDefault" density="compact" hide-details/></td>
                             <td>{{ item.code }}</td>
                             <td>{{ item.description }}</td>
+                            <td>{{ item.printerPath }}</td>
                             <td>
                                 <v-icon color="green mr-3" @click="onEdit">mdi-pencil</v-icon>
                                 <v-icon color="red" @click="onDelete">mdi-trash-can</v-icon>
@@ -58,7 +59,7 @@ const props = defineProps({
     },
 })
 
-const emits = defineEmits()
+const emits = defineEmits(['close-dialog'])
 
 const drug_admin_group = ref(false)
 
@@ -67,7 +68,7 @@ const headers = [
         title: "System Default", 
         align: "start",
         sortable: true,
-        width: "25%",
+        width: "24%",
     },
     {
         title: "Code",
@@ -78,19 +79,24 @@ const headers = [
         title: "Description",
         align: "start",
         sortable: false,
-        width: "45%",
+        width: "30%",
     },
     {
         title: "Printer Path",
         align: "start",
         sortable: false,
     },
+    {
+        title: "Actions",
+        align: "start",
+        sortable: false,
+    },
 ];
 
 const data = [
-    { systemDefault: true, code: 'Code1', description: 'Description1' },
-    { systemDefault: false, code: 'Code2', description: 'Description2' },
-    { systemDefault: true, code: 'Code3', description: 'Description3' },
+    { systemDefault: true, code: 'Code1', description: 'Description1', printerPath: "" },
+    { systemDefault: false, code: 'Code2', description: 'Description2', printerPath: "" },
+    { systemDefault: true, code: 'Code3', description: 'Description3', printerPath: "" },
 ];
 
 const openDrugAdminGroup = () => {

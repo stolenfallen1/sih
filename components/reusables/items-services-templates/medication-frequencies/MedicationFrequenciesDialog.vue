@@ -59,7 +59,7 @@ const props = defineProps({
     },
 })
 
-const emits = defineEmits()
+const emits = defineEmits(['close-dialog'])
 
 const open_medication_frequency_form = ref(false)
 
@@ -75,6 +75,11 @@ const headers = [
         align: "start",
         sortable: false,
         width: "60%",
+    },
+    {
+        title: "Actions",
+        align: "start",
+        sortable: false,
     },
 ];
 

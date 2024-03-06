@@ -111,25 +111,25 @@ const headers = [
       title: "Item ID", 
       align: "start",
       sortable: true,
-      width: "15%",
+      width: "20%",
   },
   {
       title: "Description",
       align: "start",
       sortable: false,
-      width: "45%",
+      width: "40%",
   },
   {
       title: "Quantity",
       align: "start",
       sortable: false,
-      width: "25%",
+      width: "20%",
   },
   {
       title: "Price",
       align: "start",
       sortable: false,
-      width: "15%",
+      width: "20%",
   },
 ];
 
@@ -139,7 +139,7 @@ const data = [
   { item_id: 'Item3', description: 'Description3', qty: '7', price: '765.433' },
 ];
 
-const emits = defineEmits()
+const emits = defineEmits(['close-dialog', 'handle-submit'])
 
 const openMedicalItemSelection = () => {
   open_medical_item_selection.value = true
