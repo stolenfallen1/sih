@@ -58,7 +58,7 @@ const props = defineProps({
     },
 })
 
-const emits = defineEmits()
+const emits = defineEmits(['close-dialog'])
 
 const open_item_unit_form = ref(false)
 
@@ -71,6 +71,16 @@ const headers = [
     },
     {
         title: "Unit",
+        align: "start",
+        sortable: false,
+    },
+    {
+        title: "Description",
+        align: "start",
+        sortable: false,
+    },
+    {
+        title: "Actions",
         align: "start",
         sortable: false,
     },
