@@ -57,23 +57,28 @@ const props = defineProps({
   },
 })
 
-const emits = defineEmits()
+const emits = defineEmits(['close-dialog'])
 
 const open_phic_item_category_form = ref(false)
 
 const headers = [
-  {
-      title: "System Default",
-      align: "start",
-      sortable: false,
-      width: "25%",
-  },
-  {
-      title: "Description",
-      align: "start",
-      sortable: false,
-      width: "60%",
-  },
+    {
+        title: "System Default",
+        align: "start",
+        sortable: false,
+        width: "25%",
+    },
+    {
+        title: "Description",
+        align: "start",
+        sortable: false,
+        width: "60%",
+    },
+    {
+        title: "Actions",
+        align: "start",
+        sortable: false,
+    },
 ];
 
 const data = [

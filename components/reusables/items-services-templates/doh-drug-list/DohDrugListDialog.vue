@@ -73,7 +73,7 @@ const props = defineProps({
     },
 })
 
-const emits = defineEmits()
+const emits = defineEmits(['close-dialog'])
 
 const doh_drug_list_form = ref(false)
 
@@ -97,6 +97,11 @@ const headers = [
     },
     {
         title: "Status",
+        align: "start",
+        sortable: false,
+    },
+    {
+        title: "Actions",
         align: "start",
         sortable: false,
     },
