@@ -8,6 +8,7 @@
                     <v-icon>mdi-close</v-icon>
                 </v-btn>
             </v-toolbar>
+            <v-divider></v-divider>
             <v-card-text>
                 <v-text-field
                     label="Search by Description"
@@ -42,8 +43,8 @@
                         </slot>
                         </td>
                     </template>
-                    <template v-slot:item.isactive="{ item }">
-                        {{ item.isactive == 1 ? "Active" : "In-active" }}
+                    <template v-slot:item.isActive="{ item }">
+                        {{ item.isActive == 1 ? "Active" : "In-active" }}
                     </template>
                     <template v-slot:item.actions="{ item }">
                         <v-icon color="green mr-3" @click="onEdit(item)">mdi-pencil</v-icon>
@@ -59,7 +60,8 @@
             </v-card-actions>
         </v-card>
     </v-dialog>
-    <generic-names-form :open_generic_names_form="open_generic_names_form" @close-dialog="closeGenericNamesForm" @handle-submit="onSubmit" />
+    <generic-names-form :payload="payload" :open_generic_names_form="open_generic_names_form" @close-dialog="closeGenericNamesForm" @handle-submit="onSubmit" /> 
+    <deleteConfirmation :show="confirmation" @confirm="confirm" @close="closeconfirmation" />
 </template>
 
 <script setup>
@@ -83,10 +85,9 @@ const headers = [
         title: 'code',
         align: 'start',
         sortable: false,
-        key: 'generic_id',
+        key: 'id',
     },
-    { title: 'Description', key: 'generic_names', align: 'start',width:"50%" },
-    { title: 'Key', key: 'generic_key', align: 'start',width:"20%" },
+    { title: 'Description', key: 'generic_name', align: 'start',width:"60%" },
     { title: '', key: 'actions', align: 'start' },
 ];
 const data = ref({
@@ -130,10 +131,10 @@ const closeGenericNamesForm = () => {
 }
 
 const onEdit = (item) => {
-    openItemPriceGroupForm();
+    openGenericNamesForm();
     payload.value = Object.assign({});
     payload.value = Object.assign({},item);
-    payload.value.isactive = item.isactive ? true:false;
+    payload.value.isActive = item.isActive == 1 ? true:false;
 }
 
 
