@@ -1,6 +1,12 @@
 <template>
-  <v-dialog :model-value="open_medication_routes_form" rounded="lg" persistent scrollable max-width="700px">
-        <form @submit.prevent="handleSubmit">
+  <v-dialog
+    :model-value="open_medication_routes_form"
+    rounded="lg"
+    persistent
+    scrollable
+    max-width="700px"
+  >
+    <form @submit.prevent="handleSubmit">
       <v-card rounded="lg">
         <v-toolbar density="compact" color="#6984ff" hide-details>
           <v-toolbar-title>Medication Route Details</v-toolbar-title>
@@ -62,14 +68,13 @@
 </template>
 
 <script setup>
-
 const props = defineProps({
   open_medication_routes_form: {
-      type: Boolean,
-      default: () => false,
-      required: true,
+    type: Boolean,
+    default: () => false,
+    required: true,
   },
-   payload: {
+  payload: {
     type: Object,
     default: () => {},
   },
@@ -77,7 +82,7 @@ const props = defineProps({
     type: Boolean,
     default: () => false,
   },
-})
+});
 
 const emits = defineEmits(["handle-submit", "close-dialog"]);
 const handleSubmit = () => {
@@ -86,9 +91,8 @@ const handleSubmit = () => {
 };
 
 const closeDialog = () => {
-  emits('close-dialog')
-}
+  emits("close-dialog");
+};
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>
