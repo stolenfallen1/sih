@@ -1,7 +1,7 @@
 <template>
-    <v-dialog :model-value="show" rounded="lg" persistent scrollable max-width="700px">
+    <v-dialog :model-value="open_sections_dialog" rounded="lg" persistent scrollable max-width="700px">
         <v-toolbar density="compact" color="#6984ff" hide-details>
-            <v-toolbar-title>Medication Frequencies</v-toolbar-title>
+            <v-toolbar-title>Sections</v-toolbar-title>
             <v-spacer></v-spacer>
             <v-btn color="white" @click="closeDialog">
                 <v-icon>mdi-close</v-icon>
@@ -25,6 +25,7 @@
                     <template v-slot:item="{ item }">
                         <tr>
                             <td><v-checkbox v-model="item.systemDefault" density="compact" hide-details/></td>
+                            <td>{{ item.code }}</td>
                             <td>{{ item.description }}</td>
                             <td>
                                 <v-icon color="green mr-3" @click="onEdit">mdi-pencil</v-icon>
@@ -39,18 +40,19 @@
             <v-card-actions>
                 <v-btn color="blue-darken-1" @click="closeDialog"> Close </v-btn>
                 <v-spacer></v-spacer>
-                <v-btn class="bg-primary text-white" type="submit" @click="openMedicationFrequencyForm">Add</v-btn>
+                <v-btn class="bg-primary text-white" type="submit" @click="openSectionDetails">Add</v-btn>
             </v-card-actions>
         </v-card>
     </v-dialog>
-    <medication-frequency-form :open_medication_frequency_form="open_medication_frequency_form" @close-dialog="closeMedicationFrequencyForm" @handle-submit="onSubmit" />
+    <section-details :open_section_details_dialog="open_section_details_dialog" @close-dialog="closeSectionDetails" />
+    <deleteConfirmation :show="confirmationDialog" @confirm="confirmDelete" @close="closeconfirmation" />
 </template>
 
 <script setup>
-import MedicationFrequencyForm from './sub-forms/MedicationFrequencyForm.vue';
+import SectionDetails from './SectionDetails.vue';
 
 const props = defineProps({
-    show: {
+    open_sections_dialog: {
         type: Boolean,
         default: () => false,
         required: true,
@@ -59,7 +61,8 @@ const props = defineProps({
 
 const emits = defineEmits(['close-dialog'])
 
-const open_medication_frequency_form = ref(false)
+const open_section_details_dialog = ref(false)
+const confirmationDialog = ref(false)
 
 const headers = [
     {
@@ -69,10 +72,15 @@ const headers = [
         width: "25%",
     },
     {
+        title: "Code",
+        align: "start",
+        sortable: true,
+        width: "25%",
+    },
+    {
         title: "Description",
         align: "start",
         sortable: false,
-        width: "60%",
     },
     {
         title: "Actions",
@@ -82,25 +90,33 @@ const headers = [
 ];
 
 const data = [
-    { systemDefault: true, description: 'Description1' },
-    { systemDefault: false, description: 'Description2' },
-    { systemDefault: true, description: 'Description3' },
+    { systemDefault: true, code: 'Code1', description: 'Description1' },
+    { systemDefault: false, code: 'Code2', description: 'Description2' },
+    { systemDefault: true, code: 'Code3', description: 'Description3' },
 ];
-
-const openMedicationFrequencyForm = () => {
-    open_medication_frequency_form.value = true;
-}
-
-const closeMedicationFrequencyForm = () => {
-    open_medication_frequency_form.value = false;
-}
 
 const onEdit = () => {
     alert("Edit")
 }
 
 const onDelete = () => {
-    alert("Delete")
+    confirmationDialog.value = true;
+}
+
+const confirmDelete = () => {
+    confirmationDialog.value = false;
+}
+
+const closeconfirmation = () => {
+    confirmationDialog.value = false;
+}
+
+const openSectionDetails = () => {
+    open_section_details_dialog.value = true
+}
+
+const closeSectionDetails = () => {
+    open_section_details_dialog.value = false
 }
 
 const onSubmit = () => {

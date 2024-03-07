@@ -12,7 +12,7 @@
                         class="mt-3"
                         variant="outlined"
                         density="compact"
-                        disabled
+                        readonly
                         >Main Branch</v-text-field>
                         <v-select
                             label="Select a Building"

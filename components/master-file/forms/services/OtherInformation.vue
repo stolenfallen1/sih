@@ -1,6 +1,6 @@
 <template>
     <v-col cols="12">
-        <v-card class="px-4" elevation="2">
+        <v-card class="px-4" elevation="4">
             <v-list-subheader inset>
                 Miscellanous Information
             </v-list-subheader>
@@ -12,7 +12,7 @@
                             type="text"
                             density="compact"
                             prepend-icon="mdi-plus-box"
-                            disabled
+                            readonly
                             variant="outlined"
                         ></v-text-field>
                     </v-col>
@@ -21,7 +21,7 @@
                             label="Discount Specs"
                             type="text"
                             density="compact"
-                            disabled
+                            readonly
                             variant="outlined"
                         ></v-text-field>
                     </v-col>
@@ -40,7 +40,7 @@
                             label="Weighted Avg. Cost"
                             type="number"
                             density="compact"
-                            disabled
+                            readonly
                             variant="outlined"
                         ></v-text-field>
                     </v-col>
@@ -49,7 +49,7 @@
                             label="Latest Purchase Price"
                             type="text"
                             density="compact"
-                            disabled
+                            readonly
                             variant="outlined"
                         ></v-text-field>
                     </v-col>
@@ -58,7 +58,7 @@
                             label="Latest Purchase Price"
                             type="date"
                             density="compact"
-                            disabled
+                            readonly
                             variant="outlined"
                         ></v-text-field>
                     </v-col>
@@ -69,7 +69,7 @@
     <v-col cols="12">
         <v-row>
             <v-col lg="5">
-                <v-card class="px-4" elevation="2">
+                <v-card class="px-4" elevation="4">
                     <v-list-subheader inset>
                         Journal Account Codes
                     </v-list-subheader>
@@ -87,7 +87,7 @@
                                 ></v-text-field>
                                 <v-select
                                     label="Cost of Sales"
-                                    disabled
+                                    readonly
                                     variant="outlined"
                                     density="compact"
                                 ></v-select>
@@ -106,7 +106,7 @@
                                 ></v-text-field>
                                 <v-select
                                     label="Cost of Sales"
-                                    disabled
+                                    readonly
                                     variant="outlined"
                                     density="compact"
                                 ></v-select>
@@ -125,7 +125,7 @@
                                 ></v-text-field>
                                 <v-select
                                     label="Cost of Sales"
-                                    disabled
+                                    readonly
                                     variant="outlined"
                                     density="compact"
                                 ></v-select>
@@ -138,7 +138,7 @@
                                 </v-list-subheader>
                                 <v-text-field
                                     label="Expenses"
-                                    disabled
+                                    readonly
                                     type="text"
                                     density="compact"
                                     variant="outlined"
@@ -151,7 +151,7 @@
                                 ></v-select>
                                 <v-select
                                     label="Inventories"
-                                    disabled
+                                    readonly
                                     variant="outlined"
                                     density="compact"
                                 ></v-select>
@@ -161,7 +161,7 @@
                 </v-card>
             </v-col>
             <v-col lg="7">
-                <v-card class="px-4" elevation="2">
+                <v-card class="px-4" elevation="4">
                     <v-list-subheader inset>
                         Item Group Specific Information
                     </v-list-subheader>
@@ -278,7 +278,7 @@
                                     Ordering Department
                                 </v-list-subheader>
                                 <v-select
-                                    disabled
+                                    readonly
                                     variant="outlined"
                                     density="compact"
                                 ></v-select>
@@ -289,7 +289,7 @@
                                 </v-list-subheader>
                                 <v-text-field
                                     type="date"
-                                    disabled
+                                    readonly
                                     density="compact"
                                     variant="outlined"
                                 ></v-text-field>

@@ -77,7 +77,7 @@
         <v-card-actions>
         <v-btn color="blue-darken-1" @click="closeDialog"> Close </v-btn>
         <v-spacer></v-spacer>
-        <!-- This button should be disabled when there is no data displayed after search -->
+        <!-- This button should be readonly when there is no data displayed after search -->
         <v-btn
             class="bg-primary text-white"
             type="submit"
