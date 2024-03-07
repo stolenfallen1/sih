@@ -119,7 +119,7 @@
             :key="item.label"
             :title="item.label"
             :value="item.label"
-            @click="computeTableAndTemplate(item.form, selectedRowDetails)"
+            @click="computeSubcomponent(item.form, selectedRowDetails)"
             density="compact"
             :exact="true"
             :slim="true"
@@ -236,9 +236,14 @@ const updateTime = () => {
   currentTime.value = new Date().toLocaleTimeString();
 };
 
-const computeTableAndTemplate = (dialog,type)=>{
+const computeSubcomponent = (dialog,type)=>{
     console.log(selectedRowDetails.value.id);
     if(!selectedRowDetails.value.id) return  useSnackbar(true,'red','Please select a record first');
+    if(dialog){
+      useTableAndTemplate(dialog)
+    }
+}
+const computeTableAndTemplate = (dialog,type)=>{
     if(dialog){
       useTableAndTemplate(dialog)
     }
