@@ -1,6 +1,5 @@
 <template>
     <v-dialog :model-value="show" rounded="lg" persistent scrollable max-width="700px">
-       
         <v-card rounded="lg">
             <v-toolbar density="compact" color="#6984ff" hide-details>
                 <v-toolbar-title>Item Price Groups</v-toolbar-title>
@@ -28,7 +27,7 @@
                     :items="serverItems"
                     :items-length="totalItems"
                     :loading="data.loading"
-                    item-value="name"
+                    item-value="id"
                     @update:options="initialize"
                     show-select
                     select-strategy="single"
@@ -67,88 +66,98 @@
 
 <script setup>
 import ItemPriceGroupForm from './sub-forms/ItemPriceGroupForm.vue';
+const props = defineProps({
+    show: {
+        type: Boolean,
+        default: () => false,
+        required: true,
+    },
+})
+const confirmation = ref(false);
+const emits = defineEmits()
+const payload = ref({});
+const isloading = ref(false);
+const open_item_price_group_form = ref(false)
+const headers = [
+    {
+        title: 'code',
+        align: 'start',
+        sortable: false,
+        key: 'id',
+    },
+    { title: 'Description', key: 'description', align: 'start',width:"60%" },
+    { title: '', key: 'actions', align: 'start' },
+];
+const data = ref({
+    title: "List of Unit",
+    keyword: "",
+    loading: false,
+    filter: {},
+    tab: 0,
+    param_tab: 1,
+});
+const itemsPerPage = ref(10);
+const totalItems = ref(0);
+const serverItems = ref([]);
+const initialize =  ({ page, itemsPerPage, sortBy }) => {
+loadItems(page,itemsPerPage,sortBy) 
+}
+const loadItems = async(page = null,itemsPerPage = null,sortBy = null)=>{
+    data.value.loading = true;
+    let pageno = page || 1;
+    let itemPerpageno = itemsPerPage || 10;
+    let params = "page=" +pageno + "&per_page=" + itemPerpageno + "&keyword=" + data.value.keyword;
+    const response = await useMethod("get","get-price-groups?","",params);
+    if(response){
+        serverItems.value = response.data;
+        totalItems.value = response.total;
+        data.value.loading = false;
+    }
+}
+const search = ()=>{
+    loadItems();
+}
 
-    const props = defineProps({
-        show: {
-            type: Boolean,
-            default: () => false,
-            required: true,
-        },
-    })
-    const confirmation = ref(false);
-    const emits = defineEmits()
-    const payload = ref({});
-    const isloading = ref(false);
-    const open_item_price_group_form = ref(false)
-    const headers = [
-        {
-            title: 'code',
-            align: 'start',
-            sortable: false,
-            key: 'id',
-        },
-        { title: 'Description', key: 'description', align: 'start',width:"60%" },
-        { title: '', key: 'actions', align: 'start' },
-    ];
-    const data = ref({
-        title: "List of Unit",
-        keyword: "",
-        loading: false,
-        filter: {},
-        tab: 0,
-        param_tab: 1,
-    });
-    const itemsPerPage = ref(10);
-    const totalItems = ref(0);
-    const serverItems = ref([]);
-    const initialize =  ({ page, itemsPerPage, sortBy }) => {
-    loadItems(page,itemsPerPage,sortBy)
-        
+const openItemPriceGroupForm = () => {
+    payload.value = Object.assign({});
+    open_item_price_group_form.value = true;
+}
+
+const closeItemPriceGroupForm = () => {
+    payload.value = Object.assign({});
+    open_item_price_group_form.value = false;
+}
+
+const onEdit = (item) => {
+    openItemPriceGroupForm();
+    payload.value = Object.assign({});
+    payload.value = Object.assign({},item);
+    payload.value.isactive = item.isactive ? true:false;
+}
+
+
+
+const onSubmit = async (payload) => {
+    let response;
+    isloading.value = true;
+    if(payload.id){
+        response = await useMethod("put","update-price-groups",payload,"",payload.id);
+    }else{
+        response = await useMethod("post","create-price-groups",payload);
     }
-    const loadItems = async(page = null,itemsPerPage = null,sortBy = null)=>{
-        data.value.loading = true;
-        let pageno = page || 1;
-        let itemPerpageno = itemsPerPage || 10;
-        let params = "page=" +pageno + "&per_page=" + itemPerpageno + "&keyword=" + data.value.keyword;
-        const response = await useMethod("get","get-price-groups?","",params);
-        if(response){
-            serverItems.value = response.data;
-            totalItems.value = response.total;
-            data.value.loading = false;
-        }
-    }
-    const search = ()=>{
+    if(response){
+        useSnackbar(true,"green",response.msg);
         loadItems();
-    }
-
-    const openItemPriceGroupForm = () => {
+        closeItemPriceGroupForm();
         payload.value = Object.assign({});
-        open_item_price_group_form.value = true;
+        isloading.value = false;
     }
-
-    const closeItemPriceGroupForm = () => {
-        payload.value = Object.assign({});
-        open_item_price_group_form.value = false;
-    }
-
-    const onEdit = (item) => {
-        openItemPriceGroupForm();
-        payload.value = Object.assign({});
-        payload.value = Object.assign({},item);
-        payload.value.isactive = item.isactive ? true:false;
-    }
-
- 
-
-    const onSubmit = async (payload) => {
-        let response;
-        isloading.value = true;
-        if(payload.id){
-            response = await useMethod("put","update-price-groups",payload,"",payload.id);
-        }else{
-            response = await useMethod("post","create-price-groups",payload);
-        }
+}
+const confirm = async () => {
+    if(payload.value.id){
+        let response = await useMethod("delete","delete-price-groups",payload.value,"",payload.value.id);
         if(response){
+            confirmation.value = false;
             useSnackbar(true,"green",response.msg);
             loadItems();
             closeItemPriceGroupForm();
@@ -156,31 +165,19 @@ import ItemPriceGroupForm from './sub-forms/ItemPriceGroupForm.vue';
             isloading.value = false;
         }
     }
-    const confirm = async () => {
-        if(payload.value.id){
-            let response = await useMethod("delete","delete-price-groups",payload.value,"",payload.value.id);
-            if(response){
-                confirmation.value = false;
-                useSnackbar(true,"green",response.msg);
-                loadItems();
-                closeItemPriceGroupForm();
-                payload.value = Object.assign({});
-                isloading.value = false;
-            }
-        }
-    
-    }
-   const closeconfirmation = () => {
-    confirmation.value = false;
+
 }
-    const onDelete = (item) => {
-        payload.value = Object.assign({});
-        payload.value = Object.assign({},item);
-        confirmation.value = true;
-    }
-    const closeDialog = () => {
-        emits('close-dialog')
-    }
+const closeconfirmation = () => {
+confirmation.value = false;
+}
+const onDelete = (item) => {
+    payload.value = Object.assign({});
+    payload.value = Object.assign({},item);
+    confirmation.value = true;
+}
+const closeDialog = () => {
+    emits('close-dialog')
+}
 </script>
 
 <style scoped>
