@@ -1,39 +1,55 @@
 <template>
-    <v-dialog :model-value="show" rounded="lg" persistent scrollable max-width="700px">
-        <v-toolbar density="compact" color="#6984ff" hide-details>
-            <v-toolbar-title>Generic Names</v-toolbar-title>
-            <v-spacer></v-spacer>
-            <v-btn color="white" @click="closeDialog">
-                <v-icon>mdi-close</v-icon>
-            </v-btn>
-        </v-toolbar>
-        <v-card>
-            <v-card-title>
+    <v-dialog :model-value="show" rounded="lg" persistent scrollable max-width="750px">
+        <v-card rounded="lg">
+            <v-toolbar density="compact" color="#6984ff" hide-details>
+                <v-toolbar-title>Generic Names</v-toolbar-title>
                 <v-spacer></v-spacer>
+                <v-btn color="white" @click="closeDialog">
+                    <v-icon>mdi-close</v-icon>
+                </v-btn>
+            </v-toolbar>
+            <v-card-text>
                 <v-text-field
                     label="Search by Description"
-                    rounded
-                    hide-details
                     density="compact"
                     variant="outlined"
                     prepend-inner-icon="mdi-magnify"
+                    v-model="data.keyword"
+                    @keyup.enter="search"
                 >
                 </v-text-field>
-            </v-card-title>
-            <v-card-text>
-                <v-data-table density="compact" height="60vh" :headers="headers" :items="data" hide-details>
-                    <template v-slot:item="{ item }">
-                        <tr>
-                            <td><v-checkbox v-model="item.systemDefault" density="compact" hide-details/></td>
-                            <td>{{ item.description }}</td>
-                            <td>
-                                <v-icon color="green mr-3" @click="onEdit">mdi-pencil</v-icon>
-                                <v-icon color="red" @click="onDelete">mdi-trash-can</v-icon>
-                            </td>
-                        </tr>
+                <v-divider></v-divider>
+                <v-data-table-server 
+                    class="animated animatedFadeInUp fadeInUp"
+                     v-model:items-per-page="itemsPerPage"
+                    :headers="headers"
+                    :items="serverItems"
+                    :items-length="totalItems"
+                    :loading="data.loading"
+                    item-value="id"
+                    @update:options="initialize"
+                    show-select
+                    select-strategy="single"
+                    fixed-header
+                    density="compact" 
+                    height="60vh"
+                    >
+                    <template
+                        v-for="(head, index) of headers"  v-slot:[`item.${head.value}`]="props" >
+                        <td class="test" :props="props" :key="index">
+                        <slot :name="head.value" :item="props.item">
+                            {{ props.item[head.value] || "..." }}
+                        </slot>
+                        </td>
                     </template>
-                    <template #bottom></template>
-                </v-data-table>
+                    <template v-slot:item.isactive="{ item }">
+                        {{ item.isactive == 1 ? "Active" : "In-active" }}
+                    </template>
+                    <template v-slot:item.actions="{ item }">
+                        <v-icon color="green mr-3" @click="onEdit(item)">mdi-pencil</v-icon>
+                        <v-icon color="red" @click="onDelete(item)">mdi-trash-can</v-icon>
+                    </template>
+                </v-data-table-server>
             </v-card-text>
             <v-divider></v-divider>
             <v-card-actions>
@@ -57,59 +73,115 @@ const props = defineProps({
     },
 })
 
-const emits = defineEmits(['close-dialog'])
-
+const confirmation = ref(false);
+const emits = defineEmits()
+const payload = ref({});
+const isloading = ref(false);
 const open_generic_names_form = ref(false)
-
 const headers = [
     {
-        title: "System Default", 
-        align: "start",
-        sortable: true,
-        width: "25%",
-    },
-    {
-        title: "Description",
-        align: "start",
+        title: 'code',
+        align: 'start',
         sortable: false,
-        width: "60%",
+        key: 'generic_id',
     },
-    {
-        title: "Actions",
-        align: "start",
-        sortable: false,
-    },
+    { title: 'Description', key: 'generic_names', align: 'start',width:"50%" },
+    { title: 'Key', key: 'generic_key', align: 'start',width:"20%" },
+    { title: '', key: 'actions', align: 'start' },
 ];
-
-const data = [
-    { systemDefault: true, description: 'Description1' },
-    { systemDefault: false, description: 'Description2' },
-    { systemDefault: true, description: 'Description3' },
-];
+const data = ref({
+    title: "List of Unit",
+    keyword: "",
+    loading: false,
+    filter: {},
+    tab: 0,
+    param_tab: 1,
+});
+const itemsPerPage = ref(10);
+const totalItems = ref(0);
+const serverItems = ref([]);
+const initialize =  ({ page, itemsPerPage, sortBy }) => {
+loadItems(page,itemsPerPage,sortBy) 
+}
+const loadItems = async(page = null,itemsPerPage = null,sortBy = null)=>{
+    data.value.loading = true;
+    let pageno = page || 1;
+    let itemPerpageno = itemsPerPage || 10;
+    let params = "page=" +pageno + "&per_page=" + itemPerpageno + "&keyword=" + data.value.keyword;
+    const response = await useMethod("get","get-generic-name?","",params);
+    if(response){
+        serverItems.value = response.data;
+        totalItems.value = response.total;
+        data.value.loading = false;
+    }
+}
+const search = ()=>{
+    loadItems();
+}
 
 const openGenericNamesForm = () => {
+    payload.value = Object.assign({});
     open_generic_names_form.value = true;
 }
 
 const closeGenericNamesForm = () => {
+    payload.value = Object.assign({});
     open_generic_names_form.value = false;
 }
 
-const onEdit = () => {
-    alert("Edit")
+const onEdit = (item) => {
+    openItemPriceGroupForm();
+    payload.value = Object.assign({});
+    payload.value = Object.assign({},item);
+    payload.value.isactive = item.isactive ? true:false;
 }
 
-const onDelete = () => {
-    alert("Delete")
-}
 
-const onSubmit = () => {
-    alert('Submitted')
-}
 
+const onSubmit = async (payload) => {
+    let response;
+    isloading.value = true;
+    if(payload.id){
+        response = await useMethod("put","update-generic-name",payload,"",payload.id);
+    }else{
+        response = await useMethod("post","create-generic-name",payload);
+    }
+    if(response){
+        useSnackbar(true,"green",response.msg);
+        loadItems();
+        closeGenericNamesForm();
+        payload.value = Object.assign({});
+        isloading.value = false;
+    }
+}
+const confirm = async () => {
+    if(payload.value.id){
+        let response = await useMethod("delete","delete-generic-name",payload.value,"",payload.value.id);
+        if(response){
+            confirmation.value = false;
+            useSnackbar(true,"green",response.msg);
+            loadItems();
+            closeGenericNamesForm();
+            payload.value = Object.assign({});
+            isloading.value = false;
+        }
+    }
+
+}
+const closeconfirmation = () => {
+confirmation.value = false;
+}
+const onDelete = (item) => {
+    payload.value = Object.assign({});
+    payload.value = Object.assign({},item);
+    confirmation.value = true;
+}
 const closeDialog = () => {
     emits('close-dialog')
 }
+
+
+
 </script>
 
 <style scoped>
