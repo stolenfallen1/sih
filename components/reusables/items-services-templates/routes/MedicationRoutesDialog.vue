@@ -22,7 +22,7 @@
                 <v-divider></v-divider>
                 <v-data-table-server 
                     class="animated animatedFadeInUp fadeInUp"
-                     v-model:items-per-page="itemsPerPage"
+                    v-model:items-per-page="itemsPerPage"
                     :headers="headers"
                     :items="serverItems"
                     :items-length="totalItems"
