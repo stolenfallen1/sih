@@ -57,7 +57,7 @@
             <v-card-actions>
                 <v-btn color="blue-darken-1" @click="closeDialog"> Close </v-btn>
                 <v-spacer></v-spacer>
-                <v-btn class="bg-primary text-white" type="submit" @click="openDepartmentGroupsForm">Add</v-btn>
+                <v-btn class="bg-primary text-white" @click="openDepartmentGroupsForm">Add</v-btn>
             </v-card-actions>
         </v-card>
     </v-dialog>
