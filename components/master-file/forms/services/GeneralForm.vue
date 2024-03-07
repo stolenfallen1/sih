@@ -2,7 +2,7 @@
     <v-col cols="12">
         <v-row>
             <v-col lg="6">
-                <v-card elevation="2">
+                <v-card elevation="4">
                     <v-card-text>
                         <v-row>
                             <v-col lg="6">
@@ -61,7 +61,7 @@
                                 <v-text-field
                                     label="Manufacturer Barcode ID"
                                     type="text"
-                                    disabled
+                                    readonly
                                     density="compact"
                                     variant="outlined"
                                 ></v-text-field>
@@ -76,7 +76,7 @@
                             </v-col>
                             <v-col lg="6">
                                 <v-select
-                                    disabled
+                                    readonly
                                     :items="['Industry 1', 'Industry 2', 'Industry 3']"
                                     variant="outlined"
                                     density="compact"
@@ -97,7 +97,7 @@
                             <!-- Default here is: Examinations / Procedures -->
                             <v-col lg="4">
                                 <v-select
-                                    disabled
+                                    readonly
                                     label="Item Group"
                                     :items="['Examinations']" 
                                     variant="outlined"
@@ -119,7 +119,7 @@
                             <!-- Default here is: Not applicable -->
                             <v-col lg="4">
                                 <v-select
-                                    disabled
+                                    readonly
                                     label="Examination Types"
                                     :items="['Not Applicable', 'Applicable']" 
                                     variant="outlined"
@@ -148,7 +148,7 @@
                             <!-- Default here is: Not applicable -->
                             <v-col lg="4">
                                 <v-select
-                                    disabled
+                                    readonly
                                     label="Drug Admin Group"
                                     :items="['Not Applicable', 'Applicable']" 
                                     variant="outlined"
@@ -158,7 +158,7 @@
                             <!-- Default here is: None -->
                             <v-col lg="4">
                                 <v-select
-                                    disabled
+                                    readonly
                                     label="Small Unit"
                                     :items="['None']" 
                                     variant="outlined"
@@ -170,7 +170,7 @@
                                 <v-text-field
                                     label="Conversion"
                                     type="number"
-                                    disabled
+                                    readonly
                                     density="compact"
                                     variant="outlined"
                                 ></v-text-field>
@@ -178,7 +178,7 @@
                             <!-- Default here is: None -->
                             <v-col lg="4">
                                 <v-select
-                                    disabled
+                                    readonly
                                     label="Big Unit"
                                     :items="['None']" 
                                     variant="outlined"
@@ -190,7 +190,7 @@
                 </v-card>
             </v-col>
             <v-col lg="6">
-                <v-card elevation="2">
+                <v-card elevation="4">
                     <v-card-text>
                         <v-row>
                             <v-col lg="4">
@@ -250,14 +250,14 @@
                                         color="#117dad"
                                     ></v-checkbox>
                                     <v-text-field
-                                        disabled
+                                        readonly
                                         label="Minimum Price"
                                         type="number"
                                         density="compact"
                                         variant="outlined"
                                     ></v-text-field>
                                     <v-text-field
-                                        disabled
+                                        readonly
                                         label="Maximum Price"
                                         type="number"
                                         density="compact"
@@ -274,7 +274,7 @@
                                         color="#117dad"
                                     ></v-checkbox>
                                     <v-text-field
-                                        disabled
+                                        readonly
                                         type="number"
                                         density="compact"
                                         variant="outlined"
@@ -284,7 +284,7 @@
                         </v-row>
                     </v-card-text>
                 </v-card>
-                <v-card elevation="2" class="mt-4">
+                <v-card elevation="4" class="mt-4">
                     <v-card-text>
                         <v-list-subheader inset>
                             Senior Citizen Reference Price Discount
@@ -319,7 +319,7 @@
                         </v-col>
                     </v-card-text>
                 </v-card>
-                <v-card elevation="2" class="mt-4">
+                <v-card elevation="4" class="mt-4">
                     <v-card-text>
                         <v-list-subheader inset>
                             Bills of Materials
@@ -349,7 +349,7 @@
                                 </v-col>
                                 <v-col lg="6">
                                     <v-text-field
-                                        disabled
+                                        readonly
                                         label="Bills of Materials Amount"
                                         type="number"
                                         density="compact"
@@ -360,7 +360,7 @@
                         </v-col>
                     </v-card-text>
                 </v-card>
-                <v-card elevation="2" class="mt-4">
+                <v-card elevation="4" class="mt-4">
                     <v-card-text>
                         <v-list-subheader inset>
                             Rebates Specification

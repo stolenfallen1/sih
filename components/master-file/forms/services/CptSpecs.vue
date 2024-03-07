@@ -1,6 +1,6 @@
 <template>
     <v-col cols="12">
-        <v-card class="px-4" elevation="2">
+        <v-card class="px-4" elevation="4">
             <v-list-subheader inset>
                 CPT Information
             </v-list-subheader>
@@ -59,7 +59,7 @@
                 </v-row>
             </v-card-text>
         </v-card>
-        <v-card class="mt-4" elevation="2">
+        <v-card class="mt-4" elevation="4">
             <v-row>
                 <v-col lg="12">
                     <v-card-title class="text-center">Modifiers</v-card-title>

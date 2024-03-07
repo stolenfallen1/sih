@@ -1,5 +1,5 @@
 <template>
-    <v-card class="mb-2" elevation="2">
+    <v-card class="mb-2" elevation="4">
         <v-card-actions>
             <v-spacer></v-spacer>
             <v-btn
@@ -45,7 +45,7 @@
             >
         </v-card-actions>
     </v-card>
-    <v-card class="mb-2" elevation="2">
+    <v-card class="mb-2" elevation="4">
         <ReusableTable
             :items-per-page="itemsPerPage"
             :serverItems="serverItems"
@@ -134,6 +134,10 @@
         :show="DepartmentGroups"
         @close-dialog="closeDepartmentGroups"
     />
+    <DepartmentWarehousesDialog 
+        :show="DepartmentWarehouses"
+        @close-dialog="closeDepartmentWarehouses"
+    />
     <DosageDialog 
         :show="Dosages"
         @close-dialog="closeDosages"
@@ -158,6 +162,10 @@
         :show="Indications"
         @close-dialog="closeIndications"
     />
+    <ItemCategoriesDialog
+        :show="ItemCategories"
+        @close-dialog="closeItemCategories"
+    />
     <ItemPriceGroupsDialog 
         :show="ItemPriceGroups"
         @close-dialog="closeItemPriceGroups"
@@ -165,6 +173,10 @@
     <ItemPricingSchemeDialog 
         :show="ItemPricingSchemes"
         @close-dialog="closeItemPricingSchemes"
+    />
+    <ItemTemplatesDialog 
+        :show="ItemTemplates"
+        @close-dialog="closeItemTemplates"
     />
     <ItemUnitsDialog 
         :show="ItemUnits"
@@ -252,17 +264,17 @@ import CptModifierDialog from "~/components/reusables/items-services-templates/c
 import CptSectionDialog from "~/components/reusables/items-services-templates/cpt-sections/CptSectionDialog.vue";
 import CptSubSectionDialog from "~/components/reusables/items-services-templates/cpt-sub-sections/CptSubSectionDialog.vue";
 import DepartmentGroupDialog from "~/components/reusables/items-services-templates/department-groups/DepartmentGroupDialog.vue";
-// Department. Warehouses
+import DepartmentWarehousesDialog from "~/components/reusables/items-services-templates/department-warehouses/DepartmentWarehousesDialog.vue";
 import DosageDialog from "~/components/reusables/items-services-templates/dosages/DosageDialog.vue";
 import DrugAdminGroupDialog from "~/components/reusables/items-services-templates/drug-admin-group/DrugAdminGroupDialog.vue";
 import DohDrugListDialog from "~/components/reusables/items-services-templates/doh-drug-list/DohDrugListDialog.vue";
 import DxMedicalPackagesDialog from "~/components/reusables/items-services-templates/dx-medical-packages/DxMedicalPackagesDialog.vue";
 import GenericNameDialog from "~/components/reusables/items-services-templates/generic-names/GenericNameDialog.vue";
 import IndicationDialog from "~/components/reusables/items-services-templates/indications/IndicationDialog.vue";
-// Item Categories
+import ItemCategoriesDialog from "~/components/reusables/items-services-templates/item-categories/ItemCategoriesDialog.vue";
 import ItemPriceGroupsDialog from "~/components/reusables/items-services-templates/item-price-groups/ItemPriceGroupsDialog.vue";
 import ItemPricingSchemeDialog from "~/components/reusables/items-services-templates/item-pricing-schemes/ItemPricingSchemesDialog.vue";
-// Item Templates
+import ItemTemplatesDialog from "~/components/reusables/items-services-templates/item-templates/ItemTemplatesDialog.vue";
 import ItemUnitsDialog from "~/components/reusables/items-services-templates/item-units/ItemUnitsDialog.vue";
 import MedicationDurationsDialog from "~/components/reusables/items-services-templates/medication-durations/MedicationDurationsDialog.vue";
 import MedicationFrequenciesDialog from "~/components/reusables/items-services-templates/medication-frequencies/MedicationFrequenciesDialog.vue";
@@ -658,6 +670,9 @@ const closeCptSubSections = () => {
 const closeDepartmentGroups = () => {
     DepartmentGroups.value = false;
 };
+const closeDepartmentWarehouses = () => {
+    DepartmentWarehouses.value = false;
+}
 const closeDosages = () => {
     Dosages.value = false;
 };
@@ -676,12 +691,18 @@ const closeGenericNames = () => {
 const closeIndications = () => {
     Indications.value = false;
 };
+const closeItemCategories = () => {
+    ItemCategories.value = false;
+}
 const closeItemPriceGroups = () => {
     ItemPriceGroups.value = false;
 };
 const closeItemPricingSchemes = () => {
     ItemPricingSchemes.value = false;
 };
+const closeItemTemplates = () => {
+    ItemTemplates.value = false;
+}
 const closeItemUnits = () => {
     ItemUnits.value = false;
 };

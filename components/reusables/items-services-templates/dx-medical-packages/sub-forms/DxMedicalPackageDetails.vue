@@ -9,7 +9,7 @@
                   <v-row>
                       <v-col cols="4">
                           <v-text-field
-                              disabled
+                              readonly
                               variant="outlined"
                               hide-details
                               label="Code"
@@ -20,7 +20,7 @@
                         <v-autocomplete
                           v-model="branch"
                           :items="branch"
-                          disabled
+                          readonly
                           hide-details
                           clearable
                           density="compact"
@@ -37,7 +37,7 @@
                       </v-col>
                       <v-col cols="4">
                           <v-text-field
-                              disabled
+                              readonly
                               variant="outlined"
                               hide-details
                               label="Amount"
@@ -53,7 +53,7 @@
                           ></v-checkbox>
                       </v-col>
                   </v-row>
-                  <v-card class="mt-6" elevation="2">
+                  <v-card class="mt-6" elevation="4">
                     <v-toolbar>
                       <v-toolbar-title style="font-size: medium; text-align: center;">Medical Package Details</v-toolbar-title>
                     </v-toolbar>
@@ -88,7 +88,7 @@
           </v-card-actions>
       </v-card>
   </v-dialog>
-  <dx-medical-item-selection :open_medical_item_selection="open_medical_item_selection" @close-dialog="closeMedicalItemSelection" />
+  <dx-medical-item-selection :open_medical_item_selection="open_medical_item_selection" @close-dialog="closeMedicalItemSelection" @handle-submit="submitSelectedItem" />
 </template>
 
 <script setup>
@@ -147,6 +147,10 @@ const openMedicalItemSelection = () => {
 
 const closeMedicalItemSelection = () => {
   open_medical_item_selection.value = false
+}
+
+const submitSelectedItem = () => {
+  alert("Save the selected item")
 }
 
 const handleSubmit = () => {
