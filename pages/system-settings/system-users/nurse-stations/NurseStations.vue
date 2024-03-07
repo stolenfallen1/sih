@@ -39,7 +39,7 @@
                             <v-window v-model="tab">
                                     
                                 <v-window-item v-for="(building, sectionIndex) in buildings" :key="sectionIndex" :value="index" class="pa-1">
-                                    <v-expansion-panels v-model="panel"  :disabled="disabled" multiple>
+                                    <v-expansion-panels v-model="panel"  :disabled="readonly" multiple>
                                             <v-expansion-panel  class="mb-1" v-for="(floor, floorIndex) in building.floors" :key="floorIndex" >
                                                 <v-expansion-panel-title >Floor: {{floor.description}} ({{floor.stations.length}} items)</v-expansion-panel-title>
                                                 <v-expansion-panel-text class="pa-0">

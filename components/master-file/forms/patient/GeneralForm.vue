@@ -15,7 +15,7 @@
               label="Patient No"
               type="text"
               v-model="form_payload.patient_id"
-              disabled
+              readonly
               hide-details
               density="compact"
               variant="outlined"

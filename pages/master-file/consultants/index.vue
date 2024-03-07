@@ -1,5 +1,5 @@
 <template>
-  <v-card class="mb-2" elevation="2">
+  <v-card class="mb-2" elevation="4">
     <v-card-actions>
       <v-spacer></v-spacer>
       <v-btn
@@ -44,7 +44,7 @@
       >
     </v-card-actions>
   </v-card>
-  <v-card class="mb-2" elevation="2">
+  <v-card class="mb-2" elevation="4">
     <ReusableTable
       :items-per-page="10"
       :serverItems="doctorlist"
