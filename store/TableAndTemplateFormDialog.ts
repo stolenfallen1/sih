@@ -29,8 +29,16 @@ export const TableAndTemplateFormDialog = defineStore('TableAndTemplateFormDialo
     UnitOfMeasures: false,
     Modalities: false,
     Specimens: false,
-    BillingReportCategoryDialog:false,
 
+    // This states are for Rooms and Beds 
+    BuildingsFloors: false,
+    NursingStationsWards: false,
+    RoomClassificationTypes: false,
+    RoomChargeSettings: false,
+    RoomPriceSchemes: false,
+    RoomStatus: false,
+    RoomUsageTypes: false,
+    BedStatus: false,
     
     // This states are for system users 
     ModuleDialog:false,
