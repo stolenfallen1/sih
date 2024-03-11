@@ -1,6 +1,6 @@
 export const TableAndTemplateFormDialog = defineStore('TableAndTemplateFormDialog',{
   state: () => ({
-    // This states are for Items and Supplies & Services
+    // This states are for Items and Supplies & Services ( master-file )
     BillingReportCategory: false,
     CollectionReportMainHeader: false,
     CollectionReportGroupHeader: false,
@@ -30,7 +30,7 @@ export const TableAndTemplateFormDialog = defineStore('TableAndTemplateFormDialo
     Modalities: false,
     Specimens: false,
 
-    // This states are for Rooms and Beds 
+    // This states are for Rooms and Beds ( master-file )
     BuildingsFloors: false,
     NursingStationsWards: false,
     RoomClassificationTypes: false,
@@ -39,6 +39,15 @@ export const TableAndTemplateFormDialog = defineStore('TableAndTemplateFormDialo
     RoomStatus: false,
     RoomUsageTypes: false,
     BedStatus: false,
+
+    // This states are for Consultants ( master-file )
+    ConsultantSpecializations: false,
+    MedicalServiceTypes: false,
+    MedicalSubServiceTypes: false,
+    ConsultantRoleTypes: false,
+    DoctorsDepartment: false,
+    DoctorsCategory: false,
+    DoctorsRebateCategory: false,
     
     // This states are for system users 
     ModuleDialog:false,
