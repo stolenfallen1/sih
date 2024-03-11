@@ -20,7 +20,12 @@ export default defineNuxtConfig({
     transpile: ["vuetify"],
   },
   imports:{
-    dirs:['store',"composables/build","composables/address"]
+    dirs: [
+      'store', 
+      'store/table-templates/master-file', 
+      "composables/build",
+      "composables/address"
+    ]
   },
   modules: [
     "@pinia/nuxt",

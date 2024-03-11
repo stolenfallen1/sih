@@ -159,7 +159,7 @@ const {
   DoctorsDepartment,
   DoctorsCategory,
   DoctorsRebateCategory
-} = storeToRefs(TableAndTemplateFormDialog());
+} = storeToRefs(ConsultantsTemplateDialog());
 // Table and templates component
 import ConsultantSpecializationsDialog from "~/components/reusables/consultants-templates/consultant-specializations/ConsultantSpecializationsDialog.vue";
 import MedicalServiceTypesDialog from "~/components/reusables/consultants-templates/medical-service-types/MedicalServiceTypesDialog.vue";
