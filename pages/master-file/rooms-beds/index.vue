@@ -147,7 +147,7 @@ const {
   RoomStatus,
   RoomUsageTypes,
   BedStatus
-} = storeToRefs(TableAndTemplateFormDialog());
+} = storeToRefs(RoomsBedsTemplateDialog());
 // Table and templates component
 import BuildingsFloorsDialog from "~/components/reusables/rooms-beds-templates/buildings-floors/BuildingsFloorsDialog.vue";
 import NursingStationsWardsDialog from "~/components/reusables/rooms-beds-templates/nursing-stations-wards/NursingStationsWardsDialog.vue";
