@@ -119,6 +119,26 @@
     :show="MedicalServiceTypes"
     @close-dialog="closeMedicalServiceTypes"
   />
+  <MedicalSubServiceTypesDialog 
+    :show="MedicalSubServiceTypes"
+    @close-dialog="closeMedicalSubServiceTypes"
+  />
+  <ConsultantRoleTypesDialog 
+    :show="ConsultantRoleTypes"
+    @close-dialog="closeConsultantRoleTypes"
+  />
+  <DoctorsDepartmentDialog 
+    :show="DoctorsDepartment"
+    @close-dialog="closeDoctorsDepartment"
+  />
+  <DoctorsCategoryDialog 
+    :show="DoctorsCategory"
+    @close-dialog="closeDoctorsCategory"
+  />
+  <DoctorsRebateCategoryDialog 
+    :show="DoctorsRebateCategory"
+    @close-dialog="closeDoctorsRebateCategory"
+  />
 </template>
 
 <script setup>
@@ -143,6 +163,11 @@ const {
 // Table and templates component
 import ConsultantSpecializationsDialog from "~/components/reusables/consultants-templates/consultant-specializations/ConsultantSpecializationsDialog.vue";
 import MedicalServiceTypesDialog from "~/components/reusables/consultants-templates/medical-service-types/MedicalServiceTypesDialog.vue";
+import MedicalSubServiceTypesDialog from "~/components/reusables/consultants-templates/medical-sub-service-types/MedicalSubServiceTypesDialog.vue";
+import ConsultantRoleTypesDialog from "~/components/reusables/consultants-templates/consultant-role-types/ConsultantRoleTypesDialog.vue";
+import DoctorsDepartmentDialog from "~/components/reusables/consultants-templates/doctors-department/DoctorsDepartmentDialog.vue";
+import DoctorsCategoryDialog from "~/components/reusables/consultants-templates/doctors-category/DoctorsCategoryDialog.vue";
+import DoctorsRebateCategoryDialog from "~/components/reusables/consultants-templates/doctors-rebate-category/DoctorsRebateCategoryDialog.vue";
 
 definePageMeta({
   layout: "root-layout",
@@ -467,6 +492,21 @@ const closeConsultantSpecializations = () => {
 }
 const closeMedicalServiceTypes = () => {
   MedicalServiceTypes.value = false;
+}
+const closeMedicalSubServiceTypes = () => {
+  MedicalSubServiceTypes.value = false;
+}
+const closeConsultantRoleTypes = () => {
+  ConsultantRoleTypes.value = false;
+}
+const closeDoctorsDepartment = () => {
+  DoctorsDepartment.value = false;
+}
+const closeDoctorsCategory= () => {
+  DoctorsCategory.value = false;
+}
+const closeDoctorsRebateCategory = () => {
+  DoctorsRebateCategory.value = false;
 }
 
 onMounted(() => {});
