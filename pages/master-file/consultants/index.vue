@@ -110,6 +110,15 @@
     @submit="submitDoctorsForm"
   />
   </v-card>
+
+  <ConsultantSpecializationsDialog 
+    :show="ConsultantSpecializations" 
+    @close-dialog="closeConsultantSpecializations" 
+  />
+  <MedicalServiceTypesDialog 
+    :show="MedicalServiceTypes"
+    @close-dialog="closeMedicalServiceTypes"
+  />
 </template>
 
 <script setup>
@@ -121,6 +130,20 @@ let userdetails = JSON.parse(nuxtStorage.localStorage.getData("user_details"));
 // import { storeToRefs } from "pinia";
 // import { useSnackBarStore } from "~/store/SnackBar";
 // const { setSnackbar } = useSnackBarStore();
+// Table and templates store
+const {
+  ConsultantSpecializations,
+  MedicalServiceTypes,
+  MedicalSubServiceTypes,
+  ConsultantRoleTypes,
+  DoctorsDepartment,
+  DoctorsCategory,
+  DoctorsRebateCategory
+} = storeToRefs(TableAndTemplateFormDialog());
+// Table and templates component
+import ConsultantSpecializationsDialog from "~/components/reusables/consultants-templates/consultant-specializations/ConsultantSpecializationsDialog.vue";
+import MedicalServiceTypesDialog from "~/components/reusables/consultants-templates/medical-service-types/MedicalServiceTypesDialog.vue";
+
 definePageMeta({
   layout: "root-layout",
 });
@@ -437,6 +460,14 @@ const submitDoctorsForm = async (details) => {
     }, 3000);
   }
 };
+
+// Table and Dialogs Methods
+const closeConsultantSpecializations = () => {
+  ConsultantSpecializations.value = false;
+}
+const closeMedicalServiceTypes = () => {
+  MedicalServiceTypes.value = false;
+}
 
 onMounted(() => {});
 </script>

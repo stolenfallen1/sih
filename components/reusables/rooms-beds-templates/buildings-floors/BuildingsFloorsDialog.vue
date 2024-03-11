@@ -1,13 +1,13 @@
 <template>
-    <v-dialog :model-value="show" persistent hide-overlay width="800" scrollable>
-        <v-toolbar density="compact" color="#6984ff" hide-details>
-            <v-toolbar-title>Buildings and Floor Management</v-toolbar-title>
-            <v-spacer></v-spacer>
-            <v-btn color="white" @click="closeDialog">
-                <v-icon>mdi-close</v-icon>
-            </v-btn>
-        </v-toolbar>
-        <v-card>
+    <v-dialog :model-value="show" rounded="lg" persistent hide-overlay width="800" scrollable>
+        <v-card rounded="lg">
+            <v-toolbar density="compact" color="#6984ff" hide-details>
+                <v-toolbar-title>Buildings and Floor Management</v-toolbar-title>
+                <v-spacer></v-spacer>
+                <v-btn color="white" @click="closeDialog">
+                    <v-icon>mdi-close</v-icon>
+                </v-btn>
+            </v-toolbar>
             <v-card-text>
                 <v-container>
                     <v-row>
@@ -53,7 +53,7 @@
                                         <v-spacer></v-spacer>
                                         <v-btn class="bg-primary text-white" type="submit" density="compact" @click="openFormDialog('floor')">Add New</v-btn>
                                     </v-card-actions>
-                                    <v-table>
+                                    <v-table hide-details density="compact">
                                         <thead>
                                             <tr>
                                                 <th>Code</th>
