@@ -88,12 +88,38 @@
     @close-dialog="closeFormContainer"
   />
 
-
-  <v-dialog persistent v-model="BillingReportCategoryDialog">
-    <v-card @click="BillingReportCategoryDialog = false">test</v-card>
-    
-  </v-dialog>
-
+  <DiscountSchemesDialog 
+    :show="DiscountSchemes"
+    @close-dialog="closeDiscountSchemes"
+  />
+  <MedicalServiceTypesDialog 
+    :show="MedicalServiceTypes"
+    @close-dialog="closeMedicalServiceTypes"
+  />
+  <MedicalSubServiceTypesDialog 
+    :show="MedicalSubServiceTypes"
+    @close-dialog="closeMedicalSubServiceTypes"
+  />
+  <PriceSchemesDialog 
+    :show="PriceSchemes"
+    @close-dialog="closePriceSchemes"
+  />
+  <PriceGroupDialog 
+    :show="PriceGroup"
+    @close-dialog="closePriceGroup"
+  />
+  <DocumentCategoriesDialog 
+    :show="DocumentCategories"
+    @close-dialog="closeDocumentCategories"
+  />
+  <PatientAddInfoDialog 
+    :show="PatientAddtionalInformation"
+    @close-dialog="closePatientAddtionalInformation"
+  />
+  <BadHabitsDialog 
+    :show="BadHabits"
+    @close-dialog="closeBadHabits"
+  />
 
 </template>
 
@@ -101,17 +127,39 @@
 import ReusableTable from "~/components/reusables/ReusableTable.vue";
 import CentralLookUpForm from "~/components/reusables/CentralLookUpForm.vue";
 import FormContainer from "~/components/master-file/forms/patient/FormContainer.vue";
+// Table and templates store 
+const { 
+  DiscountSchemes,
+  MedicalServiceTypes,
+  MedicalSubServiceTypes,
+  PriceSchemes,
+  PriceGroup,
+  DocumentCategories,
+  PatientAddtionalInformation,
+  BadHabits,
+  IdTypes,
+  Authorities,
+  EmploymentInformationPositions,
+  EmployerName,
+  OtherSpecialist,
+  Facilities,
+  LoaDepartment,
+  MilitaryClassification,
+} = storeToRefs(PatientsTemplateDialog())
+// Table and templates component
+import DiscountSchemesDialog from "~/components/reusables/patients-templates/discount-schemes/DiscountSchemesDialog.vue";
+import MedicalServiceTypesDialog from "~/components/reusables/patients-templates/medical-service-types/MedicalServiceTypesDialog.vue";
+import MedicalSubServiceTypesDialog from "~/components/reusables/patients-templates/medical-sub-service-types/MedicalSubServiceTypesDialog.vue";
+import PriceSchemesDialog from "~/components/reusables/patients-templates/price-schemes/PriceSchemesDialog.vue";
+import PriceGroupDialog from "~/components/reusables/patients-templates/price-group/PriceGroupDialog.vue";
+import DocumentCategoriesDialog from "~/components/reusables/patients-templates/document-categories/DocumentCategoriesDialog.vue";
+import PatientAddInfoDialog from "~/components/reusables/patients-templates/patient-add-info/PatientAddInfoDialog.vue";
+import BadHabitsDialog from "~/components/reusables/patients-templates/bad-habits/BadHabitsDialog.vue";
+
 
 definePageMeta({
   layout: "root-layout",
 });
-
-// import TableAndTemplateFormDialog state 
-const { 
-  BillingReportCategoryDialog,
-  BillingReportCategoryDialog1 
-} = storeToRefs(TableAndTemplateFormDialog());
-
 
 const central_form_dialog = ref(false);
 const form_dialog = ref(false);
@@ -346,6 +394,33 @@ const updateTotalItems = (newTotalItems) => {
 const updateServerItems = (newServerItems) => {
   serverItems.value = newServerItems;
 };
+
+// Tables and template methods
+const closeDiscountSchemes = () => {
+  DiscountSchemes.value = false;
+}
+const closeMedicalServiceTypes = () => {
+  MedicalServiceTypes.value = false;
+}
+const closeMedicalSubServiceTypes = () => {
+  MedicalSubServiceTypes.value = false;
+}
+const closePriceSchemes = () => {
+  PriceSchemes.value = false;
+}
+const closePriceGroup = () => {
+  PriceGroup.value = false;
+}
+const closeDocumentCategories = () => {
+  DocumentCategories.value = false;
+}
+const closePatientAddtionalInformation = () => {
+  PatientAddtionalInformation.value = false;
+}
+const closeBadHabits = () => {
+  BadHabits.value = false;
+}
+
 </script>
 
 <style scoped></style>

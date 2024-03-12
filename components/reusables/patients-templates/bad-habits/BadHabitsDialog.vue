@@ -1,9 +1,9 @@
 <template>
-  <v-dialog :model-value="show" rounded="lg" persistent scrollable max-width="825px">
+  <v-dialog :model-value="show" rounded="lg" persistent scrollable max-width="700px">
 
       <v-card rounded="lg">
           <v-toolbar density="compact" color="#6984ff" hide-details>
-              <v-toolbar-title>Medical Sub-Service Types</v-toolbar-title>
+              <v-toolbar-title>Bad Habits</v-toolbar-title>
               <v-spacer></v-spacer>
               <v-btn color="white" @click="closeDialog">
                   <v-icon>mdi-close</v-icon>
@@ -11,28 +11,15 @@
           </v-toolbar>
           <v-divider></v-divider>
           <v-card-text>
-              <v-row>
-                <v-col cols="5">
-                  <v-text-field
-                      label="Search by Description"
-                      density="compact"
-                      variant="outlined"
-                      prepend-inner-icon="mdi-magnify"
-                      v-model="data.keyword"
-                      @keyup.enter="search"
-                  ></v-text-field>
-                </v-col>  
-                <v-col cols="7">
-                  <v-autocomplete
-                    label="Service Types"
-                    hide-details
-                    :items="service_types"
-                    clearable
-                    density="compact"
-                    variant="outlined"
-                  ></v-autocomplete>
-                </v-col>  
-              </v-row>
+              <v-text-field
+                  label="Search by Description"
+                  density="compact"
+                  variant="outlined"
+                  prepend-inner-icon="mdi-magnify"
+                  v-model="data.keyword"
+                  @keyup.enter="search"
+              >
+              </v-text-field>
               <v-divider></v-divider>
               <v-data-table-server 
                   class="animated animatedFadeInUp fadeInUp"
@@ -74,12 +61,12 @@
           </v-card-actions>
       </v-card>
   </v-dialog>
-  <medical-sub-service-types-form :open_form_dialog="open_form_dialog" @close-dialog="closeFormDialog" @handle-submit="onSubmit" />
+  <bad-habits-form :open_form_dialog="open_form_dialog" @close-dialog="closeFormDialog" @handle-submit="onSubmit" />
   <deleteConfirmation :show="confirmation" @confirm="confirm" @close="closeconfirmation" />
 </template>
 
 <script setup>
-import MedicalSubServiceTypesForm from './sub-forms/MedicalSubServiceTypesForm.vue';
+import BadHabitsForm from './sub-forms/BadHabitsForm.vue';
 
 const props = defineProps({
   show: {
@@ -93,8 +80,7 @@ const confirmation = ref(false);
 const emits = defineEmits(['close-dialog'])
 const payload = ref({});
 const isloading = ref(false);
-const open_form_dialog = ref(false);
-const service_types = []
+const open_form_dialog = ref(false)
 const headers = [
   {
       title: 'Code',
@@ -102,8 +88,8 @@ const headers = [
       sortable: false,
       key: 'id',
   },
-  { title: 'Description', key: 'description', align: 'start',width:"60%" },
-  { title: 'Is Active', key: 'is_active', align: 'start' },
+  { title: 'Description', key: 'description', align: 'start', width:"60%" },
+  { title: 'Remarks', key: 'remarks', align: 'start',width:"25%" },
   { title: '', key: 'actions', align: 'start' },
 ];
 const data = ref({
@@ -147,13 +133,13 @@ const closeFormDialog = () => {
   open_form_dialog.value = false;
 }
 
-
 const onEdit = (item) => {
-  openMedicalServiceTypeForm();
+  openFormDialog();
   // payload.value = Object.assign({});
   // payload.value = Object.assign({},item);
   // payload.value.isactive = item.isactive == 1 ? true:false;
 }
+
 
 const onSubmit = async (payload) => {
   alert("Submitted");
@@ -167,7 +153,7 @@ const onSubmit = async (payload) => {
 //   if(response){
 //       useSnackbar(true,"green",response.msg);
 //       loadItems();
-//       closeMedicalServiceTypeForm();
+//       closeFormDialog();
 //       payload.value = Object.assign({});
 //       isloading.value = false;
 //   }
@@ -179,7 +165,7 @@ const onSubmit = async (payload) => {
 //           confirmation.value = false;
 //           useSnackbar(true,"green",response.msg);
 //           loadItems();
-//           closeMedicalServiceTypeForm();
+//           closeFormDialog();
 //           payload.value = Object.assign({});
 //           isloading.value = false;
 //       }
