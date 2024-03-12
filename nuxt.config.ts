@@ -4,7 +4,7 @@ export default defineNuxtConfig({
    runtimeConfig: {
     apiSecret:"1234",
     public: {
-      apiBase: "http://10.4.15.12:8000/api"
+      apiBase: "http://10.4.15.15/api"
     },
   },
   app: {

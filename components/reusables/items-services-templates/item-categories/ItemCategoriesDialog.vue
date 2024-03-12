@@ -143,6 +143,7 @@
         </v-card-actions>
     </v-card> -->
   </v-dialog>
+  
   <item-categories-form
     :payload="payload"
     :itemCategories="itemCategories"
