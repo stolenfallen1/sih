@@ -4,7 +4,7 @@ export default defineNuxtConfig({
    runtimeConfig: {
     apiSecret:"1234",
     public: {
-      apiBase: "http://10.4.15.15/api"
+      apiBase: "http://10.4.15.12:8000/api"
     },
   },
   app: {
@@ -20,7 +20,12 @@ export default defineNuxtConfig({
     transpile: ["vuetify"],
   },
   imports:{
-    dirs:['store',"composables/build","composables/address"]
+    dirs: [
+      'store', 
+      'store/table-templates/master-file', 
+      "composables/build",
+      "composables/address"
+    ]
   },
   modules: [
     "@pinia/nuxt",

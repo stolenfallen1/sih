@@ -254,7 +254,7 @@ const {
     UnitOfMeasures, 
     Modalities, 
     Specimens, 
-} = storeToRefs(TableAndTemplateFormDialog());
+} = storeToRefs(ItemServicesSuppliesTemplateDialog());
 // Table and templates component
 import BillingReportCategoryDialog from "~/components/reusables/items-services-templates/billing-report/BillingReportCategoryDialog.vue";
 import CollectionReportMainDialog from "~/components/reusables/items-services-templates/collection-report-main/CollectionReportMainDialog.vue";
