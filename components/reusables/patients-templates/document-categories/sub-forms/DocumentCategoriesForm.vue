@@ -23,6 +23,7 @@
                 hide-details
                 density="compact"
                 variant="outlined"
+                required
               ></v-text-field>
             </v-col>
           </v-row>

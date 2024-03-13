@@ -19,10 +19,11 @@
           <v-row>
             <v-col cols="12">
               <v-text-field
-                label="Department Name"
+                label="Description"
                 hide-details
                 density="compact"
                 variant="outlined"
+                required
               ></v-text-field>
             </v-col>
           </v-row>

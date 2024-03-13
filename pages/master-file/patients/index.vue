@@ -120,6 +120,38 @@
     :show="BadHabits"
     @close-dialog="closeBadHabits"
   />
+  <IdTypesDialog
+    :show="IdTypes"
+    @close-dialog="closeIdTypes"
+  />
+  <AuthoritiesDialog
+    :show="Authorities"
+    @close-dialog="closeAuthorities"
+  />
+  <EmploymentInfoPositionDialog 
+    :show="EmploymentInformationPositions"
+    @close-dialog="closeEmploymentInformationPositions"
+  />
+  <EmployerNameDialog 
+    :show="EmployerName"
+    @close-dialog="closeEmployerName"
+  />
+  <OtherSpecialistDialog 
+    :show="OtherSpecialist"
+    @close-dialog="closeOtherSpecialist"
+  />
+  <FacilitiesDialog 
+    :show="Facilities"
+    @close-dialog="closeFacilities"
+  />
+  <LoaDepartmentDialog 
+    :show="LoaDepartment"
+    @close-dialog="closeLoaDepartment"
+  />
+  <MilitaryClassificationDialog 
+    :show="MilitaryClassification"
+    @close-dialog="closeMilitaryClassification"
+  />
 
 </template>
 
@@ -155,7 +187,14 @@ import PriceGroupDialog from "~/components/reusables/patients-templates/price-gr
 import DocumentCategoriesDialog from "~/components/reusables/patients-templates/document-categories/DocumentCategoriesDialog.vue";
 import PatientAddInfoDialog from "~/components/reusables/patients-templates/patient-add-info/PatientAddInfoDialog.vue";
 import BadHabitsDialog from "~/components/reusables/patients-templates/bad-habits/BadHabitsDialog.vue";
-
+import IdTypesDialog from "~/components/reusables/patients-templates/id-types/IdTypesDialog.vue";
+import AuthoritiesDialog from "~/components/reusables/patients-templates/authorities/AuthoritiesDialog.vue";
+import EmploymentInfoPositionDialog from "~/components/reusables/patients-templates/employment-information-position/EmploymentInfoPositionDialog.vue";
+import EmployerNameDialog from "~/components/reusables/patients-templates/employer-name/EmployerNameDialog.vue";
+import OtherSpecialistDialog from "~/components/reusables/patients-templates/other-specialist/OtherSpecialistDialog.vue";
+import FacilitiesDialog from "~/components/reusables/patients-templates/facilities/FacilitiesDialog.vue";
+import LoaDepartmentDialog from "~/components/reusables/patients-templates/loa-department/LoaDepartmentDialog.vue";
+import MilitaryClassificationDialog from "~/components/reusables/patients-templates/military-classification/MilitaryClassificationDialog.vue";
 
 definePageMeta({
   layout: "root-layout",
@@ -419,6 +458,30 @@ const closePatientAddtionalInformation = () => {
 }
 const closeBadHabits = () => {
   BadHabits.value = false;
+}
+const closeIdTypes = () => {
+  IdTypes.value = false;
+}
+const closeAuthorities = () => {
+  Authorities.value = false
+}
+const closeEmploymentInformationPositions = () => {
+  EmploymentInformationPositions.value = false
+}
+const closeEmployerName = () => {
+  EmployerName.value = false;
+}
+const closeOtherSpecialist = () => {
+  OtherSpecialist.value = false;
+}
+const closeFacilities = () => {
+  Facilities.value = false;
+}
+const closeLoaDepartment = () => {
+  LoaDepartment.value = false;
+}
+const closeMilitaryClassification = () => {
+  MilitaryClassification.value = false;
 }
 
 </script>
