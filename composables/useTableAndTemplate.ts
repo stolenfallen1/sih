@@ -5,6 +5,9 @@ import { PatientsTemplateDialog } from "~/store/table-templates/master-file/Pati
 import { ConsultantsTemplateDialog } from "~/store/table-templates/master-file/ConsultantsTemplateDialog";
 import { RoomsBedsTemplateDialog } from "~/store/table-templates/master-file/RoomsBedsTemplateDialog";
 import { ItemServicesSuppliesTemplateDialog } from "~/store/table-templates/master-file/ItemServicesSuppliesTemplateDialog";
+// Services table and template form dialog imports
+import { OutPatientsTemplateDialog } from "~/store/table-templates/services/OutPatientsTemplateDialog";
+import { InPatientsTemplateDialog } from "~/store/table-templates/services/InPatientsTemplateDialog";
 
 export const useTableAndTemplate = async (dialog:any) => {
     // Master file table template form dialog states
@@ -13,11 +16,19 @@ export const useTableAndTemplate = async (dialog:any) => {
     const { setRoomsBedsDialog } = RoomsBedsTemplateDialog(); // Master file rooms and beds template form dialog state
     const { setItemServicesSuppliesDialog } = ItemServicesSuppliesTemplateDialog(); // Master file items supplies and services template form dialog state
 
+    // Services table template form dialog states
+    const { setOutPatientsDialog } = OutPatientsTemplateDialog()
+    const { setInPatientsDialog } = InPatientsTemplateDialog()
+
     const {setDialog} = TableAndTemplateFormDialog(); // Only system users dialog ang nabilin dre sir cel
 
+    // Master file
     setPatientsDialog(dialog);
     setConsultantsDialog(dialog);
     setRoomsBedsDialog(dialog);
     setItemServicesSuppliesDialog(dialog);
+    // Services
+    setOutPatientsDialog(dialog);
+    setInPatientsDialog(dialog);
     setDialog(dialog); 
 }
