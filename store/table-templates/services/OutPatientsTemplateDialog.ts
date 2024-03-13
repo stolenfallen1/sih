@@ -1,0 +1,41 @@
+export const OutPatientsTemplateDialog = defineStore('OutPatientsTemplateDialog', {
+  state: () => ({
+    AdjustmentTypes: false,
+    Allergies: false,
+    BillingTemplates: false,
+    BillingTemplateGroups: false,
+    CsCaseIndicators: false,
+    DeathTypes: false,
+    DiscountSchemes: false,
+    DispositionTypes: false,
+    ExcellenceCenters: false,
+    ReferringCenters: false,
+    MedicalServiceTypes: false,
+    MedicalSubServiceTypes: false,
+    PriceSchemes: false,
+    HospitalTransactionTypes: false,
+    HospitalizationTypes: false,
+    HospitalizationPlans: false,
+    HospitalizationCaseTypes: false,
+    InternalControlTable: false,
+    ListOfAttendant: false,
+    SurgicalProcedures: false,
+    SurgicalProceduresCategory: false,
+    BodySystems: false,
+    BodyOrgans: false,
+    TypesOfAnesthesia: false,
+    DocumentCategories: false,
+    OtherHospitalServices: false,
+    MedialSocialService: false,
+    ListOfPetBreed: false,
+    EducationalAttainments: false,
+  }),
+  actions: {
+    setOutPatientsDialog(dialog: any) {
+      if (this.hasOwnProperty(dialog)) {
+        // Set the value of the property to true
+        this[dialog] = true;
+      }
+    }
+  }
+})
