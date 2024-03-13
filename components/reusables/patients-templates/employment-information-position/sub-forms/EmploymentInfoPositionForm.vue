@@ -9,7 +9,7 @@
     <form @submit.prevent="handleSubmit">
       <v-card rounded="lg">
         <v-toolbar density="compact" color="#6984ff" hide-details>
-          <v-toolbar-title>Bad Habits Details</v-toolbar-title>
+          <v-toolbar-title>Employment Information Positions Details</v-toolbar-title>
           <v-btn color="white" @click="closeDialog">
             <v-icon>mdi-close</v-icon>
           </v-btn>
@@ -25,15 +25,6 @@
                 variant="outlined"
                 required
               ></v-text-field>
-            </v-col>
-            <v-col cols="12">
-              <v-textarea
-                  label="Remarks"
-                  class="cursor-pointer"
-                  density="compact"
-                  hide-details
-                  variant="outlined"
-              ></v-textarea>
             </v-col>
           </v-row>
         </v-card-text>

@@ -9,7 +9,7 @@
     <form @submit.prevent="handleSubmit">
       <v-card rounded="lg">
         <v-toolbar density="compact" color="#6984ff" hide-details>
-          <v-toolbar-title>Bad Habits Details</v-toolbar-title>
+          <v-toolbar-title>Other Specialist Details</v-toolbar-title>
           <v-btn color="white" @click="closeDialog">
             <v-icon>mdi-close</v-icon>
           </v-btn>
@@ -17,23 +17,49 @@
         <v-divider></v-divider>
         <v-card-text>
           <v-row>
-            <v-col cols="12">
+            <v-col cols="6">
               <v-text-field
-                label="Description"
+                label="Code"
+                hide-details
+                density="compact"
+                variant="outlined"
+                readonly
+              ></v-text-field>
+            </v-col>
+            <v-col cols="6">
+              <v-text-field
+                label="Lastname"
                 hide-details
                 density="compact"
                 variant="outlined"
                 required
               ></v-text-field>
             </v-col>
+            <v-col cols="6">
+              <v-text-field
+                label="Firstname"
+                hide-details
+                density="compact"
+                variant="outlined"
+                required
+              ></v-text-field>
+            </v-col>
+            <v-col cols="6">
+              <v-text-field
+                label="Middlename"
+                hide-details
+                density="compact"
+                variant="outlined"
+              ></v-text-field>
+            </v-col>
             <v-col cols="12">
-              <v-textarea
-                  label="Remarks"
-                  class="cursor-pointer"
-                  density="compact"
-                  hide-details
-                  variant="outlined"
-              ></v-textarea>
+              <v-text-field
+                label="Specilization"
+                hide-details
+                density="compact"
+                variant="outlined"
+                required
+              ></v-text-field>
             </v-col>
           </v-row>
         </v-card-text>
