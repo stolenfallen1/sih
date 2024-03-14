@@ -1,9 +1,9 @@
 <template>
-  <v-dialog :model-value="show" rounded="lg" persistent scrollable max-width="700px">
+  <v-dialog :model-value="show" rounded="lg" persistent scrollable max-width="800px">
 
       <v-card rounded="lg">
           <v-toolbar density="compact" color="#6984ff" hide-details>
-              <v-toolbar-title>Consultant Specializations</v-toolbar-title>
+              <v-toolbar-title>Discount Schemes</v-toolbar-title>
               <v-spacer></v-spacer>
               <v-btn color="white" @click="closeDialog">
                   <v-icon>mdi-close</v-icon>
@@ -44,8 +44,8 @@
                       </slot>
                       </td>
                   </template>
-                  <template v-slot:item.is_pathologist="{ item }">
-                      {{ item.is_pathologist == 1 ? "Yes" : "No" }}
+                  <template v-slot:item.isactive="{ item }">
+                      {{ item.isactive == 1 ? "Active" : "In-active" }}
                   </template>
                   <template v-slot:item.actions="{ item }">
                       <v-icon color="green mr-3" @click="onEdit(item)">mdi-pencil</v-icon>
@@ -61,12 +61,12 @@
           </v-card-actions>
       </v-card>
   </v-dialog>
-  <consultant-specialization-form :open_form_dialog="open_form_dialog" @close-dialog="closeFormDialog" @handle-submit="onSubmit" />
+  <discount-schemes-form :open_form_dialog="open_form_dialog" @close-dialog="closeFormDialog" @handle-submit="onSubmit" />
   <deleteConfirmation :show="confirmation" @confirm="confirm" @close="closeconfirmation" />
 </template>
 
 <script setup>
-import ConsultantSpecializationForm from './sub-forms/ConsultantSpecializationForm.vue';
+import DiscountSchemesForm from '../../patients-templates/discount-schemes/sub-forms/DiscountSchemeForm.vue';
 
 const props = defineProps({
   show: {
@@ -83,14 +83,16 @@ const isloading = ref(false);
 const open_form_dialog = ref(false)
 const headers = [
   {
-      title: 'Code',
+      title: 'Account Code',
       align: 'start',
       sortable: false,
       key: 'id',
   },
-  { title: 'Description', key: 'description', align: 'start',width:"60%" },
-  { title: 'Pathologist', key: 'is_pathologist', align: 'start' },
-  { title: '', key: 'actions', align: 'start' },
+  { title: 'Discount Basis', key: 'discount_basis', align: 'start' },
+  { title: 'Room Class', key: 'room_class', align: 'start' },
+  { title: 'Description', key: 'description', align: 'start', width:"35%" },
+  { title: 'Is Active', key: 'is_active', align: 'start' },
+  { title: '', key: 'actions', align: 'start', width: "15%" },
 ];
 const data = ref({
   title: "List of Unit",

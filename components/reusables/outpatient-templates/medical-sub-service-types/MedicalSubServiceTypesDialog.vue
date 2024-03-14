@@ -1,9 +1,9 @@
 <template>
-  <v-dialog :model-value="show" rounded="lg" persistent scrollable max-width="700px">
+  <v-dialog :model-value="show" rounded="lg" persistent scrollable max-width="825px">
 
       <v-card rounded="lg">
           <v-toolbar density="compact" color="#6984ff" hide-details>
-              <v-toolbar-title>Consultant Specializations</v-toolbar-title>
+              <v-toolbar-title>Medical Sub-Service Types</v-toolbar-title>
               <v-spacer></v-spacer>
               <v-btn color="white" @click="closeDialog">
                   <v-icon>mdi-close</v-icon>
@@ -11,15 +11,28 @@
           </v-toolbar>
           <v-divider></v-divider>
           <v-card-text>
-              <v-text-field
-                  label="Search by Description"
-                  density="compact"
-                  variant="outlined"
-                  prepend-inner-icon="mdi-magnify"
-                  v-model="data.keyword"
-                  @keyup.enter="search"
-              >
-              </v-text-field>
+              <v-row>
+                <v-col cols="5">
+                  <v-text-field
+                      label="Search by Description"
+                      density="compact"
+                      variant="outlined"
+                      prepend-inner-icon="mdi-magnify"
+                      v-model="data.keyword"
+                      @keyup.enter="search"
+                  ></v-text-field>
+                </v-col>  
+                <v-col cols="7">
+                  <v-autocomplete
+                    label="Service Types"
+                    hide-details
+                    :items="service_types"
+                    clearable
+                    density="compact"
+                    variant="outlined"
+                  ></v-autocomplete>
+                </v-col>  
+              </v-row>
               <v-divider></v-divider>
               <v-data-table-server 
                   class="animated animatedFadeInUp fadeInUp"
@@ -44,8 +57,8 @@
                       </slot>
                       </td>
                   </template>
-                  <template v-slot:item.is_pathologist="{ item }">
-                      {{ item.is_pathologist == 1 ? "Yes" : "No" }}
+                  <template v-slot:item.isactive="{ item }">
+                      {{ item.isactive == 1 ? "Active" : "In-active" }}
                   </template>
                   <template v-slot:item.actions="{ item }">
                       <v-icon color="green mr-3" @click="onEdit(item)">mdi-pencil</v-icon>
@@ -61,12 +74,12 @@
           </v-card-actions>
       </v-card>
   </v-dialog>
-  <consultant-specialization-form :open_form_dialog="open_form_dialog" @close-dialog="closeFormDialog" @handle-submit="onSubmit" />
+  <medical-sub-service-types-form :open_form_dialog="open_form_dialog" @close-dialog="closeFormDialog" @handle-submit="onSubmit" />
   <deleteConfirmation :show="confirmation" @confirm="confirm" @close="closeconfirmation" />
 </template>
 
 <script setup>
-import ConsultantSpecializationForm from './sub-forms/ConsultantSpecializationForm.vue';
+import MedicalSubServiceTypesForm from './sub-forms/MedicalSubServiceTypesForm.vue';
 
 const props = defineProps({
   show: {
@@ -80,7 +93,8 @@ const confirmation = ref(false);
 const emits = defineEmits(['close-dialog'])
 const payload = ref({});
 const isloading = ref(false);
-const open_form_dialog = ref(false)
+const open_form_dialog = ref(false);
+const service_types = []
 const headers = [
   {
       title: 'Code',
@@ -89,7 +103,7 @@ const headers = [
       key: 'id',
   },
   { title: 'Description', key: 'description', align: 'start',width:"60%" },
-  { title: 'Pathologist', key: 'is_pathologist', align: 'start' },
+  { title: 'Status', key: 'status', align: 'start' },
   { title: '', key: 'actions', align: 'start' },
 ];
 const data = ref({
@@ -133,13 +147,13 @@ const closeFormDialog = () => {
   open_form_dialog.value = false;
 }
 
+
 const onEdit = (item) => {
-  openFormDialog();
+  openMedicalServiceTypeForm();
   // payload.value = Object.assign({});
   // payload.value = Object.assign({},item);
   // payload.value.isactive = item.isactive == 1 ? true:false;
 }
-
 
 const onSubmit = async (payload) => {
   alert("Submitted");
@@ -153,7 +167,7 @@ const onSubmit = async (payload) => {
 //   if(response){
 //       useSnackbar(true,"green",response.msg);
 //       loadItems();
-//       closeFormDialog();
+//       closeMedicalServiceTypeForm();
 //       payload.value = Object.assign({});
 //       isloading.value = false;
 //   }
@@ -165,7 +179,7 @@ const onSubmit = async (payload) => {
 //           confirmation.value = false;
 //           useSnackbar(true,"green",response.msg);
 //           loadItems();
-//           closeFormDialog();
+//           closeMedicalServiceTypeForm();
 //           payload.value = Object.assign({});
 //           isloading.value = false;
 //       }
