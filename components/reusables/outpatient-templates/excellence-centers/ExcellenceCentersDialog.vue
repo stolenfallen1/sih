@@ -3,7 +3,7 @@
 
       <v-card rounded="lg">
           <v-toolbar density="compact" color="#6984ff" hide-details>
-              <v-toolbar-title>Consultant Specializations</v-toolbar-title>
+              <v-toolbar-title>Excellence Centers</v-toolbar-title>
               <v-spacer></v-spacer>
               <v-btn color="white" @click="closeDialog">
                   <v-icon>mdi-close</v-icon>
@@ -11,15 +11,29 @@
           </v-toolbar>
           <v-divider></v-divider>
           <v-card-text>
-              <v-text-field
-                  label="Search by Description"
-                  density="compact"
-                  variant="outlined"
-                  prepend-inner-icon="mdi-magnify"
-                  v-model="data.keyword"
-                  @keyup.enter="search"
-              >
-              </v-text-field>
+              <v-row>
+                <v-col cols="7">
+                  <v-text-field
+                      label="Search by Description"
+                      density="compact"
+                      variant="outlined"
+                      prepend-inner-icon="mdi-magnify"
+                      v-model="data.keyword"
+                      @keyup.enter="search"
+                  >
+                  </v-text-field>
+                </v-col>
+                <v-col cols="5">
+                  <v-autocomplete
+                      :items="excellence_group"
+                      label="Excellence Group"
+                      hide-details
+                      clearable
+                      density="compact"
+                      variant="outlined"
+                  ></v-autocomplete>
+                </v-col>
+              </v-row>
               <v-divider></v-divider>
               <v-data-table-server 
                   class="animated animatedFadeInUp fadeInUp"
@@ -44,8 +58,8 @@
                       </slot>
                       </td>
                   </template>
-                  <template v-slot:item.is_pathologist="{ item }">
-                      {{ item.is_pathologist == 1 ? "Yes" : "No" }}
+                  <template v-slot:item.isactive="{ item }">
+                      {{ item.isactive == 1 ? "Active" : "In-active" }}
                   </template>
                   <template v-slot:item.actions="{ item }">
                       <v-icon color="green mr-3" @click="onEdit(item)">mdi-pencil</v-icon>
@@ -61,12 +75,12 @@
           </v-card-actions>
       </v-card>
   </v-dialog>
-  <consultant-specialization-form :open_form_dialog="open_form_dialog" @close-dialog="closeFormDialog" @handle-submit="onSubmit" />
+  <excellence-centers-form :open_form_dialog="open_form_dialog" @close-dialog="closeFormDialog" @handle-submit="onSubmit" />
   <deleteConfirmation :show="confirmation" @confirm="confirm" @close="closeconfirmation" />
 </template>
 
 <script setup>
-import ConsultantSpecializationForm from './sub-forms/ConsultantSpecializationForm.vue';
+import ExcellenceCentersForm from './sub-forms/ExcellenceCentersForm.vue';
 
 const props = defineProps({
   show: {
@@ -77,6 +91,7 @@ const props = defineProps({
 })
 
 const confirmation = ref(false);
+const excellence_group = []
 const emits = defineEmits(['close-dialog'])
 const payload = ref({});
 const isloading = ref(false);
@@ -88,8 +103,8 @@ const headers = [
       sortable: false,
       key: 'id',
   },
-  { title: 'Description', key: 'description', align: 'start',width:"60%" },
-  { title: 'Pathologist', key: 'is_pathologist', align: 'start' },
+  { title: 'Group', key: 'group', align: 'start' },
+  { title: 'Description', key: 'description', align: 'start', width:"60%" },
   { title: '', key: 'actions', align: 'start' },
 ];
 const data = ref({

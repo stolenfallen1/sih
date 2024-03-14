@@ -88,10 +88,158 @@
       </template>
     </ReusableTable>
   </v-card>
+
+
+  <AdjustmentTypesDialog 
+    :show="AdjustmentTypes"
+    @close-dialog="closeAdjustmentTypes"
+  />
+  <AllergiesDialog 
+    :show="Allergies"
+    @close-dialog="closeAllergies"
+  />
+  <BillingTemplateDialog
+    :show="BillingTemplates"
+    @close-dialog="closeBillingTemplates"
+  />
+  <BillingTemplateGroupDialog 
+    :show="BillingTemplateGroups"
+    @close-dialog="closeBillingTemplateGroups"
+  />
+  <CsCaseIndicatorsDialog
+    :show="CsCaseIndicators"
+    @close-dialog="closeCsCaseIndicators"
+  />
+  <DeathTypesDialog 
+    :show="DeathTypes"
+    @close-dialog="closeDeathTypes"
+  />
+  <DiscountSchemesDialog 
+    :show="DiscountSchemes"
+    @close-dialog="closeDiscountSchemes"
+  />
+  <DispositionTypesDialog
+    :show="DispositionTypes"
+    @close-dialog="closeDispositionTypes"
+  />
+  <ExcellenceCentersDialog
+    :show="ExcellenceCenters"
+    @close-dialog="closeExcellenceCenters"
+  />
+  <ReferringCentersDialog 
+    :show="ReferringCenters"
+    @close-dialog="closeReferringCenters"
+  />
+  <MedicalServiceTypesDialog 
+    :show="MedicalServiceTypes"
+    @close-dialog="closeMedicalServiceTypes"
+  />
+  <MedicalSubServiceTypesDialog 
+    :show="MedicalSubServiceTypes"
+    @close-dialog="closeMedicalSubServiceTypes"
+  />
+  <PriceSchemesDialog 
+    :show="PriceSchemes"
+    @close-dialog="closePriceSchemes"
+  />
+  <HospitalizationTransactionTypesDialog 
+    :show="HospitalTransactionTypes"
+    @close-dialog="closeHospitalTransactionTypes"
+  />
+  <HospitalizationTypesDialog 
+    :show="HospitalizationTypes"
+    @close-dialog="closeHospitalizationTypes"
+  />
+  <HospitalizationPlansDialog
+    :show="HospitalizationPlans"
+    @close-dialog="closeHospitalizationPlans"
+  />
+  <HospitalizationCaseTypesDialog
+    :show="HospitalizationCaseTypes"
+    @close-dialog="closeHospitalizationCaseTypes"
+  />
+  <InternalControlTableDialog 
+    :show="InternalControlTable"
+    @close-dialog="closeInternalControlTable"
+  />
+  <ListOfAttendantDialog 
+    :show="ListOfAttendant"
+    @close-dialog="closeListOfAttendant"
+  />
+  <SurgicalProcedureCategoryDialog
+    :show="SurgicalProceduresCategory"
+    @close-dialog="closeSurgicalProceduresCategory"
+  />
+  <BodySystemsDialog
+    :show="BodySystems"
+    @close-dialog="closeBodySystems"
+  />
+  <BodyOrgansDialog 
+    :show="BodyOrgans"
+    @close-dialog="closeBodyOrgans"
+  />
+
 </template>
 
 <script setup>
 import ReusableTable from "~/components/reusables/ReusableTable.vue";
+// Table and Template store
+const {
+  AdjustmentTypes,
+  Allergies,
+  BillingTemplates,
+  BillingTemplateGroups,
+  CsCaseIndicators,
+  DeathTypes,
+  DiscountSchemes,
+  DispositionTypes,
+  ExcellenceCenters,
+  ReferringCenters,
+  MedicalServiceTypes,
+  MedicalSubServiceTypes,
+  PriceSchemes,
+  HospitalTransactionTypes,
+  HospitalizationTypes,
+  HospitalizationPlans,
+  HospitalizationCaseTypes,
+  InternalControlTable,
+  ListOfAttendant,
+  SurgicalProcedures,
+  SurgicalProceduresCategory,
+  BodySystems,
+  BodyOrgans,
+  TypesOfAnesthesia,
+  DocumentCategories,
+  OtherHospitalServices,
+  MedialSocialService,
+  ListOfPetBreed,
+  EducationalAttainments,
+} = storeToRefs(OutPatientsTemplateDialog())
+// Table and Template components
+import AdjustmentTypesDialog from "~/components/reusables/outpatient-templates/adjustment-types/AdjustmentTypesDialog.vue";
+import AllergiesDialog from "~/components/reusables/outpatient-templates/allergies/AllergiesDialog.vue";
+import BillingTemplateDialog from "~/components/reusables/outpatient-templates/billing-templates/BillingTemplateDialog.vue";
+import BillingTemplateGroupDialog from "~/components/reusables/outpatient-templates/billing-template-groups/BillingTemplateGroupDialog.vue";
+import CsCaseIndicatorsDialog from "../../../components/reusables/outpatient-templates/cs-case-indicators/CsCaseIndicatorsDialog.vue";
+import DeathTypesDialog from "~/components/reusables/outpatient-templates/death-types/DeathTypesDialog.vue";
+import DiscountSchemesDialog from "~/components/reusables/outpatient-templates/discount-schemes/DiscountSchemesDialog.vue";
+import DispositionTypesDialog from "~/components/reusables/outpatient-templates/disposition-types/DispositionTypesDialog.vue";
+import ExcellenceCentersDialog from "~/components/reusables/outpatient-templates/excellence-centers/ExcellenceCentersDialog.vue";
+import ReferringCentersDialog from "~/components/reusables/outpatient-templates/referring-centers/ReferringCentersDialog.vue";
+import MedicalServiceTypesDialog from "~/components/reusables/outpatient-templates/medical-service-types/MedicalServiceTypesDialog.vue";
+import MedicalSubServiceTypesDialog from "~/components/reusables/outpatient-templates/medical-sub-service-types/MedicalSubServiceTypesDialog.vue";
+import PriceSchemesDialog from "~/components/reusables/outpatient-templates/price-schemes/PriceSchemesDialog.vue";
+import HospitalizationTransactionTypesDialog from "~/components/reusables/outpatient-templates/hospitalization-transaction-types/HospitalizationTransactionTypesDialog.vue";
+import HospitalizationTypesDialog from "~/components/reusables/outpatient-templates/hospitalization-types/HospitalizationTypesDialog.vue";
+import HospitalizationPlansDialog from "~/components/reusables/outpatient-templates/hospitalization-plans/HospitalizationPlansDialog.vue";
+import HospitalizationCaseTypesDialog from "~/components/reusables/outpatient-templates/hospitalization-case-types/HospitalizationCaseTypesDialog.vue";
+import InternalControlTableDialog from "~/components/reusables/outpatient-templates/internal-control-table/InternalControlTableDialog.vue";
+import ListOfAttendantDialog from "~/components/reusables/outpatient-templates/list-of-attendant/ListOfAttendantDialog.vue";
+// Surgical Procedures
+import SurgicalProcedureCategoryDialog from "~/components/reusables/outpatient-templates/surgical-procedures-category/SurgicalProcedureCategoryDialog.vue";
+import BodySystemsDialog from "~/components/reusables/outpatient-templates/body-systems/BodySystemsDialog.vue";
+import BodyOrgansDialog from "~/components/reusables/outpatient-templates/body-organs/BodyOrgansDialog.vue";
+
 definePageMeta({
   layout: "root-layout",
 });
@@ -202,6 +350,74 @@ const updateTotalItems = (newTotalItems) => {
 const updateServerItems = (newServerItems) => {
   serverItems.value = newServerItems;
 };
+
+// Table and template methods
+const closeAdjustmentTypes = () => {
+  AdjustmentTypes.value = false;
+}
+const closeAllergies = () => {
+  Allergies.value = false;
+}
+const closeBillingTemplates = () => {
+  BillingTemplates.value = false;
+}
+const closeBillingTemplateGroups = () => {
+  BillingTemplateGroups.value = false;
+}
+const closeCsCaseIndicators = () => {
+  CsCaseIndicators.value = false;
+}
+const closeDeathTypes = () => {
+  DeathTypes.value = false;
+}
+const closeDiscountSchemes = () => {
+  DiscountSchemes.value = false;
+}
+const closeDispositionTypes = () => {
+  DispositionTypes.value = false;
+}
+const closeExcellenceCenters = () => {
+  ExcellenceCenters.value = false;
+}
+const closeReferringCenters = () => {
+  ReferringCenters.value = false;
+}
+const closeMedicalServiceTypes = () => {
+  MedicalServiceTypes.value = false;
+}
+const closeMedicalSubServiceTypes = () => {
+  MedicalSubServiceTypes.value = false;
+}
+const closePriceSchemes = () => {
+  PriceSchemes.value = false;
+}
+const closeHospitalTransactionTypes = () => {
+  HospitalTransactionTypes.value = false;
+}
+const closeHospitalizationTypes = () => {
+  HospitalizationTypes.value = false;
+}
+const closeHospitalizationPlans = () => {
+  HospitalizationPlans.value = false;
+}
+const closeHospitalizationCaseTypes = () => {
+  HospitalizationCaseTypes.value = false;
+}
+const closeInternalControlTable = () => {
+  InternalControlTable.value = false;
+}
+const closeListOfAttendant = () => {
+  ListOfAttendant.value = false;
+}
+const closeSurgicalProceduresCategory = () => {
+  SurgicalProceduresCategory.value = false;
+}
+const closeBodySystems = () => {
+  BodySystems.value = false;
+}
+const closeBodyOrgans = () => {
+  BodyOrgans.value = false;
+}
 
 </script>
 

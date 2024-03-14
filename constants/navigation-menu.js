@@ -1632,9 +1632,9 @@ export default [
                         rule: "",
                     },
                     {
-                        label: "List of Attendant ( Death Cert )",
+                        label: "List of Attendant",
                         icon: "mdi-file-document-edit",
-                        path: "/system-settings/system-users/modules",
+                        form: "ListOfAttendants",
                         rule: "",
                     },
                     {
@@ -2040,7 +2040,7 @@ export default [
                         rule: "",
                     },
                     {
-                        label: "List of Attendant ( Death Cert )",
+                        label: "List of Attendant",
                         icon: "mdi-file-document-edit",
                         form: "ListOfAttendants",
                         rule: "",

@@ -1,9 +1,9 @@
 <template>
-  <v-dialog :model-value="show" rounded="lg" persistent scrollable max-width="700px">
+  <v-dialog :model-value="show" rounded="lg" persistent scrollable max-width="825px">
 
       <v-card rounded="lg">
           <v-toolbar density="compact" color="#6984ff" hide-details>
-              <v-toolbar-title>Consultant Specializations</v-toolbar-title>
+              <v-toolbar-title>Medical Service Types</v-toolbar-title>
               <v-spacer></v-spacer>
               <v-btn color="white" @click="closeDialog">
                   <v-icon>mdi-close</v-icon>
@@ -36,6 +36,9 @@
                   density="compact" 
                   height="50vh"
                   >
+                  <template v-slot:item.redirectToList="{ item }">
+                      <v-icon color="#6984FF" @click="openDepartmentListForm">mdi-link-circle-outline</v-icon> 
+                  </template>
                   <template
                       v-for="(head, index) of headers"  v-slot:[`item.${head.value}`]="props" >
                       <td class="test" :props="props" :key="index">
@@ -44,8 +47,8 @@
                       </slot>
                       </td>
                   </template>
-                  <template v-slot:item.is_pathologist="{ item }">
-                      {{ item.is_pathologist == 1 ? "Yes" : "No" }}
+                  <template v-slot:item.isactive="{ item }">
+                      {{ item.isactive == 1 ? "Active" : "In-active" }}
                   </template>
                   <template v-slot:item.actions="{ item }">
                       <v-icon color="green mr-3" @click="onEdit(item)">mdi-pencil</v-icon>
@@ -57,16 +60,18 @@
           <v-card-actions>
               <v-btn color="blue-darken-1" @click="closeDialog"> Close </v-btn>
               <v-spacer></v-spacer>
-              <v-btn class="bg-primary text-white" @click="openFormDialog">Add</v-btn>
+              <v-btn class="bg-primary text-white" @click="openMedicalServiceTypeForm">Add</v-btn>
           </v-card-actions>
       </v-card>
   </v-dialog>
-  <consultant-specialization-form :open_form_dialog="open_form_dialog" @close-dialog="closeFormDialog" @handle-submit="onSubmit" />
+  <list-of-department-for-notification :open_department_list_form="open_department_list_form" @close-dialog="closeDepartmentListForm" @handle-submit="onSaveList" />
+  <medical-service-type-form :open_medical_service_type_form="open_medical_service_type_form" @close-dialog="closeMedicalServiceTypeForm" @handle-submit="onSubmit" />
   <deleteConfirmation :show="confirmation" @confirm="confirm" @close="closeconfirmation" />
 </template>
 
 <script setup>
-import ConsultantSpecializationForm from './sub-forms/ConsultantSpecializationForm.vue';
+import ListOfDepartmentForNotification from './sub-forms/ListOfDepartmentForNotification.vue';
+import MedicalServiceTypeForm from './sub-forms/MedicalServiceTypeForm.vue';
 
 const props = defineProps({
   show: {
@@ -80,8 +85,10 @@ const confirmation = ref(false);
 const emits = defineEmits(['close-dialog'])
 const payload = ref({});
 const isloading = ref(false);
-const open_form_dialog = ref(false)
+const open_department_list_form = ref(false)
+const open_medical_service_type_form = ref(false)
 const headers = [
+  { title: '', key: 'redirectToList', align: 'start' },
   {
       title: 'Code',
       align: 'start',
@@ -89,7 +96,9 @@ const headers = [
       key: 'id',
   },
   { title: 'Description', key: 'description', align: 'start',width:"60%" },
-  { title: 'Pathologist', key: 'is_pathologist', align: 'start' },
+  { title: 'Allocated Beds (Pay)', key: 'allocated_beds_pay', align: 'start' },
+  { title: 'Allocated Beds (Service)', key: 'allocated_beds_service', align: 'start' },
+  { title: 'Is Active', key: 'is_active', align: 'start' },
   { title: '', key: 'actions', align: 'start' },
 ];
 const data = ref({
@@ -104,8 +113,8 @@ const itemsPerPage = ref(10);
 const totalItems = ref(0);
 const serverItems = ref([]);
 const initialize =  ({ page, itemsPerPage, sortBy }) => {
-  // loadItems(page,itemsPerPage,sortBy) 
-  null
+  loadItems(page,itemsPerPage,sortBy) 
+  // null
 }
 const loadItems = async(page = null,itemsPerPage = null,sortBy = null)=>{
   data.value.loading = true;
@@ -123,21 +132,37 @@ const search = ()=>{
   loadItems();
 }
 
-const openFormDialog = () => {
+const openDepartmentListForm = () => {
   // payload.value = Object.assign({});
-  open_form_dialog.value = true;
+  open_department_list_form.value = true;
+  console.log("TEST")
 }
 
-const closeFormDialog = () => {
+const closeDepartmentListForm = () => {
   // payload.value = Object.assign({});
-  open_form_dialog.value = false;
+  open_department_list_form.value = false;
 }
+
+const openMedicalServiceTypeForm = () => {
+  // payload.value = Object.assign({});
+  open_medical_service_type_form.value = true;
+}
+
+const closeMedicalServiceTypeForm = () => {
+  // payload.value = Object.assign({});
+  open_medical_service_type_form.value = false;
+}
+
 
 const onEdit = (item) => {
-  openFormDialog();
+  openMedicalServiceTypeForm();
   // payload.value = Object.assign({});
   // payload.value = Object.assign({},item);
   // payload.value.isactive = item.isactive == 1 ? true:false;
+}
+
+const onSaveList = () => {
+  alert("Save Selected List");
 }
 
 
@@ -153,7 +178,7 @@ const onSubmit = async (payload) => {
 //   if(response){
 //       useSnackbar(true,"green",response.msg);
 //       loadItems();
-//       closeFormDialog();
+//       closeMedicalServiceTypeForm();
 //       payload.value = Object.assign({});
 //       isloading.value = false;
 //   }
@@ -165,7 +190,7 @@ const onSubmit = async (payload) => {
 //           confirmation.value = false;
 //           useSnackbar(true,"green",response.msg);
 //           loadItems();
-//           closeFormDialog();
+//           closeMedicalServiceTypeForm();
 //           payload.value = Object.assign({});
 //           isloading.value = false;
 //       }
