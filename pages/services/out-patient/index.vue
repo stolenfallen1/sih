@@ -166,6 +166,10 @@
     :show="ListOfAttendant"
     @close-dialog="closeListOfAttendant"
   />
+  <SurgicalProceduresDialog 
+    :show="SurgicalProcedures"
+    @close-dialog="closeSurgicalProcedures"
+  />
   <SurgicalProcedureCategoryDialog
     :show="SurgicalProceduresCategory"
     @close-dialog="closeSurgicalProceduresCategory"
@@ -177,6 +181,30 @@
   <BodyOrgansDialog 
     :show="BodyOrgans"
     @close-dialog="closeBodyOrgans"
+  />
+  <TypesOfAnesthesiaDialog
+    :show="TypesOfAnesthesia"
+    @close-dialog="closeTypesOfAnesthesia"
+  />
+  <DocumentCategoriesDialog 
+    :show="DocumentCategories"
+    @close-dialog="closeDocumentCategories"
+  />
+  <OtherHospitalServicesDialog 
+    :show="OtherHospitalServices"
+    @close-dialog="closeOtherHospitalServices"
+  />
+  <MedialSocialServiceDialog 
+    :show="MedialSocialService"
+    @close-dialog="closeMedialSocialService"
+  />
+  <ListOfPetDialog 
+    :show="ListOfPetBreed"
+    @close-dialog="closeListOfPetBreed"
+  />
+  <EducationalAttainmentsDialog 
+    :show="EducationalAttainments"
+    @close-dialog="closeEducationalAttainments"
   />
 
 </template>
@@ -235,10 +263,16 @@ import HospitalizationPlansDialog from "~/components/reusables/outpatient-templa
 import HospitalizationCaseTypesDialog from "~/components/reusables/outpatient-templates/hospitalization-case-types/HospitalizationCaseTypesDialog.vue";
 import InternalControlTableDialog from "~/components/reusables/outpatient-templates/internal-control-table/InternalControlTableDialog.vue";
 import ListOfAttendantDialog from "~/components/reusables/outpatient-templates/list-of-attendant/ListOfAttendantDialog.vue";
-// Surgical Procedures
+import SurgicalProceduresDialog from "~/components/reusables/outpatient-templates/surgical-procedures/SurgicalProceduresDialog.vue";
 import SurgicalProcedureCategoryDialog from "~/components/reusables/outpatient-templates/surgical-procedures-category/SurgicalProcedureCategoryDialog.vue";
 import BodySystemsDialog from "~/components/reusables/outpatient-templates/body-systems/BodySystemsDialog.vue";
 import BodyOrgansDialog from "~/components/reusables/outpatient-templates/body-organs/BodyOrgansDialog.vue";
+import TypesOfAnesthesiaDialog from "~/components/reusables/outpatient-templates/types-of-anesthesia/TypesOfAnesthesiaDialog.vue";
+import DocumentCategoriesDialog from "~/components/reusables/outpatient-templates/document-categories/DocumentCategoriesDialog.vue";
+import OtherHospitalServicesDialog from "~/components/reusables/outpatient-templates/other-hospital-services-template/OtherHospitalServicesDialog.vue";
+import MedialSocialServiceDialog from "~/components/reusables/outpatient-templates/medial-social-service-template/MedialSocialServiceDialog.vue";
+import ListOfPetDialog from "~/components/reusables/outpatient-templates/list-of-pet-breed/ListOfPetDialog.vue";
+import EducationalAttainmentsDialog from "~/components/reusables/outpatient-templates/educational-attainments/EducationalAttainmentsDialog.vue";
 
 definePageMeta({
   layout: "root-layout",
@@ -409,6 +443,9 @@ const closeInternalControlTable = () => {
 const closeListOfAttendant = () => {
   ListOfAttendant.value = false;
 }
+const closeSurgicalProcedures = () => {
+  SurgicalProcedures.value = false;
+}
 const closeSurgicalProceduresCategory = () => {
   SurgicalProceduresCategory.value = false;
 }
@@ -417,6 +454,24 @@ const closeBodySystems = () => {
 }
 const closeBodyOrgans = () => {
   BodyOrgans.value = false;
+}
+const closeTypesOfAnesthesia = () => {
+  TypesOfAnesthesia.value = false;
+}
+const closeDocumentCategories = () => {
+  DocumentCategories.value = false;
+}
+const closeOtherHospitalServices = () => {
+  OtherHospitalServices.value = false;
+}
+const closeMedialSocialService = () => {
+  MedialSocialService.value = false;
+}
+const closeListOfPetBreed = () => {
+  ListOfPetBreed.value = false;
+}
+const closeEducationalAttainments = () => {
+  EducationalAttainments.value = false;
 }
 
 </script>
