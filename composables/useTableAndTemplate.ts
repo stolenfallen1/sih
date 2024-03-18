@@ -9,12 +9,15 @@ import { ItemServicesSuppliesTemplateDialog } from "~/store/table-templates/mast
 import { OutPatientsTemplateDialog } from "~/store/table-templates/services/OutPatientsTemplateDialog";
 import { InPatientsTemplateDialog } from "~/store/table-templates/services/InPatientsTemplateDialog";
 
+import { BuildFileDialog } from "~/store/table-templates/build-file/BuildFileDialog";
+
 export const useTableAndTemplate = async (dialog:any) => {
     // Master file table template form dialog states
     const { setPatientsDialog } = PatientsTemplateDialog(); // Master file patients template form dialog state
     const { setConsultantsDialog } = ConsultantsTemplateDialog(); // Master file consultants template form dialog state
     const { setRoomsBedsDialog } = RoomsBedsTemplateDialog(); // Master file rooms and beds template form dialog state
     const { setItemServicesSuppliesDialog } = ItemServicesSuppliesTemplateDialog(); // Master file items supplies and services template form dialog state
+    const { setBuildFileDialog } = BuildFileDialog(); // Build file  template form dialog state
 
     // Services table template form dialog states
     const { setOutPatientsDialog } = OutPatientsTemplateDialog()
@@ -30,5 +33,9 @@ export const useTableAndTemplate = async (dialog:any) => {
     // Services
     setOutPatientsDialog(dialog);
     setInPatientsDialog(dialog);
+
     setDialog(dialog); 
+    
+    // build File 
+    setBuildFileDialog(dialog);
 }
