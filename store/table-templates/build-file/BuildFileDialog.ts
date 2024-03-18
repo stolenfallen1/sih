@@ -6,6 +6,7 @@ export const BuildFileDialog = defineStore('BuildFileDialog',{
     BedStatusDialog:false,
     BloodTypeDialog:false,
     DeathTypeDialog:false,
+    TransactionTypeDialog:false,
   }),
    actions:{
     setBuildFileDialog(dialog:any) {

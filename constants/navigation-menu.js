@@ -2401,7 +2401,8 @@ export default [
                     {
                         label: "Transaction Type",
                         icon: "mdi-file-document",
-                        path: "/build-file/transaction-type"
+                        form: "TransactionTypeDialog", 
+                        rule: ""
                     },
                     {
                         label: "Hospital Plan",
