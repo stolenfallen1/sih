@@ -360,10 +360,10 @@ const logout = () => {
 }
 .v-overlay__scrim {
     pointer-events: auto;
-    background: #fbfbfb !important;
+    /* background: #fbfbfb !important; */
     bottom: 0;
     left: 0;
-    opacity: 1 !important;
+    /* opacity: 1 !important; */
     position: fixed;
     right: 0;
     top: 0;

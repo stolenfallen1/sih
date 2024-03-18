@@ -1,5 +1,5 @@
 <template>
-    <v-dialog :model-value="open_form_dialog" persistent hide-overlay width="650">
+    <v-dialog :model-value="open_form_dialog" persistent hide-overlay width="550">
         <form @submit.prevent="handleSubmit">
             <v-card>
                 <v-toolbar color="#6984ff" hide-details density="compact">
@@ -12,13 +12,16 @@
                 <v-card-text>
                     <v-row v-if="form_data === `building`">
                         <v-col cols="12" class="pa-1">
-                            <v-text-field
-                            class="my-2"
-                            variant="outlined"
+                           <v-autocomplete
+                            label="Branch"
+                            type="text"
+                            :items="branch"
+                            item-title="name"
+                            item-value="id"
                             density="compact"
-                            hide-details
-                            readonly
-                            >Main Branch</v-text-field>
+                            variant="outlined"
+                            clearable
+                        ></v-autocomplete>
                             <v-text-field
                             class="my-2"
                             label="Building Name"
@@ -26,18 +29,22 @@
                             hide-details
                             density="compact"
                             ></v-text-field>
+
                         </v-col>
                     </v-row>
                     <v-row v-if="form_data === `floor`">
                         <v-col cols="12" class="pa-1">
-                            <v-select
-                                class="my-2"
-                                label="Select"
-                                :items="['Main Building', 'Annex Building']"
-                                hide-details
+                            <v-autocomplete
+                                label="Building Name"
+                                :items="buildings"
+                                item-title="description"
+                                item-value="id"
                                 variant="outlined"
                                 density="compact"
-                            ></v-select>
+                                :rules="[(v) => !!v || 'Building Name is required']"
+                                return-object
+                                clearable
+                            ></v-autocomplete>
                             <v-text-field
                                 class="my-2"
                                 label="Floor Name"
@@ -60,6 +67,9 @@
 </template>
 
 <script setup>
+import nuxtStorage from "nuxt-storage";
+const branch = JSON.parse(nuxtStorage.localStorage.getData("branches"));
+const buildings = JSON.parse(nuxtStorage.localStorage.getData("buildings"));
 const props = defineProps({
     open_form_dialog: {
         type: Boolean,
@@ -69,6 +79,7 @@ const props = defineProps({
     form_data: String,
     form_title: String,
 });
+
 const emits = defineEmits(['close-dialog' , 'handle-submit']);
 
 const handleSubmit = () => {

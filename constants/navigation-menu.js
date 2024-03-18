@@ -56,7 +56,7 @@ export default [
                         rule: "",
                     },
                 ],
-                processing_and_queries:[
+                processing_and_queries: [
                     {
                         label: "Print Patient Address Label",
                         icon: "mdi-file-document-edit",
@@ -73,7 +73,7 @@ export default [
                         rule: "",
                     },
                 ],
-                table_and_template:[
+                table_and_template: [
                     {
                         label: "Discount Schemes",
                         icon: "mdi-file-document-edit",
@@ -405,49 +405,49 @@ export default [
                     {
                         label: "Billing Report Categories",
                         icon: "mdi-file-document-edit",
-                        form:"BillingReportCategory",
+                        form: "BillingReportCategory",
                         rule: "",
                     },
                     {
                         label: "Collection Report Main Header",
                         icon: "mdi-file-document-edit",
-                        form:"CollectionReportMainHeader",
+                        form: "CollectionReportMainHeader",
                         rule: "",
                     },
                     {
                         label: "Collection Report Group Header",
                         icon: "mdi-file-document-edit",
-                        form:"CollectionReportGroupHeader",
+                        form: "CollectionReportGroupHeader",
                         rule: "",
                     },
                     {
                         label: "CPT Modifiers",
                         icon: "mdi-file-document-edit",
-                        form:"CptModifiers",
+                        form: "CptModifiers",
                         rule: "",
                     },
                     {
                         label: "CPT Sections",
                         icon: "mdi-file-document-edit",
-                        form:"CptSections",
+                        form: "CptSections",
                         rule: "",
                     },
                     {
                         label: "CPT Sub-Sections",
                         icon: "mdi-file-document-edit",
-                        form:"CptSubSections",
+                        form: "CptSubSections",
                         rule: "",
                     },
                     {
                         label: "Department Groups",
                         icon: "mdi-file-document-edit",
-                        form:"DepartmentGroups",
+                        form: "DepartmentGroups",
                         rule: "",
                     },
                     {
                         label: "Department .Warehouses",
                         icon: "mdi-file-document-edit",
-                        form:"DepartmentWarehouses",
+                        form: "DepartmentWarehouses",
                         rule: "",
                     },
                     {
@@ -459,115 +459,115 @@ export default [
                     {
                         label: "Drug Administration Group",
                         icon: "mdi-file-document-edit",
-                        form:"DrugAdminGroups",
+                        form: "DrugAdminGroups",
                         rule: "",
                     },
                     {
                         label: "DOH Drug List",
                         icon: "mdi-file-document-edit",
-                        form:"DohDrugLists",
+                        form: "DohDrugLists",
                         rule: "",
                     },
                     {
                         label: "DX Medical Packages",
                         icon: "mdi-file-document-edit",
-                        form:"DxMedicalPackages",
+                        form: "DxMedicalPackages",
                         rule: "",
                     },
                     {
                         label: "Generic Names",
                         icon: "mdi-file-document-edit",
-                        form:"GenericNames",
+                        form: "GenericNames",
                         rule: "",
                     },
                     {
                         label: "Indications",
                         icon: "mdi-file-document-edit",
-                        form:"Indications",
+                        form: "Indications",
                         rule: "",
                     },
                     {
                         label: "Item Categories",
                         icon: "mdi-file-document-edit",
-                        form:"ItemCategories",
+                        form: "ItemCategories",
                         rule: "",
                     },
                     {
                         label: "Item Price Groups",
                         icon: "mdi-file-document-edit",
-                        form:"ItemPriceGroups",
+                        form: "ItemPriceGroups",
                         rule: "",
                     },
                     {
                         label: "Item Pricing Schemes",
                         icon: "mdi-file-document-edit",
-                        form:"ItemPricingSchemes",
+                        form: "ItemPricingSchemes",
                         rule: "",
                     },
                     {
                         label: "Item Templates",
                         icon: "mdi-file-document-edit",
-                        form:"ItemTemplates",
+                        form: "ItemTemplates",
                         rule: "",
                     },
                     {
                         label: "Item Units",
                         icon: "mdi-file-document-edit",
-                        form:"ItemUnits",
+                        form: "ItemUnits",
                         rule: "",
                     },
                     {
                         label: "Medication Durations",
                         icon: "mdi-file-document-edit",
-                        form:"MedicationDurations",
+                        form: "MedicationDurations",
                         rule: "",
                     },
                     {
                         label: "Medication Frequencies",
                         icon: "mdi-file-document-edit",
-                        form:"MedicationFrequencies",
+                        form: "MedicationFrequencies",
                         rule: "",
                     },
                     {
                         label: "Medication Preparations",
                         icon: "mdi-file-document-edit",
-                        form:"MedicationPreparations",
+                        form: "MedicationPreparations",
                         rule: "",
                     },
                     {
                         label: "Routes",
                         icon: "mdi-file-document-edit",
-                        form:"Routes",
+                        form: "Routes",
                         rule: "",
                     },
                     {
                         label: "Others",
                         icon: "mdi-file-document-edit",
-                        form:"Others",
+                        form: "Others",
                         rule: "",
                     },
                     {
                         label: "PHIC Item Categories",
                         icon: "mdi-file-document-edit",
-                        form:"PhicItemCategories",
+                        form: "PhicItemCategories",
                         rule: "",
                     },
                     {
                         label: "Unit of Measures",
                         icon: "mdi-file-document-edit",
-                        form:"UnitOfMeasures",
+                        form: "UnitOfMeasures",
                         rule: "",
                     },
                     {
                         label: "Modalities",
                         icon: "mdi-file-document-edit",
-                        form:"Modalities",
+                        form: "Modalities",
                         rule: "",
                     },
                     {
                         label: "Specimens",
                         icon: "mdi-file-document-edit",
-                        form:"Specimens",
+                        form: "Specimens",
                         rule: "",
                     },
                 ],
@@ -635,49 +635,49 @@ export default [
                     {
                         label: "Billing Report Categories",
                         icon: "mdi-file-document-edit",
-                        form:"BillingReportCategory",
+                        form: "BillingReportCategory",
                         rule: "",
                     },
                     {
                         label: "Collection Report Main Header",
                         icon: "mdi-file-document-edit",
-                        form:"CollectionReportMainHeader",
+                        form: "CollectionReportMainHeader",
                         rule: "",
                     },
                     {
                         label: "Collection Report Group Header",
                         icon: "mdi-file-document-edit",
-                        form:"CollectionReportGroupHeader",
+                        form: "CollectionReportGroupHeader",
                         rule: "",
                     },
                     {
                         label: "CPT Modifiers",
                         icon: "mdi-file-document-edit",
-                        form:"CptModifiers",
+                        form: "CptModifiers",
                         rule: "",
                     },
                     {
                         label: "CPT Sections",
                         icon: "mdi-file-document-edit",
-                        form:"CptSections",
+                        form: "CptSections",
                         rule: "",
                     },
                     {
                         label: "CPT Sub-Sections",
                         icon: "mdi-file-document-edit",
-                        form:"CptSubSections",
+                        form: "CptSubSections",
                         rule: "",
                     },
                     {
                         label: "Department Groups",
                         icon: "mdi-file-document-edit",
-                        form:"DepartmentGroups",
+                        form: "DepartmentGroups",
                         rule: "",
                     },
                     {
                         label: "Department .Warehouses",
                         icon: "mdi-file-document-edit",
-                        form:"DepartmentWarehouses",
+                        form: "DepartmentWarehouses",
                         rule: "",
                     },
                     {
@@ -689,115 +689,115 @@ export default [
                     {
                         label: "Drug Administration Group",
                         icon: "mdi-file-document-edit",
-                        form:"DrugAdminGroups",
+                        form: "DrugAdminGroups",
                         rule: "",
                     },
                     {
                         label: "DOH Drug List",
                         icon: "mdi-file-document-edit",
-                        form:"DohDrugLists",
+                        form: "DohDrugLists",
                         rule: "",
                     },
                     {
                         label: "DX Medical Packages",
                         icon: "mdi-file-document-edit",
-                        form:"DxMedicalPackages",
+                        form: "DxMedicalPackages",
                         rule: "",
                     },
                     {
                         label: "Generic Names",
                         icon: "mdi-file-document-edit",
-                        form:"GenericNames",
+                        form: "GenericNames",
                         rule: "",
                     },
                     {
                         label: "Indications",
                         icon: "mdi-file-document-edit",
-                        form:"Indications",
+                        form: "Indications",
                         rule: "",
                     },
                     {
                         label: "Item Categories",
                         icon: "mdi-file-document-edit",
-                        form:"ItemCategories",
+                        form: "ItemCategories",
                         rule: "",
                     },
                     {
                         label: "Item Price Groups",
                         icon: "mdi-file-document-edit",
-                        form:"ItemPriceGroups",
+                        form: "ItemPriceGroups",
                         rule: "",
                     },
                     {
                         label: "Item Pricing Schemes",
                         icon: "mdi-file-document-edit",
-                        form:"ItemPricingSchemes",
+                        form: "ItemPricingSchemes",
                         rule: "",
                     },
                     {
                         label: "Item Templates",
                         icon: "mdi-file-document-edit",
-                        form:"ItemTemplates",
+                        form: "ItemTemplates",
                         rule: "",
                     },
                     {
                         label: "Item Units",
                         icon: "mdi-file-document-edit",
-                        form:"ItemUnits",
+                        form: "ItemUnits",
                         rule: "",
                     },
                     {
                         label: "Medication Durations",
                         icon: "mdi-file-document-edit",
-                        form:"MedicationDurations",
+                        form: "MedicationDurations",
                         rule: "",
                     },
                     {
                         label: "Medication Frequencies",
                         icon: "mdi-file-document-edit",
-                        form:"MedicationFrequencies",
+                        form: "MedicationFrequencies",
                         rule: "",
                     },
                     {
                         label: "Medication Preparations",
                         icon: "mdi-file-document-edit",
-                        form:"MedicationPreparations",
+                        form: "MedicationPreparations",
                         rule: "",
                     },
                     {
                         label: "Routes",
                         icon: "mdi-file-document-edit",
-                        form:"Routes",
+                        form: "Routes",
                         rule: "",
                     },
                     {
                         label: "Others",
                         icon: "mdi-file-document-edit",
-                        form:"Others",
+                        form: "Others",
                         rule: "",
                     },
                     {
                         label: "PHIC Item Categories",
                         icon: "mdi-file-document-edit",
-                        form:"PhicItemCategories",
+                        form: "PhicItemCategories",
                         rule: "",
                     },
                     {
                         label: "Unit of Measures",
                         icon: "mdi-file-document-edit",
-                        form:"UnitOfMeasures",
+                        form: "UnitOfMeasures",
                         rule: "",
                     },
                     {
                         label: "Modalities",
                         icon: "mdi-file-document-edit",
-                        form:"Modalities",
+                        form: "Modalities",
                         rule: "",
                     },
                     {
                         label: "Specimens",
                         icon: "mdi-file-document-edit",
-                        form:"Specimens",
+                        form: "Specimens",
                         rule: "",
                     },
                 ],
@@ -997,55 +997,55 @@ export default [
                     {
                         label: "Adjustment Types",
                         icon: "mdi-file-document-edit",
-                        form:"AdjustmentTypes",
+                        form: "AdjustmentTypes",
                         rule: "",
                     },
                     {
                         label: "Allergies",
                         icon: "mdi-file-document-edit",
-                        form:"Allergies",
+                        form: "Allergies",
                         rule: "",
                     },
                     {
                         label: "Billing Templates",
                         icon: "mdi-file-document-edit",
-                        form:"BillingTemplates",
+                        form: "BillingTemplates",
                         rule: "",
                     },
                     {
                         label: "Billing Template Groups",
                         icon: "mdi-file-document-edit",
-                        form:"BillingTemplateGroups",
+                        form: "BillingTemplateGroups",
                         rule: "",
                     },
                     {
                         label: "CS Case Indicators",
                         icon: "mdi-file-document-edit",
-                        form:"CsCaseIndicators",
+                        form: "CsCaseIndicators",
                         rule: "",
                     },
                     {
                         label: "Death Types",
                         icon: "mdi-file-document-edit",
-                        form:"DeathTypes",
+                        form: "DeathTypes",
                         rule: "",
                     },
                     {
                         label: "Discount Schemes",
                         icon: "mdi-file-document-edit",
-                        form:"DiscountSchemes",
+                        form: "DiscountSchemes",
                         rule: "",
                     },
                     {
                         label: "Disposition Types",
                         icon: "mdi-file-document-edit",
-                        form:"DispositionTypes",
+                        form: "DispositionTypes",
                         rule: "",
                     },
                     {
                         label: "Excellence Centers",
                         icon: "mdi-file-document-edit",
-                        form:"ExcellenceCenters",
+                        form: "ExcellenceCenters",
                         rule: "",
                     },
                     {
@@ -1057,7 +1057,7 @@ export default [
                     {
                         label: "Medical Service Types",
                         icon: "mdi-file-document-edit",
-                        form:"MedicalServiceTypes",
+                        form: "MedicalServiceTypes",
                         rule: "",
                     },
                     {
@@ -2329,7 +2329,7 @@ export default [
                     },
                 ],
                 processing_and_queries: [],
-                table_and_template:[]
+                table_and_template: []
             },
             {
                 label: "Report Manager",
@@ -2340,6 +2340,244 @@ export default [
                 subcomponents: [],
                 processing_and_queries: [],
                 table_and_template: []
+            },
+            {
+                label: "Build File",
+                icon: "mdi-form-select",
+                path: "/build-file",
+                // rule: "browse_reports", no rule like this yet
+                rule: "browse_settings", // for now so that I can access the page
+                subcomponents: [
+                    {
+                        label: "Nurse Stations",
+                        icon: "mdi-file-document",
+                        form: "NurseStationDialog",
+                        path: "/system-settings/system-users/nurse-stations",
+                    },
+                    {
+                        label: "Reports",
+                        icon: "mdi-file-document",
+                        path: "/system-settings/system-users/reports",
+                    },
+                ],
+                processing_and_queries: [],
+                table_and_template: [
+                    {
+                        label: "Admission Source",
+                        icon: "mdi-file-document",
+                        form: "AdmissionSourceDialog", 
+                        rule: ""
+                    },
+                    {
+                        label: "Admission Type",
+                        icon: "mdi-file-document",
+                        form: "AdmissionTypeDialog", 
+                        rule: ""
+                    },
+                    {
+                        label: "Age Bracket",
+                        icon: "mdi-file-document",
+                        form: "AgeBracketDialog",
+                        rule: ""
+                    },
+                    {
+                        label: "Bed Status",
+                        icon: "mdi-file-document",
+                        form: "BedStatusDialog", 
+                        rule: ""
+                    },
+                    {
+                        label: "Blood Type",
+                        icon: "mdi-file-document",
+                        form: "BloodTypeDialog", 
+                        rule: ""
+                    },
+                    {
+                        label: "Death Types",
+                        icon: "mdi-file-document",
+                        path: "/build-file/death-type"
+                    },
+                    {
+                        label: "Transaction Type",
+                        icon: "mdi-file-document",
+                        path: "/build-file/transaction-type"
+                    },
+                    {
+                        label: "Hospital Plan",
+                        icon: "mdi-file-document",
+                        path: "/build-file/hospital-plan"
+                    },
+                    {
+                        label: "ID Types",
+                        icon: "mdi-file-document",
+                        path: "/build-file/id-type"
+                    },
+                    {
+                        label: "Religion",
+                        icon: "mdi-file-document",
+                        path: "/build-file/religion"
+                    },
+                    {
+                        label: "Nationality",
+                        icon: "mdi-file-document",
+                        path: "/build-file/nationality"
+                    },
+                    {
+                        label: "Sex",
+                        icon: "mdi-file-document",
+                        path: "/build-file/sex"
+                    },
+                    {
+                        label: "Civil Status",
+                        icon: "mdi-file-document",
+                        path: "/build-file/civil-status"
+                    },
+                    {
+                        label: "Status",
+                        icon: "mdi-file-document",
+                        path: "/build-file/status"
+                    },
+                    {
+                        label: "Shifts",
+                        icon: "mdi-file-document",
+                        path: "/build-file/shifts"
+                    },
+                    {
+                        label: "Patient Relation",
+                        icon: "mdi-file-document",
+                        path: "/build-file/patient-relation"
+                    },
+                    {
+                        label: "Doctor Category",
+                        icon: "mdi-file-document",
+                        path: "/build-file/doctor-category"
+                    },
+                    {
+                        label: "Service Type",
+                        icon: "mdi-file-document",
+                        path: "/build-file/service-type"
+                    },
+                    {
+                        label: "Suffix",
+                        icon: "mdi-file-document",
+                        path: "/build-file/suffix"
+                    },
+                    {
+                        label: "Payment Method",
+                        icon: "mdi-file-document",
+                        path: "/build-file/payment-method"
+                    },
+                    {
+                        label: "Refund Type",
+                        icon: "mdi-file-document",
+                        path: "/build-file/refund-type"
+                    },
+                    {
+                        label: "Level",
+                        icon: "mdi-file-document",
+                        path: "/vendor/level"
+                    },
+                    {
+                        label: "Terms",
+                        icon: "mdi-file-document",
+                        path: "/vendor/terms"
+                    },
+                    {
+                        label: "Types",
+                        icon: "mdi-file-document",
+                        path: "/vendor/types"
+                    },
+                    {
+                        label: "Banks",
+                        icon: "mdi-file-document",
+                        path: "/banks/list"
+                    },
+                    {
+                        label: "Banck Account",
+                        icon: "mdi-file-document",
+                        path: "/banks/account"
+                    },
+                    {
+                        label: "Credit Cards",
+                        icon: "mdi-file-document",
+                        path: "/banks/credit-cards"
+                    },
+                    {
+                        label: "Debit Cards",
+                        icon: "mdi-file-document",
+                        path: "/banks/debit-cards"
+                    },
+                    {
+                        label: "Account Class",
+                        icon: "mdi-file-document",
+                        path: "/fms/account-class"
+                    },
+                    {
+                        label: "Account Type",
+                        icon: "mdi-file-document",
+                        path: "/fms/account-type"
+                    },
+                    {
+                        label: "Cost Center",
+                        icon: "mdi-file-document",
+                        path: "/fms/cost-center"
+                    },
+                    {
+                        label: "Account Group",
+                        icon: "mdi-file-document",
+                        path: "/fms/account-group"
+                    },
+                    {
+                        label: "Medicare Type",
+                        icon: "mdi-file-document",
+                        path: "/fms/medicare-type"
+                    },
+                    {
+                        label: "Revenue Class",
+                        icon: "mdi-file-document",
+                        path: "/fms/revenue-class"
+                    },
+                    {
+                        label: "Transaction Classification",
+                        icon: "mdi-file-document",
+                        path: "/fms/transaction-classification"
+                    },
+                    {
+                        label: "Transaction Code",
+                        icon: "mdi-file-document",
+                        path: "/fms/transaction-code"
+                    },
+                    {
+                        label: "Country",
+                        icon: "mdi-file-document",
+                        path: "/address/country"
+                    },
+                    {
+                        label: "Region",
+                        icon: "mdi-file-document",
+                        path: "/address/region"
+                    },
+                    {
+                        label: "Province",
+                        icon: "mdi-file-document",
+                        path: "/address/province"
+                    },
+                    {
+                        label: "Municipality",
+                        icon: "mdi-file-document",
+                        path: "/address/municipality"
+                    },
+                    {
+                        label: "Barangay",
+                        icon: "mdi-file-document",
+                        path: "/address/barangay"
+                    },
+                    {
+                        label: "Zipcode",
+                        icon: "mdi-file-document",
+                        path: "/address/zipcode"
+                    },
+                ]
             },
         ],
     },

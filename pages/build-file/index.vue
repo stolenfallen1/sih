@@ -58,12 +58,60 @@
             </v-col>
         </v-row>
     </v-container>
+    <AdmissionSourceFormDialog 
+        :show="AdmissionSourceDialog"
+        @close-dialog="close_dialog"
+    />
+
+    <AdmissionTypeFormDialog 
+        :show="AdmissionTypeDialog"
+        @close-dialog="close_dialog"
+    />
+     <AgeBracketFormDialog 
+        :show="AgeBracketDialog"
+        @close-dialog="close_dialog"
+    />
+    
+     <BedStatusFormDialog 
+        :show="BedStatusDialog"
+        @close-dialog="close_dialog"
+    />
+
+   <BloodTypeFormDialog 
+        :show="BloodTypeDialog"
+        @close-dialog="close_dialog"
+    />
 </template>
 
 <script setup>
 definePageMeta({
     layout: "root-layout",
 });
+import { storeToRefs } from "pinia";
+import AdmissionSourceFormDialog from "~/components/reusables/build-file/admission-source/AdmissionSourceDialog";
+import AdmissionTypeFormDialog from "~/components/reusables/build-file/admission-type/AdmissionTypeDialog.vue";
+import AgeBracketFormDialog from "~/components/reusables/build-file/age-bracket/AgeBracketDialog.vue";
+import BedStatusFormDialog from "~/components/reusables/build-file/bed-status/BedStatusDialog.vue";
+import BloodTypeFormDialog from "~/components/reusables/build-file/blood-type/BloodTypeDialog.vue";
+
+
+// Table and templates store
+const {
+    AdmissionSourceDialog,
+    AdmissionTypeDialog,
+    AgeBracketDialog,
+    BedStatusDialog,
+    BloodTypeDialog
+} = storeToRefs(BuildFileDialog());
+
+const close_dialog = ()=>{
+    AdmissionSourceDialog.value = false;
+    AdmissionTypeDialog.value = false;
+    AgeBracketDialog.value = false;
+    BedStatusDialog.value = false;
+    BloodTypeDialog.value = false;
+    
+}
 </script>
 
 <style scoped></style>
