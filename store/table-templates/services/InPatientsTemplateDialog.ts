@@ -36,7 +36,7 @@ export const InPatientsTemplateDialog = defineStore('InPatientsTemplateDialog' ,
     setInPatientsDialog(dialog: any) {
       if (this.hasOwnProperty(dialog)) {
         // Set the value of the property to true
-        this[dialog].true
+        this[dialog] = true;
       }
     }
   }
