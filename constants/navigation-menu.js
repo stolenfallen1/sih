@@ -2395,7 +2395,8 @@ export default [
                     {
                         label: "Death Types",
                         icon: "mdi-file-document",
-                        path: "/build-file/death-type"
+                        form: "DeathTypeDialog", 
+                        rule: ""
                     },
                     {
                         label: "Transaction Type",
