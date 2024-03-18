@@ -173,6 +173,10 @@ const onSubmit = async (payload) => {
 //   }
 
 }
+
+const confirm = () => {
+  confirmation.value = false;
+}
 const closeconfirmation = () => {
 confirmation.value = false;
 }

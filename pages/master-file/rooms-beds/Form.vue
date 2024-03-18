@@ -199,7 +199,7 @@ const props = defineProps({
 });
 
 const payload = ref({});
-const emits = defineEmits();
+const emits = defineEmits(['close-dialog', 'submit']);
 
 const closeDialog = () => {
   emits("close-dialog");

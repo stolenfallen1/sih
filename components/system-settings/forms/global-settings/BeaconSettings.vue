@@ -69,7 +69,7 @@
 import { defineProps, defineEmits } from "vue";
 
 const props = defineProps(["beaconData"]);
-const emits = defineEmits();
+const emits = defineEmits(['close']);
 
 const closeTab = () => {
     // Emit the close event to notify the parent component

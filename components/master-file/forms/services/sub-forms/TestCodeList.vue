@@ -42,7 +42,7 @@ const props = defineProps({
     }
 })
 
-const emits = defineEmits()
+const emits = defineEmits(['close-dialog'])
 
 const closeDialog = () => {
     emits('close-dialog')

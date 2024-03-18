@@ -544,7 +544,7 @@
 <script setup>
 import nuxtStorage from "nuxt-storage";
 import AddressForm from "./AddressForm.vue";
-const emits = defineEmits();
+const emits = defineEmits(['close-dialog', 'handle-submit']);
 const props = defineProps({
   payload: {
     type: Object,

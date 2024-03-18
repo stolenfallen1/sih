@@ -121,7 +121,7 @@ const props = defineProps({
         default:()=>{}
     }
 })
-const emits = defineEmits()
+const emits = defineEmits(['close-dialog'])
 
 let tab = ref("0");
 

@@ -74,7 +74,7 @@ const props = defineProps({
         default: () => false,
     },
 })
-const emits = defineEmits()
+const emits = defineEmits(['close-dialog', 'select-habits'])
 
 const vices = [
     { description: "Smoking", remarks: "Smoking" },

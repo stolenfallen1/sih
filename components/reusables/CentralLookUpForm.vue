@@ -183,6 +183,8 @@ const headers = ref([
   },
 ]);
 
+const emits = defineEmits(['selected-row', 'search', 'close-dialog', 'open-form']);
+
 const handleSelectedRow = (event, selectedRow) => {
   const index = selectedRows.value.indexOf(selectedRow?.item.id);
   selectedRows.value = [];
@@ -196,7 +198,6 @@ const handleSelectedRow = (event, selectedRow) => {
   emits("selected-row", item);
 };
 
-const emits = defineEmits();
 
 const handleSearch = () => {
   emits("search", props.search_payload);
