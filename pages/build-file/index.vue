@@ -86,6 +86,12 @@
         :show="DeathTypeDialog"
         @close-dialog="close_dialog"
     />
+
+    <TransactionTypeFormDialog 
+        :show="TransactionTypeDialog"
+        @close-dialog="close_dialog"
+    />
+
     
 </template>
 
@@ -100,6 +106,7 @@ import AgeBracketFormDialog from "~/components/reusables/build-file/age-bracket/
 import BedStatusFormDialog from "~/components/reusables/build-file/bed-status/BedStatusDialog.vue";
 import BloodTypeFormDialog from "~/components/reusables/build-file/blood-type/BloodTypeDialog.vue";
 import DeathTypeFormDialog from "~/components/reusables/build-file/death-types/DeathTypeDialog.vue";
+import TransactionTypeFormDialog from "~/components/reusables/build-file/transaction-type/TransactionTypeDialog.vue";
 
 
 // Table and templates store
@@ -110,6 +117,7 @@ const {
     BedStatusDialog,
     BloodTypeDialog,
     DeathTypeDialog,
+    TransactionTypeDialog
 } = storeToRefs(BuildFileDialog());
 
 const close_dialog = ()=>{
@@ -119,7 +127,7 @@ const close_dialog = ()=>{
     BedStatusDialog.value = false;
     BloodTypeDialog.value = false;
     DeathTypeDialog.value = false;
-    
+    TransactionTypeDialog.value = false;
 }
 </script>
 
