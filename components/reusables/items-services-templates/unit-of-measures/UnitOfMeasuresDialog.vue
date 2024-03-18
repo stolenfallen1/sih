@@ -74,7 +74,7 @@ const props = defineProps({
     },
 })
 
-const emits = defineEmits()
+const emits = defineEmits(['close-dialog'])
 const payload = ref({});
 const isloading = ref(false);
 const open_item_unit_form = ref(false)

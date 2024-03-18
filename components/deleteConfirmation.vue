@@ -11,7 +11,7 @@
           <div class="text-center">
             <v-icon size="80" color="red">mdi-alert</v-icon>
           </div>
-           <center><h2 class="mt-3">Are you sure want to delete?</h2></center>
+          <h2 class="mt-3" style="text-align: center;">Are you sure want to delete?</h2>
         </v-card-text>
         <v-divider></v-divider>
         <v-card-actions>
@@ -30,7 +30,7 @@
   </div>
 </template>
 <script setup>
-const emits = defineEmits("close");
+const emits = defineEmits("close", "confirm");
 const props = defineProps({
   color: {
     type: String,

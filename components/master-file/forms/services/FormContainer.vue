@@ -67,7 +67,7 @@ const props = defineProps({
 
 const tab = ref("1")
 
-const emits = defineEmits()
+const emits = defineEmits(['close-dialog'])
 
 const closeDialog = () => {
     emits("close-dialog")

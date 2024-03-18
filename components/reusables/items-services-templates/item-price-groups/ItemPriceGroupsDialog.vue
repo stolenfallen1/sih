@@ -74,7 +74,7 @@ const props = defineProps({
     },
 })
 const confirmation = ref(false);
-const emits = defineEmits()
+const emits = defineEmits(['close-dialog'])
 const payload = ref({});
 const isloading = ref(false);
 const open_item_price_group_form = ref(false)

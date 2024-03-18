@@ -123,7 +123,7 @@
 </template>
 
 <script setup>
-const emits = defineEmits();
+const emits = defineEmits(['close-dialog', 'handle-submit']);
 const props = defineProps({
     form_data: {
         type: Object,

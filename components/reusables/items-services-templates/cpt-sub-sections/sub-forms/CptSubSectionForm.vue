@@ -58,7 +58,7 @@ const props = defineProps({
     },
 })
 
-const emits = defineEmits()
+const emits = defineEmits(['close-dialog', 'handle-submit'])
 
 const cptSection = [
     { id: 1, section: "Section 1" },

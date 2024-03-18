@@ -444,7 +444,7 @@ const props = defineProps({
     },
 })
 
-const emits = defineEmits()
+const emits = defineEmits(['close-dialog', 'submit-form'])
 const defaultValue = ref("");
 const payload = ref({});
 const itemGroups = JSON.parse(nuxtStorage.localStorage.getData("items-group"))|| [];

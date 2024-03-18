@@ -44,7 +44,7 @@
 import { defineProps, defineEmits } from "vue";
 
 const props = defineProps(["userAccountData"]);
-const emits = defineEmits();
+const emits = defineEmits(['close']);
 
 const closeTab = () => {
     // Emit the close event to notify the parent component

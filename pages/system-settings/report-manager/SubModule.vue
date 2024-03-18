@@ -100,7 +100,7 @@
 </template>
 
 <script setup>
-const emits = defineEmits();
+const emits = defineEmits(['close-dialog']);
 
 let tab = ref("HIS");
 const tabs = ref([

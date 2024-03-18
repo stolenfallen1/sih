@@ -88,10 +88,53 @@
       </template>
     </ReusableTable>
   </v-card>
+
+  <AdjustmentTypesDialog 
+    :show="AdjustmentTypes"
+    @close-dialog="closeAdjustmentTypes"
+  />
 </template>
 
 <script setup>
 import ReusableTable from "~/components/reusables/ReusableTable.vue";
+// Table and Template store
+const {
+    AdjustmentTypes,  
+    AdmissionResult, 
+    Allergies, 
+    BillingTemplates, 
+    BillingTemplateGroups, 
+    CsCaseIndicators, 
+    DeathTypes, 
+    DiscountSchemes, 
+    ExcellenceCenters, 
+    ReferringCenters, 
+    DispositionTypes, 
+    MedicalServiceTypes, 
+    MedicalSubServiceTypes, 
+    NursingStation,
+    RoomClassifications,
+    RoomPriceSchemes,
+    HospitalizationTypes, 
+    HospitalizationPlan,  
+    HospitalizationCaseTypes,  
+    HospitalTransactionTypes, 
+    InternalControlTable, 
+    ListOfAttendants,
+    SurgicalProcedures,  
+    SurgicalProceduresCategory,
+    BodySystems,  
+    BodyOrgans,  
+    TypesOfAnesthesia,  
+    MedicalSocialServiceTemplate,
+    OtherHospitalServicesTemplate,
+    ListOfPetBreed, 
+    RegistryGroup,
+} = storeToRefs(InPatientsTemplateDialog())
+// Table and Template components
+import AdjustmentTypesDialog from "../../../components/reusables/inpatient-templates/adjustment-types/AdjustmentTypesDialog.vue";
+
+
 definePageMeta({
   layout: "root-layout",
 });
@@ -202,6 +245,11 @@ const updateTotalItems = (newTotalItems) => {
 const updateServerItems = (newServerItems) => {
   serverItems.value = newServerItems;
 };
+
+// Table and Template methods
+const closeAdjustmentTypes = () => {
+  AdjustmentTypes.value = false;
+}
 
 </script>
 

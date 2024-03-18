@@ -134,6 +134,7 @@ const isAllowAddNew = ref(false);
 //     key: "item_name",
 // },
 // ]);
+const emits = defineEmits(['close-dialog', 'open-form', 'selected-row', 'search']);
 
 const handleSearch = () => {
     isAllowAddNew.value = true;
@@ -168,7 +169,6 @@ const handleSelectedRow = (event, selectedRow) => {
     emits("selected-row", item);
 };
 
-const emits = defineEmits();
 
 const closeDialog = () => {
     emits("close-dialog");

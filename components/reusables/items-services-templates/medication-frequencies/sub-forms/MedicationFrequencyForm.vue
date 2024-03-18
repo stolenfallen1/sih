@@ -52,7 +52,7 @@ const props = defineProps({
 
 const is_inactive = ref(false)
 
-const emits = defineEmits()
+const emits = defineEmits(['close-dialog', 'handle-submit'])
 
 const handleSubmit = () => {
     emits('handle-submit')

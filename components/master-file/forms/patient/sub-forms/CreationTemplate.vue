@@ -98,7 +98,7 @@ const props = defineProps({
         default: () => false,
     },
 })
-const emits = defineEmits()
+const emits = defineEmits(['close-dialog'])
 
 const remarks_form_dialog = ref(false);
 

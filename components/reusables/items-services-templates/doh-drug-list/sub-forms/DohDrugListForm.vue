@@ -49,7 +49,7 @@ const props = defineProps({
 
 const is_active = ref(true)
 
-const emits = defineEmits()
+const emits = defineEmits(['close-dialog', 'handle-submit'])
 
 const handleSubmit = () => {
     emits('handle-submit')

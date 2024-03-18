@@ -57,7 +57,7 @@ const props = defineProps({
     },
 })
 
-const emits = defineEmits()
+const emits = defineEmits(['close-dialog', 'handle-submit'])
 
 const collection_report_group = ref([
     { id: 1, name: 'Collection Report Group 1' },
