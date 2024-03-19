@@ -2407,57 +2407,68 @@ export default [
                     {
                         label: "Hospital Plan",
                         icon: "mdi-file-document",
-                        path: "/build-file/hospital-plan"
+                        form: "HospitalPlanDialog", 
+                        rule: ""
                     },
                     {
                         label: "ID Types",
                         icon: "mdi-file-document",
-                        path: "/build-file/id-type"
+                        form: "IDTypesDialog",
+                        rule: ""
                     },
                     {
                         label: "Religion",
                         icon: "mdi-file-document",
-                        path: "/build-file/religion"
+                        form: "ReligionDialog",
+                        rule: ""
                     },
                     {
                         label: "Nationality",
                         icon: "mdi-file-document",
-                        path: "/build-file/nationality"
+                        form: "NationalitDialog",
+                        rule: ""
                     },
                     {
                         label: "Sex",
                         icon: "mdi-file-document",
-                        path: "/build-file/sex"
+                        form: "SexDialog",
+                        rule: ""
                     },
                     {
                         label: "Civil Status",
                         icon: "mdi-file-document",
-                        path: "/build-file/civil-status"
+                        form: "CivilStatusDialog",
+                        rule: ""
                     },
                     {
                         label: "Status",
                         icon: "mdi-file-document",
-                        path: "/build-file/status"
+                        form: "HospitalPlanDialog",
+                        rule: ""
                     },
                     {
                         label: "Shifts",
                         icon: "mdi-file-document",
-                        path: "/build-file/shifts"
+                        form: "HospitalPlanDialog",
+                        rule: ""
                     },
                     {
                         label: "Patient Relation",
                         icon: "mdi-file-document",
-                        path: "/build-file/patient-relation"
+                        form: "HospitalPlanDialog",
+                        rule: ""
                     },
                     {
                         label: "Doctor Category",
                         icon: "mdi-file-document",
-                        path: "/build-file/doctor-category"
+                        form: "HospitalPlanDialog",
+                        rule: ""
                     },
                     {
                         label: "Service Type",
                         icon: "mdi-file-document",
-                        path: "/build-file/service-type"
+                        form: "HospitalPlanDialog",
+                        rule: ""
                     },
                     {
                         label: "Suffix",
