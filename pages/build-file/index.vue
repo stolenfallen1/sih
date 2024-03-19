@@ -114,7 +114,7 @@
         :show="SexDialog"
         @close-dialog="close_dialog"
     />
-    
+
     <CivilStatusFormDialog 
         :show="CivilStatusDialog"
         @close-dialog="close_dialog"
@@ -127,6 +127,31 @@
 
     <ShiftFormDialog 
         :show="ShiftDialog"
+        @close-dialog="close_dialog"
+    />
+    
+    <PatientRelationFormDialog 
+        :show="PatientRelationDialog"
+        @close-dialog="close_dialog"
+    />
+
+    <DoctorCategoryFormDialog 
+        :show="DoctorCategoryDialog"
+        @close-dialog="close_dialog"
+    />
+
+    <ServiceTypeFormDialog 
+        :show="ServiceTypeDialog"
+        @close-dialog="close_dialog"
+    />
+
+     <SuffixFormDialog 
+        :show="SuffixDialog"
+        @close-dialog="close_dialog"
+    />
+
+     <PaymentMethodFormDialog 
+        :show="PaymentMethodDialog"
         @close-dialog="close_dialog"
     />
     
@@ -152,6 +177,11 @@ import SexFormDialog from "~/components/reusables/build-file/sex/SexDialog.vue";
 import CivilStatusFormDialog from "~/components/reusables/build-file/civil-status/CivilStatusDialog.vue";
 import StatusFormDialog from "~/components/reusables/build-file/status/StatusDialog.vue";
 import ShiftFormDialog from "~/components/reusables/build-file/shift/ShiftDialog.vue";
+import PatientRelationFormDialog from "~/components/reusables/build-file/patient-relation/PatientRelationDialog.vue";
+import DoctorCategoryFormDialog from "~/components/reusables/build-file/doctor-category/DoctorCategoryDialog.vue";
+import ServiceTypeFormDialog from "~/components/reusables/build-file/service-type/ServiceTypeDialog.vue";
+import SuffixFormDialog from "~/components/reusables/build-file/suffix/SuffixDialog.vue";
+import PaymentMethodFormDialog from "~/components/reusables/build-file/payment-method/PaymentMethodDialog.vue";
 
 
 // Table and templates store
@@ -171,6 +201,11 @@ const {
     CivilStatusDialog,
     StatusDialog,
     ShiftDialog,
+    PatientRelationDialog,
+    DoctorCategoryDialog,
+    ServiceTypeDialog,
+    SuffixDialog,
+    PaymentMethodDialog
 } = storeToRefs(BuildFileDialog());
 
 const close_dialog = ()=>{
@@ -189,6 +224,11 @@ const close_dialog = ()=>{
     CivilStatusDialog.value = false;
     StatusDialog.value = false;
     ShiftDialog.value = false;
+    PatientRelationDialog.value = false;
+    DoctorCategoryDialog.value = false;
+    ServiceTypeDialog.value = false;
+    SuffixDialog.value = false;
+    PaymentMethodDialog.value = false;
 }
 </script>
 
