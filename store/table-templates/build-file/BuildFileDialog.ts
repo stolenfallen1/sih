@@ -15,6 +15,10 @@ export const BuildFileDialog = defineStore('BuildFileDialog',{
     CivilStatusDialog:false,
     StatusDialog:false,
     ShiftDialog:false,
+    PatientRelationDialog:false,
+    DoctorCategoryDialog:false,
+    ServiceTypeDialog:false,
+    SuffixDialog:false,
   }),
    actions:{
     setBuildFileDialog(dialog:any) {

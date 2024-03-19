@@ -2455,140 +2455,164 @@ export default [
                     {
                         label: "Patient Relation",
                         icon: "mdi-file-document",
-                        form: "HospitalPlanDialog",
+                        form: "PatientRelationDialog",
                         rule: ""
                     },
                     {
                         label: "Doctor Category",
                         icon: "mdi-file-document",
-                        form: "HospitalPlanDialog",
+                        form: "DoctorCategoryDialog",
                         rule: ""
                     },
                     {
                         label: "Service Type",
                         icon: "mdi-file-document",
-                        form: "HospitalPlanDialog",
+                        form: "ServiceTypeDialog",
                         rule: ""
                     },
                     {
                         label: "Suffix",
                         icon: "mdi-file-document",
-                        path: "/build-file/suffix"
+                        form: "SuffixDialog",
+                        rule: ""
                     },
                     {
                         label: "Payment Method",
                         icon: "mdi-file-document",
-                        path: "/build-file/payment-method"
+                        form: "ServiceTypeDialog",
+                        rule: ""
                     },
                     {
                         label: "Refund Type",
                         icon: "mdi-file-document",
-                        path: "/build-file/refund-type"
+                        form: "ServiceTypeDialog",
+                        rule: ""
                     },
                     {
                         label: "Level",
                         icon: "mdi-file-document",
-                        path: "/vendor/level"
+                        form: "ServiceTypeDialog",
+                        rule: ""
                     },
                     {
                         label: "Terms",
                         icon: "mdi-file-document",
-                        path: "/vendor/terms"
+                        form: "ServiceTypeDialog",
+                        rule: ""
                     },
                     {
                         label: "Types",
                         icon: "mdi-file-document",
-                        path: "/vendor/types"
+                        form: "ServiceTypeDialog",
+                        rule: ""
                     },
                     {
                         label: "Banks",
                         icon: "mdi-file-document",
-                        path: "/banks/list"
+                        form: "ServiceTypeDialog",
+                        rule: ""
                     },
                     {
                         label: "Banck Account",
                         icon: "mdi-file-document",
-                        path: "/banks/account"
+                        form: "ServiceTypeDialog",
+                        rule: ""
                     },
                     {
                         label: "Credit Cards",
                         icon: "mdi-file-document",
-                        path: "/banks/credit-cards"
+                        form: "ServiceTypeDialog",
+                        rule: ""
                     },
                     {
                         label: "Debit Cards",
                         icon: "mdi-file-document",
-                        path: "/banks/debit-cards"
+                        form: "ServiceTypeDialog",
+                        rule: ""
                     },
                     {
                         label: "Account Class",
                         icon: "mdi-file-document",
-                        path: "/fms/account-class"
+                        form: "ServiceTypeDialog",
+                        rule: ""
                     },
                     {
                         label: "Account Type",
                         icon: "mdi-file-document",
-                        path: "/fms/account-type"
+                        form: "ServiceTypeDialog",
+                        rule: ""
                     },
                     {
                         label: "Cost Center",
                         icon: "mdi-file-document",
-                        path: "/fms/cost-center"
+                        form: "ServiceTypeDialog",
+                        rule: ""
                     },
                     {
                         label: "Account Group",
                         icon: "mdi-file-document",
-                        path: "/fms/account-group"
+                        form: "ServiceTypeDialog",
+                        rule: ""
                     },
                     {
                         label: "Medicare Type",
                         icon: "mdi-file-document",
-                        path: "/fms/medicare-type"
+                        form: "ServiceTypeDialog",
+                        rule: ""
                     },
                     {
                         label: "Revenue Class",
                         icon: "mdi-file-document",
-                        path: "/fms/revenue-class"
+                        form: "ServiceTypeDialog",
+                        rule: ""
                     },
                     {
                         label: "Transaction Classification",
                         icon: "mdi-file-document",
-                        path: "/fms/transaction-classification"
+                        form: "ServiceTypeDialog",
+                        rule: ""
                     },
                     {
                         label: "Transaction Code",
                         icon: "mdi-file-document",
-                        path: "/fms/transaction-code"
+                        form: "ServiceTypeDialog",
+                        rule: ""
                     },
                     {
                         label: "Country",
                         icon: "mdi-file-document",
-                        path: "/address/country"
+                        form: "ServiceTypeDialog",
+                        rule: ""
                     },
                     {
                         label: "Region",
                         icon: "mdi-file-document",
-                        path: "/address/region"
+                        form: "ServiceTypeDialog",
+                        rule: ""
                     },
                     {
                         label: "Province",
                         icon: "mdi-file-document",
-                        path: "/address/province"
+                        form: "ServiceTypeDialog",
+                        rule: ""
                     },
                     {
                         label: "Municipality",
                         icon: "mdi-file-document",
-                        path: "/address/municipality"
+                        form: "ServiceTypeDialog",
+                        rule: ""
                     },
                     {
                         label: "Barangay",
                         icon: "mdi-file-document",
-                        path: "/address/barangay"
+                        form: "ServiceTypeDialog",
+                        rule: ""
                     },
                     {
                         label: "Zipcode",
                         icon: "mdi-file-document",
-                        path: "/address/zipcode"
+                        form: "ServiceTypeDialog",
+                        rule: ""
                     },
                 ]
             },
