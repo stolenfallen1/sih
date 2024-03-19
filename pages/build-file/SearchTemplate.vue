@@ -3,11 +3,12 @@
     <form @submit.prevent="handleSearch">
       <v-card elevation="4" rounded="lg">
         <v-toolbar color="#FFF">
-          <v-toolbar-title style="font-size: large; text-align: center;">Build File Manager</v-toolbar-title>
+          <v-toolbar-title style="font-size: large; text-align: center"
+            >Build File Manager</v-toolbar-title
+          >
         </v-toolbar>
         <v-divider></v-divider>
         <v-card-text>
-
           <v-row>
             <v-col cols="10">
               <v-text-field
@@ -27,21 +28,37 @@
             </v-col>
           </v-row>
 
-          <v-row>
-            <v-col 
-              v-for="(template, index) in items" :key="index"
-              cols="12" sm="6" md="4" lg="3"
-              >
-                <v-card elevation="4" v-for="(template_item, index) in template.child" :key="index">
-                  <template v-for="(item, index) in template_item.table_and_template" :key="index">
-                    <v-card-text style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
-                      <p style="font-size: large; font-weight: 500; font-style: italic; margin-bottom: 20px;">
-                        {{  item.label }}
-                      </p>
-                      <v-btn color="#6984FF" @click="handleOpenTemplate">Open Template</v-btn>
-                    </v-card-text>
-                  </template>
-                </v-card>
+          <v-row no-gutters>
+            <v-col
+              v-for="(template, index) in items"
+              :key="index"
+              cols="12"
+              sm="6"
+              md="4"
+              lg="3"
+              class="pa-1"
+            >
+              <template v-for="(template_item, index) in template.child" :key="index">
+                <template v-if="template_item.table_and_template.length > 0">
+                  <v-card class="ma-1">
+                    <v-list density="compact" class="ma-1">
+                      <v-card-title><div style="font-weight:bold; color:#117dad !important;">{{ template_item.label }}</div></v-card-title>
+                      <v-divider></v-divider>
+                      <template
+                        v-for="(item, index) in template_item.table_and_template"
+                        :key="index"
+                      >
+                        <v-list-item @click="handleOpenTemplate">
+                          <p style="font-size: large; font-weight: 500" >
+                            {{ item.label }}
+                          </p>
+                          <!-- <v-btn color="#6984FF" @click="handleOpenTemplate">Open Template</v-btn> -->
+                        </v-list-item>
+                      </template>
+                    </v-list>
+                  </v-card>
+                </template>
+              </template>
             </v-col>
           </v-row>
         </v-card-text>
@@ -51,18 +68,18 @@
 </template>
 
 <script setup>
-import navigationMenu from '~/constants/navigation-menu';
+import navigationMenu from "~/constants/navigation-menu";
 
-const items = navigationMenu
+const items = navigationMenu;
 
-const emits = defineEmits(['search'])
+const emits = defineEmits(["search"]);
 
-const searchQuery = ref('')
+const searchQuery = ref("");
 // const filteredTemplates = ref(templates.value)
 
 const handleSearch = () => {
   // items.value = items.value.filter(template => template.name.toLowerCase().includes(searchQuery.value.toLowerCase()))
-}
+};
 
 // const handleRefresh = () => {
 //   searchQuery.value = ''
@@ -70,10 +87,8 @@ const handleSearch = () => {
 // }
 
 const handleOpenTemplate = () => {
-  alert("Open Template")
-}
-
+  alert("Open Template");
+};
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>
