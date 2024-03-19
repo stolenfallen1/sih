@@ -2443,13 +2443,13 @@ export default [
                     {
                         label: "Status",
                         icon: "mdi-file-document",
-                        form: "HospitalPlanDialog",
+                        form: "StatusDialog",
                         rule: ""
                     },
                     {
                         label: "Shifts",
                         icon: "mdi-file-document",
-                        form: "HospitalPlanDialog",
+                        form: "ShiftDialog",
                         rule: ""
                     },
                     {

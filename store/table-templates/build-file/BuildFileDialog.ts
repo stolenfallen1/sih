@@ -13,6 +13,8 @@ export const BuildFileDialog = defineStore('BuildFileDialog',{
     ReligionDialog:false,
     SexDialog:false,
     CivilStatusDialog:false,
+    StatusDialog:false,
+    ShiftDialog:false,
   }),
    actions:{
     setBuildFileDialog(dialog:any) {

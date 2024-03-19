@@ -114,8 +114,19 @@
         :show="SexDialog"
         @close-dialog="close_dialog"
     />
+    
     <CivilStatusFormDialog 
         :show="CivilStatusDialog"
+        @close-dialog="close_dialog"
+    />
+
+    <StatusFormDialog 
+        :show="StatusDialog"
+        @close-dialog="close_dialog"
+    />
+
+    <ShiftFormDialog 
+        :show="ShiftDialog"
         @close-dialog="close_dialog"
     />
     
@@ -139,6 +150,8 @@ import NationalitFormDialog from "~/components/reusables/build-file/nationality/
 import ReligionFormDialog from "~/components/reusables/build-file/religion/ReligionDialog.vue";
 import SexFormDialog from "~/components/reusables/build-file/sex/SexDialog.vue";
 import CivilStatusFormDialog from "~/components/reusables/build-file/civil-status/CivilStatusDialog.vue";
+import StatusFormDialog from "~/components/reusables/build-file/status/StatusDialog.vue";
+import ShiftFormDialog from "~/components/reusables/build-file/shift/ShiftDialog.vue";
 
 
 // Table and templates store
@@ -155,7 +168,9 @@ const {
     NationalitDialog,
     ReligionDialog,
     SexDialog,
-    CivilStatusDialog
+    CivilStatusDialog,
+    StatusDialog,
+    ShiftDialog,
 } = storeToRefs(BuildFileDialog());
 
 const close_dialog = ()=>{
@@ -172,6 +187,8 @@ const close_dialog = ()=>{
     ReligionDialog.value = false;
     SexDialog.value = false;
     CivilStatusDialog.value = false;
+    StatusDialog.value = false;
+    ShiftDialog.value = false;
 }
 </script>
 
