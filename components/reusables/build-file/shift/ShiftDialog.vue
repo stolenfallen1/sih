@@ -1,8 +1,8 @@
 <template>
-  <v-dialog :model-value="show" rounded="lg" persistent scrollable max-width="750px">
+  <v-dialog :model-value="show" rounded="lg" persistent scrollable max-width="850px">
     <v-card rounded="lg">
       <v-toolbar density="compact" color="#6984ff" hide-details>
-        <v-toolbar-title>Civil Status</v-toolbar-title>
+        <v-toolbar-title>Shifts</v-toolbar-title>
         <v-spacer></v-spacer>
         <v-btn color="white" @click="closeDialog">
           <v-icon>mdi-close</v-icon>
@@ -45,8 +45,8 @@
               </slot>
             </td>
           </template>
-          <template v-slot:item.isactive="{ item }">
-            {{ item.isactive == 1 ? "Active" : "In-active" }}
+          <template v-slot:item.isActive="{ item }">
+            {{ item.isActive == 1 ? "Active" : "In-active" }}
           </template>
           <template v-slot:item.actions="{ item }">
             <v-icon color="green mr-3" @click="onEdit(item)">mdi-pencil</v-icon>
@@ -73,7 +73,7 @@
     <form @submit.prevent="onSubmit">
       <v-card rounded="lg">
         <v-toolbar density="compact" color="#6984ff" hide-details>
-          <v-toolbar-title>Civil Status Details</v-toolbar-title>
+          <v-toolbar-title>Shifts Details</v-toolbar-title>
           <v-spacer></v-spacer>
           <v-btn color="white" @click="closeForm">
             <v-icon>mdi-close</v-icon>
@@ -85,7 +85,7 @@
           <v-row>
             <v-col cols="3">
               <v-text-field
-                label="Code"
+                label="ID"
                 hide-details
                 readonly
                 v-model="payload.id"
@@ -97,9 +97,42 @@
               <v-text-field
                 variant="outlined"
                 density="compact"
-                label="Enter description"
                 required
-                v-model="payload.civil_status_description"
+                v-model="payload.shift_description"
+                label="Enter Description"
+                clearable
+                hide-details
+              ></v-text-field>
+            </v-col>
+            <v-col cols="3">
+              <v-text-field
+                variant="outlined"
+                density="compact"
+                required
+                v-model="payload.shifts_code"
+                label="Enter Code"
+                clearable
+                hide-details
+              ></v-text-field>
+            </v-col>
+            <v-col cols="5">
+              <v-text-field
+                variant="outlined"
+                density="compact"
+                required
+                v-model="payload.beginning_military_hour"
+                label="Enter Beginning Military"
+                clearable
+                hide-details
+              ></v-text-field>
+            </v-col>
+            <v-col cols="4">
+              <v-text-field
+                variant="outlined"
+                density="compact"
+                required
+                v-model="payload.end_military_hour"
+                label="End Military Hour"
                 clearable
                 hide-details
               ></v-text-field>
@@ -107,8 +140,7 @@
             <v-col cols="4">
               <v-checkbox
                 class="mt-0 mb-0"
-                v-model="payload.isactive"
-                hide-details
+                v-model="payload.isActive"
                 label="Is Active"
               ></v-checkbox>
             </v-col>
@@ -146,17 +178,25 @@ const isloading = ref(false);
 const open_form_dialog = ref(false);
 const headers = [
   {
-    title: "code",
+    title: "ID",
     align: "start",
     sortable: false,
     key: "id",
   },
-  { title: "Description", key: "civil_status_description", align: "start", width: "60%" },
+  { title: "Code", key: "shifts_code", align: "start", width: "10%" },
+  { title: "Description", key: "shift_description", align: "start", width: "30%" },
+  {
+    title: "Beginning Hour",
+    key: "beginning_military_hour",
+    align: "start",
+    width: "15%",
+  },
+  { title: "End Military Hour", key: "end_military_hour", align: "start", width: "15%" },
   { title: "", key: "actions", align: "start", width: "20%" },
 ];
 
 const data = ref({
-  title: "List of civil-status",
+  title: "List of shift-schedules",
   keyword: "",
   loading: false,
   filter: {},
@@ -176,7 +216,7 @@ const loadItems = async (page = null, itemsPerPage = null, sortBy = null) => {
   let itemPerpageno = itemsPerPage || 10;
   let params =
     "page=" + pageno + "&per_page=" + itemPerpageno + "&keyword=" + data.value.keyword;
-  const response = await useMethod("get", "civil-status?", "", params);
+  const response = await useMethod("get", "shift-schedules?", "", params);
   if (response) {
     serverItems.value = response.data;
     totalItems.value = response.total;
@@ -201,7 +241,7 @@ const onEdit = (item) => {
   openForm();
   payload.value = Object.assign({});
   payload.value = Object.assign({}, item);
-  payload.value.isactive = item.isactive == 1 ? true : false;
+  payload.value.isActive = item.isActive == 1 ? true : false;
 };
 
 const onSubmit = async () => {
@@ -210,13 +250,13 @@ const onSubmit = async () => {
   if (payload.value.id) {
     response = await useMethod(
       "put",
-      "civil-status",
+      "shift-schedules",
       payload.value,
       "",
       payload.value.id
     );
   } else {
-    response = await useMethod("post", "civil-status", payload.value);
+    response = await useMethod("post", "shift-schedules", payload.value);
   }
   if (response) {
     useSnackbar(true, "green", response.msg);
@@ -230,7 +270,7 @@ const confirm = async () => {
   if (payload.value.id) {
     let response = await useMethod(
       "delete",
-      "civil-status",
+      "shift-schedules",
       payload.value,
       "",
       payload.value.id

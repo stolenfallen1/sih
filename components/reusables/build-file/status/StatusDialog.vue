@@ -2,7 +2,7 @@
   <v-dialog :model-value="show" rounded="lg" persistent scrollable max-width="750px">
     <v-card rounded="lg">
       <v-toolbar density="compact" color="#6984ff" hide-details>
-        <v-toolbar-title>Civil Status</v-toolbar-title>
+        <v-toolbar-title>Status</v-toolbar-title>
         <v-spacer></v-spacer>
         <v-btn color="white" @click="closeDialog">
           <v-icon>mdi-close</v-icon>
@@ -45,8 +45,8 @@
               </slot>
             </td>
           </template>
-          <template v-slot:item.isactive="{ item }">
-            {{ item.isactive == 1 ? "Active" : "In-active" }}
+          <template v-slot:item.isActive="{ item }">
+            {{ item.isActive == 1 ? "Active" : "In-active" }}
           </template>
           <template v-slot:item.actions="{ item }">
             <v-icon color="green mr-3" @click="onEdit(item)">mdi-pencil</v-icon>
@@ -58,7 +58,9 @@
       <v-card-actions>
         <v-btn color="blue-darken-1" @click="closeDialog"> Close </v-btn>
         <v-spacer></v-spacer>
-        <v-btn class="bg-primary text-white" type="submit" @click="openForm">Add</v-btn>
+        <v-btn class="bg-primary text-white" type="submit" @click="openForm"
+          >Add</v-btn
+        >
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -73,7 +75,7 @@
     <form @submit.prevent="onSubmit">
       <v-card rounded="lg">
         <v-toolbar density="compact" color="#6984ff" hide-details>
-          <v-toolbar-title>Civil Status Details</v-toolbar-title>
+          <v-toolbar-title>Status Details</v-toolbar-title>
           <v-spacer></v-spacer>
           <v-btn color="white" @click="closeForm">
             <v-icon>mdi-close</v-icon>
@@ -93,21 +95,21 @@
                 variant="outlined"
               ></v-text-field>
             </v-col>
-            <v-col cols="9">
-              <v-text-field
-                variant="outlined"
-                density="compact"
-                label="Enter description"
-                required
-                v-model="payload.civil_status_description"
-                clearable
-                hide-details
-              ></v-text-field>
-            </v-col>
+             <v-col cols="9">
+                <v-text-field
+                  variant="outlined"
+                  density="compact"
+                  label="Enter description"
+                  required
+                  v-model="payload.Status_description"
+                  clearable
+                  hide-details
+                ></v-text-field>
+              </v-col>
             <v-col cols="4">
               <v-checkbox
                 class="mt-0 mb-0"
-                v-model="payload.isactive"
+                v-model="payload.isActive"
                 hide-details
                 label="Is Active"
               ></v-checkbox>
@@ -151,12 +153,12 @@ const headers = [
     sortable: false,
     key: "id",
   },
-  { title: "Description", key: "civil_status_description", align: "start", width: "60%" },
+  { title: "Description", key: "Status_description", align: "start", width: "60%" },
   { title: "", key: "actions", align: "start", width: "20%" },
 ];
 
 const data = ref({
-  title: "List of civil-status",
+  title: "List of statuses",
   keyword: "",
   loading: false,
   filter: {},
@@ -176,7 +178,7 @@ const loadItems = async (page = null, itemsPerPage = null, sortBy = null) => {
   let itemPerpageno = itemsPerPage || 10;
   let params =
     "page=" + pageno + "&per_page=" + itemPerpageno + "&keyword=" + data.value.keyword;
-  const response = await useMethod("get", "civil-status?", "", params);
+  const response = await useMethod("get", "statuses?", "", params);
   if (response) {
     serverItems.value = response.data;
     totalItems.value = response.total;
@@ -201,22 +203,16 @@ const onEdit = (item) => {
   openForm();
   payload.value = Object.assign({});
   payload.value = Object.assign({}, item);
-  payload.value.isactive = item.isactive == 1 ? true : false;
+  payload.value.isActive = item.isActive == 1 ? true : false;
 };
 
 const onSubmit = async () => {
   let response;
   isloading.value = true;
   if (payload.value.id) {
-    response = await useMethod(
-      "put",
-      "civil-status",
-      payload.value,
-      "",
-      payload.value.id
-    );
+    response = await useMethod("put", "statuses", payload.value, "", payload.value.id);
   } else {
-    response = await useMethod("post", "civil-status", payload.value);
+    response = await useMethod("post", "statuses", payload.value);
   }
   if (response) {
     useSnackbar(true, "green", response.msg);
@@ -230,7 +226,7 @@ const confirm = async () => {
   if (payload.value.id) {
     let response = await useMethod(
       "delete",
-      "civil-status",
+      "statuses",
       payload.value,
       "",
       payload.value.id
