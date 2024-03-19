@@ -7,6 +7,12 @@ export const BuildFileDialog = defineStore('BuildFileDialog',{
     BloodTypeDialog:false,
     DeathTypeDialog:false,
     TransactionTypeDialog:false,
+    HospitalPlanDialog:false,
+    IDTypesDialog:false,
+    NationalitDialog:false,
+    ReligionDialog:false,
+    SexDialog:false,
+    CivilStatusDialog:false,
   }),
    actions:{
     setBuildFileDialog(dialog:any) {

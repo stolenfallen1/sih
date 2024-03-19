@@ -2,7 +2,7 @@
   <v-dialog :model-value="show" rounded="lg" persistent scrollable max-width="750px">
     <v-card rounded="lg">
       <v-toolbar density="compact" color="#6984ff" hide-details>
-        <v-toolbar-title>Transaction Type</v-toolbar-title>
+        <v-toolbar-title>Civil Status</v-toolbar-title>
         <v-spacer></v-spacer>
         <v-btn color="white" @click="closeDialog">
           <v-icon>mdi-close</v-icon>
@@ -75,7 +75,7 @@
     <form @submit.prevent="onSubmit">
       <v-card rounded="lg">
         <v-toolbar density="compact" color="#6984ff" hide-details>
-          <v-toolbar-title>Transaction Type Details</v-toolbar-title>
+          <v-toolbar-title>Civil Status Details</v-toolbar-title>
           <v-spacer></v-spacer>
           <v-btn color="white" @click="closeForm">
             <v-icon>mdi-close</v-icon>
@@ -101,7 +101,7 @@
                   density="compact"
                   label="Enter description"
                   required
-                  v-model="payload.description"
+                  v-model="payload.civil-status_description"
                   clearable
                   hide-details
                 ></v-text-field>
@@ -153,11 +153,11 @@ const headers = [
     sortable: false,
     key: "id",
   },
-  { title: "Description", key: "description", align: "start", width: "60%" },
+  { title: "Description", key: "CivilStatus_name", align: "start", width: "60%" },
   { title: "", key: "actions", align: "start", width: "20%" },
 ];
 const data = ref({
-  title: "List of Transaction Type",
+  title: "List of civil-status",
   keyword: "",
   loading: false,
   filter: {},
@@ -177,7 +177,7 @@ const loadItems = async (page = null, itemsPerPage = null, sortBy = null) => {
   let itemPerpageno = itemsPerPage || 10;
   let params =
     "page=" + pageno + "&per_page=" + itemPerpageno + "&keyword=" + data.value.keyword;
-  const response = await useMethod("get", "transaction-type?", "", params);
+  const response = await useMethod("get", "civil-status?", "", params);
   if (response) {
     serverItems.value = response.data;
     totalItems.value = response.total;
@@ -209,9 +209,9 @@ const onSubmit = async () => {
   let response;
   isloading.value = true;
   if (payload.value.id) {
-    response = await useMethod("put", "transaction-type", payload.value, "", payload.value.id);
+    response = await useMethod("put", "civil-status", payload.value, "", payload.value.id);
   } else {
-    response = await useMethod("post", "transaction-type", payload.value);
+    response = await useMethod("post", "civil-status", payload.value);
   }
   if (response) {
     useSnackbar(true, "green", response.msg);
@@ -225,7 +225,7 @@ const confirm = async () => {
   if (payload.value.id) {
     let response = await useMethod(
       "delete",
-      "transaction-type",
+      "civil-status",
       payload.value,
       "",
       payload.value.id

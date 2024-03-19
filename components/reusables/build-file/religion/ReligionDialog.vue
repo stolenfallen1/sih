@@ -2,7 +2,7 @@
   <v-dialog :model-value="show" rounded="lg" persistent scrollable max-width="750px">
     <v-card rounded="lg">
       <v-toolbar density="compact" color="#6984ff" hide-details>
-        <v-toolbar-title>Transaction Type</v-toolbar-title>
+        <v-toolbar-title>Religion</v-toolbar-title>
         <v-spacer></v-spacer>
         <v-btn color="white" @click="closeDialog">
           <v-icon>mdi-close</v-icon>
@@ -58,9 +58,7 @@
       <v-card-actions>
         <v-btn color="blue-darken-1" @click="closeDialog"> Close </v-btn>
         <v-spacer></v-spacer>
-        <v-btn class="bg-primary text-white" type="submit" @click="openForm"
-          >Add</v-btn
-        >
+        <v-btn class="bg-primary text-white" type="submit" @click="openForm">Add</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -75,14 +73,13 @@
     <form @submit.prevent="onSubmit">
       <v-card rounded="lg">
         <v-toolbar density="compact" color="#6984ff" hide-details>
-          <v-toolbar-title>Transaction Type Details</v-toolbar-title>
+          <v-toolbar-title>Religion Details</v-toolbar-title>
           <v-spacer></v-spacer>
           <v-btn color="white" @click="closeForm">
             <v-icon>mdi-close</v-icon>
           </v-btn>
         </v-toolbar>
         <v-divider></v-divider>
-
         <v-card-text>
           <v-row>
             <v-col cols="3">
@@ -95,17 +92,17 @@
                 variant="outlined"
               ></v-text-field>
             </v-col>
-             <v-col cols="9">
-                <v-text-field
-                  variant="outlined"
-                  density="compact"
-                  label="Enter description"
-                  required
-                  v-model="payload.description"
-                  clearable
-                  hide-details
-                ></v-text-field>
-              </v-col>
+            <v-col cols="9">
+              <v-text-field
+                variant="outlined"
+                density="compact"
+                label="Enter description"
+                required
+                v-model="payload.religion"
+                clearable
+                hide-details
+              ></v-text-field>
+            </v-col>
             <v-col cols="4">
               <v-checkbox
                 class="mt-0 mb-0"
@@ -125,6 +122,7 @@
       </v-card>
     </form>
   </v-dialog>
+
   <deleteConfirmation
     :show="confirmation"
     @confirm="confirm"
@@ -153,11 +151,11 @@ const headers = [
     sortable: false,
     key: "id",
   },
-  { title: "Description", key: "description", align: "start", width: "60%" },
+  { title: "Religion", key: "religion_name", align: "start", width: "60%" },
   { title: "", key: "actions", align: "start", width: "20%" },
 ];
 const data = ref({
-  title: "List of Transaction Type",
+  title: "List of Religion",
   keyword: "",
   loading: false,
   filter: {},
@@ -177,7 +175,7 @@ const loadItems = async (page = null, itemsPerPage = null, sortBy = null) => {
   let itemPerpageno = itemsPerPage || 10;
   let params =
     "page=" + pageno + "&per_page=" + itemPerpageno + "&keyword=" + data.value.keyword;
-  const response = await useMethod("get", "transaction-type?", "", params);
+  const response = await useMethod("get", "religions?", "", params);
   if (response) {
     serverItems.value = response.data;
     totalItems.value = response.total;
@@ -209,9 +207,15 @@ const onSubmit = async () => {
   let response;
   isloading.value = true;
   if (payload.value.id) {
-    response = await useMethod("put", "transaction-type", payload.value, "", payload.value.id);
+    response = await useMethod(
+      "put",
+      "religions",
+      payload.value,
+      "",
+      payload.value.id
+    );
   } else {
-    response = await useMethod("post", "transaction-type", payload.value);
+    response = await useMethod("post", "religions", payload.value);
   }
   if (response) {
     useSnackbar(true, "green", response.msg);
@@ -225,7 +229,7 @@ const confirm = async () => {
   if (payload.value.id) {
     let response = await useMethod(
       "delete",
-      "transaction-type",
+      "religions",
       payload.value,
       "",
       payload.value.id

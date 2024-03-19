@@ -65,6 +65,7 @@
   <deleteConfirmation :show="confirmation" @confirm="confirm" @close="closeconfirmation" />
 </template>
 
+
 <script setup>
 import AdjustmentTypesForm from './sub-forms/AdjustmentTypesForm.vue';
 

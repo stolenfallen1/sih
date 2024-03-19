@@ -92,6 +92,32 @@
         @close-dialog="close_dialog"
     />
 
+    <HospitalPlanFormDialog 
+        :show="HospitalPlanDialog"
+        @close-dialog="close_dialog"
+    />
+    <IDTypesFormDialog 
+        :show="IDTypesDialog"
+        @close-dialog="close_dialog"
+    />
+
+    <NationalitFormDialog 
+        :show="NationalitDialog"
+        @close-dialog="close_dialog"
+    />
+
+    <ReligionFormDialog 
+        :show="ReligionDialog"
+        @close-dialog="close_dialog"
+    />
+     <SexFormDialog 
+        :show="SexDialog"
+        @close-dialog="close_dialog"
+    />
+    <CivilStatusFormDialog 
+        :show="CivilStatusDialog"
+        @close-dialog="close_dialog"
+    />
     
 </template>
 
@@ -107,6 +133,12 @@ import BedStatusFormDialog from "~/components/reusables/build-file/bed-status/Be
 import BloodTypeFormDialog from "~/components/reusables/build-file/blood-type/BloodTypeDialog.vue";
 import DeathTypeFormDialog from "~/components/reusables/build-file/death-types/DeathTypeDialog.vue";
 import TransactionTypeFormDialog from "~/components/reusables/build-file/transaction-type/TransactionTypeDialog.vue";
+import HospitalPlanFormDialog from "~/components/reusables/build-file/hospital-plan/HospitalPlanDialog.vue";
+import IDTypesFormDialog from "~/components/reusables/build-file/id-types/IDTypesDialog.vue";
+import NationalitFormDialog from "~/components/reusables/build-file/nationality/NationalityDialog.vue";
+import ReligionFormDialog from "~/components/reusables/build-file/religion/ReligionDialog.vue";
+import SexFormDialog from "~/components/reusables/build-file/sex/SexDialog.vue";
+import CivilStatusFormDialog from "~/components/reusables/build-file/civil-status/CivilStatusDialog.vue";
 
 
 // Table and templates store
@@ -117,7 +149,13 @@ const {
     BedStatusDialog,
     BloodTypeDialog,
     DeathTypeDialog,
-    TransactionTypeDialog
+    TransactionTypeDialog,
+    HospitalPlanDialog,
+    IDTypesDialog,
+    NationalitDialog,
+    ReligionDialog,
+    SexDialog,
+    CivilStatusDialog
 } = storeToRefs(BuildFileDialog());
 
 const close_dialog = ()=>{
@@ -128,6 +166,12 @@ const close_dialog = ()=>{
     BloodTypeDialog.value = false;
     DeathTypeDialog.value = false;
     TransactionTypeDialog.value = false;
+    HospitalPlanDialog.value = false;
+    IDTypesDialog.value = false;
+    NationalitDialog.value = false;
+    ReligionDialog.value = false;
+    SexDialog.value = false;
+    CivilStatusDialog.value = false;
 }
 </script>
 
