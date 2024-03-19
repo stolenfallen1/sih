@@ -101,7 +101,7 @@
                   density="compact"
                   label="Enter description"
                   required
-                  v-model="payload.civil-status_description"
+                  v-model="payload.status_description"
                   clearable
                   hide-details
                 ></v-text-field>
