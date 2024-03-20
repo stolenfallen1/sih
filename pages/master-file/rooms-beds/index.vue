@@ -91,40 +91,6 @@
   <!-- FORM HERE -->
   <RoomsandBedsForm @close-dialog="closeFormDialog" @submit="confirmation" :form_dialog="form_dialog" :form_payload="form_payload" />
 
-  <!-- Table and Templates -->
-  <BuildingsFloorsDialog 
-    :show="BuildingsFloors"
-    @close-dialog="closeBuildingsFloors"
-  />
-  <NursingStationsWardsDialog 
-    :show="NursingStationsWards"
-    @close-dialog="closeNursingStationsWards"
-  />
-  <RoomClassicationTypesDialog 
-    :show="RoomClassificationTypes"
-    @close-dialog="closeRoomClassificationTypes"
-  />
-  <RoomChargeSettingsDialog 
-    :show="RoomChargeSettings"
-    @close-dialog="closeRoomChargeSettings"
-  />
-  <RoomPriceSchemesDialog 
-    :show="RoomPriceSchemes"
-    @close-dialog="closeRoomPriceSchemes"
-  />
-  <RoomStatusDialog 
-    :show="RoomStatus"
-    @close-dialog="closeRoomStatus"
-  />
-  <RoomUsageTypeDialog 
-    :show="RoomUsageTypes"
-    @close-dialog="closeRoomUsageTypes"
-  />
-  <BedStatusDialog 
-    :show="BedStatus"
-    @close-dialog="closeBedStatus"
-  />
-
   <Confirmation
     :show="confirmationDialog"
     :payload="form_payload"
@@ -138,25 +104,6 @@
 <script setup>
 import RoomsandBedsForm from "./Form.vue";
 import ReusableTable from "~/components/reusables/ReusableTable.vue";
-const { 
-  BuildingsFloors,
-  NursingStationsWards,
-  RoomClassificationTypes,
-  RoomChargeSettings,
-  RoomPriceSchemes,
-  RoomStatus,
-  RoomUsageTypes,
-  BedStatus
-} = storeToRefs(RoomsBedsTemplateDialog());
-// Table and templates component
-import BuildingsFloorsDialog from "~/components/reusables/rooms-beds-templates/buildings-floors/BuildingsFloorsDialog.vue";
-import NursingStationsWardsDialog from "~/components/reusables/rooms-beds-templates/nursing-stations-wards/NursingStationsWardsDialog.vue";
-import RoomClassicationTypesDialog from "~/components/reusables/rooms-beds-templates/room-classification-types/RoomClassificationTypesDialog.vue";
-import RoomChargeSettingsDialog from "~/components/reusables/rooms-beds-templates/room-charge-settings/RoomChargeSettingsDialog.vue";
-import RoomPriceSchemesDialog from "~/components/reusables/rooms-beds-templates/room-price-schemes/RoomPriceSchemesDialog.vue";
-import RoomStatusDialog from "~/components/reusables/rooms-beds-templates/room-status/RoomStatusDialog.vue";
-import RoomUsageTypeDialog from "~/components/reusables/rooms-beds-templates/room-usage-type/RoomUsageTypeDialog.vue";
-import BedStatusDialog from "~/components/reusables/rooms-beds-templates/bed-status/BedStatusDialog.vue"; 
 
 definePageMeta({
   layout: "root-layout",

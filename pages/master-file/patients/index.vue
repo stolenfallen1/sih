@@ -87,114 +87,12 @@
     :form_payload="form_payload"
     @close-dialog="closeFormContainer"
   />
-
-  <DiscountSchemesDialog 
-    :show="DiscountSchemes"
-    @close-dialog="closeDiscountSchemes"
-  />
-  <MedicalServiceTypesDialog 
-    :show="MedicalServiceTypes"
-    @close-dialog="closeMedicalServiceTypes"
-  />
-  <MedicalSubServiceTypesDialog 
-    :show="MedicalSubServiceTypes"
-    @close-dialog="closeMedicalSubServiceTypes"
-  />
-  <PriceSchemesDialog 
-    :show="PriceSchemes"
-    @close-dialog="closePriceSchemes"
-  />
-  <PriceGroupDialog 
-    :show="PriceGroup"
-    @close-dialog="closePriceGroup"
-  />
-  <DocumentCategoriesDialog 
-    :show="DocumentCategories"
-    @close-dialog="closeDocumentCategories"
-  />
-  <PatientAddInfoDialog 
-    :show="PatientAddtionalInformation"
-    @close-dialog="closePatientAddtionalInformation"
-  />
-  <BadHabitsDialog 
-    :show="BadHabits"
-    @close-dialog="closeBadHabits"
-  />
-  <IdTypesDialog
-    :show="IdTypes"
-    @close-dialog="closeIdTypes"
-  />
-  <AuthoritiesDialog
-    :show="Authorities"
-    @close-dialog="closeAuthorities"
-  />
-  <EmploymentInfoPositionDialog 
-    :show="EmploymentInformationPositions"
-    @close-dialog="closeEmploymentInformationPositions"
-  />
-  <EmployerNameDialog 
-    :show="EmployerName"
-    @close-dialog="closeEmployerName"
-  />
-  <OtherSpecialistDialog 
-    :show="OtherSpecialist"
-    @close-dialog="closeOtherSpecialist"
-  />
-  <FacilitiesDialog 
-    :show="Facilities"
-    @close-dialog="closeFacilities"
-  />
-  <LoaDepartmentDialog 
-    :show="LoaDepartment"
-    @close-dialog="closeLoaDepartment"
-  />
-  <MilitaryClassificationDialog 
-    :show="MilitaryClassification"
-    @close-dialog="closeMilitaryClassification"
-  />
-
 </template>
 
 <script setup>
 import ReusableTable from "~/components/reusables/ReusableTable.vue";
 import CentralLookUpForm from "~/components/reusables/CentralLookUpForm.vue";
 import FormContainer from "~/components/master-file/forms/patient/FormContainer.vue";
-// Table and templates store 
-const { 
-  DiscountSchemes,
-  MedicalServiceTypes,
-  MedicalSubServiceTypes,
-  PriceSchemes,
-  PriceGroup,
-  DocumentCategories,
-  PatientAddtionalInformation,
-  BadHabits,
-  IdTypes,
-  Authorities,
-  EmploymentInformationPositions,
-  EmployerName,
-  OtherSpecialist,
-  Facilities,
-  LoaDepartment,
-  MilitaryClassification,
-} = storeToRefs(PatientsTemplateDialog())
-// Table and templates component
-import DiscountSchemesDialog from "~/components/reusables/patients-templates/discount-schemes/DiscountSchemesDialog.vue";
-import MedicalServiceTypesDialog from "~/components/reusables/patients-templates/medical-service-types/MedicalServiceTypesDialog.vue";
-import MedicalSubServiceTypesDialog from "~/components/reusables/patients-templates/medical-sub-service-types/MedicalSubServiceTypesDialog.vue";
-import PriceSchemesDialog from "~/components/reusables/patients-templates/price-schemes/PriceSchemesDialog.vue";
-import PriceGroupDialog from "~/components/reusables/patients-templates/price-group/PriceGroupDialog.vue";
-import DocumentCategoriesDialog from "~/components/reusables/patients-templates/document-categories/DocumentCategoriesDialog.vue";
-import PatientAddInfoDialog from "~/components/reusables/patients-templates/patient-add-info/PatientAddInfoDialog.vue";
-import BadHabitsDialog from "~/components/reusables/patients-templates/bad-habits/BadHabitsDialog.vue";
-import IdTypesDialog from "~/components/reusables/patients-templates/id-types/IdTypesDialog.vue";
-import AuthoritiesDialog from "~/components/reusables/patients-templates/authorities/AuthoritiesDialog.vue";
-import EmploymentInfoPositionDialog from "~/components/reusables/patients-templates/employment-information-position/EmploymentInfoPositionDialog.vue";
-import EmployerNameDialog from "~/components/reusables/patients-templates/employer-name/EmployerNameDialog.vue";
-import OtherSpecialistDialog from "~/components/reusables/patients-templates/other-specialist/OtherSpecialistDialog.vue";
-import FacilitiesDialog from "~/components/reusables/patients-templates/facilities/FacilitiesDialog.vue";
-import LoaDepartmentDialog from "~/components/reusables/patients-templates/loa-department/LoaDepartmentDialog.vue";
-import MilitaryClassificationDialog from "~/components/reusables/patients-templates/military-classification/MilitaryClassificationDialog.vue";
 
 definePageMeta({
   layout: "root-layout",
@@ -433,56 +331,6 @@ const updateTotalItems = (newTotalItems) => {
 const updateServerItems = (newServerItems) => {
   serverItems.value = newServerItems;
 };
-
-// Tables and template methods
-const closeDiscountSchemes = () => {
-  DiscountSchemes.value = false;
-}
-const closeMedicalServiceTypes = () => {
-  MedicalServiceTypes.value = false;
-}
-const closeMedicalSubServiceTypes = () => {
-  MedicalSubServiceTypes.value = false;
-}
-const closePriceSchemes = () => {
-  PriceSchemes.value = false;
-}
-const closePriceGroup = () => {
-  PriceGroup.value = false;
-}
-const closeDocumentCategories = () => {
-  DocumentCategories.value = false;
-}
-const closePatientAddtionalInformation = () => {
-  PatientAddtionalInformation.value = false;
-}
-const closeBadHabits = () => {
-  BadHabits.value = false;
-}
-const closeIdTypes = () => {
-  IdTypes.value = false;
-}
-const closeAuthorities = () => {
-  Authorities.value = false
-}
-const closeEmploymentInformationPositions = () => {
-  EmploymentInformationPositions.value = false
-}
-const closeEmployerName = () => {
-  EmployerName.value = false;
-}
-const closeOtherSpecialist = () => {
-  OtherSpecialist.value = false;
-}
-const closeFacilities = () => {
-  Facilities.value = false;
-}
-const closeLoaDepartment = () => {
-  LoaDepartment.value = false;
-}
-const closeMilitaryClassification = () => {
-  MilitaryClassification.value = false;
-}
 
 </script>
 

@@ -3,7 +3,7 @@
 
       <v-card rounded="lg">
           <v-toolbar density="compact" color="#6984ff" hide-details>
-              <v-toolbar-title>I.D Types</v-toolbar-title>
+              <v-toolbar-title>Medical Social Service Template</v-toolbar-title>
               <v-spacer></v-spacer>
               <v-btn color="white" @click="closeDialog">
                   <v-icon>mdi-close</v-icon>
@@ -61,12 +61,12 @@
           </v-card-actions>
       </v-card>
   </v-dialog>
-  <id-types-form :open_form_dialog="open_form_dialog" @close-dialog="closeFormDialog" @handle-submit="onSubmit" />
+  <medial-social-service-form :open_form_dialog="open_form_dialog" @close-dialog="closeFormDialog" @handle-submit="onSubmit" />
   <deleteConfirmation :show="confirmation" @confirm="confirm" @close="closeconfirmation" />
 </template>
 
 <script setup>
-import IdTypesForm from "./sub-forms/IdTypesForm.vue";
+import MedialSocialServiceForm from './sub-forms/MedialSocialServiceForm.vue';
 
 const props = defineProps({
   show: {
@@ -88,8 +88,8 @@ const headers = [
       sortable: false,
       key: 'id',
   },
-  { title: 'Description', key: 'description', align: 'start', width:"65%" },
-  { title: '', key: 'actions', align: 'start' },
+  { title: 'Description', key: 'description', align: 'start', width:"60%" },
+  { title: '', key: 'actions', align: 'start', width: "15%" },
 ];
 const data = ref({
   title: "List of Unit",

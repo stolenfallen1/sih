@@ -93,6 +93,111 @@
     :show="AdjustmentTypes"
     @close-dialog="closeAdjustmentTypes"
   />
+  <AdmissionResultDialog 
+    :show="AdmissionResult"
+    @close-dialog="closeAdmissionResult"
+  />
+  <AllergiesDialog 
+    :show="Allergies"
+    @close-dialog="closeAllergies"
+  />
+  <BillingTemplateDialog 
+    :show="BillingTemplates"
+    @close-dialog="closeBillingTemplates"
+  />
+  <BillingTemplateGroupDialog 
+    :show="BillingTemplateGroups"
+    @close-dialog="closeBillingTemplateGroups"
+  />
+  <CsCaseIndicatorsDialog 
+    :show="CsCaseIndicators"
+    @close-dialog="closeCsCaseIndicators"
+  />
+  <DeathTypesDialog 
+    :show="DeathTypes"
+    @close-dialog="closeDeathTypes"
+  />
+  <DiscountSchemesDialog 
+    :show="DiscountSchemes"
+    @close-dialog="closeDiscountSchemes"
+  />
+  <ExcellenceCentersDialog
+    :show="ExcellenceCenters"
+    @close-dialog="closeExcellenceCenters"
+  />
+  <ReferringCentersDialog
+    :show="ReferringCenters"
+    @close-dialog="closeReferringCenters"
+  />
+  <DispositionTypesDialog 
+    :show="DispositionTypes"
+    @close-dialog="closeDispositionTypes"
+  />
+  <MedicalServiceTypesDialog
+    :show="MedicalServiceTypes"
+    @close-dialog="closeMedicalServiceTypes"
+  />
+  <MedicalSubServiceTypesDialog 
+    :show="MedicalSubServiceTypes"
+    @close-dialog="closeMedicalSubServiceTypes"
+  />
+  <HospitalizationTypesDialog
+    :show="HospitalizationTypes"
+    @close-dialog="closeHospitalizationTypes"
+  />
+  <HospitalizationPlansDialog 
+    :show="HospitalizationPlan"
+    @close-dialog="closeHospitalizationPlan"
+  />
+  <HospitalizationCaseTypesDialog 
+    :show="HospitalizationCaseTypes"
+    @close-dialog="closeHospitalizationCaseTypes"
+  />
+  <HospitalizationTransactionTypesDialog 
+    :show="HospitalTransactionTypes"
+    @close-dialog="closeHospitalTransactionTypes"
+  />
+  <InternalControlTableDialog 
+    :show="InternalControlTable"
+    @close-dialog="closeInternalControlTable"
+  />
+  <ListOfAttendantDialog 
+    :show="ListOfAttendants"
+    @close-dialog="closeListOfAttendants"
+  />
+  <SurgicalProceduresDialog 
+    :show="SurgicalProcedures"
+    @close-dialog="closeSurgicalProcedures"
+  />
+  <SurgicalProcedureCategoryDialog 
+    :show="SurgicalProceduresCategory"
+    @close-dialog="closeSurgicalProceduresCategory"
+  />
+  <BodySystemsDialog 
+    :show="BodySystems"
+    @close-dialog="closeBodySystems"
+  />
+  <BodyOrgansDialog 
+    :show="BodyOrgans"
+    @close-dialog="closeBodyOrgans"
+  />
+  <TypesOfAnesthesiaDialog 
+    :show="TypesOfAnesthesia"
+    @close-dialog="closeTypesOfAnesthesia"
+  />
+  <MedialSocialServiceDialog 
+    :show="MedicalSocialServiceTemplate"
+    @close-dialog="closeMedicalSocialServiceTemplate"
+  />
+  <OtherHospitalServicesDialog 
+    :show="OtherHospitalServicesTemplate"
+    @close-dialog="closeOtherHospitalServicesTemplate"
+  />
+  <ListOfPetDialog 
+    :show="ListOfPetBreed"
+    @close-dialog="closeListOfPetBreed"
+  />
+
 </template>
 
 <script setup>
@@ -133,6 +238,35 @@ const {
 } = storeToRefs(InPatientsTemplateDialog())
 // Table and Template components
 import AdjustmentTypesDialog from "../../../components/reusables/inpatient-templates/adjustment-types/AdjustmentTypesDialog.vue";
+import AdmissionResultDialog from "~/components/reusables/inpatient-templates/admission-result/AdmissionResultDialog.vue";
+import AllergiesDialog from "~/components/reusables/inpatient-templates/allergies/AllergiesDialog.vue";
+import BillingTemplateDialog from "~/components/reusables/inpatient-templates/billing-templates/BillingTemplateDialog.vue";
+import BillingTemplateGroupDialog from "~/components/reusables/inpatient-templates/billing-template-groups/BillingTemplateGroupDialog.vue";
+import CsCaseIndicatorsDialog from "~/components/reusables/inpatient-templates/cs-case-indicators/CsCaseIndicatorsDialog.vue";
+import DeathTypesDialog from "~/components/reusables/inpatient-templates/death-types/DeathTypesDialog.vue";
+import DiscountSchemesDialog from "~/components/reusables/inpatient-templates/discount-schemes/DiscountSchemesDialog.vue";
+import ExcellenceCentersDialog from "~/components/reusables/inpatient-templates/excellence-centers/ExcellenceCentersDialog.vue";
+import ReferringCentersDialog from "~/components/reusables/inpatient-templates/referring-centers/ReferringCentersDialog.vue";
+import DispositionTypesDialog from "~/components/reusables/inpatient-templates/disposition-types/DispositionTypesDialog.vue";
+import MedicalServiceTypesDialog from "~/components/reusables/inpatient-templates/medical-service-types/MedicalServiceTypesDialog.vue";
+import MedicalSubServiceTypesDialog from "~/components/reusables/inpatient-templates/medical-sub-service-types/MedicalSubServiceTypesDialog.vue";
+// Room Classifications
+// Room Price Schemes
+import HospitalizationTypesDialog from "~/components/reusables/inpatient-templates/hospitalization-types/HospitalizationTypesDialog.vue";
+import HospitalizationPlansDialog from "~/components/reusables/inpatient-templates/hospitalization-plans/HospitalizationPlansDialog.vue";
+import HospitalizationCaseTypesDialog from "~/components/reusables/inpatient-templates/hospitalization-case-types/HospitalizationCaseTypesDialog.vue";
+import HospitalizationTransactionTypesDialog from "~/components/reusables/inpatient-templates/hospitalization-transaction-types/HospitalizationTransactionTypesDialog.vue";
+import InternalControlTableDialog from "~/components/reusables/inpatient-templates/internal-control-table/InternalControlTableDialog.vue";
+import ListOfAttendantDialog from "~/components/reusables/inpatient-templates/list-of-attendant/ListOfAttendantDialog.vue";
+import SurgicalProceduresDialog from "~/components/reusables/inpatient-templates/surgical-procedures/SurgicalProceduresDialog.vue";
+import SurgicalProcedureCategoryDialog from "~/components/reusables/inpatient-templates/surgical-procedures-category/SurgicalProcedureCategoryDialog.vue";
+import BodySystemsDialog from "~/components/reusables/inpatient-templates/body-systems/BodySystemsDialog.vue";
+import BodyOrgansDialog from "~/components/reusables/inpatient-templates/body-organs/BodyOrgansDialog.vue";
+import TypesOfAnesthesiaDialog from "~/components/reusables/inpatient-templates/types-of-anesthesia/TypesOfAnesthesiaDialog.vue";
+import MedialSocialServiceDialog from "~/components/reusables/inpatient-templates/medial-social-service-template/MedialSocialServiceDialog.vue";
+import OtherHospitalServicesDialog from "~/components/reusables/inpatient-templates/other-hospital-services-template/OtherHospitalServicesDialog.vue";
+import ListOfPetDialog from "~/components/reusables/inpatient-templates/list-of-pet-breed/ListOfPetDialog.vue";
+// Registry Groups
 
 
 definePageMeta({
@@ -249,6 +383,84 @@ const updateServerItems = (newServerItems) => {
 // Table and Template methods
 const closeAdjustmentTypes = () => {
   AdjustmentTypes.value = false;
+}
+const closeAllergies = () => {
+  Allergies.value = false;
+}
+const closeBillingTemplates = () => {
+  BillingTemplates.value = false;
+}
+const closeBillingTemplateGroups = () => {
+  BillingTemplateGroups.value = false;
+}
+const closeCsCaseIndicators = () => {
+  CsCaseIndicators.value = false;
+}
+const closeDeathTypes = () => {
+  DeathTypes.value = false;
+}
+const closeDiscountSchemes = () => {
+  DiscountSchemes.value = false;
+}
+const closeExcellenceCenters = () => {
+  ExcellenceCenters.value = false;
+}
+const closeReferringCenters = () => {
+  ReferringCenters.value = false;
+}
+const closeDispositionTypes = () => {
+  DispositionTypes.value = false;
+}
+const closeMedicalServiceTypes = () => {
+  MedicalServiceTypes.value = false;
+}
+const closeMedicalSubServiceTypes = () => {
+  MedicalSubServiceTypes.value = false;
+}
+const closeHospitalizationTypes = () => {
+  HospitalizationTypes.value = false;
+}
+const closeHospitalizationPlan = () => {
+  HospitalizationPlan.value = false;
+}
+const closeHospitalizationCaseTypes = () => {
+  HospitalizationCaseTypes.value = false;
+}
+const closeHospitalTransactionTypes = () => {
+  HospitalTransactionTypes.value = false;
+}
+const closeInternalControlTable = () => {
+  InternalControlTable.value = false;
+}
+const closeListOfAttendants = () => {
+  ListOfAttendants.value = false;
+}
+const closeSurgicalProcedures =() => {
+  SurgicalProcedures.value = false;
+}
+const closeSurgicalProceduresCategory = () => {
+  SurgicalProceduresCategory.value = false;
+}
+const closeBodySystems = () => {
+  BodySystems.value = false;
+}
+const closeBodyOrgans = () => {
+  BodyOrgans.value = false;
+}
+const closeTypesOfAnesthesia = () => {
+  TypesOfAnesthesia.value = false;
+}
+const closeMedicalSocialServiceTemplate = () => {
+  MedicalSocialServiceTemplate.value = false;
+}
+const closeOtherHospitalServicesTemplate = () => {
+  OtherHospitalServicesTemplate.value = false;
+}
+const closeListOfPetBreed = () => {
+  ListOfPetBreed.value = false;
+}
+const closeAdmissionResult = () => {
+  AdmissionResult.value = false;
 }
 
 </script>
