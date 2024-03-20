@@ -332,7 +332,7 @@ export default [
                     {
                         label: "Bed Status",
                         icon: "mdi-file-document-edit",
-                        form: "BedStatus",
+                        form: "BedStatusDialog",
                         rule: "",
                     },
                 ],
@@ -2511,25 +2511,25 @@ export default [
                     {
                         label: "Banks",
                         icon: "mdi-file-document",
-                        form: "ServiceTypeDialog",
+                        form: "BankDialog",
                         rule: ""
                     },
                     {
                         label: "Banck Account",
                         icon: "mdi-file-document",
-                        form: "ServiceTypeDialog",
+                        form: "BankAccountDialog",
                         rule: ""
                     },
                     {
                         label: "Credit Cards",
                         icon: "mdi-file-document",
-                        form: "ServiceTypeDialog",
+                        form: "BankAccountCreditCardDialog",
                         rule: ""
                     },
                     {
                         label: "Debit Cards",
                         icon: "mdi-file-document",
-                        form: "ServiceTypeDialog",
+                        form: "BankAccountDebitCardDialog",
                         rule: ""
                     },
                     {

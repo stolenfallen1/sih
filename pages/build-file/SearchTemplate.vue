@@ -1,6 +1,5 @@
 <template>
   <v-container>
-    <form @submit.prevent="handleSearch">
       <v-card elevation="4" rounded="lg">
         <v-toolbar color="#FFF">
           <v-toolbar-title style="font-size: large; text-align: center"
@@ -56,7 +55,6 @@
           </v-row>
         </v-card-text>
       </v-card>
-    </form>
   </v-container>
 </template>
 
@@ -85,19 +83,20 @@ const computeTableAndTemplate = (dialog,type)=>{
     }
 }
 
-
 const filteredItems = computed(() => {
     if (!searchQuery.value) {
       return items;
     }
     const query = searchQuery.value.toLowerCase();
     return items.filter(item => containsLabel(item, query));
-});
+  });
 
-const containsLabel =(obj, query) => {
+  const containsLabel =(obj, query) => {
+
     if (obj.label.toLowerCase().includes(query)) {
       return true;
     }
+
     if (obj.child) {
       // Check child labels
       if (obj.child.some(child => child.label.toLowerCase().includes(query))) {
@@ -120,6 +119,7 @@ const containsLabel =(obj, query) => {
     const query = searchQuery.value.toLowerCase();
     return table_and_template.filter(item => item.label.toLowerCase().includes(query));
   };
+  
 </script>
 
 <style scoped></style>
