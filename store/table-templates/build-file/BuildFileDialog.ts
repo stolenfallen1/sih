@@ -23,6 +23,7 @@ export const BuildFileDialog = defineStore('BuildFileDialog',{
     RefunTypeDialog:false,
     ApproverLevelDialog:false,
     SupplierTermsDialog:false,
+    SupplierTypesDialog:false,
   }),
    actions:{
     setBuildFileDialog(dialog:any,type:Boolean) {

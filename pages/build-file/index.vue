@@ -118,6 +118,10 @@
         :show="SupplierTermsDialog"
         @close-dialog="useTableAndTemplate('SupplierTermsDialog',false);"
     />
+    <SupplierTypesFormDialog 
+        :show="SupplierTypesDialog"
+        @close-dialog="useTableAndTemplate('SupplierTypesDialog',false);"
+    />
 
     
 </template>
@@ -152,6 +156,7 @@ import PaymentMethodFormDialog from "~/components/reusables/build-file/payment-m
 import RefunTypeFormDialog from "~/components/reusables/build-file/refund-type/RefundTypeDialog.vue";
 import ApproverLevelFormDialog from "~/components/reusables/build-file/approver-level/ApproverLevelDialog.vue";
 import SupplierTermsFormDialog from "~/components/reusables/build-file/supplier-terms/SupplierTermsDialog.vue";
+import SupplierTypesFormDialog from "~/components/reusables/build-file/supplier-types/SupplierTypesDialog.vue";
 
 // import SupplierTermsFormDialog from "~/components/reusables/build-file;
 
@@ -179,7 +184,8 @@ const {
     PaymentMethodDialog,
     RefunTypeDialog,
     ApproverLevelDialog,
-    SupplierTermsDialog
+    SupplierTermsDialog,
+    SupplierTypesDialog
 } = storeToRefs(BuildFileDialog());
 
 </script>

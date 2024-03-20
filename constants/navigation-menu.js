@@ -2497,15 +2497,15 @@ export default [
                         rule: ""
                     },
                     {
-                        label: "Terms",
+                        label: "Supplier Terms",
                         icon: "mdi-file-document",
                         form: "SupplierTermsDialog",
                         rule: ""
                     },
                     {
-                        label: "Types",
+                        label: "Supplier Types",
                         icon: "mdi-file-document",
-                        form: "ServiceTypeDialog",
+                        form: "SupplierTypesDialog",
                         rule: ""
                     },
                     {
