@@ -44,14 +44,14 @@
                     <v-list density="compact" class="ma-1">
                       <v-card-title><div style="font-weight:bold; color:#117dad !important;">{{ template_item.label }}</div></v-card-title>
                       <v-divider></v-divider>
-                      <template
-                        v-for="(item, index) in template_item.table_and_template"
-                        :key="index"
-                      >
-                        <v-list-item @click="handleOpenTemplate">
+                      <template v-for="(item, index) in template_item.table_and_template" :key="index">
+                        <v-list-item @click="computeTableAndTemplate(item.form)">
                           <p style="font-size: large; font-weight: 500" >
                             {{ item.label }}
                           </p>
+                           <!-- <template v-slot:prepend>
+                            <v-btn class="mr-2 pa-1" size="medium" color="#6984FF" :icon="item.icon"></v-btn>
+                            </template> -->
                           <!-- <v-btn color="#6984FF" @click="handleOpenTemplate">Open Template</v-btn> -->
                         </v-list-item>
                       </template>
@@ -89,6 +89,12 @@ const handleSearch = () => {
 const handleOpenTemplate = () => {
   alert("Open Template");
 };
+
+const computeTableAndTemplate = (dialog,type)=>{
+    if(dialog){
+      useTableAndTemplate(dialog)
+    }
+}
 </script>
 
 <style scoped></style>

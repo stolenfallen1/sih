@@ -261,6 +261,7 @@ const onDelete = (item) => {
 };
 const closeDialog = () => {
   emits("close-dialog");
+  payload.value = Object.assign({});
 };
 </script>
 

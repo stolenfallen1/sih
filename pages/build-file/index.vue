@@ -14,7 +14,7 @@
         :show="AdmissionTypeDialog"
         @close-dialog="close_dialog"
     />
-     <AgeBracketFormDialog 
+    <AgeBracketFormDialog 
         :show="AgeBracketDialog"
         @close-dialog="close_dialog"
     />
@@ -97,9 +97,9 @@
         @close-dialog="close_dialog"
     />
 
-     <PaymentMethodFormDialog 
+    <PaymentMethodFormDialog 
         :show="PaymentMethodDialog"
-        @close-dialog="close_dialog"
+        @close-dialog="setCloseDialog(PaymentMethodDialog)"
     />
     
 </template>
@@ -131,7 +131,6 @@ import DoctorCategoryFormDialog from "~/components/reusables/build-file/doctor-c
 import ServiceTypeFormDialog from "~/components/reusables/build-file/service-type/ServiceTypeDialog.vue";
 import SuffixFormDialog from "~/components/reusables/build-file/suffix/SuffixDialog.vue";
 import PaymentMethodFormDialog from "~/components/reusables/build-file/payment-method/PaymentMethodDialog.vue";
-
 
 // Table and templates store
 const {
