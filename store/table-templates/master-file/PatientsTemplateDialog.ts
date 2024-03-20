@@ -18,10 +18,10 @@ export const PatientsTemplateDialog = defineStore('PatientsTemplateDialog',{
     MilitaryClassification: false,
   }),
    actions:{
-    setPatientsDialog(dialog:any) {
+    setPatientsDialog(dialog:any, type: Boolean) {
        if (this.hasOwnProperty(dialog)) {
             // Set the value of the property to true
-            this[dialog] = true;
+            this[dialog] = type;
         }
     },
   }

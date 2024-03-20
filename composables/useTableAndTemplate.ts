@@ -11,7 +11,7 @@ import { InPatientsTemplateDialog } from "~/store/table-templates/services/InPat
 
 import { BuildFileDialog } from "~/store/table-templates/build-file/BuildFileDialog";
 
-export const useTableAndTemplate = async (dialog:any,type:Boolean = true) => {
+export const useTableAndTemplate = async (dialog:any, type:Boolean = true) => {
     // Master file table template form dialog states
     const { setPatientsDialog } = PatientsTemplateDialog(); // Master file patients template form dialog state
     const { setConsultantsDialog } = ConsultantsTemplateDialog(); // Master file consultants template form dialog state
@@ -27,13 +27,13 @@ export const useTableAndTemplate = async (dialog:any,type:Boolean = true) => {
 
     
     // Master file
-    setPatientsDialog(dialog);
-    setConsultantsDialog(dialog);
-    setRoomsBedsDialog(dialog);
-    setItemServicesSuppliesDialog(dialog);
+    setPatientsDialog(dialog, type);
+    setConsultantsDialog(dialog, type);
+    setRoomsBedsDialog(dialog, type);
+    setItemServicesSuppliesDialog(dialog, type);
     // Services
-    setOutPatientsDialog(dialog);
-    setInPatientsDialog(dialog);
+    setOutPatientsDialog(dialog, type);
+    setInPatientsDialog(dialog, type);
 
     setDialog(dialog); 
     

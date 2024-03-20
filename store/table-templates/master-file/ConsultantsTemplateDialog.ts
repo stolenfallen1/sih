@@ -9,10 +9,10 @@ export const ConsultantsTemplateDialog = defineStore('ConsultantsTemplateDialog'
     DoctorsRebateCategory: false,
   }),
    actions:{
-    setConsultantsDialog(dialog:any) {
+    setConsultantsDialog(dialog:any, type: Boolean) {
        if (this.hasOwnProperty(dialog)) {
             // Set the value of the property to true
-            this[dialog] = true;
+            this[dialog] = type;
         }
     },
   }

@@ -202,6 +202,7 @@
       </v-container>
     </v-main>
     <Snackbar />
+    <GlobalTemplateDialog />
   </v-app>
 </template>
 
@@ -212,6 +213,7 @@ import { useAuthStore } from "~/store/auth";
 import { ref, onUpdated, onMounted } from "vue";
 import ModalSettings from "~/components/system-settings/forms/global-settings/ModalSettings.vue";
 import navigation_items from "../constants/navigation-menu";
+import GlobalTemplateDialog from "~/components/GlobalTemplateDialog.vue";
 
 const router = useRouter();
 const route = useRoute();
