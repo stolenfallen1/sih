@@ -237,35 +237,35 @@ const {
     RegistryGroup,
 } = storeToRefs(InPatientsTemplateDialog())
 // Table and Template components
-import AdjustmentTypesDialog from "../../../components/reusables/inpatient-templates/adjustment-types/AdjustmentTypesDialog.vue";
-import AdmissionResultDialog from "~/components/reusables/inpatient-templates/admission-result/AdmissionResultDialog.vue";
-import AllergiesDialog from "~/components/reusables/inpatient-templates/allergies/AllergiesDialog.vue";
-import BillingTemplateDialog from "~/components/reusables/inpatient-templates/billing-templates/BillingTemplateDialog.vue";
-import BillingTemplateGroupDialog from "~/components/reusables/inpatient-templates/billing-template-groups/BillingTemplateGroupDialog.vue";
-import CsCaseIndicatorsDialog from "~/components/reusables/inpatient-templates/cs-case-indicators/CsCaseIndicatorsDialog.vue";
-import DeathTypesDialog from "~/components/reusables/inpatient-templates/death-types/DeathTypesDialog.vue";
-import DiscountSchemesDialog from "~/components/reusables/inpatient-templates/discount-schemes/DiscountSchemesDialog.vue";
-import ExcellenceCentersDialog from "~/components/reusables/inpatient-templates/excellence-centers/ExcellenceCentersDialog.vue";
-import ReferringCentersDialog from "~/components/reusables/inpatient-templates/referring-centers/ReferringCentersDialog.vue";
-import DispositionTypesDialog from "~/components/reusables/inpatient-templates/disposition-types/DispositionTypesDialog.vue";
-import MedicalServiceTypesDialog from "~/components/reusables/inpatient-templates/medical-service-types/MedicalServiceTypesDialog.vue";
-import MedicalSubServiceTypesDialog from "~/components/reusables/inpatient-templates/medical-sub-service-types/MedicalSubServiceTypesDialog.vue";
-// Room Classifications
-// Room Price Schemes
-import HospitalizationTypesDialog from "~/components/reusables/inpatient-templates/hospitalization-types/HospitalizationTypesDialog.vue";
-import HospitalizationPlansDialog from "~/components/reusables/inpatient-templates/hospitalization-plans/HospitalizationPlansDialog.vue";
-import HospitalizationCaseTypesDialog from "~/components/reusables/inpatient-templates/hospitalization-case-types/HospitalizationCaseTypesDialog.vue";
-import HospitalizationTransactionTypesDialog from "~/components/reusables/inpatient-templates/hospitalization-transaction-types/HospitalizationTransactionTypesDialog.vue";
-import InternalControlTableDialog from "~/components/reusables/inpatient-templates/internal-control-table/InternalControlTableDialog.vue";
-import ListOfAttendantDialog from "~/components/reusables/inpatient-templates/list-of-attendant/ListOfAttendantDialog.vue";
-import SurgicalProceduresDialog from "~/components/reusables/inpatient-templates/surgical-procedures/SurgicalProceduresDialog.vue";
-import SurgicalProcedureCategoryDialog from "~/components/reusables/inpatient-templates/surgical-procedures-category/SurgicalProcedureCategoryDialog.vue";
-import BodySystemsDialog from "~/components/reusables/inpatient-templates/body-systems/BodySystemsDialog.vue";
-import BodyOrgansDialog from "~/components/reusables/inpatient-templates/body-organs/BodyOrgansDialog.vue";
-import TypesOfAnesthesiaDialog from "~/components/reusables/inpatient-templates/types-of-anesthesia/TypesOfAnesthesiaDialog.vue";
-import MedialSocialServiceDialog from "~/components/reusables/inpatient-templates/medial-social-service-template/MedialSocialServiceDialog.vue";
-import OtherHospitalServicesDialog from "~/components/reusables/inpatient-templates/other-hospital-services-template/OtherHospitalServicesDialog.vue";
-import ListOfPetDialog from "~/components/reusables/inpatient-templates/list-of-pet-breed/ListOfPetDialog.vue";
+// import AdjustmentTypesDialog from "../../../components/reusables/inpatient-templates/adjustment-types/AdjustmentTypesDialog.vue";
+// import AdmissionResultDialog from "~/components/reusables/inpatient-templates/admission-result/AdmissionResultDialog.vue";
+// import AllergiesDialog from "~/components/reusables/inpatient-templates/allergies/AllergiesDialog.vue";
+// import BillingTemplateDialog from "~/components/reusables/inpatient-templates/billing-templates/BillingTemplateDialog.vue";
+// import BillingTemplateGroupDialog from "~/components/reusables/inpatient-templates/billing-template-groups/BillingTemplateGroupDialog.vue";
+// import CsCaseIndicatorsDialog from "~/components/reusables/inpatient-templates/cs-case-indicators/CsCaseIndicatorsDialog.vue";
+// import DeathTypesDialog from "~/components/reusables/inpatient-templates/death-types/DeathTypesDialog.vue";
+// import DiscountSchemesDialog from "~/components/reusables/inpatient-templates/discount-schemes/DiscountSchemesDialog.vue";
+// import ExcellenceCentersDialog from "~/components/reusables/inpatient-templates/excellence-centers/ExcellenceCentersDialog.vue";
+// import ReferringCentersDialog from "~/components/reusables/inpatient-templates/referring-centers/ReferringCentersDialog.vue";
+// import DispositionTypesDialog from "~/components/reusables/inpatient-templates/disposition-types/DispositionTypesDialog.vue";
+// import MedicalServiceTypesDialog from "~/components/reusables/inpatient-templates/medical-service-types/MedicalServiceTypesDialog.vue";
+// import MedicalSubServiceTypesDialog from "~/components/reusables/inpatient-templates/medical-sub-service-types/MedicalSubServiceTypesDialog.vue";
+// // Room Classifications
+// // Room Price Schemes
+// import HospitalizationTypesDialog from "~/components/reusables/inpatient-templates/hospitalization-types/HospitalizationTypesDialog.vue";
+// import HospitalizationPlansDialog from "~/components/reusables/inpatient-templates/hospitalization-plans/HospitalizationPlansDialog.vue";
+// import HospitalizationCaseTypesDialog from "~/components/reusables/inpatient-templates/hospitalization-case-types/HospitalizationCaseTypesDialog.vue";
+// import HospitalizationTransactionTypesDialog from "~/components/reusables/inpatient-templates/hospitalization-transaction-types/HospitalizationTransactionTypesDialog.vue";
+// import InternalControlTableDialog from "~/components/reusables/inpatient-templates/internal-control-table/InternalControlTableDialog.vue";
+// import ListOfAttendantDialog from "~/components/reusables/inpatient-templates/list-of-attendant/ListOfAttendantDialog.vue";
+// import SurgicalProceduresDialog from "~/components/reusables/inpatient-templates/surgical-procedures/SurgicalProceduresDialog.vue";
+// import SurgicalProcedureCategoryDialog from "~/components/reusables/inpatient-templates/surgical-procedures-category/SurgicalProcedureCategoryDialog.vue";
+// import BodySystemsDialog from "~/components/reusables/inpatient-templates/body-systems/BodySystemsDialog.vue";
+// import BodyOrgansDialog from "~/components/reusables/inpatient-templates/body-organs/BodyOrgansDialog.vue";
+// import TypesOfAnesthesiaDialog from "~/components/reusables/inpatient-templates/types-of-anesthesia/TypesOfAnesthesiaDialog.vue";
+// import MedialSocialServiceDialog from "~/components/reusables/inpatient-templates/medial-social-service-template/MedialSocialServiceDialog.vue";
+// import OtherHospitalServicesDialog from "~/components/reusables/inpatient-templates/other-hospital-services-template/OtherHospitalServicesDialog.vue";
+// import ListOfPetDialog from "~/components/reusables/inpatient-templates/list-of-pet-breed/ListOfPetDialog.vue";
 // Registry Groups
 
 

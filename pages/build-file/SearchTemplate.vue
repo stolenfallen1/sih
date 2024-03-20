@@ -28,7 +28,7 @@
               v-for="(template, index) in filteredItems"
               :key="index"
               cols="4"
-              xl="4"
+              xl="3"
               sm="6"
               md="6"
               lg="6"
