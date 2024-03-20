@@ -2,7 +2,7 @@
   <v-dialog :model-value="show" rounded="lg" persistent scrollable max-width="750px">
     <v-card rounded="lg">
       <v-toolbar density="compact" color="#6984ff" hide-details>
-        <v-toolbar-title>Supplier Terms</v-toolbar-title>
+        <v-toolbar-title>Supplier Types</v-toolbar-title>
         <v-spacer></v-spacer>
         <v-btn color="white" @click="closeDialog">
           <v-icon>mdi-close</v-icon>
@@ -11,7 +11,7 @@
       <v-divider></v-divider>
       <v-card-text>
         <v-text-field
-          label="Search by Description"
+          label="Search by name"
           density="compact"
           variant="outlined"
           prepend-inner-icon="mdi-magnify"
@@ -75,7 +75,7 @@
     <form @submit.prevent="onSubmit">
       <v-card rounded="lg">
         <v-toolbar density="compact" color="#6984ff" hide-details>
-          <v-toolbar-title>Supplier Terms Details</v-toolbar-title>
+          <v-toolbar-title>Supplier Types Details</v-toolbar-title>
           <v-spacer></v-spacer>
           <v-btn color="white" @click="closeForm">
             <v-icon>mdi-close</v-icon>
@@ -106,24 +106,13 @@
                   hide-details
                 ></v-text-field>
             </v-col>
-              <v-col cols="4">
-                <v-text-field
-                  variant="outlined"
-                  density="compact"
-                  label="Enter days"
-                  required
-                  v-model="payload.days"
-                  clearable
-                  hide-details
-                ></v-text-field>
-            </v-col>
              <v-col cols="12">
                 <v-text-field
                   variant="outlined"
                   density="compact"
-                  label="Enter description"
+                  label="Enter name"
                   required
-                  v-model="payload.description"
+                  v-model="payload.name"
                   clearable
                   hide-details
                 ></v-text-field>
@@ -171,18 +160,18 @@ const isloading = ref(false);
 const open_form_dialog = ref(false);
 const headers = [
   {
-    title: "code",
+    title: "ID",
     align: "start",
     sortable: false,
     key: "id",
   },
-  { title: "Description", key: "description", align: "start", width: "60%" },
-  { title: "Days", key: "days", align: "start", width: "20%" },
+  { title: "Supplier Type", key: "name", align: "start", width: "60%" },
+  { title: "Code", key: "code", align: "start", width: "20%" },
   { title: "", key: "actions", align: "start", width: "20%" },
 ];
 
 const data = ref({
-  title: "List of supplier-terms",
+  title: "List of supplier-types",
   keyword: "",
   loading: false,
   filter: {},
@@ -202,7 +191,7 @@ const loadItems = async (page = null, itemsPerPage = null, sortBy = null) => {
   let itemPerpageno = itemsPerPage || 10;
   let params =
     "page=" + pageno + "&per_page=" + itemPerpageno + "&keyword=" + data.value.keyword;
-  const response = await useMethod("get", "supplier-terms?", "", params);
+  const response = await useMethod("get", "supplier-types?", "", params);
   if (response) {
     serverItems.value = response.data;
     totalItems.value = response.total;
@@ -234,9 +223,9 @@ const onSubmit = async () => {
   let response;
   isloading.value = true;
   if (payload.value.id) {
-    response = await useMethod("put", "supplier-terms", payload.value, "", payload.value.id);
+    response = await useMethod("put", "supplier-types", payload.value, "", payload.value.id);
   } else {
-    response = await useMethod("post", "supplier-terms", payload.value);
+    response = await useMethod("post", "supplier-types", payload.value);
   }
   if (response) {
     useSnackbar(true, "green", response.msg);
@@ -250,7 +239,7 @@ const confirm = async () => {
   if (payload.value.id) {
     let response = await useMethod(
       "delete",
-      "supplier-terms",
+      "supplier-types",
       payload.value,
       "",
       payload.value.id
