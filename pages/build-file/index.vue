@@ -7,100 +7,118 @@
     </v-container>
     <AdmissionSourceFormDialog 
         :show="AdmissionSourceDialog"
-        @close-dialog="close_dialog"
+        @close-dialog="useTableAndTemplate('AdmissionSourceDialog',false);"
     />
 
     <AdmissionTypeFormDialog 
         :show="AdmissionTypeDialog"
-        @close-dialog="close_dialog"
+        @close-dialog="useTableAndTemplate('AdmissionTypeDialog',false);"
     />
-    <AgeBracketFormDialog 
+     <AgeBracketFormDialog 
         :show="AgeBracketDialog"
-        @close-dialog="close_dialog"
+        @close-dialog="useTableAndTemplate('BedStatusDialog',false);"
     />
     
      <BedStatusFormDialog 
         :show="BedStatusDialog"
-        @close-dialog="close_dialog"
+        @close-dialog="useTableAndTemplate('BedStatusDialog',false);"
     />
 
    <BloodTypeFormDialog 
         :show="BloodTypeDialog"
-        @close-dialog="close_dialog"
+      
+        @close-dialog="useTableAndTemplate('BloodTypeDialog',false);"
     />
 
     <DeathTypeFormDialog 
         :show="DeathTypeDialog"
-        @close-dialog="close_dialog"
+        @close-dialog="useTableAndTemplate('DeathTypeDialog',false);"
     />
 
     <TransactionTypeFormDialog 
         :show="TransactionTypeDialog"
-        @close-dialog="close_dialog"
+        @close-dialog="useTableAndTemplate('TransactionTypeDialog',false);"
     />
 
     <HospitalPlanFormDialog 
         :show="HospitalPlanDialog"
-        @close-dialog="close_dialog"
+        @close-dialog="useTableAndTemplate('HospitalPlanDialog',false);"
     />
+    
     <IDTypesFormDialog 
         :show="IDTypesDialog"
-        @close-dialog="close_dialog"
+        @close-dialog="useTableAndTemplate('IDTypesDialog',false);"
     />
 
     <NationalitFormDialog 
         :show="NationalitDialog"
-        @close-dialog="close_dialog"
+        @close-dialog="useTableAndTemplate('NationalitDialog',false);"
     />
 
     <ReligionFormDialog 
         :show="ReligionDialog"
-        @close-dialog="close_dialog"
+        @close-dialog="useTableAndTemplate('ReligionDialog',false);"
     />
      <SexFormDialog 
         :show="SexDialog"
-        @close-dialog="close_dialog"
+        @close-dialog="useTableAndTemplate('SexDialog',false);"
     />
 
     <CivilStatusFormDialog 
         :show="CivilStatusDialog"
-        @close-dialog="close_dialog"
+        @close-dialog="useTableAndTemplate('CivilStatusDialog',false);"
     />
 
     <StatusFormDialog 
         :show="StatusDialog"
-        @close-dialog="close_dialog"
+        @close-dialog="useTableAndTemplate('StatusDialog',false);"
     />
 
     <ShiftFormDialog 
         :show="ShiftDialog"
-        @close-dialog="close_dialog"
+        @close-dialog="useTableAndTemplate('ShiftDialog',false);"
     />
     
     <PatientRelationFormDialog 
         :show="PatientRelationDialog"
-        @close-dialog="close_dialog"
+        @close-dialog="useTableAndTemplate('PatientRelationDialog',false);"
     />
 
     <DoctorCategoryFormDialog 
         :show="DoctorCategoryDialog"
-        @close-dialog="close_dialog"
+        @close-dialog="useTableAndTemplate('DoctorCategoryDialog',false);"
     />
 
     <ServiceTypeFormDialog 
         :show="ServiceTypeDialog"
-        @close-dialog="close_dialog"
+        @close-dialog="useTableAndTemplate('ServiceTypeDialog',false);"
     />
 
      <SuffixFormDialog 
         :show="SuffixDialog"
-        @close-dialog="close_dialog"
+        @close-dialog="useTableAndTemplate('SuffixDialog',false);"
     />
 
-    <PaymentMethodFormDialog 
+     <PaymentMethodFormDialog 
         :show="PaymentMethodDialog"
-        @close-dialog="setCloseDialog(PaymentMethodDialog)"
+        @close-dialog="useTableAndTemplate('PaymentMethodDialog',false);"
     />
+
+    <RefunTypeFormDialog 
+        :show="RefunTypeDialog"
+        @close-dialog="useTableAndTemplate('RefunTypeDialog',false);"
+    />
+    
+    <ApproverLevelFormDialog 
+        :show="ApproverLevelDialog"
+        @close-dialog="useTableAndTemplate('ApproverLevelDialog',false);"
+    />
+
+    <SupplierTermsFormDialog 
+        :show="SupplierTermsDialog"
+        @close-dialog="useTableAndTemplate('SupplierTermsDialog',false);"
+    />
+
     
 </template>
 
@@ -131,6 +149,11 @@ import DoctorCategoryFormDialog from "~/components/reusables/build-file/doctor-c
 import ServiceTypeFormDialog from "~/components/reusables/build-file/service-type/ServiceTypeDialog.vue";
 import SuffixFormDialog from "~/components/reusables/build-file/suffix/SuffixDialog.vue";
 import PaymentMethodFormDialog from "~/components/reusables/build-file/payment-method/PaymentMethodDialog.vue";
+import RefunTypeFormDialog from "~/components/reusables/build-file/refund-type/RefundTypeDialog.vue";
+import ApproverLevelFormDialog from "~/components/reusables/build-file/approver-level/ApproverLevelDialog.vue";
+import SupplierTermsFormDialog from "~/components/reusables/build-file/supplier-terms/SupplierTermsDialog.vue";
+
+// import SupplierTermsFormDialog from "~/components/reusables/build-file;
 
 // Table and templates store
 const {
@@ -153,31 +176,12 @@ const {
     DoctorCategoryDialog,
     ServiceTypeDialog,
     SuffixDialog,
-    PaymentMethodDialog
+    PaymentMethodDialog,
+    RefunTypeDialog,
+    ApproverLevelDialog,
+    SupplierTermsDialog
 } = storeToRefs(BuildFileDialog());
 
-const close_dialog = ()=>{
-    AdmissionSourceDialog.value = false;
-    AdmissionTypeDialog.value = false;
-    AgeBracketDialog.value = false;
-    BedStatusDialog.value = false;
-    BloodTypeDialog.value = false;
-    DeathTypeDialog.value = false;
-    TransactionTypeDialog.value = false;
-    HospitalPlanDialog.value = false;
-    IDTypesDialog.value = false;
-    NationalitDialog.value = false;
-    ReligionDialog.value = false;
-    SexDialog.value = false;
-    CivilStatusDialog.value = false;
-    StatusDialog.value = false;
-    ShiftDialog.value = false;
-    PatientRelationDialog.value = false;
-    DoctorCategoryDialog.value = false;
-    ServiceTypeDialog.value = false;
-    SuffixDialog.value = false;
-    PaymentMethodDialog.value = false;
-}
 </script>
 
 <style scoped></style>

@@ -11,7 +11,7 @@ import { InPatientsTemplateDialog } from "~/store/table-templates/services/InPat
 
 import { BuildFileDialog } from "~/store/table-templates/build-file/BuildFileDialog";
 
-export const useTableAndTemplate = async (dialog:any) => {
+export const useTableAndTemplate = async (dialog:any,type:Boolean = true) => {
     // Master file table template form dialog states
     const { setPatientsDialog } = PatientsTemplateDialog(); // Master file patients template form dialog state
     const { setConsultantsDialog } = ConsultantsTemplateDialog(); // Master file consultants template form dialog state
@@ -25,6 +25,7 @@ export const useTableAndTemplate = async (dialog:any) => {
 
     const {setDialog} = TableAndTemplateFormDialog(); // Only system users dialog ang nabilin dre sir cel
 
+    
     // Master file
     setPatientsDialog(dialog);
     setConsultantsDialog(dialog);
@@ -37,5 +38,5 @@ export const useTableAndTemplate = async (dialog:any) => {
     setDialog(dialog); 
     
     // build File 
-    setBuildFileDialog(dialog);
+    setBuildFileDialog(dialog,type);
 }

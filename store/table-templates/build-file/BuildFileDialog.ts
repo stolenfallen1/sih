@@ -19,13 +19,18 @@ export const BuildFileDialog = defineStore('BuildFileDialog',{
     DoctorCategoryDialog:false,
     ServiceTypeDialog:false,
     SuffixDialog:false,
+    PaymentMethodDialog:false,
+    RefunTypeDialog:false,
+    ApproverLevelDialog:false,
+    SupplierTermsDialog:false,
   }),
    actions:{
-    setBuildFileDialog(dialog:any) {
+    setBuildFileDialog(dialog:any,type:Boolean) {
        if (this.hasOwnProperty(dialog)) {
             // Set the value of the property to true
-            this[dialog] = true;
+            this[dialog] = type;
         }
     },
+
   }
 })

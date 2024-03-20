@@ -35,7 +35,7 @@
               cols="12"
               sm="6"
               md="4"
-              lg="3"
+              lg="6"
               class="pa-1"
             >
               <template v-for="(template_item, index) in template.child" :key="index">

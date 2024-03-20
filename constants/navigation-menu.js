@@ -2102,7 +2102,9 @@ export default [
                     },
                 ],
                 processing_and_queries: [],
-                table_and_template: []
+                table_and_template: [
+
+                ]
             },
             {
                 label: "Cashier",
@@ -2479,25 +2481,25 @@ export default [
                     {
                         label: "Payment Method",
                         icon: "mdi-file-document",
-                        form: "ServiceTypeDialog",
+                        form: "PaymentMethodDialog",
                         rule: ""
                     },
                     {
                         label: "Refund Type",
                         icon: "mdi-file-document",
-                        form: "ServiceTypeDialog",
+                        form: "RefunTypeDialog",
                         rule: ""
                     },
                     {
                         label: "Level",
                         icon: "mdi-file-document",
-                        form: "ServiceTypeDialog",
+                        form: "ApproverLevelDialog",
                         rule: ""
                     },
                     {
                         label: "Terms",
                         icon: "mdi-file-document",
-                        form: "ServiceTypeDialog",
+                        form: "SupplierTermsDialog",
                         rule: ""
                     },
                     {
