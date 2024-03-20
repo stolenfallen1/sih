@@ -123,7 +123,26 @@
         @close-dialog="useTableAndTemplate('SupplierTypesDialog',false);"
     />
 
-    
+     <BankFormDialog 
+        :show="BankDialog"
+        @close-dialog="useTableAndTemplate('BankDialog',false);"
+    />
+
+     <BankAccountFormDialog 
+        :show="BankAccountDialog"
+        @close-dialog="useTableAndTemplate('BankAccountDialog',false);"
+    />
+
+    <BankAccountCreditCardFormDialog 
+        :show="BankAccountCreditCardDialog"
+        @close-dialog="useTableAndTemplate('BankAccountCreditCardDialog',false);"
+    />
+
+    <BankAccountDebitCardFormDialog 
+        :show="BankAccountDebitCardDialog"
+        @close-dialog="useTableAndTemplate('BankAccountDebitCardDialog',false);"
+    />
+
 </template>
 
 <script setup>
@@ -157,6 +176,10 @@ import RefunTypeFormDialog from "~/components/reusables/build-file/refund-type/R
 import ApproverLevelFormDialog from "~/components/reusables/build-file/approver-level/ApproverLevelDialog.vue";
 import SupplierTermsFormDialog from "~/components/reusables/build-file/supplier-terms/SupplierTermsDialog.vue";
 import SupplierTypesFormDialog from "~/components/reusables/build-file/supplier-types/SupplierTypesDialog.vue";
+import BankFormDialog from "~/components/reusables/build-file/bank/BankDialog.vue";
+import BankAccountFormDialog from "~/components/reusables/build-file/bank-account/BankAccountDialog.vue";
+import BankAccountCreditCardFormDialog from "~/components/reusables/build-file/bank-credit-card/BankCreditCardDialog.vue";
+import BankAccountDebitCardFormDialog from "~/components/reusables/build-file/bank-debit-card/BankDebitCardDialog.vue";
 
 // import SupplierTermsFormDialog from "~/components/reusables/build-file;
 
@@ -185,7 +208,11 @@ const {
     RefunTypeDialog,
     ApproverLevelDialog,
     SupplierTermsDialog,
-    SupplierTypesDialog
+    SupplierTypesDialog,
+    BankDialog,
+    BankAccountDialog,
+    BankAccountCreditCardDialog,
+    BankAccountDebitCardDialog,
 } = storeToRefs(BuildFileDialog());
 
 </script>
