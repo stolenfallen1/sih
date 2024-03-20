@@ -33,10 +33,10 @@ export const InPatientsTemplateDialog = defineStore('InPatientsTemplateDialog' ,
     RegistryGroup: false,
   }),
   actions: {
-    setInPatientsDialog(dialog: any) {
+    setInPatientsDialog(dialog: any, type: Boolean) {
       if (this.hasOwnProperty(dialog)) {
         // Set the value of the property to true
-        this[dialog] = true;
+        this[dialog] = type;
       }
     }
   }

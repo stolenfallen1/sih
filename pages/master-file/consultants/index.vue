@@ -110,35 +110,6 @@
     @submit="submitDoctorsForm"
   />
   </v-card>
-
-  <ConsultantSpecializationsDialog 
-    :show="ConsultantSpecializations" 
-    @close-dialog="closeConsultantSpecializations" 
-  />
-  <MedicalServiceTypesDialog 
-    :show="MedicalServiceTypes"
-    @close-dialog="closeMedicalServiceTypes"
-  />
-  <MedicalSubServiceTypesDialog 
-    :show="MedicalSubServiceTypes"
-    @close-dialog="closeMedicalSubServiceTypes"
-  />
-  <ConsultantRoleTypesDialog 
-    :show="ConsultantRoleTypes"
-    @close-dialog="closeConsultantRoleTypes"
-  />
-  <DoctorsDepartmentDialog 
-    :show="DoctorsDepartment"
-    @close-dialog="closeDoctorsDepartment"
-  />
-  <DoctorsCategoryDialog 
-    :show="DoctorsCategory"
-    @close-dialog="closeDoctorsCategory"
-  />
-  <DoctorsRebateCategoryDialog 
-    :show="DoctorsRebateCategory"
-    @close-dialog="closeDoctorsRebateCategory"
-  />
 </template>
 
 <script setup>
@@ -150,24 +121,6 @@ let userdetails = JSON.parse(nuxtStorage.localStorage.getData("user_details"));
 // import { storeToRefs } from "pinia";
 // import { useSnackBarStore } from "~/store/SnackBar";
 // const { setSnackbar } = useSnackBarStore();
-// Table and templates store
-const {
-  ConsultantSpecializations,
-  MedicalServiceTypes,
-  MedicalSubServiceTypes,
-  ConsultantRoleTypes,
-  DoctorsDepartment,
-  DoctorsCategory,
-  DoctorsRebateCategory
-} = storeToRefs(ConsultantsTemplateDialog());
-// Table and templates component
-import ConsultantSpecializationsDialog from "~/components/reusables/consultants-templates/consultant-specializations/ConsultantSpecializationsDialog.vue";
-import MedicalServiceTypesDialog from "~/components/reusables/consultants-templates/medical-service-types/MedicalServiceTypesDialog.vue";
-import MedicalSubServiceTypesDialog from "~/components/reusables/consultants-templates/medical-sub-service-types/MedicalSubServiceTypesDialog.vue";
-import ConsultantRoleTypesDialog from "~/components/reusables/consultants-templates/consultant-role-types/ConsultantRoleTypesDialog.vue";
-import DoctorsDepartmentDialog from "~/components/reusables/consultants-templates/doctors-department/DoctorsDepartmentDialog.vue";
-import DoctorsCategoryDialog from "~/components/reusables/consultants-templates/doctors-category/DoctorsCategoryDialog.vue";
-import DoctorsRebateCategoryDialog from "~/components/reusables/consultants-templates/doctors-rebate-category/DoctorsRebateCategoryDialog.vue";
 
 definePageMeta({
   layout: "root-layout",
@@ -485,29 +438,6 @@ const submitDoctorsForm = async (details) => {
     }, 3000);
   }
 };
-
-// Table and Dialogs Methods
-const closeConsultantSpecializations = () => {
-  ConsultantSpecializations.value = false;
-}
-const closeMedicalServiceTypes = () => {
-  MedicalServiceTypes.value = false;
-}
-const closeMedicalSubServiceTypes = () => {
-  MedicalSubServiceTypes.value = false;
-}
-const closeConsultantRoleTypes = () => {
-  ConsultantRoleTypes.value = false;
-}
-const closeDoctorsDepartment = () => {
-  DoctorsDepartment.value = false;
-}
-const closeDoctorsCategory= () => {
-  DoctorsCategory.value = false;
-}
-const closeDoctorsRebateCategory = () => {
-  DoctorsRebateCategory.value = false;
-}
 
 onMounted(() => {});
 </script>

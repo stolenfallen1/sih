@@ -30,10 +30,10 @@ export const ItemServicesSuppliesTemplateDialog = defineStore('ItemServicesSuppl
     Specimens: false,
   }),
    actions:{
-    setItemServicesSuppliesDialog(dialog:any) {
+    setItemServicesSuppliesDialog(dialog:any, type: Boolean) {
        if (this.hasOwnProperty(dialog)) {
             // Set the value of the property to true
-            this[dialog] = true;
+            this[dialog] = type;
         }
     },
   }
