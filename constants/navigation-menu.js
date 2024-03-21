@@ -1027,7 +1027,7 @@ export default [
                     {
                         label: "Death Types",
                         icon: "mdi-file-document-edit",
-                        form: "DeathTypes",
+                        form: "DeathTypeDialog",
                         rule: "",
                     },
                     {
@@ -1697,7 +1697,7 @@ export default [
                     {
                         label: "Death Types",
                         icon: "mdi-file-document-edit",
-                        form: "DeathTypes",
+                        form: "DeathTypeDialog",
                         rule: "",
                     },
                     {
@@ -1963,26 +1963,31 @@ export default [
                     {
                         label: "Admission Results",
                         icon: "mdi-file-document-edit",
+                        form: "AdmissionResult",
                         rule: "",
                     },
                     {
                         label: "Caesarian Case Indicators",
                         icon: "mdi-file-document-edit",
+                        form: "CsCaseIndicators",
                         rule: "",
                     },
                     {
                         label: "Death Types",
                         icon: "mdi-file-document-edit",
+                        form: "DeathTypeDialog",
                         rule: "",
                     },
                     {
                         label: "Nursing Endorsement Categories",
                         icon: "mdi-file-document-edit",
+                        form: "NursingEndorsement",
                         rule: "",
                     },
                     {
                         label: "Referral Causes",
                         icon: "mdi-file-document-edit",
+                        form: "ReferralCauses",
                         rule: "",
                     },
                 ]
@@ -2030,21 +2035,25 @@ export default [
                     {
                         label: "Diet List",
                         icon: "mdi-file-document-edit",
+                        form: "DietList",
                         rule: "",
                     },
                     {
                         label: "Diet Meal Types",
                         icon: "mdi-file-document-edit",
+                        form: "DietMealType",
                         rule: "",
                     },
                     {
                         label: "Diet Types",
                         icon: "mdi-file-document-edit",
+                        form: "DietType",
                         rule: "",
                     },
                     {
                         label: "Diet Classifications",
                         icon: "mdi-file-document-edit",
+                        form: "DietClassification",
                         rule: "",
                     },
                 ]
@@ -2515,7 +2524,7 @@ export default [
                         rule: ""
                     },
                     {
-                        label: "Banck Account",
+                        label: "Bank Account",
                         icon: "mdi-file-document",
                         form: "BankAccountDialog",
                         rule: ""

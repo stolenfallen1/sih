@@ -8,22 +8,26 @@ import { ItemServicesSuppliesTemplateDialog } from "~/store/table-templates/mast
 // Services table and template form dialog imports
 import { OutPatientsTemplateDialog } from "~/store/table-templates/services/OutPatientsTemplateDialog";
 import { InPatientsTemplateDialog } from "~/store/table-templates/services/InPatientsTemplateDialog";
+import { NursingServicesTemplateDialog } from "~/store/table-templates/services/NursingServicesTemplateDialog";
+import { DietaryServicesTemplateDialog } from "~/store/table-templates/services/DietaryServicesTemplateDialog";
 
 import { BuildFileDialog } from "~/store/table-templates/build-file/BuildFileDialog";
 
 export const useTableAndTemplate = async (dialog:any, type:Boolean = true) => {
     // Master file table template form dialog states
-    const { setPatientsDialog } = PatientsTemplateDialog(); // Master file patients template form dialog state
-    const { setConsultantsDialog } = ConsultantsTemplateDialog(); // Master file consultants template form dialog state
-    const { setRoomsBedsDialog } = RoomsBedsTemplateDialog(); // Master file rooms and beds template form dialog state
-    const { setItemServicesSuppliesDialog } = ItemServicesSuppliesTemplateDialog(); // Master file items supplies and services template form dialog state
-    const { setBuildFileDialog } = BuildFileDialog(); // Build file  template form dialog state
+    const { setPatientsDialog } = PatientsTemplateDialog(); 
+    const { setConsultantsDialog } = ConsultantsTemplateDialog(); 
+    const { setRoomsBedsDialog } = RoomsBedsTemplateDialog(); 
+    const { setItemServicesSuppliesDialog } = ItemServicesSuppliesTemplateDialog(); 
+    const { setBuildFileDialog } = BuildFileDialog(); 
 
     // Services table template form dialog states
     const { setOutPatientsDialog } = OutPatientsTemplateDialog()
     const { setInPatientsDialog } = InPatientsTemplateDialog()
+    const { setNursingServicesDialog} = NursingServicesTemplateDialog()
+    const { setDietaryServicesDialog } = DietaryServicesTemplateDialog()
 
-    const {setDialog} = TableAndTemplateFormDialog(); // Only system users dialog ang nabilin dre sir cel
+    const { setDialog } = TableAndTemplateFormDialog(); // Only system users dialog ang nabilin dre sir cel
 
     
     // Master file
@@ -34,7 +38,10 @@ export const useTableAndTemplate = async (dialog:any, type:Boolean = true) => {
     // Services
     setOutPatientsDialog(dialog, type);
     setInPatientsDialog(dialog, type);
+    setNursingServicesDialog(dialog, type);
+    setDietaryServicesDialog(dialog, type);
 
+    // Transactions
     setDialog(dialog); 
     
     // build File 

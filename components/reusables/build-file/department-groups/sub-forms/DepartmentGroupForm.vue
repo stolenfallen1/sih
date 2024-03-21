@@ -7,7 +7,7 @@
     max-width="600px"
   >
     <form @submit.prevent="handleSubmit">
-      <v-card>
+      <v-card rounded="lg">
         <v-toolbar density="compact" color="#6984ff" hide-details>
           <v-toolbar-title>Department Group Details</v-toolbar-title>
           <v-spacer></v-spacer>

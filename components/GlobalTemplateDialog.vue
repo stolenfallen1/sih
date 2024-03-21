@@ -364,11 +364,41 @@
     :show="EducationalAttainments"
     @close-dialog="useTableAndTemplate('EducationalAttainments', false)"
   />
+  <!-- Inpatients -->
+
+  <!-- Nursing Services -->
+  <NursingEndorsementDialog 
+    :show="NursingEndorsement"
+    @close-dialog="useTableAndTemplate('NursingEndorsement', false)"
+  />
+  <ReferralCausesDialog 
+    :show="ReferralCauses"
+    @close-dialog="useTableAndTemplate('ReferralCauses', false)"
+  />
+
+  <!-- Dietary Services -->
+  <DietListDialog 
+    :show="DietList"
+    @close-dialog="useTableAndTemplate('DietList', false)"
+  />
+  <DietMealTypeDialog 
+    :show="DietMealType"
+    @close-dialog="useTableAndTemplate('DietMealType', false)"
+  />
+  <DietTypeDialog 
+    :show="DietType"
+    @close-dialog="useTableAndTemplate('DietType', false)"
+  />
+  <DietClassificationsDialog 
+    :show="DietClassification"
+    @close-dialog="useTableAndTemplate('DietClassification', false)"
+  />
+  
 
 </template>
 
 <script setup>
-// Master File
+// ------------------------ Master File ------------------------
 // Patients Master File
 const { 
   DiscountSchemes,
@@ -391,10 +421,12 @@ const {
 // Consultant Master File
 const {
   ConsultantSpecializations,
+  // MedicalServiceTypes,
+  // MedicalSubServiceTypes,
   ConsultantRoleTypes,
   DoctorsDepartment,
   DoctorsCategory,
-  DoctorsRebateCategory
+  DoctorsRebateCategory,
 } = storeToRefs(ConsultantsTemplateDialog());
 // Rooms and Beds Master File
 const { 
@@ -405,40 +437,41 @@ const {
   RoomPriceSchemes,
   RoomStatus,
   RoomUsageTypes,
-  BedStatus
+  BedStatus,
 } = storeToRefs(RoomsBedsTemplateDialog());
 // Items Supplies and Services Master File
 const {
-    BillingReportCategory, 
-    CollectionReportMainHeader, 
-    CollectionReportGroupHeader, 
-    CptModifiers, 
-    CptSections, 
-    CptSubSections, 
-    DepartmentGroups, 
-    DepartmentWarehouses, 
-    Dosages, 
-    DrugAdminGroups, 
-    DohDrugLists, 
-    DxMedicalPackages, 
-    GenericNames, 
-    Indications, 
-    ItemCategories, 
-    ItemPriceGroups, 
-    ItemPricingSchemes, 
-    ItemTemplates, 
-    ItemUnits, 
-    MedicationDurations, 
-    MedicationFrequencies, 
-    MedicationPreparations, 
-    Routes, 
-    Others, 
-    PhicItemCategories, 
-    UnitOfMeasures, 
-    Modalities, 
-    Specimens, 
+  BillingReportCategory,
+  CollectionReportMainHeader,
+  CollectionReportGroupHeader,
+  CptModifiers,
+  CptSections,
+  CptSubSections,
+  DepartmentGroups,
+  DepartmentWarehouses,
+  Dosages,
+  DrugAdminGroups,
+  DohDrugLists,
+  DxMedicalPackages,
+  GenericNames,
+  Indications,
+  ItemCategories,
+  ItemPriceGroups,
+  ItemPricingSchemes,
+  ItemTemplates,
+  ItemUnits,
+  MedicationDurations,
+  MedicationFrequencies,
+  MedicationPreparations,
+  Routes,
+  Others,
+  PhicItemCategories,
+  UnitOfMeasures,
+  Modalities,
+  Specimens,
 } = storeToRefs(ItemServicesSuppliesTemplateDialog())
-// Services 
+
+// ------------------------ Services ------------------------
 // Out-Patients 
 const {
   AdjustmentTypes,
@@ -447,9 +480,13 @@ const {
   BillingTemplateGroups,
   CsCaseIndicators,
   DeathTypes,
+  // DiscountSchemes, 
   DispositionTypes,
   ExcellenceCenters,
   ReferringCenters,
+  // MedicalServiceTypes, 
+  // MedicalSubServiceTypes, 
+  // PriceSchemes, 
   HospitalTransactionTypes,
   HospitalizationTypes,
   HospitalizationPlans,
@@ -461,11 +498,65 @@ const {
   BodySystems,
   BodyOrgans,
   TypesOfAnesthesia,
+  // DocumentCategories, 
   OtherHospitalServices,
   MedialSocialService,
   ListOfPetBreed,
   EducationalAttainments,
 } = storeToRefs(OutPatientsTemplateDialog())
+// In-Patients
+const {  
+  // AdjustmentTypes,  
+  AdmissionResult, 
+  // Allergies, 
+  // BillingTemplates, 
+  // BillingTemplateGroups, 
+  // CsCaseIndicators, 
+  // DeathTypes, 
+  // DiscountSchemes, 
+  // ExcellenceCenters, 
+  // ReferringCenters, 
+  // DispositionTypes, 
+  // MedicalServiceTypes, 
+  // MedicalSubServiceTypes, 
+  NursingStation,
+  RoomClassifications,
+  // RoomPriceSchemes,
+  // HospitalizationTypes, 
+  HospitalizationPlan,  
+  // HospitalizationCaseTypes,  
+  // HospitalTransactionTypes, 
+  // InternalControlTable, 
+  ListOfAttendants,
+  // SurgicalProcedures,  
+  // SurgicalProceduresCategory,
+  // BodySystems,  
+  // BodyOrgans,  
+  // TypesOfAnesthesia,  
+  MedicalSocialServiceTemplate,
+  OtherHospitalServicesTemplate,
+  // ListOfPetBreed, 
+  RegistryGroup,
+} = storeToRefs(InPatientsTemplateDialog())
+// Dietary Services
+const {
+  DietList,
+  DietMealType,
+  DietType,
+  DietClassification,
+} = storeToRefs(DietaryServicesTemplateDialog())
+const { 
+  // AdmissionResult,
+  // CsCaseIndicators,
+  // DeathTypeDialog,
+  NursingEndorsement,
+  ReferralCauses,
+} = storeToRefs(NursingServicesTemplateDialog())
+
+// ------------------------ Transactions ------------------------
+
+// ------------------------ Settings and Others ------------------------
+
 
 </script>
 

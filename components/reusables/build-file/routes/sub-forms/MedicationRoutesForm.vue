@@ -4,7 +4,7 @@
     rounded="lg"
     persistent
     scrollable
-    max-width="700px"
+    max-width="600px"
   >
     <form @submit.prevent="handleSubmit">
       <v-card rounded="lg">
