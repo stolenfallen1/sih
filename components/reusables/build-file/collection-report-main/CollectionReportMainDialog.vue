@@ -43,11 +43,11 @@
             </v-card-actions>
         </v-card>
     </v-dialog>
-    <collection-report-form :open_collection_report_form="open_collection_report_form" @close-dialog="closeCollectionReportMain" @handle-submit="onSubmit" />
+    <collection-report-main-form :open_collection_report_form="open_collection_report_form" @close-dialog="closeCollectionReportMain" @handle-submit="onSubmit" />
 </template>
 
 <script setup>
-import CollectionReportForm from './sub-forms/CollectionReportForm.vue'
+import CollectionReportMainForm from './sub-forms/CollectionReportMainForm.vue';
 
 const props = defineProps({
     show: {

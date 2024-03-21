@@ -4,6 +4,9 @@
       <v-card rounded="lg">
            <v-toolbar color="#6984ff" hide-details density="compact">
               <v-toolbar-title>Price Group Details</v-toolbar-title>
+              <v-btn color="white" @click="closeDialog">
+                  <v-icon>mdi-close</v-icon>
+              </v-btn>
           </v-toolbar>
           <v-divider></v-divider>
           <v-card-text>
