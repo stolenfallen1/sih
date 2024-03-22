@@ -3,7 +3,7 @@
       <v-card elevation="4" rounded="lg">
         <v-toolbar color="#FFF">
           <v-toolbar-title style="font-size: large; text-align: center"
-            >Build File Manager</v-toolbar-title
+            >Build File and HIS Templates Manager</v-toolbar-title
           >
         </v-toolbar>
         <v-divider></v-divider>

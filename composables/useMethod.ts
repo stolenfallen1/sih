@@ -1,4 +1,4 @@
-export const useMethod = async (method:any, url:any,payload:any, params:any = null,id:any = null) => {
+export const useMethod = async (method:any, url:any, payload:any, params:any = null, id:any = null) => {
 
     let apiurl = useApiUrl() + "/" + url;
     

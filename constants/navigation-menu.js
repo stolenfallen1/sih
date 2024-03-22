@@ -125,7 +125,7 @@ export default [
                     {
                         label: "ID Types",
                         icon: "mdi-file-document-edit",
-                        form: "IdTypes",
+                        form: "IDTypes",
                         rule: "",
                     },
                     {
@@ -1027,7 +1027,7 @@ export default [
                     {
                         label: "Death Types",
                         icon: "mdi-file-document-edit",
-                        form: "DeathTypeDialog",
+                        form: "DeathType",
                         rule: "",
                     },
                     {
@@ -1697,7 +1697,7 @@ export default [
                     {
                         label: "Death Types",
                         icon: "mdi-file-document-edit",
-                        form: "DeathTypeDialog",
+                        form: "DeathType",
                         rule: "",
                     },
                     {
@@ -1975,7 +1975,7 @@ export default [
                     {
                         label: "Death Types",
                         icon: "mdi-file-document-edit",
-                        form: "DeathTypeDialog",
+                        form: "DeathType",
                         rule: "",
                     },
                     {
@@ -2376,253 +2376,253 @@ export default [
                     {
                         label: "Admission Source",
                         icon: "mdi-file-document",
-                        form: "AdmissionSourceDialog", 
+                        form: "AdmissionSource", 
                         rule: ""
                     },
                     {
                         label: "Admission Type",
                         icon: "mdi-file-document",
-                        form: "AdmissionTypeDialog", 
+                        form: "AdmissionType", 
                         rule: ""
                     },
                     {
                         label: "Age Bracket",
                         icon: "mdi-file-document",
-                        form: "AgeBracketDialog",
+                        form: "AgeBracket",
                         rule: ""
                     },
                     {
                         label: "Bed Status",
                         icon: "mdi-file-document",
-                        form: "BedStatusDialog", 
+                        form: "BedStatus", 
                         rule: ""
                     },
                     {
                         label: "Blood Type",
                         icon: "mdi-file-document",
-                        form: "BloodTypeDialog", 
+                        form: "BloodType", 
                         rule: ""
                     },
                     {
                         label: "Death Types",
                         icon: "mdi-file-document",
-                        form: "DeathTypeDialog", 
+                        form: "DeathType", 
                         rule: ""
                     },
                     {
                         label: "Transaction Type",
                         icon: "mdi-file-document",
-                        form: "TransactionTypeDialog", 
+                        form: "TransactionType", 
                         rule: ""
                     },
                     {
                         label: "Hospital Plan",
                         icon: "mdi-file-document",
-                        form: "HospitalPlanDialog", 
+                        form: "HospitalPlan", 
                         rule: ""
                     },
                     {
                         label: "ID Types",
                         icon: "mdi-file-document",
-                        form: "IDTypesDialog",
+                        form: "IDTypes",
                         rule: ""
                     },
                     {
                         label: "Religion",
                         icon: "mdi-file-document",
-                        form: "ReligionDialog",
+                        form: "Religion",
                         rule: ""
                     },
                     {
                         label: "Nationality",
                         icon: "mdi-file-document",
-                        form: "NationalitDialog",
+                        form: "Nationality",
                         rule: ""
                     },
                     {
                         label: "Sex",
                         icon: "mdi-file-document",
-                        form: "SexDialog",
+                        form: "Sex",
                         rule: ""
                     },
                     {
                         label: "Civil Status",
                         icon: "mdi-file-document",
-                        form: "CivilStatusDialog",
+                        form: "CivilStatus",
                         rule: ""
                     },
                     {
                         label: "Status",
                         icon: "mdi-file-document",
-                        form: "StatusDialog",
+                        form: "Status",
                         rule: ""
                     },
                     {
                         label: "Shifts",
                         icon: "mdi-file-document",
-                        form: "ShiftDialog",
+                        form: "Shift",
                         rule: ""
                     },
                     {
                         label: "Patient Relation",
                         icon: "mdi-file-document",
-                        form: "PatientRelationDialog",
+                        form: "PatientRelation",
                         rule: ""
                     },
                     {
                         label: "Doctor Category",
                         icon: "mdi-file-document",
-                        form: "DoctorCategoryDialog",
+                        form: "DoctorCategory",
                         rule: ""
                     },
                     {
                         label: "Service Type",
                         icon: "mdi-file-document",
-                        form: "ServiceTypeDialog",
+                        form: "ServiceType",
                         rule: ""
                     },
                     {
                         label: "Suffix",
                         icon: "mdi-file-document",
-                        form: "SuffixDialog",
+                        form: "Suffix",
                         rule: ""
                     },
                     {
                         label: "Payment Method",
                         icon: "mdi-file-document",
-                        form: "PaymentMethodDialog",
+                        form: "PaymentMethod",
                         rule: ""
                     },
                     {
                         label: "Refund Type",
                         icon: "mdi-file-document",
-                        form: "RefunTypeDialog",
+                        form: "RefundType",
                         rule: ""
                     },
                     {
                         label: "Level",
                         icon: "mdi-file-document",
-                        form: "ApproverLevelDialog",
+                        form: "ApproverLevel",
                         rule: ""
                     },
                     {
                         label: "Supplier Terms",
                         icon: "mdi-file-document",
-                        form: "SupplierTermsDialog",
+                        form: "SupplierTerms",
                         rule: ""
                     },
                     {
                         label: "Supplier Types",
                         icon: "mdi-file-document",
-                        form: "SupplierTypesDialog",
+                        form: "SupplierTypes",
                         rule: ""
                     },
                     {
                         label: "Banks",
                         icon: "mdi-file-document",
-                        form: "BankDialog",
+                        form: "Bank",
                         rule: ""
                     },
                     {
                         label: "Bank Account",
                         icon: "mdi-file-document",
-                        form: "BankAccountDialog",
+                        form: "BankAccount",
                         rule: ""
                     },
                     {
                         label: "Credit Cards",
                         icon: "mdi-file-document",
-                        form: "BankAccountCreditCardDialog",
+                        form: "BankAccountCreditCard",
                         rule: ""
                     },
                     {
                         label: "Debit Cards",
                         icon: "mdi-file-document",
-                        form: "BankAccountDebitCardDialog",
+                        form: "BankAccountDebitCard",
                         rule: ""
                     },
                     {
                         label: "Account Class",
                         icon: "mdi-file-document",
-                        form: "ServiceTypeDialog",
+                        form: "ServiceType",
                         rule: ""
                     },
                     {
                         label: "Account Type",
                         icon: "mdi-file-document",
-                        form: "ServiceTypeDialog",
+                        form: "ServiceType",
                         rule: ""
                     },
                     {
                         label: "Cost Center",
                         icon: "mdi-file-document",
-                        form: "ServiceTypeDialog",
+                        form: "ServiceType",
                         rule: ""
                     },
                     {
                         label: "Account Group",
                         icon: "mdi-file-document",
-                        form: "ServiceTypeDialog",
+                        form: "ServiceType",
                         rule: ""
                     },
                     {
                         label: "Medicare Type",
                         icon: "mdi-file-document",
-                        form: "ServiceTypeDialog",
+                        form: "ServiceType",
                         rule: ""
                     },
                     {
                         label: "Revenue Class",
                         icon: "mdi-file-document",
-                        form: "ServiceTypeDialog",
+                        form: "ServiceType",
                         rule: ""
                     },
                     {
                         label: "Transaction Classification",
                         icon: "mdi-file-document",
-                        form: "ServiceTypeDialog",
+                        form: "ServiceType",
                         rule: ""
                     },
                     {
                         label: "Transaction Code",
                         icon: "mdi-file-document",
-                        form: "ServiceTypeDialog",
+                        form: "ServiceType",
                         rule: ""
                     },
                     {
                         label: "Country",
                         icon: "mdi-file-document",
-                        form: "ServiceTypeDialog",
+                        form: "ServiceType",
                         rule: ""
                     },
                     {
                         label: "Region",
                         icon: "mdi-file-document",
-                        form: "ServiceTypeDialog",
+                        form: "Region",
                         rule: ""
                     },
                     {
                         label: "Province",
                         icon: "mdi-file-document",
-                        form: "ServiceTypeDialog",
+                        form: "Province",
                         rule: ""
                     },
                     {
                         label: "Municipality",
                         icon: "mdi-file-document",
-                        form: "ServiceTypeDialog",
+                        form: "Municipality",
                         rule: ""
                     },
                     {
                         label: "Barangay",
                         icon: "mdi-file-document",
-                        form: "ServiceTypeDialog",
+                        form: "Barangay",
                         rule: ""
                     },
                     {
                         label: "Zipcode",
                         icon: "mdi-file-document",
-                        form: "ServiceTypeDialog",
+                        form: "ZipCode",
                         rule: ""
                     },
                 ]

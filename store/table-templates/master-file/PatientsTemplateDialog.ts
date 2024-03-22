@@ -8,7 +8,7 @@ export const PatientsTemplateDialog = defineStore('PatientsTemplateDialog',{
     DocumentCategories: false,
     PatientAddtionalInformation: false,
     BadHabits: false,
-    IdTypes: false,
+    IDTypes: false,
     Authorities: false,
     EmploymentInformationPositions: false,
     EmployerName: false,
