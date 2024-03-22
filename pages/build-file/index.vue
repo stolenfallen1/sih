@@ -143,6 +143,26 @@
         @close-dialog="useTableAndTemplate('BankAccountDebitCardDialog',false);"
     />
 
+    <AccountClassFormDialog 
+        :show="AccountClassDialog"
+        @close-dialog="useTableAndTemplate('AccountClassDialog',false);"
+    />
+
+
+     <AccountTypeFormDialog 
+        :show="AccountTypeDialog"
+        @close-dialog="useTableAndTemplate('AccountTypeDialog',false);"
+    />
+
+    <AccountGroupFormDialog 
+        :show="AccountGroupDialog"
+        @close-dialog="useTableAndTemplate('AccountGroupDialog',false);"
+    />
+
+     <CostCenterFormDialog
+        :show="CostCenterDialog"
+        @close-dialog="useTableAndTemplate('CostCenterDialog',false);"
+    />
 </template>
 
 <script setup>
@@ -180,8 +200,11 @@ import BankFormDialog from "~/components/reusables/build-file/bank/BankDialog.vu
 import BankAccountFormDialog from "~/components/reusables/build-file/bank-account/BankAccountDialog.vue";
 import BankAccountCreditCardFormDialog from "~/components/reusables/build-file/bank-credit-card/BankCreditCardDialog.vue";
 import BankAccountDebitCardFormDialog from "~/components/reusables/build-file/bank-debit-card/BankDebitCardDialog.vue";
-
-// import SupplierTermsFormDialog from "~/components/reusables/build-file;
+import AccountClassFormDialog from "~/components/reusables/build-file/account-class/AccountClassDialog.vue";
+import AccountTypeFormDialog from "~/components/reusables/build-file/account-type/AccountTypeDialog.vue";
+import AccountGroupFormDialog from "~/components/reusables/build-file/account-group/AccountGroupDialog.vue";
+import CostCenterFormDialog from "~/components/reusables/build-file/cost-center/CostCenterDialog.vue";
+// import SupplierTermsFormDialog from "~/components/reusables/build-file";
 
 // Table and templates store
 const {
@@ -213,6 +236,10 @@ const {
     BankAccountDialog,
     BankAccountCreditCardDialog,
     BankAccountDebitCardDialog,
+    AccountClassDialog,
+    AccountTypeDialog,
+    AccountGroupDialog,
+    CostCenterDialog,
 } = storeToRefs(BuildFileDialog());
 
 </script>

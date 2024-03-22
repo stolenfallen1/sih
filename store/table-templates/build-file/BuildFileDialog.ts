@@ -28,6 +28,10 @@ export const BuildFileDialog = defineStore('BuildFileDialog',{
     BankAccountDialog:false,
     BankAccountCreditCardDialog:false,
     BankAccountDebitCardDialog:false,
+    AccountClassDialog:false,
+    AccountTypeDialog:false,
+    AccountGroupDialog:false,
+    CostCenterDialog:false,
   }),
    actions:{
     setBuildFileDialog(dialog:any,type:Boolean) {
@@ -36,6 +40,5 @@ export const BuildFileDialog = defineStore('BuildFileDialog',{
             this[dialog] = type;
         }
     },
-
   }
 })

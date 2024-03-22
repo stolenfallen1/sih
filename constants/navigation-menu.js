@@ -2533,29 +2533,30 @@ export default [
                         rule: ""
                     },
                     {
-                        label: "Account Class",
-                        icon: "mdi-file-document",
-                        form: "ServiceTypeDialog",
-                        rule: ""
-                    },
-                    {
                         label: "Account Type",
                         icon: "mdi-file-document",
-                        form: "ServiceTypeDialog",
+                        form: "AccountTypeDialog",
                         rule: ""
                     },
                     {
-                        label: "Cost Center",
+                        label: "Account Class",
                         icon: "mdi-file-document",
-                        form: "ServiceTypeDialog",
+                        form: "AccountClassDialog",
                         rule: ""
                     },
                     {
                         label: "Account Group",
                         icon: "mdi-file-document",
-                        form: "ServiceTypeDialog",
+                        form: "AccountGroupDialog",
                         rule: ""
                     },
+                    {
+                        label: "Cost Center",
+                        icon: "mdi-file-document",
+                        form: "CostCenterDialog",
+                        rule: ""
+                    },
+                   
                     {
                         label: "Medicare Type",
                         icon: "mdi-file-document",
