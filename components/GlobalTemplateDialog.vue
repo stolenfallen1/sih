@@ -34,10 +34,6 @@
     :show="BadHabits"
     @close-dialog="useTableAndTemplate('BadHabits', false)"
   />
-  <IdTypesDialog
-    :show="IdTypes"
-    @close-dialog="useTableAndTemplate('IdTypes', false)"
-  />
   <AuthoritiesDialog
     :show="Authorities"
     @close-dialog="useTableAndTemplate('Authorities', false)"
@@ -107,7 +103,7 @@
     :show="NursingStationsWards"
     @close-dialog="useTableAndTemplate('NursingStationsWards', false)"
   />
-  <RoomClassicationTypesDialog 
+  <RoomClassificationTypesDialog 
     :show="RoomClassificationTypes"
     @close-dialog="useTableAndTemplate('RoomClassificationTypes', false)"
   />
@@ -197,7 +193,7 @@
       :show="ItemPriceGroups"
       @close-dialog="useTableAndTemplate('ItemPriceGroups', false)"
   />
-  <ItemPricingSchemeDialog 
+  <ItemPricingSchemesDialog 
       :show="ItemPricingSchemes"
       @close-dialog="useTableAndTemplate('ItemPricingSchemes', false)"
   />
@@ -267,10 +263,6 @@
   <CsCaseIndicatorsDialog
     :show="CsCaseIndicators"
     @close-dialog="useTableAndTemplate('CsCaseIndicators', false)"
-  />
-  <DeathTypesDialog 
-    :show="DeathTypes"
-    @close-dialog="useTableAndTemplate('DeathTypes', false)"
   />
   <DiscountSchemesDialog 
     :show="DiscountSchemes"
@@ -393,8 +385,142 @@
     :show="DietClassification"
     @close-dialog="useTableAndTemplate('DietClassification', false)"
   />
-  
 
+  <!-- Settings and Others -->
+  <!-- Build File -->
+  <AdmissionSourceDialog 
+        :show="AdmissionSource"
+        @close-dialog="useTableAndTemplate('AdmissionSource',false);"
+    />
+    <AdmissionTypeDialog 
+        :show="AdmissionType"
+        @close-dialog="useTableAndTemplate('AdmissionType',false);"
+    />
+    <AgeBracketDialog 
+        :show="AgeBracket"
+        @close-dialog="useTableAndTemplate('AgeBracket',false);"
+    />
+    <BedStatusDialog 
+        :show="BedStatus"
+        @close-dialog="useTableAndTemplate('BedStatus',false);"
+    />
+    <BloodTypeDialog 
+        :show="BloodType"
+        @close-dialog="useTableAndTemplate('BloodType',false);"
+    />
+    <DeathTypeDialog 
+        :show="DeathType"
+        @close-dialog="useTableAndTemplate('DeathType',false);"
+    />
+    <TransactionTypeDialog 
+        :show="TransactionType"
+        @close-dialog="useTableAndTemplate('TransactionType',false);"
+    />
+    <HospitalPlanDialog 
+        :show="HospitalPlan"
+        @close-dialog="useTableAndTemplate('HospitalPlan',false);"
+    />
+    <IDTypesDialog 
+        :show="IDTypes"
+        @close-dialog="useTableAndTemplate('IDTypes',false);"
+    />
+    <NationalityDialog 
+        :show="Nationality"
+        @close-dialog="useTableAndTemplate('Nationality',false);"
+    />
+    <ReligionDialog 
+        :show="Religion"
+        @close-dialog="useTableAndTemplate('Religion',false);"
+    />
+    <SexDialog 
+        :show="Sex"
+        @close-dialog="useTableAndTemplate('Sex',false);"
+    />
+    <CivilStatusDialog 
+        :show="CivilStatus"
+        @close-dialog="useTableAndTemplate('CivilStatus',false);"
+    />
+    <StatusDialog 
+        :show="Status"
+        @close-dialog="useTableAndTemplate('Status',false);"
+    />
+    <ShiftDialog 
+        :show="Shift"
+        @close-dialog="useTableAndTemplate('Shift',false);"
+    />
+    <PatientRelationDialog 
+        :show="PatientRelation"
+        @close-dialog="useTableAndTemplate('PatientRelation',false);"
+    />
+    <DoctorCategoryDialog 
+        :show="DoctorCategory"
+        @close-dialog="useTableAndTemplate('DoctorCategory',false);"
+    />
+    <ServiceTypeDialog 
+        :show="ServiceType"
+        @close-dialog="useTableAndTemplate('ServiceType',false);"
+    />
+    <SuffixDialog 
+        :show="Suffix"
+        @close-dialog="useTableAndTemplate('Suffix',false);"
+    />
+    <PaymentMethodDialog 
+        :show="PaymentMethod"
+        @close-dialog="useTableAndTemplate('PaymentMethod',false);"
+    />
+    <RefundTypeDialog 
+        :show="RefundType"
+        @close-dialog="useTableAndTemplate('RefundType',false);"
+    />
+    <ApproverLevelDialog 
+        :show="ApproverLevel"
+        @close-dialog="useTableAndTemplate('ApproverLevel',false);"
+    />
+    <SupplierTermsDialog 
+        :show="SupplierTerms"
+        @close-dialog="useTableAndTemplate('SupplierTerms',false);"
+    />
+    <SupplierTypesDialog 
+        :show="SupplierTypes"
+        @close-dialog="useTableAndTemplate('SupplierTypes',false);"
+    />
+    <BankDialog 
+        :show="Bank"
+        @close-dialog="useTableAndTemplate('Bank',false);"
+    />
+    <BankAccountDialog 
+        :show="BankAccount"
+        @close-dialog="useTableAndTemplate('BankAccount',false);"
+    />
+    <BankCreditCardDialog 
+        :show="BankAccountCreditCard"
+        @close-dialog="useTableAndTemplate('BankAccountCreditCard',false);"
+    />
+    <BankDebitCardDialog
+        :show="BankAccountDebitCard"
+        @close-dialog="useTableAndTemplate('BankAccountDebitCard',false);"
+    />
+    <RegionDialog 
+      :show="Region"
+      @close-dialog="useTableAndTemplate('Region', false)"
+    />
+    <ProvinceDialog 
+      :show="Province"
+      @close-dialog="useTableAndTemplate('Province', false)"
+      />
+    <MunicipalityDialog 
+      :show="Municipality"
+      @close-dialog="useTableAndTemplate('Municipality', false)"
+    />
+    <BarangayDialog 
+      :show="Barangay"
+      @close-dialog="useTableAndTemplate('Barangay', false)"
+    />
+    <ZipCodeDialog 
+      :show="ZipCode"
+      @close-dialog="useTableAndTemplate('ZipCode', false)"
+    />
+  
 </template>
 
 <script setup>
@@ -409,7 +535,7 @@ const {
   DocumentCategories,
   PatientAddtionalInformation,
   BadHabits,
-  IdTypes,
+  // IDTypes, 
   Authorities,
   EmploymentInformationPositions,
   EmployerName,
@@ -479,7 +605,6 @@ const {
   BillingTemplates,
   BillingTemplateGroups,
   CsCaseIndicators,
-  DeathTypes,
   // DiscountSchemes, 
   DispositionTypes,
   ExcellenceCenters,
@@ -512,7 +637,7 @@ const {
   // BillingTemplates, 
   // BillingTemplateGroups, 
   // CsCaseIndicators, 
-  // DeathTypes, 
+  // DeathType, 
   // DiscountSchemes, 
   // ExcellenceCenters, 
   // ReferringCenters, 
@@ -548,7 +673,7 @@ const {
 const { 
   // AdmissionResult,
   // CsCaseIndicators,
-  // DeathTypeDialog,
+  // DeathType,
   NursingEndorsement,
   ReferralCauses,
 } = storeToRefs(NursingServicesTemplateDialog())
@@ -556,6 +681,43 @@ const {
 // ------------------------ Transactions ------------------------
 
 // ------------------------ Settings and Others ------------------------
+// Build File 
+const {
+    AdmissionSource,
+    AdmissionType,
+    AgeBracket,
+    // BedStatus, 
+    BloodType,
+    DeathType,
+    TransactionType,
+    HospitalPlan,
+    IDTypes,
+    Nationality,
+    Religion,
+    Sex,
+    CivilStatus,
+    Status,
+    Shift,
+    PatientRelation,
+    DoctorCategory,
+    ServiceType,
+    Suffix,
+    PaymentMethod,
+    RefundType,
+    ApproverLevel,
+    SupplierTerms,
+    SupplierTypes,
+    Bank,
+    BankAccount,
+    BankAccountCreditCard,
+    BankAccountDebitCard,
+    //
+    Region,
+    Province,
+    Municipality,
+    Barangay,
+    ZipCode,
+} = storeToRefs(BuildFileDialog());
 
 
 </script>

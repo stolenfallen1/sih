@@ -5,7 +5,7 @@ export const OutPatientsTemplateDialog = defineStore('OutPatientsTemplateDialog'
     BillingTemplates: false,
     BillingTemplateGroups: false,
     CsCaseIndicators: false,
-    DeathTypes: false,
+    DeathType: false,
     DiscountSchemes: false,
     DispositionTypes: false,
     ExcellenceCenters: false,
