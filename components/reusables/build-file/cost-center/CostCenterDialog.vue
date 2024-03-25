@@ -1,8 +1,8 @@
 <template>
-  <v-dialog :model-value="show" rounded="lg" persistent scrollable max-width="980px">
+  <v-dialog :model-value="show" rounded="lg" persistent scrollable max-width="850px">
     <v-card rounded="lg">
       <v-toolbar density="compact" color="#6984ff" hide-details>
-        <v-toolbar-title>Province Template</v-toolbar-title>
+        <v-toolbar-title>Cost Center</v-toolbar-title>
         <v-spacer></v-spacer>
         <v-btn color="white" @click="closeDialog">
           <v-icon>mdi-close</v-icon>
@@ -45,8 +45,8 @@
               </slot>
             </td>
           </template>
-          <template v-slot:item.region_code="{ item }">
-            {{ item.regions ? item.regions.region_name :'' }}
+           <template v-slot:item.acct_type="{ item }">
+            {{ item.get_account_type ? item.get_account_type.account_type : "" }}
           </template>
           <template v-slot:item.isactive="{ item }">
             {{ item.isactive == 1 ? "Active" : "In-active" }}
@@ -78,7 +78,7 @@
     <form @submit.prevent="onSubmit">
       <v-card rounded="lg">
         <v-toolbar density="compact" color="#6984ff" hide-details>
-          <v-toolbar-title>Province Details</v-toolbar-title>
+          <v-toolbar-title>Cost Center Details</v-toolbar-title>
           <v-spacer></v-spacer>
           <v-btn color="white" @click="closeForm">
             <v-icon>mdi-close</v-icon>
@@ -88,49 +88,41 @@
 
         <v-card-text>
           <v-row>
-               <v-col cols="12">
+            <v-col cols="4">
+              <v-text-field
+                label="Code"
+                hide-details
+                readonly
+                v-model="payload.id"
+                density="compact"
+                variant="outlined"
+              ></v-text-field>
+            </v-col>
+             <v-col cols="8">
                 <v-autocomplete
-                  :items="region_data"
-                  item-title="region_name"
-                  item-value="region_code"
-                  density="compact"
+                 :items="departmentList"
+                 item-title="account_description"
+                 item-value="id"
+                 density="compact"
                   variant="outlined"
                   hide-details
-                  v-model="payload.region_code"
-                  @update:model-value="getProvince"
-                  label="Region"
-                  :loading="region_loading"
+                  v-model="payload.department_id"
+                  label="Select Department"
+                  clearable
                 ></v-autocomplete>
               </v-col>
-               <v-col cols="4">
+             <v-col cols="12">
                 <v-text-field
-                  label="Province Code"
                   variant="outlined"
                   density="compact"
-                  v-model="payload.province_code"
+                  label="Enter description"
+                  required
+                  v-model="payload.costcenter_description"
+                  clearable
                   hide-details
                 ></v-text-field>
               </v-col>
-              <v-col cols="8">
-                <v-text-field
-                  label="Province Name"
-                  variant="outlined"
-                  density="compact"
-                  v-model="payload.province_name"
-                  placeholder="Enter Province Name"
-                  hide-details
-                ></v-text-field>
-              </v-col>
-              <v-col cols="4">
-                <v-checkbox
-                  class="mt-0 mb-0"
-                  hide-details
-                  density="compact"
-                  v-model="payload.isactive"
-                  label="Status"
-                ></v-checkbox>
-              </v-col>
-            </v-row>
+          </v-row>
         </v-card-text>
         <v-divider></v-divider>
         <v-card-actions>
@@ -163,16 +155,18 @@ const payload = ref({});
 const isloading = ref(false);
 const open_form_dialog = ref(false);
 const headers = [
-  { title: "ID", key: "id", width: "5%" },
-  { title: "Region", key: "region_code", width: "35%" },
-  { title: "Province", key: "province_name", width: "20%" },
-  { title: "Province Code", key: "province_code", width: "10%" },
-  { title: "Status", key: "isactive", width: "5%" },
-  { title: "", key: "actions", width: "15%" },
-]
-
+  {
+    title: "code",
+    align: "start",
+    sortable: false,
+    key: "id",
+  },
+  { title: "Department", key: "department_id", align: "start", sortable: false,width: "20%" },
+  { title: "Description", key: "costcenter_description", align: "start",sortable: false, width: "30%" },
+  { title: "", key: "actions", align: "start", width: "20%" },
+];
 const data = ref({
-  title: "List of provinces",
+  title: "List of Cost Center",
   keyword: "",
   loading: false,
   filter: {},
@@ -183,41 +177,43 @@ const data = ref({
 const itemsPerPage = ref(10);
 const totalItems = ref(0);
 const serverItems = ref([]);
-const region_loading = ref(false);
-let region_data = ref([]);
+const account_type = ref([]);
+const departmentList = ref([]);
 const initialize = ({ page, itemsPerPage, sortBy }) => {
   loadItems(page, itemsPerPage, sortBy);
 };
-
 const loadItems = async (page = null, itemsPerPage = null, sortBy = null) => {
   data.value.loading = true;
   let pageno = page || 1;
   let itemPerpageno = itemsPerPage || 10;
   let params =
     "page=" + pageno + "&per_page=" + itemPerpageno + "&keyword=" + data.value.keyword;
-  const response = await useMethod("get", "get-provinces?", "", params);
+  const response = await useMethod("get", "cost-centers?", "", params);
   if (response) {
     serverItems.value = response.data;
     totalItems.value = response.total;
     data.value.loading = false;
   }
 };
-
-const getRegion = async () => {
-  region_loading.value = true;
-  const response = await useMethod("get", "get-regions", "", "");
-  if (response) {
-    region_data.value = response;
-    region_loading.value = false;
-  } 
-};
 const search = () => {
   loadItems();
 };
 
+const department = async () => {
+  const response = await useMethod("get","departments","","");
+  if (response) {
+    departmentList.value = response.departments;
+  }
+};
+const accountType = async () => {
+  const response = await useMethod("get","get-account-type","","");
+  if (response) {
+    account_type.value = response;
+  }
+};
 const openForm = () => {
   payload.value = Object.assign({});
-  getRegion();
+  department();
   open_form_dialog.value = true;
 };
 
@@ -228,20 +224,20 @@ const closeForm = () => {
 
 const onEdit = (item) => {
   openForm();
-  getRegion();
   payload.value = Object.assign({});
   payload.value = Object.assign({}, item);
   payload.value.isactive = item.isactive == 1 ? true : false;
+  payload.value.Class = parseInt(item.Class) ? parseInt(item.Class) : "";
+  payload.value.acct_type = parseInt(item.acct_type) ? parseInt(item.acct_type) : "";
 };
 
 const onSubmit = async () => {
   let response;
   isloading.value = true;
-  
   if (payload.value.id) {
-    response = await useMethod("put", "update-provinces", payload.value, "", payload.value.id);
+    response = await useMethod("put", "cost-centers", payload.value, "", payload.value.id);
   } else {
-    response = await useMethod("post", "create-provinces", payload.value);
+    response = await useMethod("post", "cost-centers", payload.value);
   }
   if (response) {
     useSnackbar(true, "green", response.msg);
@@ -255,7 +251,7 @@ const confirm = async () => {
   if (payload.value.id) {
     let response = await useMethod(
       "delete",
-      "get-provinces",
+      "cost-centers",
       payload.value,
       "",
       payload.value.id

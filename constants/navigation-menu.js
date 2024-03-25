@@ -2542,57 +2542,57 @@ export default [
                         rule: ""
                     },
                     {
-                        label: "Account Class",
-                        icon: "mdi-file-document",
-                        form: "ServiceType",
-                        rule: ""
-                    },
-                    {
                         label: "Account Type",
                         icon: "mdi-file-document",
-                        form: "ServiceType",
+                        form: "AccountType",
                         rule: ""
                     },
                     {
-                        label: "Cost Center",
+                        label: "Account Class",
                         icon: "mdi-file-document",
-                        form: "ServiceType",
+                        form: "AccountClass",
                         rule: ""
                     },
                     {
                         label: "Account Group",
                         icon: "mdi-file-document",
-                        form: "ServiceType",
+                        form: "AccountGroup",
+                        rule: ""
+                    },
+                    {
+                        label: "Cost Center",
+                        icon: "mdi-file-document",
+                        form: "CostCenter",
                         rule: ""
                     },
                     {
                         label: "Medicare Type",
                         icon: "mdi-file-document",
-                        form: "ServiceType",
+                        form: "MedicareType",
                         rule: ""
                     },
                     {
                         label: "Revenue Class",
                         icon: "mdi-file-document",
-                        form: "ServiceType",
+                        form: "RevenueClass",
                         rule: ""
                     },
                     {
                         label: "Transaction Classification",
                         icon: "mdi-file-document",
-                        form: "ServiceType",
+                        form: "TransactionClassification",
                         rule: ""
                     },
                     {
                         label: "Transaction Code",
                         icon: "mdi-file-document",
-                        form: "ServiceType",
+                        form: "TransactionCode",
                         rule: ""
                     },
                     {
                         label: "Country",
                         icon: "mdi-file-document",
-                        form: "ServiceType",
+                        form: "Country",
                         rule: ""
                     },
                     {

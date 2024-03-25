@@ -28,7 +28,15 @@ export const BuildFileDialog = defineStore('BuildFileDialog',{
     BankAccount:false,
     BankAccountCreditCard:false,
     BankAccountDebitCard:false,
-    // 
+    AccountClass:false,
+    AccountType:false,
+    AccountGroup:false,
+    CostCenter:false,
+    MedicareType:false,
+    RevenueClass:false,
+    TransactionClassification:false,
+    TransactionCode:false, 
+    Country: false,
     Region: false,
     Province: false,
     Municipality: false,
@@ -42,6 +50,5 @@ export const BuildFileDialog = defineStore('BuildFileDialog',{
             this[dialog] = type;
         }
     },
-
   }
 })

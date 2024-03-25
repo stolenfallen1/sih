@@ -1,8 +1,8 @@
 <template>
-  <v-dialog :model-value="show" rounded="lg" persistent scrollable max-width="980px">
+  <v-dialog :model-value="show" rounded="lg" persistent scrollable max-width="950px">
     <v-card rounded="lg">
       <v-toolbar density="compact" color="#6984ff" hide-details>
-        <v-toolbar-title>Province Template</v-toolbar-title>
+        <v-toolbar-title>Account Group</v-toolbar-title>
         <v-spacer></v-spacer>
         <v-btn color="white" @click="closeDialog">
           <v-icon>mdi-close</v-icon>
@@ -45,8 +45,11 @@
               </slot>
             </td>
           </template>
-          <template v-slot:item.region_code="{ item }">
-            {{ item.regions ? item.regions.region_name :'' }}
+          <template v-slot:item.class="{ item }">
+            {{ item.get_account_class ? item.get_account_class.Class : "" }}
+          </template>
+           <template v-slot:item.type="{ item }">
+            {{ item.get_account_type ? item.get_account_type.account_type : "" }}
           </template>
           <template v-slot:item.isactive="{ item }">
             {{ item.isactive == 1 ? "Active" : "In-active" }}
@@ -78,59 +81,85 @@
     <form @submit.prevent="onSubmit">
       <v-card rounded="lg">
         <v-toolbar density="compact" color="#6984ff" hide-details>
-          <v-toolbar-title>Province Details</v-toolbar-title>
+          <v-toolbar-title>Account Group Details</v-toolbar-title>
           <v-spacer></v-spacer>
           <v-btn color="white" @click="closeForm">
             <v-icon>mdi-close</v-icon>
           </v-btn>
         </v-toolbar>
         <v-divider></v-divider>
-
         <v-card-text>
           <v-row>
-               <v-col cols="12">
+            <v-col cols="3">
+              <v-text-field
+                label="ID"
+                hide-details
+                readonly
+                v-model="payload.id"
+                density="compact"
+                variant="outlined"
+              ></v-text-field>
+            </v-col>
+             <v-col cols="9">
+                <v-text-field
+                 density="compact"
+                  variant="outlined"
+                  required
+                  v-model="payload.account_group_code"
+                  label="Enter  Code"
+                  clearable
+                  hide-details
+                ></v-text-field>
+              </v-col>
+            <v-col cols="12">
+                <v-text-field
+                 density="compact"
+                  variant="outlined"
+                  required
+                  v-model="payload.account_group_description"
+                  label="Enter Description"
+                  clearable
+                  hide-details
+                ></v-text-field>
+              </v-col>
+              <v-col cols="12">
+                <v-textarea
+                 density="compact"
+                  variant="outlined"
+                  required
+                  v-model="payload.remarks"
+                  label="Enter Remarks"
+                  clearable
+                  hide-details
+                ></v-textarea>
+              </v-col>
+             <v-col cols="6">
                 <v-autocomplete
-                  :items="region_data"
-                  item-title="region_name"
-                  item-value="region_code"
-                  density="compact"
+                  :items="account_class"
+                 item-title="Description"
+                 item-value="id"
+                 density="compact"
                   variant="outlined"
                   hide-details
-                  v-model="payload.region_code"
-                  @update:model-value="getProvince"
-                  label="Region"
-                  :loading="region_loading"
+                  v-model="payload.account_class"
+                  label="Select Account Type"
+                  clearable
                 ></v-autocomplete>
               </v-col>
-               <v-col cols="4">
-                <v-text-field
-                  label="Province Code"
+              <v-col cols="6">
+                <v-autocomplete
+                 :items="account_type"
+                 item-title="account_description"
+                 item-value="id"
+                 density="compact"
                   variant="outlined"
-                  density="compact"
-                  v-model="payload.province_code"
                   hide-details
-                ></v-text-field>
+                  v-model="payload.account_type"
+                  label="Select Account Class"
+                  clearable
+                ></v-autocomplete>
               </v-col>
-              <v-col cols="8">
-                <v-text-field
-                  label="Province Name"
-                  variant="outlined"
-                  density="compact"
-                  v-model="payload.province_name"
-                  placeholder="Enter Province Name"
-                  hide-details
-                ></v-text-field>
-              </v-col>
-              <v-col cols="4">
-                <v-checkbox
-                  class="mt-0 mb-0"
-                  hide-details
-                  density="compact"
-                  v-model="payload.isactive"
-                  label="Status"
-                ></v-checkbox>
-              </v-col>
-            </v-row>
+          </v-row>
         </v-card-text>
         <v-divider></v-divider>
         <v-card-actions>
@@ -163,16 +192,22 @@ const payload = ref({});
 const isloading = ref(false);
 const open_form_dialog = ref(false);
 const headers = [
-  { title: "ID", key: "id", width: "5%" },
-  { title: "Region", key: "region_code", width: "35%" },
-  { title: "Province", key: "province_name", width: "20%" },
-  { title: "Province Code", key: "province_code", width: "10%" },
-  { title: "Status", key: "isactive", width: "5%" },
-  { title: "", key: "actions", width: "15%" },
-]
+  {
+    title: "code",
+    align: "start",
+    sortable: false,
+    key: "account_group_code",
+    width: "10%"
+  },
+  { title: "Account Type", key: "type", align: "start", sortable: false,width: "15%" },
+  { title: "Class", key: "class", align: "start",sortable: false, width: "10%" },
+  { title: "Description", key: "account_group_description", align: "start",sortable: false, width: "35%" },
+  { title: "Remarks", key: "remarks", align: "start",sortable: false, width: "15%" },
+  { title: "", key: "actions", align: "start",sortable: false, width: "25%" },
+];
 
 const data = ref({
-  title: "List of provinces",
+  title: "List of Account Group",
   keyword: "",
   loading: false,
   filter: {},
@@ -183,8 +218,8 @@ const data = ref({
 const itemsPerPage = ref(10);
 const totalItems = ref(0);
 const serverItems = ref([]);
-const region_loading = ref(false);
-let region_data = ref([]);
+const account_type = ref([]);
+const account_class = ref([]);
 const initialize = ({ page, itemsPerPage, sortBy }) => {
   loadItems(page, itemsPerPage, sortBy);
 };
@@ -195,7 +230,7 @@ const loadItems = async (page = null, itemsPerPage = null, sortBy = null) => {
   let itemPerpageno = itemsPerPage || 10;
   let params =
     "page=" + pageno + "&per_page=" + itemPerpageno + "&keyword=" + data.value.keyword;
-  const response = await useMethod("get", "get-provinces?", "", params);
+  const response = await useMethod("get", "account-groups?", "", params);
   if (response) {
     serverItems.value = response.data;
     totalItems.value = response.total;
@@ -203,21 +238,29 @@ const loadItems = async (page = null, itemsPerPage = null, sortBy = null) => {
   }
 };
 
-const getRegion = async () => {
-  region_loading.value = true;
-  const response = await useMethod("get", "get-regions", "", "");
+
+
+const accountClass = async () => {
+  const response = await useMethod("get","get-account-class","","");
   if (response) {
-    region_data.value = response;
-    region_loading.value = false;
-  } 
+    account_class.value = response;
+  }
 };
+const accountType = async () => {
+  const response = await useMethod("get","get-account-type","","");
+  if (response) {
+    account_type.value = response;
+  }
+};
+
 const search = () => {
   loadItems();
 };
 
 const openForm = () => {
   payload.value = Object.assign({});
-  getRegion();
+  accountClass();
+  accountType();
   open_form_dialog.value = true;
 };
 
@@ -228,20 +271,19 @@ const closeForm = () => {
 
 const onEdit = (item) => {
   openForm();
-  getRegion();
-  payload.value = Object.assign({});
   payload.value = Object.assign({}, item);
   payload.value.isactive = item.isactive == 1 ? true : false;
+  payload.value.account_class = parseInt(item.account_class) ? parseInt(item.account_class) : "";
+  payload.value.account_type = parseInt(item.account_type) ? parseInt(item.account_type) : "";
 };
 
 const onSubmit = async () => {
   let response;
   isloading.value = true;
-  
   if (payload.value.id) {
-    response = await useMethod("put", "update-provinces", payload.value, "", payload.value.id);
+    response = await useMethod("put", "account-groups", payload.value, "", payload.value.id);
   } else {
-    response = await useMethod("post", "create-provinces", payload.value);
+    response = await useMethod("post", "account-groups", payload.value);
   }
   if (response) {
     useSnackbar(true, "green", response.msg);
@@ -255,7 +297,7 @@ const confirm = async () => {
   if (payload.value.id) {
     let response = await useMethod(
       "delete",
-      "get-provinces",
+      "account-groups",
       payload.value,
       "",
       payload.value.id
