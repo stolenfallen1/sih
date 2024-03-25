@@ -500,6 +500,42 @@
         :show="BankAccountDebitCard"
         @close-dialog="useTableAndTemplate('BankAccountDebitCard',false);"
     />
+    <AccountTypeDialog 
+        :show="AccountType"
+        @close-dialog="useTableAndTemplate('AccountType',false);"
+    />
+    <AccountClassDialog 
+        :show="AccountClass"
+        @close-dialog="useTableAndTemplate('AccountClass',false);"
+    />
+    <AccountGroupDialog 
+        :show="AccountGroup"
+        @close-dialog="useTableAndTemplate('AccountGroup',false);"
+    />
+    <CostCenterDialog 
+        :show="CostCenter"
+        @close-dialog="useTableAndTemplate('CostCenter',false);"
+    />
+    <MedicareTypeDialog 
+        :show="MedicareType"
+        @close-dialog="useTableAndTemplate('MedicareType',false);"
+    />
+    <RevenueClassDialog 
+        :show="RevenueClass"
+        @close-dialog="useTableAndTemplate('RevenueClass',false);"
+    />
+    <TransactionClassificationDialog 
+      :show="TransactionClassification"
+      @close-dialog="useTableAndTemplate('TransactionClassification', false)"
+    />
+    <TransactionCodeDialog 
+      :show="TransactionCode"
+      @close-dialog="useTableAndTemplate('TransactionCode', false)"
+    />
+    <CountryDialog 
+      :show="Country"
+      @close-dialog="useTableAndTemplate('Country', false)"
+    />
     <RegionDialog 
       :show="Region"
       @close-dialog="useTableAndTemplate('Region', false)"
@@ -711,7 +747,15 @@ const {
     BankAccount,
     BankAccountCreditCard,
     BankAccountDebitCard,
-    //
+    AccountType,
+    AccountClass,
+    AccountGroup,
+    CostCenter,
+    MedicareType,
+    RevenueClass,
+    TransactionClassification,
+    TransactionCode,
+    Country,
     Region,
     Province,
     Municipality,

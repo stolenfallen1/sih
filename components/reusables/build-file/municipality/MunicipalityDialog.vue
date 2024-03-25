@@ -81,7 +81,7 @@
     <form @submit.prevent="onSubmit">
       <v-card rounded="lg">
         <v-toolbar density="compact" color="#6984ff" hide-details>
-          <v-toolbar-title>New Municipality</v-toolbar-title>
+          <v-toolbar-title>Municipality Details</v-toolbar-title>
           <v-spacer></v-spacer>
           <v-btn color="white" @click="closeForm">
             <v-icon>mdi-close</v-icon>
@@ -142,6 +142,7 @@
                 <v-checkbox
                   class="mt-0 mb-0"
                   hide-details
+                  density="compact"
                   v-model="payload.isactive"
                   label="Status"
                 ></v-checkbox>
@@ -185,7 +186,7 @@ const headers = [
   { title: "Municipality", key: "municipality_name", width: "20%" },
   { title: "Code", key: "municipality_code", width: "10%" },
   { title: "Status", key: "isactive", width: "10%" },
-  { title: "Action", key: "actions", width: "10%" },
+  { title: "", key: "actions", width: "15%" },
 ]
 
 const data = ref({

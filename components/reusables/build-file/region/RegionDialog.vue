@@ -1,4 +1,4 @@
-<!-- <template>
+<template>
   <v-dialog :model-value="show" rounded="lg" persistent scrollable max-width="980px">
     <v-card rounded="lg">
       <v-toolbar density="compact" color="#6984ff" hide-details>
@@ -45,9 +45,6 @@
               </slot>
             </td>
           </template>
-          <template v-slot:item.region_code="{ item }">
-            {{ item.regions ? item.regions.region_name :'' }}
-          </template>
           <template v-slot:item.isactive="{ item }">
             {{ item.isactive == 1 ? "Active" : "In-active" }}
           </template>
@@ -78,7 +75,7 @@
     <form @submit.prevent="onSubmit">
       <v-card rounded="lg">
         <v-toolbar density="compact" color="#6984ff" hide-details>
-          <v-toolbar-title>New Region</v-toolbar-title>
+          <v-toolbar-title>Region Details</v-toolbar-title>
           <v-spacer></v-spacer>
           <v-btn color="white" @click="closeForm">
             <v-icon>mdi-close</v-icon>
@@ -88,35 +85,21 @@
 
         <v-card-text>
           <v-row>
-               <v-col cols="12">
-                <v-autocomplete
-                  :items="region_data"
-                  item-title="region_name"
-                  item-value="region_code"
-                  density="compact"
-                  variant="outlined"
-                  hide-details
-                  v-model="payload.region_code"
-                  @update:model-value="getProvince"
-                  label="Region"
-                  :loading="region_loading"
-                ></v-autocomplete>
-              </v-col>
                <v-col cols="4">
                 <v-text-field
-                  label="Province Code"
+                  label="Region Code"
                   variant="outlined"
                   density="compact"
-                  v-model="payload.province_code"
+                  v-model="payload.region_code"
                   hide-details
                 ></v-text-field>
               </v-col>
               <v-col cols="8">
                 <v-text-field
-                  label="Province Name"
+                  label="Region Name"
                   variant="outlined"
                   density="compact"
-                  v-model="payload.province_name"
+                  v-model="payload.region_name"
                   placeholder="Enter Province Name"
                   hide-details
                 ></v-text-field>
@@ -125,6 +108,7 @@
                 <v-checkbox
                   class="mt-0 mb-0"
                   hide-details
+                  density="compact"
                   v-model="payload.isactive"
                   label="Status"
                 ></v-checkbox>
@@ -163,15 +147,14 @@ const isloading = ref(false);
 const open_form_dialog = ref(false);
 const headers = [
   { title: "ID", key: "id", width: "5%" },
-  { title: "Region", key: "region_code", width: "35%" },
-  { title: "Province", key: "province_name", width: "20%" },
-  { title: "Province Code", key: "province_code", width: "10%" },
-  { title: "Status", key: "isactive", width: "5%" },
-  { title: "", key: "actions", width: "5%" },
+  { title: "Region Name", key: "region_name", width: "45%" },
+  { title: "Region Code", key: "region_code", width: "10%" },
+  { title: "Status", key: "isactive", width: "10%" },
+  { title: "", key: "actions", width: "10%" },
 ]
 
 const data = ref({
-  title: "List of provinces",
+  title: "List of regions",
   keyword: "",
   loading: false,
   filter: {},
@@ -194,21 +177,12 @@ const loadItems = async (page = null, itemsPerPage = null, sortBy = null) => {
   let itemPerpageno = itemsPerPage || 10;
   let params =
     "page=" + pageno + "&per_page=" + itemPerpageno + "&keyword=" + data.value.keyword;
-  const response = await useMethod("get", "get-provinces?", "", params);
+  const response = await useMethod("get", "get-regions?", "", params);
   if (response) {
     serverItems.value = response.data;
     totalItems.value = response.total;
     data.value.loading = false;
   }
-};
-
-const getRegion = async () => {
-  region_loading.value = true;
-  const response = await useMethod("get", "get-regions", "", "");
-  if (response) {
-    region_data.value = response;
-    region_loading.value = false;
-  } 
 };
 const search = () => {
   loadItems();
@@ -216,7 +190,6 @@ const search = () => {
 
 const openForm = () => {
   payload.value = Object.assign({});
-  getRegion();
   open_form_dialog.value = true;
 };
 
@@ -227,7 +200,6 @@ const closeForm = () => {
 
 const onEdit = (item) => {
   openForm();
-  getRegion();
   payload.value = Object.assign({});
   payload.value = Object.assign({}, item);
   payload.value.isactive = item.isactive == 1 ? true : false;
@@ -238,9 +210,9 @@ const onSubmit = async () => {
   isloading.value = true;
   
   if (payload.value.id) {
-    response = await useMethod("put", "update-provinces", payload.value, "", payload.value.id);
+    response = await useMethod("put", "update-regions", payload.value, "", payload.value.id);
   } else {
-    response = await useMethod("post", "create-provinces", payload.value);
+    response = await useMethod("post", "create-regions", payload.value);
   }
   if (response) {
     useSnackbar(true, "green", response.msg);
@@ -254,7 +226,7 @@ const confirm = async () => {
   if (payload.value.id) {
     let response = await useMethod(
       "delete",
-      "get-provinces",
+      "get-regions",
       payload.value,
       "",
       payload.value.id
@@ -282,4 +254,4 @@ const closeDialog = () => {
 };
 </script>
 
-<style scoped></style> -->
+<style scoped></style>

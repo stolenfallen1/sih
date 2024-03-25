@@ -84,7 +84,7 @@
     <form @submit.prevent="onSubmit">
       <v-card rounded="lg">
         <v-toolbar density="compact" color="#6984ff" hide-details>
-          <v-toolbar-title>New Zipcode</v-toolbar-title>
+          <v-toolbar-title>Zipcode Details</v-toolbar-title>
           <v-spacer></v-spacer>
           <v-btn color="white" @click="closeForm">
             <v-icon>mdi-close</v-icon>
@@ -149,6 +149,7 @@
                 <v-checkbox
                   class="mt-0 mb-0"
                   hide-details
+                  density="compact"
                   v-model="payload.isactive"
                   label="Status"
                 ></v-checkbox>
@@ -187,12 +188,12 @@ const isloading = ref(false);
 const open_form_dialog = ref(false);
 const headers = [
     { title: "ID", key: "id", width: "5%" },
-    { title: "Region", key: "region_code", width: "20%" },
-    { title: "Province", key: "province_code", width: "20%" },
-    { title: "Municipality", key: "municipality_code", width: "20%" },
-    { title: "Zip Code", key: "zip_code", width: "20%" },
-    { title: "Status", key: "isactive", width: "10%" },
-    { title: '', key: 'actions', align: 'start', width: "10%" },
+    { title: "Region", key: "region_code", width: "18%" },
+    { title: "Province", key: "province_code", width: "18%" },
+    { title: "Municipality", key: "municipality_code", width: "18%" },
+    { title: "Zip Code", key: "zip_code", width: "18%" },
+    { title: "Status", key: "isactive", width: "8%" },
+    { title: '', key: 'actions', align: 'start', width: "15%" },
 ];
 
 const data = ref({
