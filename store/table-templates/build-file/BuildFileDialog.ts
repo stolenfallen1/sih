@@ -8,6 +8,8 @@ export const BuildFileDialog = defineStore('BuildFileDialog',{
     DeathType:false,
     TransactionType:false,
     HospitalPlan:false,
+    AntibioticClass:false,
+    TherapeuticClass:false,
     IDTypes:false,
     Nationality:false,
     Religion:false,

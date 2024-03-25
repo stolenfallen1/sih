@@ -17,7 +17,7 @@
                 required
                 clearable
                 hide-details
-                prepend-icon="mdi-refresh"
+                prepend-inner-icon="mdi-magnify"
                 density="compact"
               ></v-text-field>
             </v-col>

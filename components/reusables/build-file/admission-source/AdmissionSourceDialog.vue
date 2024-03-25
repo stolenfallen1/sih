@@ -117,7 +117,7 @@
         </v-card-text>
         <v-divider></v-divider>
         <v-card-actions>
-          <v-btn color="blue-darken-1" @click="closeForm"> Close </v-btn>
+          <v-btn color="blue-darken-1" @click="closeForm" v-on=""> Close </v-btn>
           <v-spacer></v-spacer>
           <v-btn class="bg-primary text-white" type="submit">Submit</v-btn>
         </v-card-actions>
@@ -147,7 +147,7 @@ const isloading = ref(false);
 const open_form_dialog = ref(false);
 const headers = [
   {
-    title: "code",
+    title: "Code",
     align: "start",
     sortable: false,
     key: "id",
@@ -250,6 +250,7 @@ const onDelete = (item) => {
 const closeDialog = () => {
   emits("close-dialog");
 };
+useKeyboardEscToClose(closeDialog);
 </script>
 
 <style scoped></style>

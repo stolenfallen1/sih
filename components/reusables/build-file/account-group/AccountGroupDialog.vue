@@ -193,7 +193,7 @@ const isloading = ref(false);
 const open_form_dialog = ref(false);
 const headers = [
   {
-    title: "code",
+    title: "Code",
     align: "start",
     sortable: false,
     key: "account_group_code",
@@ -323,6 +323,7 @@ const onDelete = (item) => {
 const closeDialog = () => {
   emits("close-dialog");
 };
+useKeyboardEscToClose(closeDialog);
 </script>
 
 <style scoped></style>

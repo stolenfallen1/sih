@@ -87,7 +87,7 @@ const headers = [
         sortable: false,
         key: 'id',
     },
-    { title: 'Description', key: 'generic_name', align: 'start',width:"60%" },
+    { title: 'Description', key: 'generic_names', align: 'start',width:"60%" },
     { title: '', key: 'actions', align: 'start' },
 ];
 const data = ref({
