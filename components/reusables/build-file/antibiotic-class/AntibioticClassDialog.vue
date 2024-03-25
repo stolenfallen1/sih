@@ -1,8 +1,8 @@
 <template>
-  <v-dialog :model-value="show" rounded="lg" persistent scrollable max-width="850px">
+  <v-dialog :model-value="show" rounded="lg" persistent scrollable max-width="750px">
     <v-card rounded="lg">
       <v-toolbar density="compact" color="#6984ff" hide-details>
-        <v-toolbar-title>Cost Center</v-toolbar-title>
+        <v-toolbar-title>Antibiotic Class</v-toolbar-title>
         <v-spacer></v-spacer>
         <v-btn color="white" @click="closeDialog">
           <v-icon>mdi-close</v-icon>
@@ -45,11 +45,8 @@
               </slot>
             </td>
           </template>
-           <template v-slot:item.acct_type="{ item }">
-            {{ item.get_account_type ? item.get_account_type.account_type : "" }}
-          </template>
-          <template v-slot:item.isactive="{ item }">
-            {{ item.isactive == 1 ? "Active" : "In-active" }}
+          <template v-slot:item.isActive="{ item }">
+            {{ item.isActive == 1 ? "Active" : "In-active" }}
           </template>
           <template v-slot:item.actions="{ item }">
             <v-icon color="green mr-3" @click="onEdit(item)">mdi-pencil</v-icon>
@@ -78,7 +75,7 @@
     <form @submit.prevent="onSubmit">
       <v-card rounded="lg">
         <v-toolbar density="compact" color="#6984ff" hide-details>
-          <v-toolbar-title>Cost Center Details</v-toolbar-title>
+          <v-toolbar-title>Antibiotic Class Details</v-toolbar-title>
           <v-spacer></v-spacer>
           <v-btn color="white" @click="closeForm">
             <v-icon>mdi-close</v-icon>
@@ -91,37 +88,33 @@
             <v-col cols="4">
               <v-text-field
                 label="Code"
+                placeholder="Enter Code"
                 hide-details
-                readonly
-                v-model="payload.id"
+                v-model="payload.code"
                 density="compact"
                 variant="outlined"
               ></v-text-field>
             </v-col>
-             <v-col cols="8">
-                <v-autocomplete
-                 :items="departmentList"
-                 item-title="account_description"
-                 item-value="id"
-                 density="compact"
-                  variant="outlined"
-                  hide-details
-                  v-model="payload.department_id"
-                  label="Select Department"
-                  clearable
-                ></v-autocomplete>
-              </v-col>
-             <v-col cols="12">
-                <v-text-field
-                  variant="outlined"
-                  density="compact"
-                  label="Enter description"
-                  required
-                  v-model="payload.costcenter_description"
-                  clearable
-                  hide-details
-                ></v-text-field>
-              </v-col>
+            <v-col cols="8">
+              <v-text-field
+                label="Antibiotic Name"
+                placeholder="Enter Antibiotic name"
+                hide-details
+                v-model="payload.name"
+                density="compact"
+                variant="outlined"
+                required
+              ></v-text-field>
+            </v-col>
+            <v-col cols="4">
+              <v-checkbox
+                class="mt-0 mb-0"
+                v-model="payload.isActive"
+                hide-details
+                density="compact"
+                label="Is Active"
+              ></v-checkbox>
+            </v-col>
           </v-row>
         </v-card-text>
         <v-divider></v-divider>
@@ -155,18 +148,13 @@ const payload = ref({});
 const isloading = ref(false);
 const open_form_dialog = ref(false);
 const headers = [
-  {
-    title: "Code",
-    align: "start",
-    sortable: false,
-    key: "id",
-  },
-  { title: "Department", key: "department_id", align: "start", sortable: false,width: "20%" },
-  { title: "Description", key: "costcenter_description", align: "start",sortable: false, width: "30%" },
-  { title: "", key: "actions", align: "start", width: "20%" },
+  { title: "Code", key: "code", width: "5%" , align: "start"},
+  { title: "Name", key: "name", width: "50%", align: "start" },
+  { title: "Status", key: "isActive", width: "10%", align: "start" },
+  { title: "", key: "actions", width: "15%", align: "start" },
 ];
 const data = ref({
-  title: "List of Cost Center",
+  title: "List of Antiboitic Class",
   keyword: "",
   loading: false,
   filter: {},
@@ -177,8 +165,6 @@ const data = ref({
 const itemsPerPage = ref(10);
 const totalItems = ref(0);
 const serverItems = ref([]);
-const account_type = ref([]);
-const departmentList = ref([]);
 const initialize = ({ page, itemsPerPage, sortBy }) => {
   loadItems(page, itemsPerPage, sortBy);
 };
@@ -188,7 +174,7 @@ const loadItems = async (page = null, itemsPerPage = null, sortBy = null) => {
   let itemPerpageno = itemsPerPage || 10;
   let params =
     "page=" + pageno + "&per_page=" + itemPerpageno + "&keyword=" + data.value.keyword;
-  const response = await useMethod("get", "cost-centers?", "", params);
+  const response = await useMethod("get", "get-antibiotic-class?", "", params);
   if (response) {
     serverItems.value = response.data;
     totalItems.value = response.total;
@@ -199,21 +185,8 @@ const search = () => {
   loadItems();
 };
 
-const department = async () => {
-  const response = await useMethod("get","departments","","");
-  if (response) {
-    departmentList.value = response.departments;
-  }
-};
-const accountType = async () => {
-  const response = await useMethod("get","get-account-type","","");
-  if (response) {
-    account_type.value = response;
-  }
-};
 const openForm = () => {
   payload.value = Object.assign({});
-  department();
   open_form_dialog.value = true;
 };
 
@@ -226,18 +199,16 @@ const onEdit = (item) => {
   openForm();
   payload.value = Object.assign({});
   payload.value = Object.assign({}, item);
-  payload.value.isactive = item.isactive == 1 ? true : false;
-  payload.value.Class = parseInt(item.Class) ? parseInt(item.Class) : "";
-  payload.value.acct_type = parseInt(item.acct_type) ? parseInt(item.acct_type) : "";
+  payload.value.isActive = item.isActive == 1 ? true : false;
 };
 
 const onSubmit = async () => {
   let response;
   isloading.value = true;
   if (payload.value.id) {
-    response = await useMethod("put", "cost-centers", payload.value, "", payload.value.id);
+    response = await useMethod("put", "update-antibiotic-class", payload.value, "", payload.value.id);
   } else {
-    response = await useMethod("post", "cost-centers", payload.value);
+    response = await useMethod("post", "create-antibiotic-class", payload.value);
   }
   if (response) {
     useSnackbar(true, "green", response.msg);
@@ -251,7 +222,7 @@ const confirm = async () => {
   if (payload.value.id) {
     let response = await useMethod(
       "delete",
-      "cost-centers",
+      "get-antibiotic-class",
       payload.value,
       "",
       payload.value.id

@@ -332,7 +332,7 @@ export default [
                     {
                         label: "Bed Status",
                         icon: "mdi-file-document-edit",
-                        form: "BedStatusDialog",
+                        form: "BedStatus",
                         rule: "",
                     },
                 ],
@@ -2422,6 +2422,18 @@ export default [
                         rule: ""
                     },
                     {
+                        label: "Antibiotic Class",
+                        icon: "mdi-file-document",
+                        form: "AntibioticClass", 
+                        rule: ""
+                    },
+                    {
+                        label: "Therapeutic Class",
+                        icon: "mdi-file-document",
+                        form: "TherapeuticClass", 
+                        rule: ""
+                    },
+                    {
                         label: "ID Types",
                         icon: "mdi-file-document",
                         form: "IDTypes",
@@ -2500,7 +2512,7 @@ export default [
                         rule: ""
                     },
                     {
-                        label: "Level",
+                        label: "Approver Level",
                         icon: "mdi-file-document",
                         form: "ApproverLevel",
                         rule: ""

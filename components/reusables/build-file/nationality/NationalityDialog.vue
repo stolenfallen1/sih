@@ -194,12 +194,12 @@ const isloading = ref(false);
 const open_form_dialog = ref(false);
 const headers = [
   {
-    title: "code",
+    title: "Code",
     align: "start",
     sortable: false,
     key: "id",
   },
-   { title: "Nationality", key: "nationality", width: "60%" ,sortable:false},
+   { title: "Nationality", key: "natinality_name", width: "60%" ,sortable:false},
   { title: "", key: "actions", align: "start", width: "20%" },
 ];
 const data = ref({

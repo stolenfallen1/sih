@@ -420,6 +420,14 @@
         :show="HospitalPlan"
         @close-dialog="useTableAndTemplate('HospitalPlan',false);"
     />
+    <AntibioticClassDialog 
+      :show="AntibioticClass"
+      @close-dialog="useTableAndTemplate('AntibioticClass',false);"
+    />
+    <TherapeuticClassDialog 
+      :show="TherapeuticClass"
+      @close-dialog="useTableAndTemplate('TherapeuticClass',false);"
+    />
     <IDTypesDialog 
         :show="IDTypes"
         @close-dialog="useTableAndTemplate('IDTypes',false);"
@@ -727,6 +735,8 @@ const {
     DeathType,
     TransactionType,
     HospitalPlan,
+    AntibioticClass,
+    TherapeuticClass,
     IDTypes,
     Nationality,
     Religion,
@@ -762,7 +772,6 @@ const {
     Barangay,
     ZipCode,
 } = storeToRefs(BuildFileDialog());
-
 
 </script>
 

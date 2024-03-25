@@ -103,7 +103,7 @@
                   hide-details
                   density="compact"
                   v-model="payload.isActive"
-                  label="Status"
+                  label="Is Active"
                 ></v-checkbox>
               </v-col>
           </v-row>
