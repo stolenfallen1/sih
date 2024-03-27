@@ -1,5 +1,5 @@
 <template>
-  <v-dialog :model-value="open_medical_item_selection" rounded="lg" persistent fullscreen>
+  <v-dialog :model-value="open_medical_item_selection" rounded="lg" @update:model-value="closeDialog" fullscreen>
     <v-card>
       <v-toolbar color="#6984ff" density="compact">
         <v-toolbar-title>Multi Department Item Selection</v-toolbar-title>

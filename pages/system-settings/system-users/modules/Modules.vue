@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-dialog  :model-value="show" width="950" persistent scrollable>
+    <v-dialog  :model-value="show" width="950"  scrollable>
       <v-card>
         <v-toolbar density="compact">
           <v-toolbar-title>System User Group {{ selectedGroup }}</v-toolbar-title>
@@ -119,7 +119,7 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-    <v-dialog v-model="subdialog" persistent hide-overlay width="950" scrollable>
+    <v-dialog v-model="subdialog"  hide-overlay width="950" scrollable>
       <sub-module
         :subModuleData="subModuleData"
         :roleList="roleList"

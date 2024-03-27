@@ -1,5 +1,5 @@
 <template>
-    <v-dialog :model-value="open_form_dialog" persistent hide-overlay width="550">
+    <v-dialog :model-value="open_form_dialog" @update:model-value="closeDialog" hide-overlay width="550">
         <form @submit.prevent="handleSubmit">
             <v-card>
                 <v-toolbar color="#6984ff" hide-details density="compact">

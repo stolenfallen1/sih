@@ -4,7 +4,7 @@
     width="870px"
     transition="dialog-bottom-transition"
     scrollable
-    persistent
+    
   >
     <form @submit.prevent="handleSubmit">
        <template v-if="!isrefresh">

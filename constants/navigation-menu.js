@@ -253,10 +253,10 @@ export default [
                         rule: "",
                     },
                     {
-                        label: "Doctors Category",
+                        label: "Doctor Category",
                         icon: "mdi-file-document-edit",
 
-                        form: "DoctorsCategory",
+                        form: "DoctorCategory",
                         rule: "",
                     },
                     {
@@ -495,7 +495,7 @@ export default [
                     {
                         label: "Item Price Groups",
                         icon: "mdi-file-document-edit",
-                        form: "ItemPriceGroups",
+                        form: "PriceGroup",
                         rule: "",
                     },
                     {
@@ -725,7 +725,7 @@ export default [
                     {
                         label: "Item Price Groups",
                         icon: "mdi-file-document-edit",
-                        form: "ItemPriceGroups",
+                        form: "PriceGroup",
                         rule: "",
                     },
                     {
@@ -1333,96 +1333,115 @@ export default [
                     {
                         label: "Adjustment Types",
                         icon: "mdi-file-document-edit",
+                        form: "AdjustmentTypes",
                         rule: "",
                     },
                     {
                         label: "Allergies",
                         icon: "mdi-file-document-edit",
+                        form: "Allergies",
                         rule: "",
                     },
                     {
                         label: "Billing Templates",
                         icon: "mdi-file-document-edit",
+                        form: "BillingTemplates",
                         rule: "",
                     },
                     {
                         label: "Billing Templates Groups",
                         icon: "mdi-file-document-edit",
+                        form: "BillingTemplateGroups",
                         rule: "",
                     },
                     {
                         label: "CS Case Indicators",
                         icon: "mdi-file-document-edit",
+                        form: "CsCaseIndicators",
                         rule: "",
                     },
                     {
                         label: "Death Types",
                         icon: "mdi-file-document-edit",
+                        form: "DeathType",
                         rule: "",
                     },
                     {
                         label: "Discount Schemes",
                         icon: "mdi-file-document-edit",
+                        form: "DiscountSchemes",
                         rule: "",
                     },
                     {
                         label: "Disposition Types",
                         icon: "mdi-file-document-edit",
+                        form: "DispositionTypes",
                         rule: "",
                     },
                     {
                         label: "E.R. Areas",
                         icon: "mdi-file-document-edit",
+                        form: "ErAreas",
                         rule: "",
                     },
                     {
                         label: "Excellence Centers",
                         icon: "mdi-file-document-edit",
+                        form: "ExcellenceCenters",
                         rule: "",
                     },
                     {
                         label: "Referring Centers",
                         icon: "mdi-file-document-edit",
+                        form: "ReferringCenters",
                         rule: "",
                     },
                     {
                         label: "Medical Service Types",
                         icon: "mdi-file-document-edit",
+                        form: "MedicalServiceTypes",
                         rule: "",
                     },
                     {
                         label: "Medical Sub Service Types",
                         icon: "mdi-file-document-edit",
+                        form: "MedicalSubServiceTypes",
                         rule: "",
                     },
                     {
                         label: "Price Schemes",
                         icon: "mdi-file-document-edit",
+                        form: "PriceSchemes",
                         rule: "",
                     },
                     {
                         label: "Hospitalization Types",
                         icon: "mdi-file-document-edit",
+                        form: "HospitalizationTypes",
                         rule: "",
                     },
                     {
-                        label: "Hospitalization Plan",
+                        label: "Hospitalization Plans",
                         icon: "mdi-file-document-edit",
+                        form: "HospitalizationPlans",
                         rule: "",
                     },
                     {
                         label: "Hospitalization Case Types",
                         icon: "mdi-file-document-edit",
+                        form: "HospitalizationCaseTypes",
                         rule: "",
                     },
                     {
                         label: "Hospitalization Transaction Types",
                         icon: "mdi-file-document-edit",
+                        form: "HospitalTransactionTypes",
                         rule: "",
                     },
                     {
                         label: "Internal Control Table",
                         icon: "mdi-file-document-edit",
+                        form: "InternalControlTable",
                         rule: "",
                     },
                     {
@@ -1434,41 +1453,49 @@ export default [
                     {
                         label: "Surgical Procedures",
                         icon: "mdi-file-document-edit",
+                        form: "SurgicalProcedures",
                         rule: "",
                     },
                     {
                         label: "Surgical Procedures Categories",
                         icon: "mdi-file-document-edit",
+                        form: "SurgicalProceduresCategory",
                         rule: "",
                     },
                     {
                         label: "Body Systems",
                         icon: "mdi-file-document-edit",
+                        form: "BodySystems",
                         rule: "",
                     },
                     {
                         label: "Body Organs",
                         icon: "mdi-file-document-edit",
+                        form: "BodyOrgans",
                         rule: "",
                     },
                     {
                         label: "Types of Anesthesia",
                         icon: "mdi-file-document-edit",
+                        form: "TypesOfAnesthesia",
                         rule: "",
                     },
                     {
                         label: "Medical Social Service Template",
                         icon: "mdi-file-document-edit",
+                        form: "MedicalSocialServiceTemplate",
                         rule: "",
                     },
                     {
                         label: "List of Pet Breed",
                         icon: "mdi-file-document-edit",
+                        form: "ListOfPetBreed",
                         rule: "",
                     },
                     {
                         label: "Registry Groups",
                         icon: "mdi-file-document-edit",
+                        form: "RegistryGroup",
                         rule: "",
                     },
                 ]
@@ -1761,9 +1788,9 @@ export default [
                         rule: "",
                     },
                     {
-                        label: "Hospitalization Plan",
+                        label: "Hospitalization Plans",
                         icon: "mdi-file-document-edit",
-                        form: "HospitalizationPlan",
+                        form: "HospitalizationPlans",
                         rule: "",
                     },
                     {
@@ -1961,7 +1988,7 @@ export default [
                 ],
                 table_and_template: [
                     {
-                        label: "Admission Results",
+                        label: "Admission Result",
                         icon: "mdi-file-document-edit",
                         form: "AdmissionResult",
                         rule: "",
@@ -2169,43 +2196,7 @@ export default [
                         rule: "",
                     },
                 ],
-                table_and_template: [
-                    {
-                        label: "A/R. Income Transaction Types",
-                        icon: "mdi-file-document-edit",
-                        rule: "",
-                    },
-                    {
-                        label: "Cash Flow Types",
-                        icon: "mdi-file-document-edit",
-                        rule: "",
-                    },
-                    {
-                        label: "Official Receipt Series Types",
-                        icon: "mdi-file-document-edit",
-                        rule: "",
-                    },
-                    {
-                        label: "Banks",
-                        icon: "mdi-file-document-edit",
-                        rule: "",
-                    },
-                    {
-                        label: "Credit Cards",
-                        icon: "mdi-file-document-edit",
-                        rule: "",
-                    },
-                    {
-                        label: "Other Payment Types",
-                        icon: "mdi-file-document-edit",
-                        rule: "",
-                    },
-                    {
-                        label: "Official Receipt Reset Setup",
-                        icon: "mdi-file-document-edit",
-                        rule: "",
-                    },
-                ]
+                table_and_template: []
             },
             {
                 label: "Guarantors Billing",
@@ -2245,18 +2236,7 @@ export default [
                     },
                 ],
                 processing_and_queries: [],
-                table_and_template: [
-                    {
-                        label: "Customer Types",
-                        icon: "mdi-file-document-edit",
-                        rule: "",
-                    },
-                    {
-                        label: "Terms",
-                        icon: "mdi-file-document-edit",
-                        rule: "",
-                    },
-                ]
+                table_and_template: []
             },
             {
                 label: "Refunds",
@@ -2282,23 +2262,7 @@ export default [
                         rule: "",
                     },
                 ],
-                table_and_template: [
-                    {
-                        label: "A/P .Expense Transaction Types",
-                        icon: "mdi-file-document-edit",
-                        rule: "",
-                    },
-                    {
-                        label: "Cash Flow Types",
-                        icon: "mdi-file-document-edit",
-                        rule: "",
-                    },
-                    {
-                        label: "Petty Cash Transaction Types",
-                        icon: "mdi-file-document-edit",
-                        rule: "",
-                    },
-                ]
+                table_and_template: []
             },
         ],
     },

@@ -1,13 +1,13 @@
 <template>
-    <v-dialog :model-value="show" rounded="lg" persistent scrollable max-width="700px">
-        <v-toolbar density="compact" color="#6984ff" hide-details>
-            <v-toolbar-title>Collection Report Group Header</v-toolbar-title>
-            <v-spacer></v-spacer>
-            <v-btn color="white" @click="closeDialog">
-                <v-icon>mdi-close</v-icon>
-            </v-btn>
-        </v-toolbar>
+    <v-dialog :model-value="show" rounded="lg" @update:model-value="closeDialog" scrollable max-width="700px">
         <v-card>
+            <v-toolbar density="compact" color="#6984ff" hide-details>
+                <v-toolbar-title>Collection Report Group Header</v-toolbar-title>
+                <v-spacer></v-spacer>
+                <v-btn color="white" @click="closeDialog">
+                    <v-icon>mdi-close</v-icon>
+                </v-btn>
+            </v-toolbar>
             <v-card-title>
                 <v-spacer></v-spacer>
                 <v-text-field

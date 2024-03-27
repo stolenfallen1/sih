@@ -1,5 +1,5 @@
 <template>
-    <v-dialog :model-value="open_sections_dialog" rounded="lg" persistent scrollable max-width="700px">
+    <v-dialog :model-value="open_sections_dialog" rounded="lg" @update:model-value="closeDialog" scrollable max-width="700px">
         <v-toolbar density="compact" color="#6984ff" hide-details>
             <v-toolbar-title>Sections</v-toolbar-title>
             <v-spacer></v-spacer>

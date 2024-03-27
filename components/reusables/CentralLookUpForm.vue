@@ -1,7 +1,7 @@
 <template>
   <v-dialog
     :model-value="central_form_dialog"
-    persistent
+    
     hide-overlay
     width="800"
     scrollable

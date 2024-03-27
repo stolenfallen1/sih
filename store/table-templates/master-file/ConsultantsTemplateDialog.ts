@@ -5,7 +5,7 @@ export const ConsultantsTemplateDialog = defineStore('ConsultantsTemplateDialog'
     MedicalSubServiceTypes: false,
     ConsultantRoleTypes: false,
     DoctorsDepartment: false,
-    DoctorsCategory: false,
+    DoctorCategory: false,
     DoctorsRebateCategory: false,
   }),
    actions:{

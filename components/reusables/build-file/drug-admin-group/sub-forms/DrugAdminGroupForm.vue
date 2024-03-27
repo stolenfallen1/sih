@@ -2,7 +2,7 @@
   <v-dialog
     :model-value="drug_admin_group"
     rounded="lg"
-    persistent
+    @update:model-value="closeDialog"
     scrollable
     max-width="600px"
   >
@@ -10,7 +10,6 @@
       <v-card rounded="lg">
         <v-toolbar density="compact" color="#6984ff" hide-details>
           <v-toolbar-title>Drug Admin Group Details</v-toolbar-title>
-          <v-spacer></v-spacer>
           <v-btn color="white" @click="closeDialog">
             <v-icon>mdi-close</v-icon>
           </v-btn>

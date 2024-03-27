@@ -8,6 +8,7 @@ import { ItemServicesSuppliesTemplateDialog } from "~/store/table-templates/mast
 // Services table and template form dialog imports
 import { OutPatientsTemplateDialog } from "~/store/table-templates/services/OutPatientsTemplateDialog";
 import { InPatientsTemplateDialog } from "~/store/table-templates/services/InPatientsTemplateDialog";
+import { EmergencyTemplateDialog } from "~/store/table-templates/services/EmergencyTemplateDialog";
 import { NursingServicesTemplateDialog } from "~/store/table-templates/services/NursingServicesTemplateDialog";
 import { DietaryServicesTemplateDialog } from "~/store/table-templates/services/DietaryServicesTemplateDialog";
 
@@ -24,6 +25,7 @@ export const useTableAndTemplate = async (dialog:any, type:Boolean = true) => {
     // Services table template form dialog states
     const { setOutPatientsDialog } = OutPatientsTemplateDialog()
     const { setInPatientsDialog } = InPatientsTemplateDialog()
+    const { setEmergencyDialog } = EmergencyTemplateDialog()
     const { setNursingServicesDialog} = NursingServicesTemplateDialog()
     const { setDietaryServicesDialog } = DietaryServicesTemplateDialog()
 
@@ -38,6 +40,7 @@ export const useTableAndTemplate = async (dialog:any, type:Boolean = true) => {
     // Services
     setOutPatientsDialog(dialog, type);
     setInPatientsDialog(dialog, type);
+    setEmergencyDialog(dialog, type);
     setNursingServicesDialog(dialog, type);
     setDietaryServicesDialog(dialog, type);
 

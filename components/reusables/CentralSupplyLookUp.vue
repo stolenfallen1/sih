@@ -1,5 +1,5 @@
 <template>
-<v-dialog :model-value="central_form_dialog" persistent hide-overlay width="700" height="90vh" scrollable>
+<v-dialog :model-value="central_form_dialog"  hide-overlay width="700" height="90vh" scrollable>
     <form @submit.prevent="handleSearch">
     <v-card>
         <v-toolbar density="compact" color="#FFF">

@@ -317,6 +317,9 @@ const logout = () => {
 </script>
 
 <style>
+* {
+  font-family: 'Montserrat', sans-serif;
+}
 .v-navigation-drawer{
   border-style: none !important;
 }

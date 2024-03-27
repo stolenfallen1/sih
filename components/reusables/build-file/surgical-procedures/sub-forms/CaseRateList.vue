@@ -1,5 +1,5 @@
 <template>
-  <v-dialog :model-value="open_case_rate_list" rounded="lg" persistent scrollable max-width="825px">
+  <v-dialog :model-value="open_case_rate_list" rounded="lg"  scrollable max-width="825px">
     <form @submit.prevent="handleSubmit">
       <v-card rounded="lg">
           <v-toolbar density="compact" color="#6984ff" hide-details>

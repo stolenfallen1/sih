@@ -2,15 +2,18 @@
   <v-dialog
     :model-value="open_item_pricing_schemes_form"
     rounded="lg"
-    persistent
+    @update:model-value="closeDialog"
     scrollable
-    max-width="700px"
+    max-width="600px"
   >
-    <v-toolbar color="#6984ff" hide-details density="compact">
-      <v-toolbar-title>Price Scheme Details</v-toolbar-title>
-    </v-toolbar>
-    <form @submit.prevent="handleSubmit">
-      <v-card>
+  <form @submit.prevent="handleSubmit">
+    <v-card rounded="lg">
+        <v-toolbar color="#6984ff" hide-details density="compact">
+          <v-toolbar-title>Price Scheme Details</v-toolbar-title>
+          <v-btn color="white" @click="closeDialog">
+              <v-icon>mdi-close</v-icon>
+          </v-btn>
+        </v-toolbar>
         <v-card-text>
           <v-container>
             <v-row>

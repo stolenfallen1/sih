@@ -1,5 +1,5 @@
 <template>
-  <v-dialog :model-value="moduleDialog" persistent hide-overlay width="350" scrollable>
+  <v-dialog :model-value="moduleDialog"  hide-overlay width="350" scrollable>
     <form  @submit.prevent="handleSubmit(usergroup_payload)">
     <v-card>
       <v-card-title> User Groups</v-card-title>

@@ -1,7 +1,7 @@
 <template>
     <v-dialog 
         :model-value="template_dialog"
-        persistent
+        
         hide-overlay
         width="650"
     >
@@ -55,7 +55,7 @@
     <!-- Wala nalang nako siya gi separate nga file sir for now. -->
     <v-dialog 
         v-model="remarks_form_dialog"
-        persistent
+        
         hide-overlay
         width="450"
     >

@@ -1,5 +1,5 @@
 <template>
-  <v-dialog :model-value="open_department_list_form" rounded="lg" persistent scrollable max-width="825px">
+  <v-dialog :model-value="open_department_list_form" rounded="lg" @update:model-value="closeDialog"  scrollable max-width="725px">
     <form @submit.prevent="handleSubmit">
       <v-card rounded="lg">
           <v-toolbar density="compact" color="#6984ff" hide-details>

@@ -15,7 +15,7 @@ export const ItemServicesSuppliesTemplateDialog = defineStore('ItemServicesSuppl
     GenericNames: false,
     Indications: false,
     ItemCategories: false,
-    ItemPriceGroups: false,
+    PriceGroup: false,
     ItemPricingSchemes: false,
     ItemTemplates: false,
     ItemUnits: false,

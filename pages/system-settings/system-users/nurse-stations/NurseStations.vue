@@ -1,6 +1,6 @@
 <template>
     <!-- <div>{{ route.params}}</div> -->
-    <v-dialog :model-value="show" persistent hide-overlay width="800" scrollable>
+    <v-dialog :model-value="show"  hide-overlay width="800" scrollable>
         <v-card>
             <v-toolbar density="compact" >
                 <v-toolbar-title>System User Nurse Station</v-toolbar-title>

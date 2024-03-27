@@ -1,9 +1,12 @@
 <template>
-  <v-dialog :model-value="open_phic_item_category_form" rounded="lg" persistent scrollable max-width="700px">
-      <v-toolbar color="#6984ff" hide-details density="compact">
-          <v-toolbar-title>PHIC Item Category Template Details</v-toolbar-title>
-      </v-toolbar>
-      <v-card>
+  <v-dialog :model-value="open_phic_item_category_form" rounded="lg" @update:model-value="closeDialog"  scrollable max-width="600px">
+    <v-card rounded="lg">
+          <v-toolbar color="#6984ff" hide-details density="compact">
+            <v-toolbar-title>PHIC Item Category Template Details</v-toolbar-title>
+            <v-btn color="white" @click="closeDialog">
+                <v-icon>mdi-close</v-icon>
+            </v-btn>
+          </v-toolbar>
           <v-card-text>
               <v-container>
                   <v-row>

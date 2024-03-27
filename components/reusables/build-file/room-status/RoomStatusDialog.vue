@@ -1,5 +1,5 @@
 <template>
-  <v-dialog :model-value="show" rounded="lg" persistent hide-overlay width="800" scrollable>
+  <v-dialog :model-value="show" rounded="lg" @update:model-value="closeDialog"  hide-overlay width="800" scrollable>
     <v-card rounded="lg">
           <v-toolbar density="compact" color="#6984ff" hide-details>
               <v-toolbar-title>Room Status Template</v-toolbar-title>

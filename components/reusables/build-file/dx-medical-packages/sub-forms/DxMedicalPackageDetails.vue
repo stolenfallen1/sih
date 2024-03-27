@@ -1,9 +1,12 @@
 <template>
-  <v-dialog :model-value="open_medical_package_details" rounded="lg" persistent scrollable max-width="700px">
-      <v-toolbar color="#6984ff" hide-details density="compact">
-          <v-toolbar-title>Medical Package Details</v-toolbar-title>
-      </v-toolbar>
-      <v-card>
+  <v-dialog :model-value="open_medical_package_details" rounded="lg" @update:model-value="closeDialog"rollable max-width="700px">
+    <v-card rounded="lg">
+        <v-toolbar color="#6984ff" hide-details density="compact">
+            <v-toolbar-title>Medical Package Details</v-toolbar-title>
+            <v-btn color="white" @click="closeDialog">
+                <v-icon>mdi-close</v-icon>
+            </v-btn>
+        </v-toolbar>
           <v-card-text>
               <v-container>
                   <v-row>

@@ -1,5 +1,5 @@
 <template>
-  <v-dialog :model-value="open_class_discount_setup" persistent hide-overlay width="650">
+  <v-dialog :model-value="open_class_discount_setup"  hide-overlay width="650">
     <form @submit.prevent="handleSubmit">
       <v-card>
           <v-card-title>Discount Details</v-card-title>
