@@ -1,7 +1,7 @@
 <template>
     <v-dialog 
         :model-value="template_dialog"
-        persistent
+        
         hide-overlay
         width="650"
     >

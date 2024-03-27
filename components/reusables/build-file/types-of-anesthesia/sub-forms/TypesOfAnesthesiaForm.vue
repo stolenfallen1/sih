@@ -1,8 +1,8 @@
 <template>
   <v-dialog
     :model-value="open_form_dialog"
-    rounded="lg"
-    persistent
+rounded="lg"
+@update:model-value="closeForm"
     scrollable
     max-width="600px"
   >

@@ -2,7 +2,7 @@
   <v-dialog
     :model-value="department_groups_form"
     rounded="lg"
-    persistent
+    @update:model-value="closeDialog"
     scrollable
     max-width="600px"
   >
@@ -10,7 +10,6 @@
       <v-card rounded="lg">
         <v-toolbar density="compact" color="#6984ff" hide-details>
           <v-toolbar-title>Department Group Details</v-toolbar-title>
-          <v-spacer></v-spacer>
           <v-btn color="white" @click="closeDialog">
             <v-icon>mdi-close</v-icon>
           </v-btn>

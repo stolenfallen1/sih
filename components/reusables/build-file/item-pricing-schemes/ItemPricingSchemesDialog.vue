@@ -1,5 +1,5 @@
 <template>
-    <v-dialog :model-value="show" rounded="lg" persistent scrollable max-width="650px">
+    <v-dialog :model-value="show" rounded="lg" @update:model-value="closeDialog"  scrollable max-width="650px">
         <v-card rounded="lg">
             <v-toolbar density="compact" color="#6984ff" hide-details>
                 <v-toolbar-title>Item Pricing Schemes</v-toolbar-title>

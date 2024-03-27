@@ -85,10 +85,6 @@
     :show="DoctorsDepartment"
     @close-dialog="useTableAndTemplate('DoctorsDepartment', false)"
   />
-  <DoctorsCategoryDialog 
-    :show="DoctorsCategory"
-    @close-dialog="useTableAndTemplate('DoctorsCategory', false)"
-  />
   <DoctorsRebateCategoryDialog 
     :show="DoctorsRebateCategory"
     @close-dialog="useTableAndTemplate('DoctorsRebateCategory', false)"
@@ -356,8 +352,20 @@
     :show="EducationalAttainments"
     @close-dialog="useTableAndTemplate('EducationalAttainments', false)"
   />
+  <!-- Emergency -->
+  <ErAreasDialog 
+    :show="ErAreas"
+    @close-dialog="useTableAndTemplate('ErAreas', false)"
+  />
+  <MedialSocialServiceDialog 
+    :show="MedicalSocialServiceTemplate"
+    @close-dialog="useTableAndTemplate('MedicalSocialServiceTemplate', false)"
+  />
   <!-- Inpatients -->
-
+  <AdmissionResultDialog 
+    :show="AdmissionResult"
+    @close-dialog="useTableAndTemplate('AdmissionResult', false)"
+  />
   <!-- Nursing Services -->
   <NursingEndorsementDialog 
     :show="NursingEndorsement"
@@ -595,7 +603,7 @@ const {
   // MedicalSubServiceTypes,
   ConsultantRoleTypes,
   DoctorsDepartment,
-  DoctorsCategory,
+  // DoctorCategory, 
   DoctorsRebateCategory,
 } = storeToRefs(ConsultantsTemplateDialog());
 // Rooms and Beds Master File
@@ -707,6 +715,37 @@ const {
   // ListOfPetBreed, 
   RegistryGroup,
 } = storeToRefs(InPatientsTemplateDialog())
+// Emergency Services
+const {
+  // AdjustmentTypes,
+  // Allergies,
+  // BillingTemplates,
+  // BillingTemplateGroups,
+  // CsCaseIndicators,
+  // DeathType,
+  // DiscountSchemes,
+  // DispositionTypes,
+  ErAreas,
+  // ExcellenceCenters,
+  // ReferringCenters,
+  // MedicalServiceTypes,
+  // MedicalSubServiceTypes,
+  // PriceSchemes,
+  // HospitalizationTypes,
+  // HospitalizationPlan,
+  // HospitalizationCaseTypes,
+  // HospitalTransactionTypes,
+  // InternalControlTable,
+  // ListOfAttendants,
+  // SurgicalProcedures,
+  // SurgicalProceduresCategory,
+  // BodySystems,
+  // BodyOrgans,
+  // TypesOfAnesthesia,
+  // MedicalSocialServiceTemplate,
+  // ListOfPetBreed,
+  // RegistryGroup,
+} = storeToRefs(EmergencyTemplateDialog())
 // Dietary Services
 const {
   DietList,
@@ -714,6 +753,7 @@ const {
   DietType,
   DietClassification,
 } = storeToRefs(DietaryServicesTemplateDialog())
+// Nursing Services
 const { 
   // AdmissionResult,
   // CsCaseIndicators,

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-dialog :model-value="show" rounded="lg" persistent scrollable max-width="350px">
+    <v-dialog :model-value="show" rounded="lg" @update:model-value="closeDialog"  scrollable max-width="350px">
       <form @submit.prevent="handleSubmit(payload)">
         <v-card>
           <v-toolbar color="white" flat density="compact">

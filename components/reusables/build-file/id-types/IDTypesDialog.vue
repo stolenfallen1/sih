@@ -1,5 +1,5 @@
 <template>
-  <v-dialog :model-value="show" rounded="lg" persistent scrollable max-width="750px">
+  <v-dialog :model-value="show" rounded="lg" @update:model-value="closeDialog" scrollable max-width="750px">
     <v-card rounded="lg">
       <v-toolbar density="compact" color="#6984ff" hide-details>
         <v-toolbar-title>ID Types</v-toolbar-title>
@@ -68,7 +68,7 @@
   <v-dialog
     :model-value="open_form_dialog"
     rounded="lg"
-    persistent
+    @update:model-value="closeForm"
     scrollable
     max-width="600px"
   >

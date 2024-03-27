@@ -2,7 +2,7 @@
   <v-dialog
     :model-value="dosage_form"
     rounded="lg"
-    persistent
+    @update:model-value="closeDialog"
     scrollable
     max-width="600px"
   >

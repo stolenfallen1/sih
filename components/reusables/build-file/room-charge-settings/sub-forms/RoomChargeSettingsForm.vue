@@ -1,5 +1,5 @@
 <template>
-    <v-dialog :model-value="open_form_dialog" persistent hide-overlay width="650">
+    <v-dialog :model-value="open_form_dialog"  hide-overlay width="650">
         <v-toolbar color="#6984ff" hide-details density="compact">
             <v-toolbar-title>Room Charge Setting Details</v-toolbar-title>
             <v-btn color="white" @click="closeDialog">

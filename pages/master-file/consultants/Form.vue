@@ -2,7 +2,7 @@
   <v-dialog
         :model-value="form_dialog"
         width="1220"
-        persistent
+        
         hide-overlay
         transition="dialog-bottom-transition"
         scrollable
@@ -526,7 +526,7 @@
       </form>
       <v-dialog
         v-model="address_form_dialog"
-        persistent
+        
         hide-overlay
         width="650"
       >

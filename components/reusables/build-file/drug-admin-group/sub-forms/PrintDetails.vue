@@ -1,5 +1,5 @@
 <template>
-    <v-dialog :model-value="printer_details" rounded="lg" persistent scrollable max-width="650px">
+    <v-dialog :model-value="printer_details" rounded="lg"  scrollable max-width="650px">
         <v-toolbar density="compact" color="#6984ff" hide-details>
             <v-toolbar-title>Print</v-toolbar-title>
             <v-spacer></v-spacer>

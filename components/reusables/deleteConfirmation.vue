@@ -2,7 +2,7 @@
   <div>
     <v-dialog
       :model-value="show"
-      persistent
+      
       max-width="300px"
     >
       <v-card>

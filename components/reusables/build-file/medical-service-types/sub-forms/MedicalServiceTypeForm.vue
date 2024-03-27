@@ -2,7 +2,7 @@
   <v-dialog
     :model-value="open_medical_service_type_form"
     rounded="lg"
-    persistent
+    @update:model-value="closeDialog"
     scrollable
     max-width="600px"
   >

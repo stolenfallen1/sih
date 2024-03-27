@@ -1,5 +1,5 @@
 <template>
-    <v-dialog :model-value="item_supplies_form" persistent hide-overlay width="980" scrollable>
+    <v-dialog :model-value="item_supplies_form"  hide-overlay width="980" scrollable>
          <form @submit.prevent="handleSubmit">
             <v-toolbar density="compact" color="#6984ff" hide-details>
                 <v-toolbar-title>Form Examination and Procedures </v-toolbar-title>

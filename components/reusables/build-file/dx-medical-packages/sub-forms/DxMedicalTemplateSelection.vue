@@ -1,9 +1,12 @@
 <template>
-    <v-dialog :model-value="open_medical_template_selection" rounded="lg" persistent scrollable max-width="875px">
-        <v-toolbar color="#6984ff" hide-details density="compact">
-            <v-toolbar-title>Item Template Selection List</v-toolbar-title>
-        </v-toolbar>
-        <v-card>
+    <v-dialog :model-value="open_medical_template_selection" rounded="lg" @update:model-value="closeDialog"scrollable max-width="875px">
+        <v-card rounded="lg">
+            <v-toolbar color="#6984ff" hide-details density="compact">
+                <v-toolbar-title>Item Template Selection List</v-toolbar-title>
+                <v-btn color="white" @click="closeDialog">
+                    <v-icon>mdi-close</v-icon>
+                </v-btn>
+            </v-toolbar>
             <v-card-text>
                 <v-row>
                     <v-col cols="4">
