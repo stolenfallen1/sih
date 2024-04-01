@@ -2,7 +2,7 @@
   <v-dialog
     :model-value="open_medication_routes_form"
     rounded="lg"
-    
+    @update:model-value="closeDialog"
     scrollable
     max-width="600px"
   >

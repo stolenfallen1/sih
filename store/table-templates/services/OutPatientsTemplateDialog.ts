@@ -26,7 +26,7 @@ export const OutPatientsTemplateDialog = defineStore('OutPatientsTemplateDialog'
     TypesOfAnesthesia: false,
     DocumentCategories: false,
     OtherHospitalServices: false,
-    MedialSocialService: false,
+    MedicalSocialServiceTemplate: false,
     ListOfPetBreed: false,
     EducationalAttainments: false,
   }),

@@ -1,6 +1,5 @@
 <template>
-    <v-dialog :model-value="open_item_unit_form" rounded="lg"  scrollable max-width="500px">
-      
+    <v-dialog :model-value="open_item_unit_form" rounded="lg" @update:model-value="closeDialog"  scrollable max-width="500px">
         <v-card rounded="lg">
            <v-toolbar color="#6984ff" hide-details density="compact">
                 <v-toolbar-title>Item Unit Details</v-toolbar-title>

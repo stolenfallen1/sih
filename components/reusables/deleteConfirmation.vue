@@ -2,7 +2,7 @@
   <div>
     <v-dialog
       :model-value="show"
-      
+      @update:model-value="handleClose"
       max-width="300px"
     >
       <v-card>

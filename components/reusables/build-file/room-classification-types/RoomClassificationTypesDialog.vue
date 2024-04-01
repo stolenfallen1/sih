@@ -1,146 +1,286 @@
 <template>
-    <v-dialog :model-value="show" rounded="lg" @update:model-value="closeDialog"  hide-overlay width="800" scrollable>
+    <v-dialog :model-value="show" rounded="lg" @update:model-value="closeDialog"  scrollable max-width="850px">
         <v-card rounded="lg">
             <v-toolbar density="compact" color="#6984ff" hide-details>
                 <v-toolbar-title>Room Classification</v-toolbar-title>
                 <v-spacer></v-spacer>
                 <v-btn color="white" @click="closeDialog">
-                    <v-icon>mdi-close</v-icon>
+                <v-icon>mdi-close</v-icon>
                 </v-btn>
             </v-toolbar>
+            <v-divider></v-divider>
             <v-card-text>
-                <v-container>
-                    <v-table density="compact">
-                        <thead>
-                            <tr>
-                                <th><v-icon>mdi-desktop-classic</v-icon></th>
-                                <th>Internal Subaccount Code</th>
-                                <th>Price Scheme</th>
-                                <th>Description</th>
-                                <th>Credit Limit</th>
-                                <th>Discount Details</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <template v-for="(types, typeIndex) in room_types" :key="typeIndex">
-                                <tr>      
-                                    <template v-for="(value, key) in types" :key="key">
-                                        <td v-if="key === 'system_default'">
-                                            <v-checkbox density="compact"></v-checkbox>
-                                        </td>
-                                    </template>                            
-                                    <template v-for="(value, key) in types" :key="key">
-                                        <td v-if="key === 'sub_code'">{{ value }}</td>
-                                    </template>
-                                    <template v-for="(value, key) in types" :key="key">
-                                        <td v-if="key === 'scheme'">{{ value }}</td>
-                                    </template>
-                                    <template v-for="(value, key) in types" :key="key">
-                                        <td v-if="key === 'description'">{{ value }}</td>
-                                    </template>
-                                    <template v-for="(value, key) in types" :key="key">
-                                        <td v-if="key === 'credit_limit'">{{ value }}</td>
-                                    </template>
-                                    <template v-for="(value, key) in types" :key="key">
-                                        <td v-if="key === 'discount_icon'">
-                                            <v-icon color="orange" @click="openDicountTablesDialog">{{ value }}</v-icon>
-                                        </td>
-                                    </template>
-                                    <template v-for="(value, key) in types" :key="key">
-                                        <td v-if="key === 'actions'">
-                                            <div v-if="value === true">
-                                                <v-icon color="green" class="mr-1" @click="openFormDialog">mdi-pencil</v-icon>
-                                                <v-icon color="red" @click="onDelete">mdi-trash-can</v-icon>
-                                            </div>
-                                        </td>
-                                    </template>
-                                </tr>
-                            </template>
-                        </tbody>
-                    </v-table>
-                </v-container>
+                <v-text-field
+                    label="Search by Description"
+                    density="compact"
+                    variant="outlined"
+                    prepend-inner-icon="mdi-magnify"
+                    v-model="data.keyword"
+                    @keyup.enter="search"
+                >
+                </v-text-field>
+                <v-divider></v-divider>
+                <v-data-table-server
+                    class="animated animatedFadeInUp fadeInUp"
+                    v-model:items-per-page="itemsPerPage"
+                    :headers="headers"
+                    :items="serverItems"
+                    :items-length="totalItems"
+                    :loading="data.loading"
+                    item-value="id"
+                    @update:options="initialize"
+                    show-select
+                    select-strategy="single"
+                    fixed-header
+                    density="compact"
+                    height="60vh"
+                >
+                    <template
+                        v-for="(head, index) of headers"
+                        v-slot:[`item.${head.value}`]="props"
+                    >
+                        <td class="test" :props="props" :key="index">
+                        <slot :name="head.value" :item="props.item">
+                            {{ props.item[head.value] || "..." }}
+                        </slot>
+                        </td>
+                    </template>
+                    <template v-slot:item.discount_setup="{ item }">
+                        <v-icon color="orange mr-3" @click="openDiscountSetup">mdi-settings-helper</v-icon>
+                    </template>
+                    <template v-slot:item.actions="{ item }">
+                        <v-icon color="green mr-3" @click="onEdit(item)">mdi-pencil</v-icon>
+                        <v-icon color="red" @click="onDelete(item)">mdi-trash-can</v-icon>
+                    </template>
+                </v-data-table-server>
             </v-card-text>
             <v-divider></v-divider>
             <v-card-actions>
                 <v-btn color="blue-darken-1" @click="closeDialog"> Close </v-btn>
                 <v-spacer></v-spacer>
-                <v-btn class="bg-primary text-white" type="submit" @click="openFormDialog">Add</v-btn>
+                <v-btn class="bg-primary text-white" type="submit" @click="openForm">Add</v-btn>
             </v-card-actions>
         </v-card>
     </v-dialog>
-    <room-classification-details :open_form_classification_details="open_form_classification_details" @close-dialog="closeFormDialog" @handle-submit="onSubmitDetails" />
-    <room-class-discount-setup :open_class_discount_setup="open_class_discount_setup" :discount_types="discount_types" @close-dialog="closeDiscountTablesDialog" @handle-submit="onSubmitDiscountSetup" />
-    <deleteConfirmation :show="confirmation" @confirm="confirm" @close="closeconfirmation" />
+
+    <v-dialog
+        :model-value="open_form_dialog"
+        rounded="lg"
+        @update:model-value="closeForm"
+        scrollable
+        max-width="600px"
+    >
+        <form @submit.prevent="onSubmit">
+        <v-card rounded="lg">
+            <v-toolbar density="compact" color="#6984ff" hide-details>
+            <v-toolbar-title>Room Classification Details</v-toolbar-title>
+            <v-btn color="white" @click="closeForm">
+                <v-icon>mdi-close</v-icon>
+            </v-btn>
+            </v-toolbar>
+            <v-divider></v-divider>
+            <v-card-text>
+                <v-row>
+                    <v-col cols="12">
+                        <v-select
+                            label="Pricing Scheme"
+                            :items="pricing_schemes"
+                            required
+                            variant="outlined"
+                            density="compact"
+                            hide-details
+                        ></v-select>
+                    </v-col>
+                    <v-col cols="12">
+                        <v-text-field
+                            variant="outlined"
+                            required
+                            label="Description"
+                            density="compact"
+                            hide-details
+                        ></v-text-field>
+                    </v-col>
+                    <v-col cols="6">
+                        <v-text-field
+                            variant="outlined"
+                            label="Credit Limit"
+                            required
+                            density="compact"
+                            hide-details
+                        ></v-text-field>
+                    </v-col>
+                    <v-checkbox
+                        label="Is Ward (for PHIC CF2 Purposes)"
+                        hide-details
+                    ></v-checkbox>
+                </v-row>
+            </v-card-text>
+            <v-divider></v-divider>
+            <v-card-actions>
+            <v-btn color="blue-darken-1" @click="closeForm"> Close </v-btn>
+            <v-spacer></v-spacer>
+            <v-btn class="bg-primary text-white" type="submit">Submit</v-btn>
+            </v-card-actions>
+        </v-card>
+        </form>
+    </v-dialog>
+
+    <room-class-discount-setup :open_discount_setup="open_discount_setup" @close-dialog="closeDiscountSetup" @handle-submit="submitDiscountSetup" />
+    <deleteConfirmation
+        :show="confirmation"
+        @confirm="confirm"
+        @close="closeconfirmation"
+    />
 </template>
 
 <script setup>
-import RoomClassificationDetails from './sub-forms/RoomClassificationDetails.vue';
-import RoomClassDiscountSetup from "./sub-forms/RoomClassDiscountSetup.vue";
+import RoomClassDiscountSetup from './sub-forms/RoomClassDiscountSetup.vue';
 
 const props = defineProps({
-    show: {
-        type: Boolean,
-        default: () => false,
-        required: true,
+show: {
+    type: Boolean,
+    default: () => false,
+    required: true,
+},
+});
+
+const confirmation = ref(false);
+const emits = defineEmits(["close-dialog"]);
+const payload = ref({});
+const isloading = ref(false);
+const open_form_dialog = ref(false);
+const open_discount_setup = ref(false);
+const headers = [
+    {
+        title: "Internal SubAccount Code",
+        align: "start",
+        sortable: false,
+        key: "id",
     },
-})
+    { title: "Price Scheme", key: "price_scheme", align: "start", width: "20%" },
+    { title: "Description", key: "description", align: "start", width: "25%" },
+    { title: "Credit Limit", key: "credit_limit", align: "start", width: "15%" },
+    { title: "Discount Setup", key: "discount_setup", align: "start", width: "15%" },
+    { title: "", key: "actions", align: "start", width: "15%" },
+];
+const pricing_schemes = ['Outpatient','Emergency','Room-in','Cash Transaction'];
+const data = ref({
+    title: "List of Room Classification Types",
+    keyword: "",
+    loading: false,
+    filter: {},
+    tab: 0,
+    param_tab: 1,
+});
 
-const emits = defineEmits(['close-dialog'])
+const itemsPerPage = ref(10);
+const totalItems = ref(0);
+const serverItems = ref([]);
+const initialize = ({ page, itemsPerPage, sortBy }) => {
+    // loadItems(page, itemsPerPage, sortBy);
+    null
+};
+const loadItems = async (page = null, itemsPerPage = null, sortBy = null) => {
+    data.value.loading = true;
+    let pageno = page || 1;
+    let itemPerpageno = itemsPerPage || 10;
+    let params =
+        "page=" + pageno + "&per_page=" + itemPerpageno + "&keyword=" + data.value.keyword;
+    const response = await useMethod("get", "religions?", "", params);
+    if (response) {
+        serverItems.value = response.data;
+        totalItems.value = response.total;
+        data.value.loading = false;
+    }
+};
+const search = () => {
+    loadItems();
+};
 
-const open_class_discount_setup = ref(false)
-const open_form_classification_details = ref(false)
-const confirmation = ref(false)
-const room_types = [
-  { system_default: "No", sub_code: "RT0004", scheme: "Private/Aircon", description: "PRIVATE/AIRCON", credit_limit: 0, discount_icon: "mdi-settings-helper", actions: true },
-  { system_default: "No", sub_code: "RT0005", scheme: "Suite-Luxury", description: "SUITE-LUXURY", credit_limit: 0, discount_icon: "mdi-settings-helper", actions: true },
-  { system_default: "No", sub_code: "RT0006", scheme: "Private/Aircon", description: "PRIVATE/AIRCON", credit_limit:0, discount_icon: "mdi-settings-helper", actions: true },
-  { system_default: "No", sub_code: "RT0003", scheme: "Private/Aircon", description: "PRIVATE/AIRCON", credit_limit: 0, discount_icon: "mdi-settings-helper", actions: true },
-]
-const discount_types = [
-  { description: "GSIS Discount", discount: 2 },
-  { description: "DOCTORS REFERRAL DISCOUNT", discount: 0 },
-  { description: "CASH DISCOUNT", discount: 0 },
-  { description: "PWD Discount", discount: 1 },
-]
-const openDicountTablesDialog = () => {
-  open_class_discount_setup.value = true
+const openForm = () => {
+    // payload.value = Object.assign({});
+    open_form_dialog.value = true;
+};
+
+const closeForm = () => {
+    // payload.value = Object.assign({});
+    open_form_dialog.value = false;
+};
+
+const onEdit = (item) => {
+    openForm();
+    // payload.value = Object.assign({});
+    // payload.value = Object.assign({}, item);
+    // payload.value.isactive = item.isactive == 1 ? true : false;
+};
+
+const onSubmit = async () => {
+    alert("submitted");
+    // let response;
+    // isloading.value = true;
+    // if (payload.value.id) {
+    //     response = await useMethod(
+    //     "put",
+    //     "religions",
+    //     payload.value,
+    //     "",
+    //     payload.value.id
+    //     );
+    // } else {
+    //     response = await useMethod("post", "religions", payload.value);
+    // }
+    // if (response) {
+    //     useSnackbar(true, "green", response.msg);
+    //     loadItems();
+    //     closeForm();
+    //     payload.value = Object.assign({});
+    //     isloading.value = false;
+    // }
+};
+
+const openDiscountSetup = () => {
+    open_discount_setup.value = true;
+};
+
+const closeDiscountSetup = () => {
+    open_discount_setup.value = false;
+};
+
+const submitDiscountSetup = () => {
+    alert("submitted");
+    open_discount_setup.value = false;
 }
-const closeDiscountTablesDialog = () => {
-  open_class_discount_setup.value = false
-}
 
-const openFormDialog = () => {
-  open_form_classification_details.value = true
-}
-
-const closeFormDialog = () => {
-  open_form_classification_details.value = false
-}
-
-const onSubmitDetails = () => {
-  alert("Submitted")
-}
-
-const onSubmitDiscountSetup = () => {
-    alert("Submitted")
-}
-
-const confirm = () => {
+const confirm = async () => {
+if (payload.value.id) {
+    let response = await useMethod(
+    "delete",
+    "religions",
+    payload.value,
+    "",
+    payload.value.id
+    );
+    if (response) {
     confirmation.value = false;
+    useSnackbar(true, "green", response.msg);
+    loadItems();
+    closeForm();
+    payload.value = Object.assign({});
+    isloading.value = false;
+    }
 }
+};
 const closeconfirmation = () => {
     confirmation.value = false;
-}
+};
 const onDelete = (item) => {
+    // payload.value = Object.assign({});
+    // payload.value = Object.assign({}, item);
     confirmation.value = true;
-}
-
+};
 const closeDialog = () => {
-  emits('close-dialog')
-}
-
+    emits("close-dialog");
+};
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

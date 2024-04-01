@@ -300,7 +300,7 @@ export default [
                         rule: "",
                     },
                     {
-                        label: "Room Classification Types",
+                        label: "Room Classifications",
                         icon: "mdi-file-document-edit",
                         form: "RoomClassificationTypes",
                         rule: "",
@@ -1151,9 +1151,9 @@ export default [
                         rule: "",
                     },
                     {
-                        label: "Medial Social Service Template",
+                        label: "Medical Social Service Template",
                         icon: "mdi-file-document-edit",
-                        form: "MedialSocialService",
+                        form: "MedicalSocialServiceTemplate",
                         rule: "",
                     },
                     {
@@ -1772,7 +1772,7 @@ export default [
                     {
                         label: "Room Classifications",
                         icon: "mdi-file-document-edit",
-                        form: "RoomClassifications",
+                        form: "RoomClassificationTypes",
                         rule: "",
                     },
                     {
