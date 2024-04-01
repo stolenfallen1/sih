@@ -60,12 +60,12 @@
           </v-card-actions>
       </v-card>
   </v-dialog>
-  <medial-social-service-form :open_form_dialog="open_form_dialog" @close-dialog="closeFormDialog" @handle-submit="onSubmit" />
+  <medical-social-service-form :open_form_dialog="open_form_dialog" @close-dialog="closeFormDialog" @handle-submit="onSubmit" />
   <deleteConfirmation :show="confirmation" @confirm="confirm" @close="closeconfirmation" />
 </template>
 
 <script setup>
-import MedialSocialServiceForm from './sub-forms/MedialSocialServiceForm.vue';
+import MedicalSocialServiceForm from './sub-forms/MedicalSocialServiceForm.vue';
 
 const props = defineProps({
   show: {

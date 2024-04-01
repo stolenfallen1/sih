@@ -1,111 +1,238 @@
 <template>
-  <v-dialog :model-value="show" rounded="lg" @update:model-value="closeDialog"  hide-overlay width="800" scrollable>
-    <v-card rounded="lg">
-          <v-toolbar density="compact" color="#6984ff" hide-details>
-              <v-toolbar-title>Room Usage Types</v-toolbar-title>
-              <v-spacer></v-spacer>
-              <v-btn color="white" @click="closeDialog">
-                  <v-icon>mdi-close</v-icon>
-              </v-btn>
-          </v-toolbar>
-          <v-card-text>
-              <v-container>
-                  <v-table density="compact" hide-details>
-                      <thead>
-                          <tr>
-                              <th><v-icon>mdi-desktop-classic</v-icon></th>
-                              <th>Code</th>
-                              <th>Description</th>
-                              <th>Actions</th>
-                          </tr>
-                      </thead>
-                      <tbody>
-                          <template v-for="(usage, typeIndex) in room_usage" :key="typeIndex">
-                              <tr>                                 
-                                  <template v-for="(value, key) in usage" :key="key">
-                                      <td v-if="key === 'system_default'">
-                                          <v-checkbox density="compact"></v-checkbox>
-                                      </td>
-                                  </template>
-                                  <template v-for="(value, key) in usage" :key="key">
-                                      <td v-if="key === 'code'">{{ value }}</td>
-                                  </template>
-                                  <template v-for="(value, key) in usage" :key="key">
-                                      <td v-if="key === 'description'">{{ value }}</td>
-                                  </template>
-                                  <template v-for="(value, key) in usage" :key="key">
-                                        <td v-if="key === 'actions'">
-                                            <div v-if="value === true">
-                                                <v-icon color="green" class="mr-1" @click="openFormDialog">mdi-pencil</v-icon>
-                                                <v-icon color="red" @click="onDelete">mdi-trash-can</v-icon>
-                                            </div>
-                                        </td>
-                                    </template>
-                              </tr>
-                          </template>
-                      </tbody>
-                  </v-table>
-              </v-container>
-          </v-card-text>
-          <v-divider></v-divider>
-          <v-card-actions>
-              <v-btn color="blue-darken-1" @click="closeDialog"> Close </v-btn>
-              <v-spacer></v-spacer>
-              <v-btn class="bg-primary text-white" type="submit" @click="openFormDialog">Add</v-btn>
-          </v-card-actions>
-      </v-card>
-  </v-dialog>
-  <room-usage-type-form :open_form_dialog="open_form_dialog" @close-dialog="closeFormDialog" @handle-submit="onSubmit" />
-  <deleteConfirmation :show="confirmation" @confirm="confirm" @close="closeconfirmation" />
+    <v-dialog :model-value="show" rounded="lg" @update:model-value="closeDialog"  scrollable max-width="800px">
+        <v-card rounded="lg">
+            <v-toolbar density="compact" color="#6984ff" hide-details>
+                <v-toolbar-title>Room Usage Types</v-toolbar-title>
+                <v-spacer></v-spacer>
+                <v-btn color="white" @click="closeDialog">
+                <v-icon>mdi-close</v-icon>
+                </v-btn>
+            </v-toolbar>
+            <v-divider></v-divider>
+            <v-card-text>
+                <v-text-field
+                    label="Search by Description"
+                    density="compact"
+                    variant="outlined"
+                    prepend-inner-icon="mdi-magnify"
+                    v-model="data.keyword"
+                    @keyup.enter="search"
+                >
+                </v-text-field>
+                <v-divider></v-divider>
+                <v-data-table-server
+                    class="animated animatedFadeInUp fadeInUp"
+                    v-model:items-per-page="itemsPerPage"
+                    :headers="headers"
+                    :items="serverItems"
+                    :items-length="totalItems"
+                    :loading="data.loading"
+                    item-value="id"
+                    @update:options="initialize"
+                    show-select
+                    select-strategy="single"
+                    fixed-header
+                    density="compact"
+                    height="60vh"
+                >
+                    <template
+                        v-for="(head, index) of headers"
+                        v-slot:[`item.${head.value}`]="props"
+                    >
+                        <td class="test" :props="props" :key="index">
+                        <slot :name="head.value" :item="props.item">
+                            {{ props.item[head.value] || "..." }}
+                        </slot>
+                        </td>
+                    </template>
+                    <template v-slot:item.actions="{ item }">
+                        <v-icon color="green mr-3" @click="onEdit(item)">mdi-pencil</v-icon>
+                        <v-icon color="red" @click="onDelete(item)">mdi-trash-can</v-icon>
+                    </template>
+                </v-data-table-server>
+            </v-card-text>
+            <v-divider></v-divider>
+            <v-card-actions>
+                <v-btn color="blue-darken-1" @click="closeDialog"> Close </v-btn>
+                <v-spacer></v-spacer>
+                <v-btn class="bg-primary text-white" type="submit" @click="openForm">Add</v-btn>
+            </v-card-actions>
+        </v-card>
+    </v-dialog>
+
+    <v-dialog
+        :model-value="open_form_dialog"
+        rounded="lg"
+        @update:model-value="closeForm"
+        scrollable
+        max-width="600px"
+    >
+        <form @submit.prevent="onSubmit">
+        <v-card rounded="lg">
+            <v-toolbar density="compact" color="#6984ff" hide-details>
+            <v-toolbar-title>Room Usage Type Details</v-toolbar-title>
+            <v-btn color="white" @click="closeForm">
+                <v-icon>mdi-close</v-icon>
+            </v-btn>
+            </v-toolbar>
+            <v-divider></v-divider>
+            <v-card-text>
+                <v-row>
+                    <v-col cols="12" class="pa-1">
+                        <v-text-field
+                            class="mt-3"
+                            variant="outlined"
+                            label="Description"
+                            density="compact"
+                        ></v-text-field>
+                    </v-col>
+                </v-row>
+            </v-card-text>
+            <v-divider></v-divider>
+            <v-card-actions>
+            <v-btn color="blue-darken-1" @click="closeForm"> Close </v-btn>
+            <v-spacer></v-spacer>
+            <v-btn class="bg-primary text-white" type="submit">Submit</v-btn>
+            </v-card-actions>
+        </v-card>
+        </form>
+    </v-dialog>
+
+    <deleteConfirmation
+        :show="confirmation"
+        @confirm="confirm"
+        @close="closeconfirmation"
+    />
 </template>
 
 <script setup>
-import RoomUsageTypeForm from './sub-forms/RoomUsageTypeForm.vue';
-
 const props = defineProps({
-  show: {
-        type: Boolean,
-        default: () => false,
-        required: true,
+show: {
+    type: Boolean,
+    default: () => false,
+    required: true,
+},
+});
+
+const confirmation = ref(false);
+const emits = defineEmits(["close-dialog"]);
+const payload = ref({});
+const isloading = ref(false);
+const open_form_dialog = ref(false);
+const headers = [
+    {
+        title: "Code",
+        align: "start",
+        sortable: false,
+        key: "id",
     },
-})
+    { title: "Description", key: "description", align: "start", width: "55%" },
+    { title: "", key: "actions", align: "start", width: "15%" },
+];
+const data = ref({
+    title: "List of Room Usage Types",
+    keyword: "",
+    loading: false,
+    filter: {},
+    tab: 0,
+    param_tab: 1,
+});
 
-const emits = defineEmits(['close-dialog'])
+const itemsPerPage = ref(10);
+const totalItems = ref(0);
+const serverItems = ref([]);
+const initialize = ({ page, itemsPerPage, sortBy }) => {
+    // loadItems(page, itemsPerPage, sortBy);
+    null
+};
+const loadItems = async (page = null, itemsPerPage = null, sortBy = null) => {
+    data.value.loading = true;
+    let pageno = page || 1;
+    let itemPerpageno = itemsPerPage || 10;
+    let params =
+        "page=" + pageno + "&per_page=" + itemPerpageno + "&keyword=" + data.value.keyword;
+    const response = await useMethod("get", "religions?", "", params);
+    if (response) {
+        serverItems.value = response.data;
+        totalItems.value = response.total;
+        data.value.loading = false;
+    }
+};
+const search = () => {
+    loadItems();
+};
 
-const open_form_dialog = ref(false)
-const confirmation = ref(false)
-const room_usage = [
-  { code: 1001, description: "PRIMARY", system_default: "Yes", actions: true },
-  { code: 1002, description: "SECONDARY", system_default: "Yes", actions: true },
-]
+const openForm = () => {
+    // payload.value = Object.assign({});
+    open_form_dialog.value = true;
+};
 
-const openFormDialog = () => {
-  open_form_dialog.value = true
-}
+const closeForm = () => {
+    // payload.value = Object.assign({});
+    open_form_dialog.value = false;
+};
 
-const closeFormDialog = () => {
-  open_form_dialog.value = false
-}
+const onEdit = (item) => {
+    openForm();
+    // payload.value = Object.assign({});
+    // payload.value = Object.assign({}, item);
+    // payload.value.isactive = item.isactive == 1 ? true : false;
+};
 
-const onSubmit = () => {
-  alert("Submitted")
-}
+const onSubmit = async () => {
+    alert("submitted");
+    // let response;
+    // isloading.value = true;
+    // if (payload.value.id) {
+    //     response = await useMethod(
+    //     "put",
+    //     "religions",
+    //     payload.value,
+    //     "",
+    //     payload.value.id
+    //     );
+    // } else {
+    //     response = await useMethod("post", "religions", payload.value);
+    // }
+    // if (response) {
+    //     useSnackbar(true, "green", response.msg);
+    //     loadItems();
+    //     closeForm();
+    //     payload.value = Object.assign({});
+    //     isloading.value = false;
+    // }
+};
 
-const confirm = () => {
+const confirm = async () => {
+if (payload.value.id) {
+    let response = await useMethod(
+    "delete",
+    "religions",
+    payload.value,
+    "",
+    payload.value.id
+    );
+    if (response) {
     confirmation.value = false;
+    useSnackbar(true, "green", response.msg);
+    loadItems();
+    closeForm();
+    payload.value = Object.assign({});
+    isloading.value = false;
+    }
 }
+};
 const closeconfirmation = () => {
     confirmation.value = false;
-}
+};
 const onDelete = (item) => {
+    // payload.value = Object.assign({});
+    // payload.value = Object.assign({}, item);
     confirmation.value = true;
-}
-
+};
 const closeDialog = () => {
-  emits('close-dialog')
-}
-
+    emits("close-dialog");
+};
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

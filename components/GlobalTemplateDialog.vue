@@ -340,9 +340,9 @@
     :show="OtherHospitalServices"
     @close-dialog="useTableAndTemplate('OtherHospitalServices', false)"
   />
-  <MedialSocialServiceDialog 
-    :show="MedialSocialService"
-    @close-dialog="useTableAndTemplate('MedialSocialService', false)"
+  <MedicalSocialServiceDialog 
+    :show="MedicalSocialServiceTemplate"
+    @close-dialog="useTableAndTemplate('MedicalSocialServiceTemplate', false)"
   />
   <ListOfPetDialog 
     :show="ListOfPetBreed"
@@ -356,10 +356,6 @@
   <ErAreasDialog 
     :show="ErAreas"
     @close-dialog="useTableAndTemplate('ErAreas', false)"
-  />
-  <MedialSocialServiceDialog 
-    :show="MedicalSocialServiceTemplate"
-    @close-dialog="useTableAndTemplate('MedicalSocialServiceTemplate', false)"
   />
   <!-- Inpatients -->
   <AdmissionResultDialog 
@@ -677,7 +673,7 @@ const {
   TypesOfAnesthesia,
   // DocumentCategories, 
   OtherHospitalServices,
-  MedialSocialService,
+  MedicalSocialServiceTemplate,
   ListOfPetBreed,
   EducationalAttainments,
 } = storeToRefs(OutPatientsTemplateDialog())
@@ -697,7 +693,7 @@ const {
   // MedicalServiceTypes, 
   // MedicalSubServiceTypes, 
   NursingStation,
-  RoomClassifications,
+  // RoomClassificationTypes,
   // RoomPriceSchemes,
   // HospitalizationTypes, 
   HospitalizationPlan,  
@@ -710,7 +706,7 @@ const {
   // BodySystems,  
   // BodyOrgans,  
   // TypesOfAnesthesia,  
-  MedicalSocialServiceTemplate,
+  // MedicalSocialServiceTemplate,
   OtherHospitalServicesTemplate,
   // ListOfPetBreed, 
   RegistryGroup,
