@@ -352,6 +352,10 @@
     :show="EducationalAttainments"
     @close-dialog="useTableAndTemplate('EducationalAttainments', false)"
   />
+  <RegistryGroupDialog 
+    :show="RegistryGroup"
+    @close-dialog="useTableAndTemplate('RegistryGroup', false)"
+  />
   <!-- Emergency -->
   <ErAreasDialog 
     :show="ErAreas"
@@ -692,7 +696,7 @@ const {
   // DispositionTypes, 
   // MedicalServiceTypes, 
   // MedicalSubServiceTypes, 
-  NursingStation,
+  // NursingStationsWards, 
   // RoomClassificationTypes,
   // RoomPriceSchemes,
   // HospitalizationTypes, 
@@ -700,14 +704,14 @@ const {
   // HospitalizationCaseTypes,  
   // HospitalTransactionTypes, 
   // InternalControlTable, 
-  ListOfAttendants,
+  // ListOfAttendant,
   // SurgicalProcedures,  
   // SurgicalProceduresCategory,
   // BodySystems,  
   // BodyOrgans,  
   // TypesOfAnesthesia,  
   // MedicalSocialServiceTemplate,
-  OtherHospitalServicesTemplate,
+  // OtherHospitalServices,
   // ListOfPetBreed, 
   RegistryGroup,
 } = storeToRefs(InPatientsTemplateDialog())
@@ -732,7 +736,7 @@ const {
   // HospitalizationCaseTypes,
   // HospitalTransactionTypes,
   // InternalControlTable,
-  // ListOfAttendants,
+  // ListOfAttendant,
   // SurgicalProcedures,
   // SurgicalProceduresCategory,
   // BodySystems,

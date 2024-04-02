@@ -1,13 +1,12 @@
 <template>
 <v-dialog :model-value="central_form_dialog"  hide-overlay width="700" height="90vh" scrollable>
     <form @submit.prevent="handleSearch">
-    <v-card>
-        <v-toolbar density="compact" color="#FFF">
-            <v-toolbar-title>Central Database Lookup Window</v-toolbar-title>
-            <v-spacer></v-spacer>
-            <v-btn color="black" @click="closeDialog">
+    <v-card rounded="lg">
+        <v-toolbar density="compact" color="#6984ff" hide-details>
+          <v-toolbar-title>Central Database Lookup Window</v-toolbar-title>
+          <v-btn color="white" @click="closeDialog">
             <v-icon>mdi-close</v-icon>
-            </v-btn>
+          </v-btn>
         </v-toolbar>
         <v-divider></v-divider>
         <v-card-text>

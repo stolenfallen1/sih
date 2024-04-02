@@ -19,7 +19,7 @@ export const EmergencyTemplateDialog = defineStore('EmergencyTemplateDialog', {
         HospitalizationCaseTypes: false,
         HospitalTransactionTypes: false,
         InternalControlTable: false,
-        ListOfAttendants: false,
+        ListOfAttendant: false,
         SurgicalProcedures: false,
         SurgicalProceduresCategory: false,
         BodySystems: false,
