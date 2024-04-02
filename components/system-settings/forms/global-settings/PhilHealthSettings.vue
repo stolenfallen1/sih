@@ -94,8 +94,6 @@
 </template>
 
 <script setup>
-import { defineProps, defineEmits } from "vue";
-
 const props = defineProps(["phicData"]);
 const emits = defineEmits(['close']);
 

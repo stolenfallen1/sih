@@ -1447,7 +1447,7 @@ export default [
                     {
                         label: "List of Attendant",
                         icon: "mdi-file-document-edit",
-                        form: "ListOfAttendants",
+                        form: "ListOfAttendant",
                         rule: "",
                     },
                     {
@@ -1766,7 +1766,7 @@ export default [
                     {
                         label: "Nursing Stations",
                         icon: "mdi-file-document-edit",
-                        form: "NursingStation",
+                        form: "NursingStationsWards",
                         rule: "",
                     },
                     {
@@ -1814,7 +1814,7 @@ export default [
                     {
                         label: "List of Attendant",
                         icon: "mdi-file-document-edit",
-                        form: "ListOfAttendants",
+                        form: "ListOfAttendant",
                         rule: "",
                     },
                     {
@@ -1856,7 +1856,7 @@ export default [
                     {
                         label: "Other Hospital Services Template",
                         icon: "mdi-file-document-edit",
-                        form: "OtherHospitalServicesTemplate",
+                        form: "OtherHospitalServices",
                         rule: "",
                     },
                     {
