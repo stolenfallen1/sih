@@ -4,20 +4,18 @@
     width="870px"
     transition="dialog-bottom-transition"
     scrollable
-    
+    :persistent="true"
   >
     <form @submit.prevent="handleSubmit">
        <template v-if="!isrefresh">
-        <v-card>
-            <v-card-title>
-            <v-toolbar density="compact" color="#FFF">
+        <v-card rounded="lg">
+            <v-toolbar density="compact" color="#6984ff">
                 <v-toolbar-title>Room and Bed Maintenance</v-toolbar-title>
                 <v-spacer></v-spacer>
-                <v-btn color="black" @click="closeDialog">
+                <v-btn color="white" @click="closeDialog">
                 <v-icon>mdi-close</v-icon>
                 </v-btn>
             </v-toolbar>
-            </v-card-title>
             <v-divider></v-divider>
             <v-card-text style="max-height: auto">
             <v-row>
@@ -40,7 +38,7 @@
                     item-value="id"
                     variant="outlined"
                     density="compact"
-                    :rules="[(v) => !!v || 'Building Name is required']"
+                    required
                     v-model="payload.building"
                     @update:model-value="getBuildingFloors"
                     return-object
@@ -52,7 +50,7 @@
                     item-title="description"
                     item-value="id"
                     v-model="payload.floor"
-                    :rules="[(v) => !!v || 'Floor Level is required']"
+                    required
                     @update:model-value="getBuildingFloorsStation"
                     return-object
                     variant="outlined"
@@ -68,7 +66,7 @@
                     return-object
                     variant="outlined"
                     density="compact"
-                    :rules="[(v) => !!v || 'Nursing Station is required']"
+                    required
                     v-model="payload.station_id"
                     clearable
                     hide-details
@@ -82,7 +80,7 @@
                         :items="room_accomodation"
                         item-title="accomodation_description"
                         item-value="id"
-                        :rules="[(v) => !!v || 'Nursing Station is required']"
+                        required
                         variant="outlined"
                         density="compact"
                         hide-details
@@ -95,8 +93,7 @@
                         :items="room_type"
                         item-title="room_class_description"
                         item-value="id"
-                        
-                        :rules="[(v) => !!v || 'Room type is required']"
+                        required
                         variant="outlined"
                         hide-details
                         density="compact"
@@ -109,7 +106,7 @@
                         type="text"
                         hide-details
                         density="compact"
-                        :rules="[(v) => !!v || 'Price Scheme is required']"
+                        required
                         v-model="payload.room_rate"
                         variant="outlined"
                     ></v-text-field>
@@ -118,7 +115,7 @@
                     <v-text-field
                         label="Room No."
                         type="text"
-                        :rules="[(v) => !!v || 'Room No. is required']"
+                        required
                         density="compact"
                         variant="outlined"
                         v-model="payload.room_code"
@@ -129,7 +126,7 @@
                         :items="room_status"
                         item-title="room_description"
                         item-value="id"
-                        :rules="[(v) => !!v || 'Room Status is required']"
+                        required
                         variant="outlined"
                         density="compact"
                         hide-details
@@ -174,6 +171,7 @@
             </v-card-text>
             <v-divider></v-divider>
             <v-card-actions>
+            <v-btn color="blue-darken-1 border border-info" @click="closeDialog"> Close </v-btn>
             <v-spacer></v-spacer>
             <v-btn v-if="payload.type !='view'" class="bg-primary text-white" type="submit"
                 >Submit</v-btn

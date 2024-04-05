@@ -1,15 +1,18 @@
 <template>
   <v-form ref="form" @submit.prevent="handleSubmit(payload)">
     <v-card>
-      <v-card-title>
-        <span class="text-h7">User Registration</span>
-        <v-divider></v-divider>
-        <v-tabs v-model="tab">
-          <v-tab value="one">General</v-tab>
-          <v-tab value="two">Miscellaneous</v-tab>
-        </v-tabs>
-        <v-divider></v-divider>
-      </v-card-title>
+      <v-toolbar density="compact" color="#6984ff" hide-details>
+          <v-toolbar-title>User Registration Form</v-toolbar-title>
+          <v-btn color="white" @click="closeDialog">
+              <v-icon>mdi-close</v-icon>
+          </v-btn>
+      </v-toolbar>
+      <v-divider></v-divider>
+      <v-tabs v-model="tab">
+        <v-tab value="one">General</v-tab>
+        <v-tab value="two">Miscellaneous</v-tab>
+      </v-tabs>
+      <v-divider></v-divider>
       <v-card-text style="max-height: 450px" class="pa-1">
         <v-window v-model="tab" class="pa-0">
           <v-window-item value="one" class="pa-1">
@@ -306,7 +309,7 @@
 
       <v-divider></v-divider>
       <v-card-actions>
-        <v-btn color="blue-darken-1" @click="closeDialog"> Close </v-btn>
+        <v-btn color="blue-darken-1 border border-info" @click="closeDialog"> Close </v-btn>
         <v-spacer></v-spacer>
         <v-btn
           v-if="payload.type == 'edit' || payload.type == 'new'"

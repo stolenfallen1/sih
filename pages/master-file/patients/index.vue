@@ -91,7 +91,6 @@
 
 <script setup>
 import ReusableTable from "~/components/reusables/ReusableTable.vue";
-import CentralLookUpForm from "~/components/reusables/CentralLookUpForm.vue";
 import FormContainer from "~/components/master-file/forms/patient/FormContainer.vue";
 
 definePageMeta({

@@ -48,6 +48,9 @@
             @update:modelValue="handleSelectedInput"
             @click:row="handleSelectedRow"
             item-value="id"
+            :hover="true"
+            :prev-icon="prevIcon"
+            :next-icon="nextIcon"
         >
             <template
                 v-for="column in columns"
@@ -116,6 +119,8 @@ const props = defineProps({
 const tab = ref("");
 const selectedRows = ref([]);
 const keyword = ref("");
+const prevIcon = "mdi-arrow-left-bold";
+const nextIcon = "mdi-arrow-right-bold";
 
 const refetch = (options) => {
     selectedRows.value = [];
@@ -176,4 +181,5 @@ onMounted(() => {
 });
 </script>
 
-<style scoped></style>
+<style scoped>
+</style>

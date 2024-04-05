@@ -5,17 +5,16 @@
         :scrim="false"
         transition="dialog-bottom-transition"
         scrollable
+        :persistent="true"
         >
             <v-card>
-                <v-card-title>
-                    <v-toolbar density="compact" color="#FFF">
-                        <v-toolbar-title>Patient Information Form</v-toolbar-title>
-                        <v-spacer></v-spacer>
-                        <v-btn color="black" @click="closeDialog">
-                            <v-icon>mdi-close</v-icon>
-                        </v-btn>
-                    </v-toolbar>
-                </v-card-title>
+                <v-toolbar density="compact" color="#6984ff" class="py-2">
+                    <v-toolbar-title>Patient Information Form</v-toolbar-title>
+                    <v-spacer></v-spacer>
+                    <v-btn color="white" @click="closeDialog">
+                        <v-icon>mdi-close</v-icon>
+                    </v-btn>
+                </v-toolbar>
                 <v-divider></v-divider>
                 <v-card-text>
                     <v-row>

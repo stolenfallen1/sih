@@ -53,7 +53,7 @@
             </v-card-text>
             <v-divider></v-divider>
             <v-card-actions>
-                <v-btn color="blue-darken-1" @click="closeDialog"> Close </v-btn>
+                <v-btn color="blue-darken-1 border border-info" @click="closeDialog"> Close </v-btn>
                 <v-spacer></v-spacer>
                 <v-btn class="bg-primary text-white" type="submit" @click="openForm">Add</v-btn>
             </v-card-actions>
@@ -90,7 +90,7 @@
             </v-card-text>
             <v-divider></v-divider>
             <v-card-actions>
-            <v-btn color="blue-darken-1" @click="closeForm"> Close </v-btn>
+            <v-btn color="blue-darken-1 border border-info" @click="closeForm"> Close </v-btn>
             <v-spacer></v-spacer>
             <v-btn class="bg-primary text-white" type="submit">Submit</v-btn>
             </v-card-actions>

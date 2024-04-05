@@ -14,7 +14,6 @@
       </v-btn>
       <v-btn
         @click="handleNew"
-        :disabled="serverItems.length > 0 ? true : false"
         prepend-icon="mdi-plus-outline"
         width="100"
         color="primary"
@@ -88,6 +87,17 @@
       </template>
     </ReusableTable>
   </v-card>
+
+  <CentralLookUpForm 
+    :central_form_dialog="central_form_dialog"
+    @close-dialog="closeCentralFormDialog"
+    @search="SearchOutPatient"
+    @selected-row="selectedOutPatient"
+    :search_results="search_results"
+    :search_payload="search_payload"
+    @open-form="openAddFormDialog"
+  />
+  <RegistrationForm :form_dialog="form_dialog" @close-dialog="closeDialog" />
 </template>
 
 <script setup>
@@ -103,6 +113,11 @@ const pageTitle = ref("Out Patient");
 const currentTab = ref(false);
 const showTabs = ref(false);
 const tableTabs = ref([]);
+const central_form_dialog = ref(false);
+const search_results = ref([]);
+const search_payload = ref({});
+const form_payload = ref({});
+const form_dialog = ref(false);
 
 const totalItems = ref(0);
 const itemsPerPage = ref(15);
@@ -144,6 +159,7 @@ const handleSearch = (keyword) => {
   // Handle search action
    loadItems(null, keyword);
 };
+
 const selectedUser = (item) => {
   isSelectedUser.value = true;
   isrefresh.value = false;
@@ -166,8 +182,22 @@ const handleEdit = () => {
   
 };
 const handleNew = () => {
-  
+  central_form_dialog.value = true;
 };
+const closeCentralFormDialog = () => {
+  central_form_dialog.value = false;
+};
+const openAddFormDialog = () => {
+  form_dialog.value = true;
+};
+const closeDialog = () => {
+  form_dialog.value = false;
+};
+const selectedOutPatient = () => {
+};
+const SearchOutPatient = () => {
+};
+
 const DeactiveUser = () => {
   
 };

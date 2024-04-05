@@ -5,15 +5,11 @@
         <v-toolbar density="compact" color="primary">
           <v-card-title class="d-flex align-center pe-2">
             <v-icon icon="mdi-form-select"></v-icon> &nbsp; List of Social History
-            <v-spacer></v-spacer>
-            <v-btn
-              class="bg-primary text-white"
-              type="submit"
-              @click="openTemplateDialog"
-            >
-              Add New Social History
-            </v-btn>
           </v-card-title>
+          <v-spacer></v-spacer>
+          <v-btn class="bg-primary text-white" type="submit" @click="openTemplateDialog">
+            Add New Social History
+          </v-btn>
         </v-toolbar>
         <v-divider></v-divider>
         <v-card-text>

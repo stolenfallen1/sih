@@ -42,7 +42,7 @@
       v-if="authenticated"
       class="drawer"
       v-model="drawer"
-      :permanent="true"
+      elevation="4"
     >
       <v-list :lines="false" density="compact" nav v-model:opened="open">
         <template v-for="(item, i) in items" :key="i">
@@ -99,7 +99,7 @@
       location="right"
       class="drawer"
       v-model="drawer"
-      :permanent="true"
+      elevation="4"
       v-if="rightSidebarDisplay && authenticated && subcomponents.length > 0"
     >
       <v-list
