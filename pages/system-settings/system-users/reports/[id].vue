@@ -47,7 +47,7 @@
       </v-card-text>
       <v-divider></v-divider>
       <v-card-actions>
-        <v-btn color="blue-darken-1" @click="router.back()"> Close </v-btn>
+        <v-btn color="blue-darken-1 border border-info" @click="router.back()"> Close </v-btn>
         <v-spacer></v-spacer>
         <v-btn class="bg-primary text-white" type="submit">Apply</v-btn>
       </v-card-actions>

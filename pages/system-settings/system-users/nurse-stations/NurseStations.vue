@@ -1,8 +1,8 @@
 <template>
     <!-- <div>{{ route.params}}</div> -->
-    <v-dialog :model-value="show"  hide-overlay width="800" scrollable>
-        <v-card>
-            <v-toolbar density="compact" >
+    <v-dialog :model-value="show" @update:model-value="closedialog"  hide-overlay width="800" scrollable>
+        <v-card rounded="lg">
+            <v-toolbar density="compact" color="#6984ff">
                 <v-toolbar-title>System User Nurse Station</v-toolbar-title>
                 <v-spacer></v-spacer>
                 <v-toolbar-items>
@@ -15,13 +15,13 @@
             <v-container class="mb-1">
                 <v-row>
                     <v-col cols="12" sm="6" md="3">
-                        <v-text-field :model-value="selectedRowDetails.idnumber" label="ID Number" density="compact" hide-details outlined readonly></v-text-field>
+                        <v-text-field :model-value="selectedRowDetails.idnumber" label="ID Number" density="compact" hide-details variant="outlined" readonly></v-text-field>
                     </v-col>
                     <v-col cols="12" sm="6" md="4">
-                        <v-text-field  :model-value="selectedRowDetails.name" label="Name" density="compact"  hide-details outlined readonly></v-text-field>
+                        <v-text-field  :model-value="selectedRowDetails.name" label="Name" density="compact"  hide-details variant="outlined" readonly></v-text-field>
                     </v-col>
                     <v-col cols="12" sm="6" md="5">
-                        <v-text-field  :model-value="selectedRowDetails.warehouse.warehouse_description" density="compact" label="Department"  hide-details outlined readonly></v-text-field>
+                        <v-text-field  :model-value="selectedRowDetails.warehouse.warehouse_description" density="compact" label="Department"  hide-details variant="outlined" readonly></v-text-field>
                     </v-col>
                 </v-row>
             </v-container>
@@ -74,7 +74,7 @@
          
             <v-divider></v-divider>
             <v-card-actions>
-                <v-btn  class="bg-primary text-white" @click="closedialog"> Close </v-btn>
+                <v-btn color="blue-darken-1 border border-info" @click="closedialog"> Close </v-btn>
                 <v-spacer></v-spacer>
                 <v-btn  class="bg-primary text-white" @click="saveandclose"> Save and Close </v-btn>
             </v-card-actions>

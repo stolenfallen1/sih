@@ -1,11 +1,11 @@
 <template>
   <v-dialog
     :model-value="central_form_dialog"
-    
     hide-overlay
     width="800"
     scrollable
     height="90vh"
+    @update:model-value="closeDialog"
   >
     <form @submit.prevent="handleSearch">
       <v-card rounded="lg">
@@ -105,7 +105,7 @@
         </v-card-text>
         <v-divider></v-divider>
         <v-card-actions>
-          <v-btn color="blue-darken-1" @click="closeDialog"> Close </v-btn>
+          <v-btn color="blue-darken-1 border border-info" @click="closeDialog"> Close </v-btn>
           <v-spacer></v-spacer>
           <!-- This button should be readonly when there is no data displayed after search -->
           <v-btn

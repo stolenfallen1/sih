@@ -22,7 +22,7 @@
                             ></v-autocomplete>       
                         </v-col>
                         <v-col cols="3">
-                            <v-btn color="blue-darken-1" @click="handleProperties"> Properties </v-btn>       
+                            <v-btn color="blue-darken-1 border border-info" @click="handleProperties"> Properties </v-btn>       
                         </v-col>
                         <v-col cols="12"><label>Status: {{ status }}</label></v-col>
                         <v-col cols="12"><label>Type: {{ type }}</label></v-col>
@@ -68,7 +68,7 @@
             <v-card-actions>
                 <v-spacer></v-spacer>
                 <v-btn class="bg-primary text-white" type="submit" @click="handleSubmit">Ok</v-btn>
-                <v-btn color="blue-darken-1" @click="closeDialog"> Close </v-btn>
+                <v-btn color="blue-darken-1 border border-info" @click="closeDialog"> Close </v-btn>
             </v-card-actions>
         </v-card>
     </v-dialog>

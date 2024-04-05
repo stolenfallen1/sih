@@ -9,6 +9,7 @@
                 <v-form>
                     <v-text-field
                     class="input"
+                    variant="outlined"
                     clearable
                     append-inner-icon="mdi-account"
                     type="text"
@@ -20,6 +21,7 @@
                     
                     <v-text-field
                     class="input"
+                    variant="outlined"
                     clearable
                     label="Password"
                     placeholder="Enter your password"

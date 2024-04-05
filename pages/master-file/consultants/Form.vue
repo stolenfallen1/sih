@@ -2,26 +2,24 @@
   <v-dialog
         :model-value="form_dialog"
         width="1220"
-        
         hide-overlay
         transition="dialog-bottom-transition"
         scrollable
+        :persistent="true"
       >
-  <v-card>
+  <v-card rounded="lg">
       <form @submit.prevent="handleSubmit">
-        <v-card-title>
-          <v-card-actions>
-            <p>Consultant Information Form</p>
-            <v-spacer></v-spacer>
-            <v-btn color="black" @click="closeDialog">
-              <v-icon>mdi-close</v-icon>
-            </v-btn>
-          </v-card-actions>
-          <v-tabs v-model="tab" bg-color="primary">
-            <v-tab value="one">General Information</v-tab>
-            <v-tab value="two">Contacts and Addresses</v-tab>
-          </v-tabs>
-        </v-card-title>
+        <v-toolbar density="compact" color="#6984ff" hide-details>
+          <v-toolbar-title>Consultant Information Form</v-toolbar-title>
+          <v-btn color="white" @click="closeDialog">
+            <v-icon>mdi-close</v-icon>
+          </v-btn>
+        </v-toolbar>
+        <v-tabs v-model="tab" bg-color="#FFF">
+          <v-tab value="one">General Information</v-tab>
+          <v-tab value="two">Contacts and Addresses</v-tab>
+        </v-tabs>
+        <v-divider></v-divider>
         <v-card-text style="max-height: auto">
           <v-window v-model="tab" class="pa-0">
             <v-window-item value="one" class="pa-1">
@@ -34,7 +32,7 @@
                         label="Lastname*"
                         type="text"
                         v-model="payload.lastname"
-                        :rules="[(v) => !!v || 'Lastname is required']"
+                        required
                         density="compact"
                         variant="outlined"
                       ></v-text-field>
@@ -44,7 +42,7 @@
                         label="Firstname*"
                         type="text"
                         v-model="payload.firstname"
-                        :rules="[(v) => !!v || 'Firstname is required']"
+                        required
                         density="compact"
                         variant="outlined"
                       ></v-text-field>
@@ -126,7 +124,7 @@
                         label="TIN*"
                         type="text"
                         v-model="payload.TIN"
-                        :rules="[(v) => !!v || 'TIN is required']"
+                        required
                         density="compact"
                         variant="outlined"
                       ></v-text-field>
@@ -358,7 +356,7 @@
                         v-model="payload.doctor_code"
                         type="text"
                         hide-details
-                        :rules="[(v) => !!v || 'Doctors ID is required']"
+                        required
                         density="compact"
                         variant="outlined"
                       ></v-text-field>
@@ -520,6 +518,7 @@
         </v-card-text>
         <v-divider></v-divider>
         <v-card-actions>
+          <v-btn color="blue-darken-1 border border-info" @click="closeDialog"> Close </v-btn>
           <v-spacer></v-spacer>
           <v-btn class="bg-primary text-white" type="submit" v-if="payload.type != 'view'">Save and Close</v-btn>
         </v-card-actions>

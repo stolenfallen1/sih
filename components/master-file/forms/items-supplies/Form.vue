@@ -1,14 +1,14 @@
 <template>
-    <v-dialog :model-value="item_supplies_form"  hide-overlay width="1120" scrollable>
+    <v-dialog :model-value="item_supplies_form" :persistent="true" hide-overlay width="1120" scrollable>
          <form @submit.prevent="handleSubmit">
-            <v-toolbar density="compact" color="#6984ff" hide-details>
-                <v-toolbar-title>Manage Items and Supplies Details</v-toolbar-title>
-                <v-spacer></v-spacer>
-                <v-btn color="white" @click="closeDialog">
-                    <v-icon>mdi-close</v-icon>
-                </v-btn>
-            </v-toolbar>
-            <v-card>
+            <v-card rounded="lg">
+                <v-toolbar density="compact" color="#6984ff" hide-details>
+                    <v-toolbar-title>Manage Items and Supplies Details</v-toolbar-title>
+                    <v-spacer></v-spacer>
+                    <v-btn color="white" @click="closeDialog">
+                        <v-icon>mdi-close</v-icon>
+                    </v-btn>
+                </v-toolbar>
                 <v-card-text>
                     <v-row>
                         <v-col cols="6">
@@ -414,6 +414,7 @@
                 </v-card-text>
                 <v-divider></v-divider>
                 <v-card-actions>
+                    <v-btn color="blue-darken-1 border border-info" @click="closeDialog"> Close </v-btn>
                     <v-spacer></v-spacer>
                     <v-btn
                         class="bg-primary text-white"

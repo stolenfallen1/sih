@@ -1,12 +1,17 @@
 <template>
     <v-dialog 
         :model-value="template_dialog"
-        
+        @update:model-value="closeDialog"
         hide-overlay
         width="650"
     >
-        <v-card>
-            <v-card-title>Creation . Selection of Template Record</v-card-title>
+        <v-card rounded="lg">
+            <v-toolbar density="compact" color="#6984ff" hide-details>
+                <v-toolbar-title>Creation . Selection of Template Record</v-toolbar-title>
+                <v-btn color="white" @click="closeDialog">
+                    <v-icon>mdi-close</v-icon>
+                </v-btn>
+            </v-toolbar>
             <v-divider></v-divider>
             <v-card-text>
                 <v-container>
@@ -44,10 +49,10 @@
             </v-card-text>
             <v-divider></v-divider>
             <v-card-actions>
-                <v-btn color="blue-darken-1" @click="closeDialog"> Close </v-btn>
+                <v-btn color="blue-darken-1 border border-info" @click="closeDialog"> Close </v-btn>
                 <v-spacer></v-spacer>
                 <v-btn class="bg-error text-white" type="submit">Delete</v-btn>
-                <v-btn class="bg-info text-white" type="submit" @click="openNoteRemarksEntry">Select</v-btn>
+                <v-btn class="bg-primary text-white" type="submit" @click="openNoteRemarksEntry">Select</v-btn>
             </v-card-actions>
         </v-card>
     </v-dialog>
@@ -55,12 +60,17 @@
     <!-- Wala nalang nako siya gi separate nga file sir for now. -->
     <v-dialog 
         v-model="remarks_form_dialog"
-        
+        @update:model-value="closeRemarksEntry"
         hide-overlay
         width="450"
     >
-        <v-card>
-            <v-card-title>Notes . Remarks Entry</v-card-title>
+        <v-card rounded="lg">
+            <v-toolbar density="compact" color="#6984ff" hide-details>
+                <v-toolbar-title>Notes . Remarks Entry</v-toolbar-title>
+                <v-btn color="white" @click="closeRemarksEntry">
+                    <v-icon>mdi-close</v-icon>
+                </v-btn>
+            </v-toolbar>
             <v-divider></v-divider>
             <v-card-text>
                 <v-row>
@@ -82,7 +92,7 @@
                 </v-row>
             </v-card-text>
             <v-card-actions>
-                <v-btn color="blue-darken-1" @click="closeRemarksEntry"> Close </v-btn>
+                <v-btn color="blue-darken-1 border border-info" @click="closeRemarksEntry"> Close </v-btn>
                 <v-spacer></v-spacer>
                 <v-btn class="bg-primary text-white" type="submit" @click="submitRemarks">Continue</v-btn>
             </v-card-actions>
