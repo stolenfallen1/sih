@@ -2,16 +2,14 @@
   <v-app>
     <v-app-bar v-if="authenticated" flat elevation="1" color="#6984FF">
       <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
-      <img src="/cdg_logo.png" width="50" height="50" />
-      <img src="/cduh_logo.png" width="50" height="50" />
-      <div class="ml-4">
+      <img src="/cdg_logo.png" width="50" height="50" @click="router.push('/dashboard')" class="cursor-pointer" />
+      <img src="/cduh_logo.png" width="50" height="50" @click="router.push('/dashboard')" class="cursor-pointer" />
+      <div class="ml-4 cursor-pointer" @click="router.push('/dashboard')">
         <p>Cebu Doctors University Hospital</p>
         <span class="title-span">Hospital Information System</span>
       </div>
       <v-spacer></v-spacer>
-      <v-btn icon="mdi-home" @click="router.push('/dashboard')"></v-btn>
-      <v-spacer></v-spacer>
-      <div class="mr-10">{{ currentTime }}</div>
+      <div class="mr-10">{{ currentDay + " - " + currentTime }}</div>
       <ModalSettings />
       <v-btn icon="mdi-bell-alert-outline"></v-btn>
       <v-menu>
@@ -234,8 +232,17 @@ const showWarning = ref(false);
 
 // Current time state and update function
 const currentTime = ref(new Date().toLocaleTimeString());
-const updateTime = () => {
-  currentTime.value = new Date().toLocaleTimeString();
+const currentDay = ref(new Date().toLocaleDateString());
+const updateDateTime = () => {
+  const currentDate = new Date();
+  currentTime.value = currentDate.toLocaleTimeString();
+  currentDay.value = currentDate.toLocaleDateString(undefined, {
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+  // currentTime.value = new Date().toLocaleTimeString();
 };
 
 const computeSubcomponent = (dialog,type)=>{
@@ -251,17 +258,17 @@ const computeTableAndTemplate = (dialog,type)=>{
     }
 }
 
-const computeTo = (path, detail) => {
-  if(detail.id && path == '/system-settings/system-users/modules'){
-    return router.push({ path: `${path}/${detail.role_id}` });
-  }
+// const computeTo = (path, detail) => {
+//   if(detail.id && path == '/system-settings/system-users/modules'){
+//     return router.push({ path: `${path}/${detail.role_id}` });
+//   }
 
-  if (detail.id) {
-    return router.push({ path: `${path}/${detail.id}` });
-  } else if(detail.id == "" || detail.id == null) {
-    useSnackbar(true,'red','Please select a record first');
-  }
-};
+//   if (detail.id) {
+//     return router.push({ path: `${path}/${detail.id}` });
+//   } else if(detail.id == "" || detail.id == null) {
+//     useSnackbar(true,'red','Please select a record first');
+//   }
+// };
 
 const displayRightOptions = (item) => {
   subcomponents.value = [];
@@ -287,15 +294,15 @@ onUpdated(() => {
 });
 
 onMounted(async () => {
-  //  updateTime();
-  // // Update the time every second
-  // const intervalId = setInterval(updateTime, 1000);
-  // // Stop the interval when the component is unmounted
-  // watchEffect(() => {
-  //   onBeforeUnmount(() => {
-  //     clearInterval(intervalId);
-  //   });
-  // });
+  updateDateTime();
+  // Update the time every second
+  const intervalId = setInterval(updateDateTime, 1000);
+  // Stop the interval when the component is unmounted
+  watchEffect(() => {
+    onBeforeUnmount(() => {
+      clearInterval(intervalId);
+    });
+  });
   if (route.path !== "/dashboard") {
     rightSidebarDisplay.value = true;
   }
@@ -340,14 +347,12 @@ const logout = () => {
 }
 .title-span {
   font-size: 14.5px;
-  /* font-style: italic; */
+  text-decoration: underline;
 }
-/* .v-list-item__prepend {
-    margin-right: 8px;
-    background-color: #6984ff;
-    border-radius: 50%;
-    padding: 4px;
-} */
+.title-span:hover {
+  color: #000;
+  font-weight: bold;
+}
 
 ::-webkit-scrollbar {
   width: 5px;   
