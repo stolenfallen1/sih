@@ -39,6 +39,8 @@
                         hide-details
                         density="compact"
                         label="Remember me"
+                        v-model="rememberMe"
+                        @change="handleRememberMe"
                     ></v-checkbox>
                     <br/>
                     <v-btn
@@ -77,6 +79,7 @@ const showPassword = ref(false);
 const isLoading = ref(false);
 const showSuccessSnackbar = ref(false); 
 const showErrorSnackbar = ref(false); 
+const rememberMe = ref(false);
 
 const login = async () => {
     try {
@@ -101,6 +104,34 @@ const login = async () => {
         isLoading.value = false;
     }
 };
+
+const handleRememberMe = () => {
+    if (rememberMe.value) {
+        localStorage.setItem('idnumber', user.value.idnumber);
+        localStorage.setItem('password', user.value.password);
+    } else {
+        localStorage.removeItem('idnumber');
+        localStorage.removeItem('password');
+    }
+}
+
+watchEffect(() => {
+    if (rememberMe.value) {
+        localStorage.setItem('idnumber', user.value.idnumber);
+        localStorage.setItem('password', user.value.password);
+    }
+})
+
+
+onMounted(() => {
+    const rememberMeId = localStorage.getItem('idnumber');
+    const rememberMePassword = localStorage.getItem('password');
+    if (rememberMeId && rememberMePassword) {
+        user.value.idnumber = rememberMeId;
+        user.value.password = rememberMePassword;
+        rememberMe.value = true;
+    }
+})
 
 </script>
 
