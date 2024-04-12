@@ -2,10 +2,9 @@
     <v-row>
         <v-col cols="3">
             <v-col cols="12" class="form-col">
+                <v-list-subheader class="form-header">Patient No.</v-list-subheader>
                 <v-text-field
-                    variant="outlined"
-                    label="Patient No."
-                    placeholder="Patient No."
+                    variant="solo"
                     v-model="payload.patient_no"
                     readonly
                     hide-details
@@ -13,10 +12,9 @@
                 ></v-text-field>
             </v-col>
             <v-col cols="12" class="form-col">
+                <v-list-subheader class="form-header">Patient ID</v-list-subheader>
                 <v-text-field
-                    variant="outlined"
-                    label="Patient ID"
-                    placeholder="Patient ID"
+                    variant="solo"
                     v-model="payload.patient_id"
                     readonly
                     hide-details
@@ -24,21 +22,21 @@
                 ></v-text-field>
             </v-col>
             <v-col cols="12" class="form-col">
+                <v-list-subheader class="form-header">Last name <span style="color: red;" class="mdi mdi-check"></span></v-list-subheader>
                 <v-text-field
-                    label="Last Name"
                     placeholder="Enter Patient Last Name"
                     v-model="payload.lastname"
                     type="text"
                     required
                     hide-details
                     density="compact"
-                    variant="outlined"
+                    variant="solo"
                     ></v-text-field>
             </v-col>
             <v-col cols="12" class="form-col">
+                <v-list-subheader class="form-header">First name <span style="color: red;" class="mdi mdi-check"></span></v-list-subheader>
                 <v-text-field
-                    variant="outlined"
-                    label="First Name"
+                    variant="solo"
                     placeholder="Enter Patient First Name"
                     v-model="payload.firstname"
                     required
@@ -47,9 +45,9 @@
                 ></v-text-field>
             </v-col>
             <v-col cols="12" class="form-col">
+                <v-list-subheader class="form-header">Middle name</v-list-subheader>
                 <v-text-field
-                    variant="outlined"
-                    label="Middle Name"
+                    variant="solo"
                     placeholder="Enter Patient Middle Name"
                     v-model="payload.middlename"
                     hide-details
@@ -57,9 +55,9 @@
                 ></v-text-field>
             </v-col>
             <v-col cols="12" class="form-col">
+                <v-list-subheader class="form-header">Alias</v-list-subheader>
                 <v-text-field
-                    variant="outlined"
-                    label="Alias"
+                    variant="solo"
                     placeholder="Enter Patient Alias"
                     v-model="payload.alias"
                     hide-details
@@ -67,79 +65,79 @@
                 ></v-text-field>
             </v-col>
             <v-col cols="12" class="form-col">
+                <v-list-subheader class="form-header">Suffix</v-list-subheader>
                 <v-autocomplete
                     item-title="suffix_name"
                     item-value="id"
-                    label="Suffix"
                     placeholder="Select Suffix"
                     :items="[]"
-                    v-model="payload.suffix"
+                    v-model="payload.suffix_id"
                     hide-details
                     clearable
                     density="compact"
-                    variant="outlined"
+                    variant="solo"
                 ></v-autocomplete>
             </v-col>
         </v-col>
         <v-col cols="3">
             <v-col cols="12" class="form-col">
+                <v-list-subheader class="form-header">Sex <span style="color: red;" class="mdi mdi-check"></span></v-list-subheader>
                 <v-autocomplete
                     item-title="sex"
                     item-value="id"
-                    label="Sex"
-                    placeholder="Select Gender"
+                    placeholder="Select Sex"
                     :items="[]"
-                    v-model="payload.sex"
+                    v-model="payload.sex_id"
                     required
                     hide-details
                     clearable
                     density="compact"
-                    variant="outlined"
+                    variant="solo"
                 ></v-autocomplete>
             </v-col>
             <v-col cols="12" class="form-col">
+                <v-list-subheader class="form-header">Civil Status <span style="color: red;" class="mdi mdi-check"></span></v-list-subheader>
                 <v-autocomplete
                     item-title="civil_status"
                     item-value="id"
-                    label="Civil Status"
                     placeholder="Select Civil Status"
                     :items="[]"
                     required
-                    v-model="payload.civil_status"
+                    v-model="payload.civilstatus_id"
                     hide-details
                     clearable
                     density="compact"
-                    variant="outlined"
+                    variant="solo"
                 ></v-autocomplete>
             </v-col>
             <v-col cols="12" class="form-col">
+                <v-list-subheader class="form-header">Telephone No.</v-list-subheader>
                 <v-text-field
-                    variant="outlined"
-                    label="Telephone No."
+                    variant="solo"
                     placeholder="Enter Telephone No."
-                    v-model="payload.telephone_no"
+                    v-model="payload.telephone_number"
                     type="number"
                     hide-details
                     density="compact"
                 ></v-text-field>
             </v-col>
             <v-col cols="12" class="form-col">
+                <v-list-subheader class="form-header">Mobile No.</v-list-subheader>
                 <v-text-field
-                    variant="outlined"
-                    label="Mobile No."
+                    variant="solo"
                     placeholder="Enter Mobile No."
-                    v-model="payload.mobile_no"
+                    v-model="payload.mobile_number"
                     type="number"
                     hide-details
                     density="compact"
                 ></v-text-field>
             </v-col>
             <v-col cols="12" class="form-col">
+                <v-list-subheader class="form-header">Email Address</v-list-subheader>
                 <v-text-field
-                    variant="outlined"
-                    label="Email Address"
+                    variant="solo"
                     placeholder="Enter Email Address"
-                    v-model="payload.email"
+                    v-model="payload.email_address"
                     type="email"
                     hide-details
                     density="compact"
@@ -151,9 +149,9 @@
         </v-col>
         <v-col cols="3">
             <v-col cols="12" class="form-col">
+                <v-list-subheader class="form-header">Dialect</v-list-subheader>
                 <v-text-field
-                    variant="outlined"
-                    label="Dialect"
+                    variant="solo"
                     placeholder="Enter Dialect"
                     v-model="payload.dialect"
                     hide-details
@@ -161,9 +159,9 @@
                 ></v-text-field>
             </v-col>
             <v-col cols="12" class="form-col">
+                <v-list-subheader class="form-header">Blood Pressure</v-list-subheader>
                 <v-text-field
-                    variant="outlined"
-                    label="Blood Pressure"
+                    variant="solo"
                     placeholder="Enter Blood Pressure"
                     v-model="payload.blood_pressure"
                     hide-details
@@ -171,9 +169,9 @@
                 ></v-text-field>
             </v-col>
             <v-col cols="12" class="form-col">
+                <v-list-subheader class="form-header">Temperature</v-list-subheader>
                 <v-text-field
-                    variant="outlined"
-                    label="Temperature"
+                    variant="solo"
                     placeholder="Enter Temperature"
                     v-model="payload.temperature"
                     hide-details
@@ -181,9 +179,9 @@
                 ></v-text-field>
             </v-col>
             <v-col cols="12" class="form-col">
+                <v-list-subheader class="form-header">Weight</v-list-subheader>
                 <v-text-field
-                    variant="outlined"
-                    label="Weight"
+                    variant="solo"
                     placeholder="Enter Weight"
                     v-model="payload.weight"
                     hide-details
@@ -191,9 +189,9 @@
                 ></v-text-field>
             </v-col>
             <v-col cols="12" class="form-col">
+                <v-list-subheader class="form-header">Height</v-list-subheader>
                 <v-text-field
-                    variant="outlined"
-                    label="Height"
+                    variant="solo"
                     placeholder="Enter Height"
                     v-model="payload.height"
                     hide-details
@@ -201,9 +199,9 @@
                 ></v-text-field>
             </v-col>
             <v-col cols="12" class="form-col">
+                <v-list-subheader class="form-header">BMI</v-list-subheader>
                 <v-text-field
-                    variant="outlined"
-                    label="Body Mass Index"
+                    variant="solo"
                     v-model="payload.bmi"
                     readonly
                     hide-details
@@ -213,9 +211,9 @@
         </v-col>
         <v-col cols="3">
             <v-col cols="12" class="form-col">
+                <v-list-subheader class="form-header">Birth Date <span style="color: red;" class="mdi mdi-check"></span></v-list-subheader>
                 <v-text-field
-                    variant="outlined"
-                    label="Birthdate"
+                    variant="solo"
                     v-model="payload.birthdate"
                     type="date"
                     required
@@ -224,9 +222,9 @@
                 ></v-text-field>
             </v-col>
             <v-col cols="12" class="form-col">
+                <v-list-subheader class="form-header">Birth Time</v-list-subheader>
                 <v-text-field
-                    variant="outlined"
-                    label="Birth Time"
+                    variant="solo"
                     v-model="payload.birthtime"
                     readonly
                     hide-details
@@ -234,9 +232,9 @@
                 ></v-text-field>
             </v-col>
             <v-col cols="12" class="form-col">
+                <v-list-subheader class="form-header">Age</v-list-subheader>
                 <v-text-field
-                    variant="outlined"
-                    label="Age"
+                    variant="solo"
                     placeholder="Enter Age"
                     v-model="payload.age"
                     type="number"
@@ -268,6 +266,11 @@ const props = defineProps({
 </script>
 
 <style scoped>
+.form-header {
+    color: #000;
+    margin: -12px 0px -12px 0px;
+    font-weight: 500;
+}
 .form-col {
     padding: 3.25px 0px 3.25px 0px !important;
     margin: 0px !important;

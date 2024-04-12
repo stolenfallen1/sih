@@ -97,7 +97,7 @@
     :search_payload="search_payload"
     @open-form="openAddFormDialog"
   />
-  <RegistrationForm :form_dialog="form_dialog" @close-dialog="closeDialog" />
+  <OutPatientRegistration :form_dialog="form_dialog" @close-dialog="closeDialog" />
 </template>
 
 <script setup>
@@ -116,7 +116,6 @@ const tableTabs = ref([]);
 const central_form_dialog = ref(false);
 const search_results = ref([]);
 const search_payload = ref({});
-const form_payload = ref({});
 const form_dialog = ref(false);
 
 const totalItems = ref(0);

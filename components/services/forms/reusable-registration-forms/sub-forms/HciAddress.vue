@@ -12,56 +12,58 @@
                 <v-card-text>
                     <v-row>
                         <v-col cols="12">
+                            <v-list-subheader class="form-header">Bldg No. / Street <span style="color: red;" class="mdi mdi-check"></span></v-list-subheader>
                             <v-text-field
-                                variant="outlined"
-                                label="Bldg No. / Street"
+                                variant="solo"
                                 placeholder="Enter Bldg No. / Street"
                                 v-model="address_payload.bldg_no_street"
                                 required
-                                outlined
                                 hide-details
                                 density="compact"
                             ></v-text-field>
                         </v-col>
                         <v-col cols="12">
+                            <v-list-subheader class="form-header">Province <span style="color: red;" class="mdi mdi-check"></span></v-list-subheader>
                             <v-autocomplete
                                 item-title="city"
                                 item-value="id"
-                                label="Province"
+                                placeholder="Enter Province"
                                 v-model="address_payload.province"
                                 required
                                 hide-details
                                 clearable
                                 :items="[]"
                                 density="compact"
-                                variant="outlined"
+                                variant="solo"
                             ></v-autocomplete>
                         </v-col>
                         <v-col cols="12">
+                            <v-list-subheader class="form-header">Municipality <span style="color: red;" class="mdi mdi-check"></span></v-list-subheader>
                             <v-autocomplete
                                 item-title="city"
                                 item-value="id"
-                                label="City / Municipality"
+                                placeholder="Enter Municipality"
                                 v-model="address_payload.city"
                                 required
                                 hide-details
                                 clearable
                                 :items="[]"
                                 density="compact"
-                                variant="outlined"
+                                variant="solo"
                             ></v-autocomplete>
                         </v-col>
                         <v-col cols="12">
+                            <v-list-subheader class="form-header">Zip Code</v-list-subheader>
                             <v-autocomplete
                                 item-title="city"
                                 item-value="id"
-                                label="Zip Code"
+                                placeholder="Enter Zip Code"
                                 v-model="address_payload.zip_code"
                                 hide-details
                                 clearable
                                 :items="[]"
                                 density="compact"
-                                variant="outlined"
+                                variant="solo"
                             ></v-autocomplete>
                         </v-col>
                     </v-row>
@@ -112,4 +114,9 @@ const onSubmit = () => {
 </script>
 
 <style scoped>
+.form-header {
+    color: #000;
+    margin: -12px 0px -12px 0px;
+    font-weight: 500;
+}
 </style>

@@ -1,9 +1,9 @@
 <template>
-    <v-dialog :model-value="open_allergy_list" rounded="lg" @update:model-value="closeDialog" scrollable max-width="700px">
-        <form>
+    <v-dialog :model-value="medical_package_dialog" rounded="lg" @update:model-value="closeDialog" scrollable max-width="700px">
+        <form @submit.prevent="onSubmit">
             <v-card rounded="lg">
                 <v-toolbar density="compact" color="#6984ff" hide-details>
-                    <v-toolbar-title>Allergies List</v-toolbar-title>
+                    <v-toolbar-title>Apply Medical Package</v-toolbar-title>
                     <v-btn color="white" @click="closeDialog">
                         <v-icon>mdi-close</v-icon>
                     </v-btn>
@@ -53,60 +53,16 @@
                 <v-card-actions>
                     <v-btn color="blue-darken-1 border border-info" @click="closeDialog"> Close </v-btn>
                     <v-spacer></v-spacer>
-                    <v-btn class="bg-primary text-white" @click="openNoteRemarksEntry">Select Allergy</v-btn>
+                    <v-btn class="bg-primary text-white" type="submit">Select Medical Package</v-btn>
                 </v-card-actions>
             </v-card>
         </form>
-    </v-dialog>
-
-    <v-dialog 
-        v-model="remarks_form_dialog"
-        @update:model-value="closeRemarksEntry"
-        hide-overlay
-        width="450"
-    >
-        <v-card rounded="lg">
-            <v-toolbar density="compact" color="#6984ff" hide-details>
-                <v-toolbar-title>Remarks Entry</v-toolbar-title>
-                <v-btn color="white" @click="closeRemarksEntry">
-                    <v-icon>mdi-close</v-icon>
-                </v-btn>
-            </v-toolbar>
-            <v-divider></v-divider>
-            <v-card-text>
-                <v-row>
-                    <v-col cols="12">
-                        <v-text-field
-                            label="Description"
-                            type="text"
-                            density="compact"
-                            hide-details
-                            variant="outlined"
-                        ></v-text-field>
-                    </v-col>
-                    <v-col cols="12">
-                        <v-textarea
-                            class="cursor-pointer"
-                            label="Remarks"
-                            density="compact"
-                            hide-details
-                            variant="outlined"
-                        ></v-textarea>
-                    </v-col>
-                </v-row>
-            </v-card-text>
-            <v-card-actions>
-                <v-btn color="blue-darken-1 border border-info" @click="closeRemarksEntry"> Close </v-btn>
-                <v-spacer></v-spacer>
-                <v-btn class="bg-primary text-white" type="submit" @click="onSubmit">Continue</v-btn>
-            </v-card-actions>
-        </v-card>
     </v-dialog>
 </template>
 
 <script setup>
 const props = defineProps({
-    open_allergy_list: {
+    medical_package_dialog: {
         type: Boolean,
         default: () => false,
         required: true,
@@ -114,17 +70,17 @@ const props = defineProps({
 })
 
 const emits = defineEmits(['close-dialog', 'handle-select']);
-const remarks_form_dialog = ref(false);
 const selected_item = ref([]);
 const isloading = ref(false);
 const headers = [
     {
-        title: 'Code',
+        title: 'Package ID',
         align: 'start',
         sortable: false,
         key: 'id',
     },
-    { title: 'Description', key: 'description', align: 'start', width:"70%" },
+    { title: 'Package Description', key: 'description', align: 'start', width:"60%" },
+    { title: 'Package Price', key: 'price', align: 'start' },
 ];
 const data = ref({
     title: "List of Discount Scheme Selection",
@@ -158,24 +114,12 @@ const search = ()=>{
     loadItems();
 }
 
-// const onSubmit = () => {
-//     if (selected_item.value.length === 0) {
-//         return alert('Please select an allergy.');
-//     }
-//     emits('handle-select');
-// }
-
-const openNoteRemarksEntry = () => {
-    remarks_form_dialog.value = true;
-};
-
 const onSubmit = () => {
+    if (selected_item.value.length === 0) {
+        return alert('Please select a package');
+    }
     emits('handle-select');
 }
-
-const closeRemarksEntry = () => {
-    remarks_form_dialog.value = false;
-};
 
 const closeDialog = () => {
     emits('close-dialog');

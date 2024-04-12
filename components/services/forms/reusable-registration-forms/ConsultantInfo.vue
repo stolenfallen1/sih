@@ -54,7 +54,7 @@ const openConsultantsList = () => {
 }
 
 const handleAddConsultant = () => {
-    alert('Consultant Added');
+    alert('Consultant Selected');
     open_consultants_list.value = false;
 }
 

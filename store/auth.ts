@@ -1,7 +1,7 @@
 // store/auth.ts
 
 import { defineStore } from 'pinia';
-import nuxtStorage from 'nuxt-storage';
+// import nuxtStorage from 'nuxt-storage';
 interface UserPayloadInterface {
   idnumber: string;
   password: string;
@@ -43,7 +43,6 @@ export const useAuthStore = defineStore('auth', {
       const token = useCookie('token'); // useCookie new hook in nuxt 3
       this.authenticated = false; // set authenticated  state value to false
       token.value = null; // clear the token cookie
-      nuxtStorage.localStorage.clear();
     },
   },
 });

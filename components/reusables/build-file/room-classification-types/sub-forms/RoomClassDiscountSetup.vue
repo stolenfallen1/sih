@@ -50,9 +50,6 @@
 </template>
 
 <script setup>
-definePageMeta({
-  layout: "root-layout",
-});
 const props = defineProps({
   open_discount_setup: {
       type: Boolean,

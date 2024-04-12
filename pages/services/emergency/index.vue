@@ -14,7 +14,6 @@
       </v-btn>
       <v-btn
         @click="handleNew"
-        :disabled="serverItems.length > 0 ? true : false"
         prepend-icon="mdi-plus-outline"
         width="100"
         color="primary"
@@ -88,10 +87,22 @@
       </template>
     </ReusableTable>
   </v-card>
+
+  <CentralLookUpForm 
+    :central_form_dialog="central_form_dialog"
+    @close-dialog="closeCentralFormDialog"
+    @search="SearchEmergencyPatient"
+    @selected-row="selectedEmergencyPatient"
+    :search_results="search_results"
+    :search_payload="search_payload"
+    @open-form="openAddFormDialog"
+  />
+  <EmergencyRegistration :form_dialog="form_dialog" @close-dialog="closeDialog" />
 </template>
 
 <script setup>
 import ReusableTable from "~/components/reusables/ReusableTable.vue";
+
 definePageMeta({
   layout: "root-layout",
 });
@@ -102,6 +113,10 @@ const pageTitle = ref("Emergency");
 const currentTab = ref(false);
 const showTabs = ref(false);
 const tableTabs = ref([]);
+const central_form_dialog = ref(false);
+const search_results = ref([]);
+const search_payload = ref({});
+const form_dialog = ref(false);
 
 const totalItems = ref(0);
 const itemsPerPage = ref(15);
@@ -165,8 +180,22 @@ const handleEdit = () => {
   
 };
 const handleNew = () => {
-  
+  central_form_dialog.value = true;
 };
+const closeCentralFormDialog = () => {
+  central_form_dialog.value = false;
+};
+const openAddFormDialog = () => {
+  form_dialog.value = true;
+};
+const closeDialog = () => {
+  form_dialog.value = false;
+};
+const selectedEmergencyPatient = () => {
+};
+const SearchEmergencyPatient = () => {
+};
+
 const DeactiveUser = () => {
   
 };
