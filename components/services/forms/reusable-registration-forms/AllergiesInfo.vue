@@ -5,17 +5,9 @@
                 <v-table density="compact" height="40vh">
                     <thead>
                         <tr>
-                            <th>Guarantor Fullname</th>
-                            <th>Document Date</th>
-                            <th>HMO Account No.</th>
-                            <th>LOE No.</th>
-                            <th>Approval Code</th>
-                            <th>Approval No.</th>
-                            <th>Approval Date</th>
-                            <th>Card Expiry Date / No</th>
-                            <th>Credit Limit</th>
-                            <th>Amount</th>
-                            <th>Co-Pay</th>
+                            <th>Code</th>
+                            <th>Description</th>
+                            <th>Remarks</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -33,11 +25,11 @@
         <v-card-actions>
             <v-btn color="blue-darken-1 border border-info" @click="openHmoList">
                 <v-icon class="mr-2">mdi-account-multiple-plus-outline</v-icon>
-                Add HMO Guarantor
+                Add Allergies
             </v-btn>
         </v-card-actions>
     </v-card>
-    <hmo-list :open_hmo_list="open_hmo_list" @close-dialog="closeHmoList" @handle-select="handleHmoList" />
+    <allergies-list :open_allergy_list="open_allergy_list" @close-dialog="closeAllergyList" @handle-select="handleAddAllegy" />
 </template>
 
 <script setup>
@@ -49,23 +41,23 @@ const props = defineProps({
     }
 })
 
-const open_hmo_list = ref(false);
+const open_allergy_list = ref(false);
 
 const deleteRow = () => {
     alert('delete row');
 }
 
 const openHmoList = () => {
-    open_hmo_list.value = true;
+    open_allergy_list.value = true;
 }
 
-const handleHmoList = () => {
-    alert('Consultant Added');
-    open_hmo_list.value = false;
+const handleAddAllegy = () => {
+    alert('Allergy Added');
+    open_allergy_list.value = false;
 }
 
-const closeHmoList = () => {
-    open_hmo_list.value = false;
+const closeAllergyList = () => {
+    open_allergy_list.value = false;
 }
 
 </script>

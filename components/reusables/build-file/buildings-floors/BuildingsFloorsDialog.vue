@@ -18,7 +18,7 @@
                             <!-- Buildings -->
                             <v-expansion-panel v-for="(setting, i) in settings" :key="i">
                                 <v-expansion-panel-title>Buildings</v-expansion-panel-title>
-                                <v-expansion-text>
+                                <v-expansion-panel-text>
                                     <v-card-actions>
                                         <v-spacer></v-spacer>
                                         <v-btn class="bg-primary text-white" type="submit" density="compact" @click="openFormDialog('building')">Add New</v-btn>
@@ -43,12 +43,12 @@
                                             </tr>
                                         </tbody>
                                     </v-table>
-                                </v-expansion-text>
+                                </v-expansion-panel-text>
                             </v-expansion-panel>
                             <!-- Floors -->
                             <v-expansion-panel>
                                 <v-expansion-panel-title>Floors</v-expansion-panel-title>
-                                <v-expansion-text>
+                                <v-expansion-panel-text>
                                     <v-card-actions>
                                         <v-spacer></v-spacer>
                                         <v-btn class="bg-primary text-white" type="submit" density="compact" @click="openFormDialog('floor')">Add New</v-btn>
@@ -71,7 +71,7 @@
                                             </tr>
                                         </tbody>
                                     </v-table>
-                                </v-expansion-text>
+                                </v-expansion-panel-text>
                             </v-expansion-panel>
                         </v-expansion-panels>
                         </v-col>

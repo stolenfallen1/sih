@@ -9,7 +9,9 @@
         <span class="title-span">Hospital Information System</span>
       </div>
       <v-spacer></v-spacer>
-      <div class="mr-10">{{ currentDay + " - " + currentTime }}</div>
+      <ClientOnly>
+        <div class="mr-10">{{ currentDay + " - " + currentTime }}</div>
+      </ClientOnly>
       <ModalSettings />
       <v-btn icon="mdi-bell-alert-outline"></v-btn>
       <v-menu>

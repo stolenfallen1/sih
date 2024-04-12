@@ -3,7 +3,7 @@
         <form @submit.prevent="handleSubmit">
             <v-card rounded="lg">
                 <v-toolbar density="compact" color="#6984ff" hide-details>
-                    <v-toolbar-title>OutPatient Registration Form</v-toolbar-title>
+                    <v-toolbar-title>Emergency Case Registration Form</v-toolbar-title>
                     <v-btn color="white" @click="closeDialog">
                         <v-icon>mdi-close</v-icon>
                     </v-btn>
@@ -26,14 +26,14 @@
                         <v-expansion-panel elevation="4">
                             <v-expansion-panel-title color="#2a73c5" class="expansion-title" :ripple="true">Registry Basic Information</v-expansion-panel-title>
                             <v-expansion-panel-text>
-                                <registry-basic-info :payload="payload" />
+                                <registry-basic-info :payload="payload" :form_type="formType" />
                             </v-expansion-panel-text>
                         </v-expansion-panel>
 
                         <v-expansion-panel elevation="4">
                             <v-expansion-panel-title color="#2a73c5" class="expansion-title" :ripple="true">Other Details</v-expansion-panel-title>
                             <v-expansion-panel-text>
-                                <other-details-info :payload="payload" />
+                                <other-details-info :payload="payload" :form_type="formType" />
                             </v-expansion-panel-text>
                         </v-expansion-panel>
 
@@ -47,21 +47,21 @@
                         <v-expansion-panel elevation="4">
                             <v-expansion-panel-title color="#2a73c5" class="expansion-title" :ripple="true">Consultant . Physicians</v-expansion-panel-title>
                             <v-expansion-panel-text>
-                                <consultant-info :payload="payload" />
+                                Some Content
                             </v-expansion-panel-text>
                         </v-expansion-panel>
 
                         <v-expansion-panel elevation="4">
                             <v-expansion-panel-title color="#2a73c5" class="expansion-title" :ripple="true">Allergies</v-expansion-panel-title>
                             <v-expansion-panel-text>
-                                <allergies-info :payload="payload" />
+                                Some Content
                             </v-expansion-panel-text>
                         </v-expansion-panel>
 
                         <v-expansion-panel elevation="4">
                             <v-expansion-panel-title color="#2a73c5" class="expansion-title" :ripple="true">Notes . Remarks</v-expansion-panel-title>
                             <v-expansion-panel-text>
-                                <remarks-info :payload="payload" />
+                                Some Content
                             </v-expansion-panel-text>
                         </v-expansion-panel>
                     </v-expansion-panels>
@@ -93,6 +93,8 @@ const props = defineProps({
 });
 
 const panel = ref([0, 1]);
+const disabled = ref(false);
+const formType = ref('emergency');
 
 const payload = ref({});
 
