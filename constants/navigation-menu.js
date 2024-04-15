@@ -833,6 +833,7 @@ export default [
                     {
                         label: "Suspend",
                         icon: "mdi-file-document-edit",
+                        form: "OpdSuspend",
                         rule: "",
                     },
                     {
@@ -863,6 +864,7 @@ export default [
                     {
                         label: "Post Adjustments",
                         icon: "mdi-file-document-edit",
+                        form: "OpdPostAdjustments",
                         rule: "",
                     },
                     {
@@ -941,8 +943,9 @@ export default [
                         rule: "",
                     },
                     {
-                        label: "Admit Registry Account",
+                        label: "Admit Patient",
                         icon: "mdi-file-document-edit",
+                        form: "OpdAdmitPatient",
                         rule: "",
                     },
                     {
@@ -958,6 +961,7 @@ export default [
                     {
                         label: "Transfer to ER",
                         icon: "mdi-file-document-edit",
+                        form: "OpdTransferToEr",
                         rule: "",
                     },
                     {

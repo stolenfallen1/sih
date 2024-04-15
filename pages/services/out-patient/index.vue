@@ -98,10 +98,20 @@
     @open-form="openAddFormDialog"
   />
   <OutPatientRegistration :form_dialog="form_dialog" @close-dialog="closeDialog" />
+  <OpdSuspendDialog :show="OpdSuspend" @close-dialog="useSubComponents('OpdSuspend', false)" />
+  <OpdPostAdjustmentDialog :show="OpdPostAdjustments" @close-dialog="useSubComponents('OpdPostAdjustments', false)" />
+  <OpdAdmitPatientDialog :show="OpdAdmitPatient" @close-dialog="useSubComponents('OpdAdmitPatient', false)"/>
+  <OpdTransferErDialog :show="OpdTransferToEr" @close-dialog="useSubComponents('OpdTransferToEr', false)"/>
 </template>
 
 <script setup>
 import ReusableTable from "~/components/reusables/ReusableTable.vue";
+const {
+  OpdSuspend,
+  OpdPostAdjustments,
+  OpdAdmitPatient,
+  OpdTransferToEr,
+} = storeToRefs(OpdSubComponentsDialog());
 
 definePageMeta({
   layout: "root-layout",
@@ -152,11 +162,11 @@ const headers = [
 ];
 const serverItems = ref([]);
 const handleRefresh = () => {
-   loadItems();
+  loadItems();
 };
 const handleSearch = (keyword) => {
   // Handle search action
-   loadItems(null, keyword);
+  loadItems(null, keyword);
 };
 
 const selectedUser = (item) => {

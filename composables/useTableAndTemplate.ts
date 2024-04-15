@@ -1,4 +1,3 @@
-
 import { TableAndTemplateFormDialog } from "~/store/TableAndTemplateFormDialog";
 // Master file table and template form dialog imports
 import { PatientsTemplateDialog } from "~/store/table-templates/master-file/PatientsTemplateDialog";
