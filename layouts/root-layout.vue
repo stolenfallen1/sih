@@ -247,11 +247,10 @@ const updateDateTime = () => {
   // currentTime.value = new Date().toLocaleTimeString();
 };
 
-const computeSubcomponent = (dialog,type)=>{
-    console.log(selectedRowDetails.value.id);
+const computeSubcomponent = (dialog,type) => {
     if(!selectedRowDetails.value.id) return  useSnackbar(true,'red','Please select a record first');
     if(dialog){
-      useTableAndTemplate(dialog)
+      useSubComponents(dialog)
     }
 }
 const computeTableAndTemplate = (dialog,type)=>{
