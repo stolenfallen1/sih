@@ -122,6 +122,7 @@
                         </v-col>
                     </v-row>
                 </v-card-text>
+                <v-divider></v-divider>
                 <v-card-actions>
                     <v-btn color="blue-darken-1 border border-info" @click="closeAccountAdjustment"> Close </v-btn>
                     <v-spacer></v-spacer>
@@ -197,6 +198,7 @@ const closeAccountAdjustment = () => {
 
 const onSubmit = () => {
     alert('Submit');
+    open_account_adjustment.value = false;
 }
 
 const emits = defineEmits(['close-dialog'])

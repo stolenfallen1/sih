@@ -3,7 +3,7 @@
         <form @submit.prevent="onSubmit">        
             <v-card rounded="lg">
                 <v-toolbar density="compact" color="#6984ff" hide-details>
-                    <v-toolbar-title>Admit Patient / Transfer to Inpatient {{ selectedRowDetails.id }}</v-toolbar-title>
+                    <v-toolbar-title>Print Transaction Slip {{ selectedRowDetails.id }}</v-toolbar-title>
                     <v-btn color="white" @click="closeDialog">
                         <v-icon>mdi-close</v-icon>
                     </v-btn>
@@ -13,18 +13,26 @@
                     <v-card elevation="4">
                         <v-card-text>
                             <p>
-                                <span style="font-weight: bold; font-style: italic;" >NOTE: </span>You are about to change the type of the selected registry account to "Inpatient"
-                                with information displayed below. Please take note that succeeding transactions shall follow the new registry type, However, all transactions done
-                                prior to the changing of type will be "as is" for accounting purposes.
-                            </p><br/>
-                            <p>Registry Case No. will also be generated based on the registry type but the old registry number is stamped in the equivalent table for recording purposes.</p>
+                                <span style="font-weight: bold; font-style: italic;" >NOTE: </span>Please double check the information of the transaction you are about to print. Make sure
+                                that the target printer is on and ready the press "Print" button to print or "Preview" button to view in the screen. Otherwise, press "Close" button to continue
+                            </p>
                         </v-card-text>
                     </v-card>
                     <v-row class="mt-2">
                         <v-col cols="12">
                             <v-text-field
-                                label="Registry Type"
-                                v-model="payload.find(item => item.registry_case_type).registry_case_type"
+                                label="OPD Case No."
+                                v-model="payload.find(item => item.outpatient_case_no).outpatient_case_no"
+                                variant="outlined"
+                                density="compact"
+                                hide-details
+                                readonly
+                            ></v-text-field>
+                        </v-col>
+                        <v-col cols="12">
+                            <v-text-field
+                                label="Patient ID"
+                                v-model="selectedRowDetails.id"
                                 variant="outlined"
                                 density="compact"
                                 hide-details
@@ -43,29 +51,9 @@
                         </v-col>
                         <v-col cols="12">
                             <v-text-field
-                                label="OPD Case No."
-                                v-model="payload.find(item => item.outpatient_case_no).outpatient_case_no"
-                                variant="outlined"
-                                density="compact"
-                                hide-details
-                                readonly
-                            ></v-text-field>
-                        </v-col>
-                        <v-col cols="12">
-                            <v-text-field
                                 type="date"
-                                label="Case Date"
+                                label="Transaction Date"
                                 v-model="payload.find(item => item.outpatient_date).outpatient_date"
-                                variant="outlined"
-                                density="compact"
-                                hide-details
-                                readonly
-                            ></v-text-field>
-                        </v-col>
-                        <v-col cols="12">
-                            <v-text-field
-                                label="Balance Amount"
-                                v-model="payload.find(item => item.account_balance).account_balance"
                                 variant="outlined"
                                 density="compact"
                                 hide-details
@@ -74,10 +62,12 @@
                         </v-col>
                     </v-row>
                 </v-card-text>
+                <v-divider></v-divider>
                 <v-card-actions>
                     <v-btn color="blue-darken-1 border border-info" @click="closeDialog"> Close </v-btn>
                     <v-spacer></v-spacer>
-                    <v-btn class="bg-primary text-white" type="submit">Admit</v-btn>
+                    <v-btn class="bg-info text-white" type="submit">Preview</v-btn>
+                    <v-btn class="bg-primary text-white" type="submit">Print</v-btn>
                 </v-card-actions>
             </v-card>
         </form>
@@ -100,21 +90,16 @@ const payload = ref([
         patient_name: 'John Doe',
     },
     {
-        registry_case_type: 'Outpatient',
-    },
-    {
         outpatient_case_no: '123',
     },
     {
         outpatient_date: '2024-04-15',
     },
-    {
-        account_balance: '00.00',
-    },
 ]);
 
 const onSubmit = () => {
     alert('Submit');
+    emits('close-dialog');
 }
 
 const emits = defineEmits(['close-dialog'])

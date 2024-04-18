@@ -72,6 +72,7 @@
                         </v-col>
                     </v-row>
                 </v-card-text>
+                <v-divider></v-divider>
                 <v-card-actions>
                     <v-btn color="blue-darken-1 border border-info" @click="closeDialog"> Close </v-btn>
                     <v-spacer></v-spacer>
@@ -113,6 +114,7 @@ const payload = ref([
 
 const onSubmit = () => {
     alert('Submit');
+    emits('close-dialog');
 }
 
 const emits = defineEmits(['close-dialog'])
