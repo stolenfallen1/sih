@@ -849,6 +849,7 @@ export default [
                     {
                         label: "Print Transaction Receipt",
                         icon: "mdi-file-document-edit",
+                        form: "OpdPrintTransactionReceipt",
                         rule: "",
                     },
                     {
@@ -890,6 +891,7 @@ export default [
                     {
                         label: "View Examination Upshot",
                         icon: "mdi-file-document-edit",
+                        form: "OpdViewExaminationUpshot",
                         rule: "",
                     },
                     {
@@ -905,16 +907,19 @@ export default [
                     {
                         label: "Tag as MGH",
                         icon: "mdi-file-document-edit",
+                        form: "OpdTagAsMgh",
                         rule: "",
                     },
                     {
                         label: "Untag as MGH",
                         icon: "mdi-file-document-edit",
+                        form: "OpdUntagAsMgh",
                         rule: "",
                     },
                     {
                         label: "Discharge",
                         icon: "mdi-file-document-edit",
+                        form: "OpdDischarge",
                         rule: "",
                     },
                     {
@@ -935,11 +940,13 @@ export default [
                     {
                         label: "SOA. Billing Statement",
                         icon: "mdi-file-document-edit",
+                        form: "OpdSoaBillingStatement",
                         rule: "",
                     },
                     {
                         label: "View. Print Reports",
                         icon: "mdi-file-document-edit",
+                        form: "OpdViewPrintReports",
                         rule: "",
                     },
                     {

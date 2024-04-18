@@ -98,17 +98,32 @@
     @open-form="openAddFormDialog"
   />
   <OutPatientRegistration :form_dialog="form_dialog" @close-dialog="closeDialog" />
+  <!-- Out-patients Sub components -->
   <OpdSuspendDialog :show="OpdSuspend" @close-dialog="useSubComponents('OpdSuspend', false)" />
+  <OpdPrintTransReceiptDialog :show="OpdPrintTransactionReceipt" @close-dialog="useSubComponents('OpdPrintTransactionReceipt', false)"/>
   <OpdPostAdjustmentDialog :show="OpdPostAdjustments" @close-dialog="useSubComponents('OpdPostAdjustments', false)" />
-  <OpdAdmitPatientDialog :show="OpdAdmitPatient" @close-dialog="useSubComponents('OpdAdmitPatient', false)"/>
-  <OpdTransferErDialog :show="OpdTransferToEr" @close-dialog="useSubComponents('OpdTransferToEr', false)"/>
+  <OpdViewExamUpshotDialog :show="OpdViewExaminationUpshot" @close-dialog="useSubComponents('OpdViewExaminationUpshot', false)" />
+  <OpdTagAsMghDialog :show="OpdTagAsMgh" @close-dialog="useSubComponents('OpdTagAsMgh', false)" />
+  <OpdUntagAsMghDialog :show="OpdUntagAsMgh" @close-dialog="useSubComponents('OpdUntagAsMgh', false)" />
+  <OpdDischargeDialog :show="OpdDischarge" @close-dialog="useSubComponents('OpdDischarge', false)" />
+  <OpdSoaBillingDialog :show="OpdSoaBillingStatement" @close-dialog="useSubComponents('OpdSoaBillingStatement', false)" />
+  <OpdViewPrintReportsDialog :show="OpdViewPrintReports" @close-dialog="useSubComponents('OpdViewPrintReports', false)" />
+  <OpdAdmitPatientDialog :show="OpdAdmitPatient" @close-dialog="useSubComponents('OpdAdmitPatient', false)" />
+  <OpdTransferErDialog :show="OpdTransferToEr" @close-dialog="useSubComponents('OpdTransferToEr', false)" />
 </template>
 
 <script setup>
 import ReusableTable from "~/components/reusables/ReusableTable.vue";
 const {
   OpdSuspend,
+  OpdPrintTransactionReceipt,
   OpdPostAdjustments,
+  OpdViewExaminationUpshot,
+  OpdTagAsMgh,
+  OpdUntagAsMgh,
+  OpdDischarge,
+  OpdSoaBillingStatement,
+  OpdViewPrintReports,
   OpdAdmitPatient,
   OpdTransferToEr,
 } = storeToRefs(OpdSubComponentsDialog());

@@ -1,7 +1,14 @@
 export const OpdSubComponentsDialog = defineStore('OpdSubComponentsDialog',{
     state: () => ({
         OpdSuspend: false,
+        OpdPrintTransactionReceipt: false,
         OpdPostAdjustments: false,
+        OpdViewExaminationUpshot: false,
+        OpdTagAsMgh: false,
+        OpdUntagAsMgh: false,
+        OpdDischarge: false,
+        OpdSoaBillingStatement: false,
+        OpdViewPrintReports: false,
         OpdAdmitPatient: false,
         OpdTransferToEr: false,
     }),
