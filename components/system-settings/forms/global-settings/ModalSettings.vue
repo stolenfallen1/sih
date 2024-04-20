@@ -6,7 +6,7 @@
 
         <template v-slot:default>
             <v-card>
-                <v-tabs v-model="tab" bg-color="#6984FF" center-active>
+                <v-tabs v-model="tab" bg-color="primary" center-active>
                     <v-tab value="one">Hospital Settings</v-tab>
                     <v-tab value="two">DOH Settings</v-tab>
                     <v-tab value="three">PHIC Settings</v-tab>

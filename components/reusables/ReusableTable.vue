@@ -1,5 +1,5 @@
 <template>
-    <v-card rounded="lg" elevation="3">
+    <v-card rounded="lg" elevation="4">
         <v-tabs v-model="tab" v-if="showTabs">
             <v-tab
                 v-for="tabItem in tabs"

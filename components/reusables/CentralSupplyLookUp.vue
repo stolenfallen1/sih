@@ -48,6 +48,7 @@
                         :show-select="true"
                         class="animated animatedFadeInUp fadeInUp"
                         :headers="headers"
+                        :hover="true"
                         :loading="search_payload.isloading"
                         v-model="selectedRows"
                         @click:row="handleSelectedRow"

@@ -16,7 +16,7 @@
                         </v-toolbar>
                         <v-card-text>
                             <v-row>
-                                <v-col cols="12">
+                                <v-col cols="6">
                                     <v-text-field 
                                         label="Patient Name"
                                         v-model="payload.find(item => item.patient_name).patient_name"
@@ -28,8 +28,8 @@
                                 </v-col>
                                 <v-col cols="6">
                                     <v-text-field 
-                                        label="Patient ID" 
-                                        v-model="selectedRowDetails.id"
+                                        label="Outpatient Case No." 
+                                        v-model="payload.find(item => item.outpatient_case_no).outpatient_case_no"
                                         variant="outlined" 
                                         density="compact" 
                                         hide-details 
@@ -38,28 +38,8 @@
                                 </v-col>
                                 <v-col cols="6">
                                     <v-text-field 
-                                        label="Outpatient No." 
-                                        v-model="payload.find(item => item.outpatient_case_no).outpatient_case_no"
-                                        variant="outlined" 
-                                        density="compact" 
-                                        hide-details 
-                                        readonly
-                                    ></v-text-field>
-                                </v-col>
-                                <v-col cols="4">
-                                    <v-text-field 
-                                        label="Registry Case Type" 
-                                        v-model="payload.find(item => item.registry_case_type).registry_case_type"
-                                        variant="outlined" 
-                                        density="compact" 
-                                        hide-details 
-                                        readonly
-                                    ></v-text-field>
-                                </v-col>
-                                <v-col cols="4">
-                                    <v-text-field 
                                         type="date"
-                                        label="Outpatient Date" 
+                                        label="Outpatient Case DateTime" 
                                         v-model="payload.find(item => item.outpatient_date).outpatient_date"
                                         variant="outlined" 
                                         density="compact" 
@@ -67,11 +47,42 @@
                                         readonly
                                     ></v-text-field>
                                 </v-col>
-                                <v-col cols="4">
-                                    <v-text-field
-                                        label="Account Balance" 
-                                        v-model="payload.find(item => item.account_balance).account_balance"
+                                <v-col cols="6">
+                                    <v-text-field 
+                                        type="date"
+                                        label="Discharge DateTime" 
+                                        v-model="payload.find(item => item.discharge_date).discharge_date"
                                         variant="outlined" 
+                                        density="compact" 
+                                        hide-details 
+                                        readonly
+                                    ></v-text-field>
+                                </v-col>
+                                <v-col cols="4">
+                                    <v-text-field 
+                                        label="Debit" 
+                                        variant="outlined" 
+                                        v-model="payload.find(item => item.debit).debit"
+                                        density="compact" 
+                                        hide-details 
+                                        readonly
+                                    ></v-text-field>
+                                </v-col>
+                                <v-col cols="4">
+                                    <v-text-field 
+                                        label="Credit" 
+                                        variant="outlined" 
+                                        v-model="payload.find(item => item.credit).credit"
+                                        density="compact" 
+                                        hide-details 
+                                        readonly
+                                    ></v-text-field>
+                                </v-col>
+                                <v-col cols="4">
+                                    <v-text-field 
+                                        label="Balance" 
+                                        variant="outlined" 
+                                        v-model="payload.find(item => item.account_balance).account_balance"
                                         density="compact" 
                                         hide-details 
                                         readonly
@@ -89,6 +100,7 @@
                                 <v-col cols="12">
                                     <v-textarea
                                         label="Discharge Diagnosis"
+                                        v-model="payload.discharge_diagnosis"
                                         variant="outlined" 
                                         density="compact" 
                                         hide-details
@@ -106,6 +118,7 @@
                                 <v-col cols="12">
                                     <v-textarea
                                         label="Secondary Discharge Diagnosis"
+                                        v-model="payload.secondary_discharge_diagnosis"
                                         variant="outlined" 
                                         density="compact" 
                                         hide-details
@@ -123,6 +136,7 @@
                                 <v-col cols="12">
                                     <v-textarea
                                         label="Discharge Remarks"
+                                        v-model="payload.discharge_remarks"
                                         variant="outlined" 
                                         density="compact" 
                                         hide-details
@@ -136,7 +150,7 @@
                 <v-card-actions>
                     <v-btn color="blue-darken-1 border border-info" @click="closeDialog"> Close </v-btn>
                     <v-spacer></v-spacer>
-                    <v-btn class="bg-primary text-white" type="submit">Select</v-btn>
+                    <v-btn class="bg-primary text-white" type="submit">Discharge Patient</v-btn>
                 </v-card-actions>
             </v-card>
         </form>
@@ -159,13 +173,19 @@ const payload = ref([
         patient_name: 'John Doe',
     },
     {
-        registry_case_type: 'Outpatient',
-    },
-    {
         outpatient_case_no: '123',
     },
     {
         outpatient_date: '2024-04-15',
+    },
+    {
+        discharge_date: '2024-04-20',
+    },
+    {
+        debit: '00.00',
+    },
+    {
+        credit: '00.00',
     },
     {
         account_balance: '00.00',

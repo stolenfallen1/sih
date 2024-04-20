@@ -17,6 +17,7 @@
                     :items-length="totalItems"
                     :loading="data.loading"
                     item-value="id"
+                    :hover="true"
                     @update:options="initialize"
                     select-strategy="single"
                     fixed-header
