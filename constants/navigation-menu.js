@@ -860,6 +860,7 @@ export default [
                     {
                         label: "Post Diagnostic Medical Package",
                         icon: "mdi-file-document-edit",
+                        form: "OpdPostDiagnosticMedicalPackage",
                         rule: "",
                     },
                     {
@@ -871,6 +872,7 @@ export default [
                     {
                         label: "Post Professional Fees",
                         icon: "mdi-file-document-edit",
+                        form: "OpdPostProfessionalFees",
                         rule: "",
                     },
                     {
@@ -935,6 +937,7 @@ export default [
                     {
                         label: "Post Final Diagnosis",
                         icon: "mdi-file-document-edit",
+                        form: "OpdPostFinalDiagnosis",
                         rule: "",
                     },
                     {

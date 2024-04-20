@@ -8,7 +8,7 @@
           </v-btn>
       </v-toolbar>
       <v-divider></v-divider>
-      <v-tabs v-model="tab">
+      <v-tabs color="primary" v-model="tab">
         <v-tab value="one">General</v-tab>
         <v-tab value="two">Miscellaneous</v-tab>
       </v-tabs>

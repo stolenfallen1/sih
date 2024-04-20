@@ -77,6 +77,7 @@
                   v-model="selectedRows"
                   @click:row="handleSelectedRow"
                   :show-select="true"
+                  :hover="true"
                   class="animated animatedFadeInUp fadeInUp"
                   :headers="headers"
                   :items="search_results"

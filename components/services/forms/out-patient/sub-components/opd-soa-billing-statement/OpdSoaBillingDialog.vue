@@ -80,6 +80,7 @@
                     :items-length="totalItems"
                     :loading="data.loading"
                     item-value="id"
+                    :hover="true"
                     @update:options="initialize"
                     show-select
                     select-strategy="single"
@@ -100,44 +101,6 @@
                     <template #bottom></template>
                 </v-data-table-server>
             </v-card-text>
-            <v-divider></v-divider>
-            <v-row class="pa-2">
-                <v-col cols="6"></v-col>
-                <v-col cols="6">
-                    <v-row>
-                        <v-col cols="4" class="px-1">
-                            <v-text-field
-                                label="Total Debit"
-                                variant="outlined"
-                                v-model="total_payload.total_debit"
-                                density="compact"
-                                hide-details
-                                readonly
-                            ></v-text-field>
-                        </v-col>
-                        <v-col cols="4" class="px-1">
-                            <v-text-field
-                                label="Total Credit"
-                                variant="outlined"
-                                v-model="total_payload.total_credit"
-                                density="compact"
-                                hide-details
-                                readonly
-                            ></v-text-field>
-                        </v-col>
-                        <v-col cols="4" class="px-1">
-                            <v-text-field
-                                label="Total Balance"
-                                variant="outlined"
-                                v-model="total_payload.total_balance"
-                                density="compact"
-                                hide-details
-                                readonly
-                            ></v-text-field>
-                        </v-col>
-                    </v-row>
-                </v-col>
-            </v-row>
             <v-divider></v-divider>
             <v-card-actions>
                 <v-btn color="blue-darken-1 border border-info" @click="closeDialog"> Close </v-btn>

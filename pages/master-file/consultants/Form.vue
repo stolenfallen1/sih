@@ -15,7 +15,7 @@
             <v-icon>mdi-close</v-icon>
           </v-btn>
         </v-toolbar>
-        <v-tabs v-model="tab" bg-color="#FFF">
+        <v-tabs v-model="tab" color="primary">
           <v-tab value="one">General Information</v-tab>
           <v-tab value="two">Contacts and Addresses</v-tab>
         </v-tabs>

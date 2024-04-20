@@ -27,6 +27,7 @@
           :items="serverItems"
           :items-length="totalItems"
           :loading="data.loading"
+          :hover="true"
           item-value="id"
           @update:options="initialize"
           show-select

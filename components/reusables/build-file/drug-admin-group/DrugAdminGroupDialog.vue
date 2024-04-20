@@ -32,6 +32,7 @@
           :items-length="totalItems"
           :loading="data.loading"
           item-value="id"
+          :hover="true"
           @update:options="initialize"
           show-select
           select-strategy="single"

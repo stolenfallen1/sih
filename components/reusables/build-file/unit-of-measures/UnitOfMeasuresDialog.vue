@@ -27,6 +27,7 @@
                     :items-length="totalItems"
                     :loading="data.loading"
                     item-value="name"
+                    :hover="true"
                     @update:options="initialize"
                     show-select
                     select-strategy="single"

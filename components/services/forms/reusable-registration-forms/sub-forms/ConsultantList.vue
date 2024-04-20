@@ -28,10 +28,10 @@
                         :items-length="totalItems"
                         :loading="data.loading"
                         item-value="id"
+                        :hover="true"
                         @update:options="initialize"
                         @click:row="handleSelectedRow"
                         @update:modelValue="handleUpdateRow"
-                        :hover="true"
                         show-select
                         select-strategy="single"
                         fixed-header

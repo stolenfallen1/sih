@@ -2,7 +2,7 @@
   <v-row>
     <v-col cols="12">
       <v-card density="compact" min-height="20vh">
-        <v-toolbar density="compact" color="primary">
+        <v-toolbar density="compact" color="#2a73c5">
           <v-card-title class="d-flex align-center pe-2">
             <v-icon icon="mdi-form-select"></v-icon> &nbsp; Spouse Information
             <v-spacer></v-spacer>
