@@ -27,6 +27,7 @@
                           label="Lastname*"
                           type="text"
                           v-model="payload.lastname"
+                          :readonly="payload.type == 'view'"
                           required
                           :rules="[(v) => !!v || 'Lastname is required']"
                           density="compact"
@@ -39,6 +40,7 @@
                           type="text"
                           required
                           v-model="payload.firstname"
+                          :readonly="payload.type == 'view'"
                           :rules="[(v) => !!v || 'Firstname is required']"
                           density="compact"
                           variant="outlined"
@@ -51,6 +53,7 @@
                           label="Middlename"
                           type="text"
                           v-model="payload.middlename"
+                          :readonly="payload.type == 'view'"
                           density="compact"
                           hide-details
                           variant="outlined"
@@ -65,7 +68,8 @@
                           required
                           hide-details
                           v-model="payload.suffix"
-                          clearable
+                          :readonly="payload.type == 'view'"
+                          :clearable="payload.type == 'edit' || payload.type == 'new'"
                           density="compact"
                           variant="outlined"
                         ></v-select>
@@ -76,6 +80,7 @@
                         <v-text-field
                           label="Birth Date"
                           v-model="payload.birthdate"
+                          :readonly="payload.type == 'view'"
                           density="compact"
                           type="date"
                           variant="outlined"
@@ -86,6 +91,7 @@
                           label="Email"
                           type="email"
                           v-model="payload.email"
+                          :readonly="payload.type == 'view'"
                           density="compact"
                           variant="outlined"
                         ></v-text-field>
@@ -101,6 +107,8 @@
                           label="Branch"
                           v-model="payload.branch_id"
                           @update:model-value="handleBranch(payload)"
+                          :readonly="payload.type == 'view'"
+                          :clearable="payload.type == 'edit' || payload.type == 'new'"
                           required
                           :rules="[(v) => !!v || 'Branch is required']"
                           clearable
@@ -115,6 +123,8 @@
                           label="Department"
                           :loading="isdepartmentLoading"
                           v-model="payload.warehouse_id"
+                          :readonly="payload.type == 'view'"
+                          :clearable="payload.type == 'edit' || payload.type == 'new'"
                           clearable
                           required
                           :rules="[(v) => !!v || 'Department is required']"
@@ -127,6 +137,8 @@
                           item-value="value"
                           class="mt-2"
                           v-model="payload.section_id"
+                          :readonly="payload.type == 'view'"
+                          :clearable="payload.type == 'edit' || payload.type == 'new'"
                           label="Section"
                           density="compact"
                           variant="outlined"
@@ -138,6 +150,8 @@
                           item-title="display_name"
                           item-value="id"
                           v-model="payload.role_id"
+                          :readonly="payload.type == 'view'"
+                          :clearable="payload.type == 'edit' || payload.type == 'new'"
                           label="User Group"
                           clearable
                           required
@@ -151,13 +165,15 @@
                           class="mt-2"
                           item-value="code"
                           v-model="payload.position_id"
+                          :readonly="payload.type == 'view'"
+                          :clearable="payload.type == 'edit' || payload.type == 'new'"
                           label="Position"
                           clearable
                           required
                           density="compact"
                           variant="outlined"
                         ></v-autocomplete>
-                        <v-radio-group v-model="payload.isactive" inline>
+                        <v-radio-group v-model="payload.isactive" :readonly="payload.type == 'view'" inline>
                           <v-radio label="Is Active" value="1"></v-radio>
                           <v-radio label="Is Inactive" value="0"></v-radio>
                         </v-radio-group>
@@ -199,6 +215,7 @@
                           label="Employee ID*"
                           type="text"
                           v-model="payload.idnumber"
+                          :readonly="payload.type == 'view'"
                           required
                           hide-details
                           :rules="[(v) => !!v || 'Employee id is required']"
@@ -211,6 +228,7 @@
                           label="Employee Passcode*"
                           type="text"
                           v-model="payload.passcode"
+                          :readonly="payload.type == 'view'"
                           required
                           hide-details
                           :rules="[(v) => !!v || 'Employee Passcode is required']"
@@ -233,6 +251,7 @@
                           type="password"
                           class="mt-2"
                           v-model="payload.password"
+                          :readonly="payload.type == 'view'"
                           required
                           :rules="[(v) => !!v || 'Password is required']"
                           density="compact"
@@ -265,6 +284,7 @@
                       </p>
                       <v-checkbox
                         v-model="grantAdminAccess"
+                        :readonly="payload.type == 'view'"
                         label="Grant this user administrative type of accessibility"
                         color="#117dad"
                         @change="checkUncheckAll"
@@ -291,6 +311,7 @@
                             hide-details
                             v-model="system"
                             @update:model-value="selectedsystem"
+                            :readonly="payload.type == 'view'"
                             :label="item.system_description"
                             :value="item.id"
                             density="compact"

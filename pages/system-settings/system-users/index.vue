@@ -249,6 +249,15 @@ const EditUserDetails = () => {
   }
 };
 
+const EditUserGroups = () => {
+  if (selectedRowDetails.value.id) {
+    moduleDialog.value = true;
+    usergroup_payload.value.type = "edit";
+  } else {
+    moduleDialog.value = true;
+  }
+};
+
 const ViewUserDetails = () => {
   if (selectedRowDetails.value.id) {
     payload.value.type = "view";
@@ -259,6 +268,7 @@ const ViewUserDetails = () => {
 const ViewUserGroups = () => {
   if (selectedRowDetails.value.id) {
     moduleDialog.value = true;
+    usergroup_payload.value.type = "view";
   } else {
     moduleDialog.value = true;
   }
@@ -329,7 +339,7 @@ const handleEdit = () => {
     EditUserDetails();
   } else {
     usergroup_payload.value.type = "edit";
-    ViewUserGroups();
+    EditUserGroups();
   }
 };
 
