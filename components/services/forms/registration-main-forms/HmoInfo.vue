@@ -2,7 +2,7 @@
     <v-card rounded="lg">
         <v-row>
             <v-col cols="12">
-                <v-table density="compact" height="40vh">
+                <v-table density="compact" height="60vh">
                     <thead>
                         <tr>
                             <th>Guarantor Fullname</th>
@@ -31,7 +31,11 @@
         </v-row>
         <v-divider></v-divider>
         <v-card-actions>
-            <v-btn color="blue-darken-1 border border-info" @click="openHmoList" :disabled="payload.hosp_plan === 'Insurance' || payload.hosp_plan === 'Company' ? false : true">
+            <v-btn 
+                color="blue-darken-1 border border-info" 
+                @click="openHmoList" 
+                :disabled="(payload.hosp_plan === 'Insurance' || payload.hosp_plan === 'Company') || clicked_option === 'view'"
+                >
                 <v-icon class="mr-2">mdi-account-multiple-plus-outline</v-icon>
                 Add HMO Guarantor
             </v-btn>
@@ -47,6 +51,10 @@ const props = defineProps({
         required: true,
         default: () => ({})
     },
+    clicked_option: {
+        type: String,
+        default: () => ''
+    }
 })
 
 const open_hmo_list = ref(false);

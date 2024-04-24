@@ -3,7 +3,7 @@
     <v-card-actions>
       <v-spacer></v-spacer>
       <v-btn
-        @click="handleView"
+        @click="handleView('view')"
         :disabled="isSelectedUser"
         prepend-icon="mdi-eye-outline"
         width="100"
@@ -13,7 +13,8 @@
         View
       </v-btn>
       <v-btn
-        @click="handleNew"
+        @click="handleNew('new')"
+        :disabled="!isSelectedUser"
         prepend-icon="mdi-plus-outline"
         width="100"
         color="primary"
@@ -22,7 +23,7 @@
         New
       </v-btn>
       <v-btn
-        @click="handleEdit"
+        @click="handleEdit('edit')"
         prepend-icon="mdi-pencil"
         :disabled="isSelectedUser"
         width="100"
@@ -97,10 +98,11 @@
     :search_payload="search_payload"
     @open-form="openAddFormDialog"
   />
-  <OutPatientRegistration :form_dialog="form_dialog" @close-dialog="closeDialog" />
+  <OutPatientRegistration :clicked_option="clicked_option" :form_dialog="form_dialog" @close-dialog="closeAddFormDialog" />
   <!-- Out-patients Sub components -->
   <OpdSuspendDialog :show="OpdSuspend" @close-dialog="useSubComponents('OpdSuspend', false)" />
   <OpdPrintTransReceiptDialog :show="OpdPrintTransactionReceipt" @close-dialog="useSubComponents('OpdPrintTransactionReceipt', false)"/>
+  <OpdPostCorporatePackageDialog :show="OpdPostCorporateMedicalPackage" @close-dialog="useSubComponents('OpdPostCorporateMedicalPackage', false)"/>
   <OpdPostDiagnosticPackageDialog :show="OpdPostDiagnosticMedicalPackage" @close-dialog="useSubComponents('OpdPostDiagnosticMedicalPackage', false)"/> 
   <OpdPostAdjustmentDialog :show="OpdPostAdjustments" @close-dialog="useSubComponents('OpdPostAdjustments', false)" />
   <OpdPostProfessionalFeesDialog :show="OpdPostProfessionalFees" @close-dialog="useSubComponents('OpdPostProfessionalFees', false)" />
@@ -113,6 +115,7 @@
   <OpdViewPrintReportsDialog :show="OpdViewPrintReports" @close-dialog="useSubComponents('OpdViewPrintReports', false)" />
   <OpdAdmitPatientDialog :show="OpdAdmitPatient" @close-dialog="useSubComponents('OpdAdmitPatient', false)" />
   <OpdTransferErDialog :show="OpdTransferToEr" @close-dialog="useSubComponents('OpdTransferToEr', false)" />
+  <OpdClaimForm4ProcessingDialog :show="OpdClaimForm4Processing" @close-dialog="useSubComponents('OpdClaimForm4Processing', false)" />
 </template>
 
 <script setup>
@@ -120,6 +123,7 @@ import ReusableTable from "~/components/reusables/ReusableTable.vue";
 const {
   OpdSuspend,
   OpdPrintTransactionReceipt,
+  OpdPostCorporateMedicalPackage,
   OpdPostDiagnosticMedicalPackage,
   OpdPostAdjustments,
   OpdPostProfessionalFees,
@@ -132,6 +136,7 @@ const {
   OpdViewPrintReports,
   OpdAdmitPatient,
   OpdTransferToEr,
+  OpdClaimForm4Processing,
 } = storeToRefs(OpdSubComponentsDialog());
 
 definePageMeta({
@@ -148,6 +153,7 @@ const central_form_dialog = ref(false);
 const search_results = ref([]);
 const search_payload = ref({});
 const form_dialog = ref(false);
+const clicked_option = ref("");
 
 const totalItems = ref(0);
 const itemsPerPage = ref(15);
@@ -205,14 +211,17 @@ const selectedUser = (item) => {
     isSelectedUser.value = true;
   }
 };
-const handleView = () => {
-  
+const handleView = (clickedOption) => {
+  form_dialog.value = true;
+  clicked_option.value = clickedOption;
 };
-const handleEdit = () => {
-  
+const handleEdit = (clickedOption) => {
+  form_dialog.value = true;
+  clicked_option.value = clickedOption;
 };
-const handleNew = () => {
+const handleNew = (clickedOption) => {
   central_form_dialog.value = true;
+  clicked_option.value = clickedOption;
 };
 const closeCentralFormDialog = () => {
   central_form_dialog.value = false;
@@ -220,7 +229,7 @@ const closeCentralFormDialog = () => {
 const openAddFormDialog = () => {
   form_dialog.value = true;
 };
-const closeDialog = () => {
+const closeAddFormDialog = () => {
   form_dialog.value = false;
 };
 const selectedOutPatient = () => {

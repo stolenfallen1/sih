@@ -21,6 +21,8 @@
                 <v-text-field
                     variant="solo"
                     v-model="payload.case_datetime"
+                    :readonly="clicked_option === 'view'"
+                    required
                     type="date"
                     hide-details
                     density="compact"
@@ -35,6 +37,8 @@
                     item-value="id"
                     placeholder="Select Case Type"
                     v-model="payload.case_type"
+                    :readonly="clicked_option === 'view'"
+                    required
                     hide-details
                     clearable
                     :items="[]"
@@ -51,6 +55,8 @@
                     item-value="id"
                     placeholder="Select How Admitted"
                     v-model="payload.how_admitted"
+                    :readonly="clicked_option === 'view'"
+                    required
                     hide-details
                     clearable
                     :items="[]"
@@ -66,8 +72,8 @@
                     item-title="area_bed_no"
                     item-value="id"
                     v-model="payload.area_bed_no"
+                    :readonly="clicked_option === 'view'"
                     hide-details
-                    readonly
                     clearable
                     :items="[]"
                     density="compact"
@@ -81,7 +87,8 @@
                     item-value="id"
                     placeholder="Select Transaction Type"
                     v-model="payload.mscAccount_trans_types"
-                    
+                    :readonly="clicked_option === 'view'"
+                    required
                     hide-details
                     clearable
                     :items="[]"
@@ -97,7 +104,8 @@
                     item-value="id"
                     placeholder="Select Patient Category"
                     v-model="payload.mscPatient_category"
-                    readonly
+                    :readonly="clicked_option === 'view'"
+                    required
                     hide-details
                     clearable
                     :items="[]"
@@ -112,6 +120,8 @@
                     item-value="id"
                     placeholder="Select Hospital Plan"
                     v-model="payload.hosp_plan"
+                    :readonly="clicked_option === 'view'"
+                    required
                     hide-details
                     clearable
                     :items="hospitalizationPlans"
@@ -127,6 +137,7 @@
                     item-value="id"
                     placeholder="Select Classification"
                     v-model="payload.classification"
+                    :readonly="clicked_option === 'view'"
                     hide-details
                     clearable
                     :items="[]"
@@ -141,6 +152,7 @@
                     item-value="id"
                     placeholder="Select Membership"
                     v-model="payload.msc_PHIC_Memberships"
+                    :readonly="clicked_option === 'view'"
                     hide-details
                     clearable
                     :items="[]"
@@ -157,7 +169,7 @@
                     item-value="id"
                     placeholder="Select Service Type"
                     v-model="payload.mscService_type"
-                    
+                    :readonly="clicked_option === 'view'"
                     hide-details
                     clearable
                     :items="[]"
@@ -172,6 +184,7 @@
                     item-value="id"
                     placeholder="Select Sub Service Type"
                     v-model="payload.mscService_type2"
+                    :readonly="clicked_option === 'view'"
                     hide-details
                     clearable
                     :items="[]"
@@ -186,7 +199,8 @@
                     item-value="id"
                     placeholder="Select Price Group"
                     v-model="payload.mscPrice_Groups"
-                    
+                    :readonly="clicked_option === 'view'"
+                    required
                     hide-details
                     clearable
                     :items="[]"
@@ -201,7 +215,8 @@
                     item-value="id"
                     placeholder="Select Price Schemes"
                     v-model="payload.mscPrice_Schemes"
-                    
+                    :readonly="clicked_option === 'view'"
+                    required
                     hide-details
                     clearable
                     :items="[]"
@@ -213,11 +228,11 @@
                 <v-list-subheader class="form-header">Discount Scheme </v-list-subheader>
                 <v-text-field
                     v-model="payload.mscAccount_discount_id"
+                    :readonly="clicked_option === 'view'"
                     hide-details
                     prepend-icon="mdi-plus-box"
                     @click:prepend="openHandleDiscountScheme"
                     class="cursor-pointer"
-                    readonly
                     density="compact"
                     variant="solo"
                 ></v-text-field>
@@ -229,6 +244,7 @@
                     item-value="id"
                     placeholder="Select Reffered From"
                     v-model="payload.referred_from_HCI"
+                    :readonly="clicked_option === 'view'"
                     hide-details
                     clearable
                     :items="[]"
@@ -241,7 +257,7 @@
                 <v-text-field
                     variant="solo"
                     v-model="payload.phic_ref_no"
-                    readonly
+                    :readonly="clicked_option === 'view'"
                     hide-details
                     density="compact"
                 ></v-text-field>
@@ -253,7 +269,7 @@
                     item-value="id"
                     variant="solo"
                     v-model="payload.referred_from_HCI_code"
-                    readonly
+                    :readonly="clicked_option === 'view'"
                     hide-details
                     prepend-icon="mdi-plus-box"
                     @click:prepend="openReferringHciCode"
@@ -265,7 +281,7 @@
                 <v-text-field
                     variant="solo"
                     v-model="payload.referred_from_HCI_address"
-                    readonly
+                    :readonly="clicked_option === 'view'"
                     hide-details
                     prepend-icon="mdi-plus-box"
                     @click:prepend="openReferringHciAddress"
@@ -280,7 +296,7 @@
                     variant="solo"
                     type="number"
                     v-model="payload.passport_no"
-                    readonly
+                    :readonly="clicked_option === 'view'"
                     hide-details
                     density="compact"
                 ></v-text-field>
@@ -292,6 +308,7 @@
                     type="number"
                     placeholder="Enter OSCA ID No."
                     v-model="payload.osca_id_no"
+                    :readonly="clicked_option === 'view'"
                     hide-details
                     density="compact"
                 ></v-text-field>
@@ -302,6 +319,7 @@
                     variant="solo"
                     placeholder="Enter ID Presented"
                     v-model="payload.id_presented"
+                    :readonly="clicked_option === 'view'"
                     hide-details
                     density="compact"
                 ></v-text-field>
@@ -313,6 +331,7 @@
                     type="number"
                     placeholder="Enter ID Number"
                     v-model="payload.id_number"
+                    :readonly="clicked_option === 'view'"
                     hide-details
                     density="compact"
                 ></v-text-field>
@@ -324,7 +343,7 @@
                     item-value="id"
                     placeholder="Select Department"
                     v-model="payload.department"
-                    
+                    :readonly="clicked_option === 'view'"
                     hide-details
                     clearable
                     :items="[]"
@@ -338,7 +357,7 @@
                     item-title="department"
                     item-value="id"
                     v-model="payload.newborn_status"
-                    readonly
+                    :readonly="clicked_option === 'view'"
                     hide-details
                     clearable
                     :items="[]"
@@ -353,6 +372,7 @@
                     item-value="id"
                     placeholder="Select Source of Admission"
                     v-model="payload.source_of_admission"
+                    :readonly="clicked_option === 'view'"
                     hide-details
                     clearable
                     :items="[]"
@@ -367,7 +387,7 @@
                     item-value="id"
                     placeholder="Select Medical Social Service"
                     v-model="payload.medical_social_service"
-                    
+                    :readonly="clicked_option === 'view'"
                     hide-details
                     clearable
                     :items="['A', 'B', 'C']"
@@ -382,6 +402,7 @@
                     density="compact" 
                     variant="solo" 
                     v-model="payload.clinical_chief_complaint"
+                    :readonly="clicked_option === 'view'"
                     placeholder="Enter Chief Complaints"
                 ></v-textarea>
             </v-col>
@@ -393,7 +414,7 @@
                     prepend-icon="mdi-plus-box"
                     @click:prepend="openDietDesc"
                     class="cursor-pointer"
-                    readonly
+                    :readonly="clicked_option === 'view'"
                     density="compact"
                     variant="solo"
                 ></v-text-field>
@@ -432,6 +453,10 @@ const props = defineProps({
     form_type: {
         type: String,
         required: true,
+        default: () => ''
+    },
+    clicked_option: {
+        type: String,
         default: () => ''
     }
 });

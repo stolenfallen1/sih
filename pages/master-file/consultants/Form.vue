@@ -7,18 +7,20 @@
         scrollable
         :persistent="true"
       >
-  <v-card rounded="lg">
-      <form @submit.prevent="handleSubmit">
-        <v-toolbar density="compact" color="#6984ff" hide-details>
-          <v-toolbar-title>Consultant Information Form</v-toolbar-title>
-          <v-btn color="white" @click="closeDialog">
-            <v-icon>mdi-close</v-icon>
-          </v-btn>
-        </v-toolbar>
-        <v-tabs v-model="tab" color="primary">
-          <v-tab value="one">General Information</v-tab>
-          <v-tab value="two">Contacts and Addresses</v-tab>
-        </v-tabs>
+    <form @submit.prevent="handleSubmit">
+      <v-card rounded="lg">
+        <v-card-title class="pa-0">
+          <v-toolbar density="compact" color="#6984ff" hide-details>
+            <v-toolbar-title>Consultant Information Form</v-toolbar-title>
+            <v-btn color="white" @click="closeDialog">
+              <v-icon>mdi-close</v-icon>
+            </v-btn>
+          </v-toolbar>
+          <v-tabs v-model="tab" color="primary">
+            <v-tab value="one">General Information</v-tab>
+            <v-tab value="two">Contacts and Addresses</v-tab>
+          </v-tabs>
+        </v-card-title>
         <v-divider></v-divider>
         <v-card-text style="max-height: auto">
           <v-window v-model="tab" class="pa-0">
@@ -522,20 +524,20 @@
           <v-spacer></v-spacer>
           <v-btn class="bg-primary text-white" type="submit" v-if="payload.type != 'view'">Save and Close</v-btn>
         </v-card-actions>
-      </form>
-      <v-dialog
-        v-model="address_form_dialog"
-        
-        hide-overlay
-        width="650"
-      >
-        <AddressForm
-          :payload="payload"
-          @close-dialog="closeAddressForm"
-          @handle-submit="handleAddressSubmission"
-        />
-      </v-dialog>
-  </v-card>
+      </v-card>
+    </form>
+    <v-dialog
+      v-model="address_form_dialog"
+      
+      hide-overlay
+      width="650"
+    >
+      <AddressForm
+        :payload="payload"
+        @close-dialog="closeAddressForm"
+        @handle-submit="handleAddressSubmission"
+      />
+    </v-dialog>
   </v-dialog>
 
 </template>
