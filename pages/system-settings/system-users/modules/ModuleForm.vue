@@ -15,6 +15,7 @@
             variant="outlined"
             density="compact"
             v-model="usergroup_payload.name"
+            :readonly="usergroup_payload.type == 'view'"
             label="User Group Name"
           ></v-text-field>
 
@@ -23,6 +24,7 @@
             variant="outlined"
             density="compact"
             v-model="usergroup_payload.display_name"
+            :readonly="usergroup_payload.type == 'view'"
             label="User Group Display Name"
           ></v-text-field>
           <v-checkbox
@@ -31,6 +33,7 @@
             density="compact"
             color="#117dad"
             v-model="usergroup_payload.isactive"
+            :readonly="usergroup_payload.type == 'view'"
           ></v-checkbox>
         </v-card-text>
         <v-divider></v-divider>
