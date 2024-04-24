@@ -2,6 +2,7 @@ export const OpdSubComponentsDialog = defineStore('OpdSubComponentsDialog',{
     state: () => ({
         OpdSuspend: false,
         OpdPrintTransactionReceipt: false,
+        OpdPostCorporateMedicalPackage: false,
         OpdPostDiagnosticMedicalPackage: false,
         OpdPostAdjustments: false,
         OpdPostProfessionalFees: false,
@@ -14,6 +15,7 @@ export const OpdSubComponentsDialog = defineStore('OpdSubComponentsDialog',{
         OpdViewPrintReports: false,
         OpdAdmitPatient: false,
         OpdTransferToEr: false,
+        OpdClaimForm4Processing: false,
     }),
     actions:{
     setOpdSubComponentsDialog(dialog:any,type:Boolean) {

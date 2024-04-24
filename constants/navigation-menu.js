@@ -826,11 +826,6 @@ export default [
                         rule: "",
                     },
                     {
-                        label: "Manage Picture",
-                        icon: "mdi-file-document-edit",
-                        rule: "",
-                    },
-                    {
                         label: "Suspend",
                         icon: "mdi-file-document-edit",
                         form: "OpdSuspend",
@@ -855,6 +850,7 @@ export default [
                     {
                         label: "Post Corporate Medical Package",
                         icon: "mdi-file-document-edit",
+                        form: "OpdPostCorporateMedicalPackage",
                         rule: "",
                     },
                     {
@@ -982,6 +978,7 @@ export default [
                     {
                         label: "Claim Form 4 Processing",
                         icon: "mdi-file-document-edit",
+                        form: "OpdClaimForm4Processing",
                         rule: "",
                     },
                 ],
@@ -1197,11 +1194,6 @@ export default [
                     },
                     {
                         label: "Patient Profile",
-                        icon: "mdi-file-document-edit",
-                        rule: "",
-                    },
-                    {
-                        label: "Manage Picture",
                         icon: "mdi-file-document-edit",
                         rule: "",
                     },
@@ -1532,11 +1524,6 @@ export default [
                     },
                     {
                         label: "Room Inquiry",
-                        icon: "mdi-file-document-edit",
-                        rule: "",
-                    },
-                    {
-                        label: "Manage Picture",
                         icon: "mdi-file-document-edit",
                         rule: "",
                     },

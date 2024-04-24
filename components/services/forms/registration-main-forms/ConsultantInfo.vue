@@ -2,12 +2,13 @@
     <v-card rounded="lg">
         <v-row>
             <v-col cols="12">
-                <v-table density="compact" height="40vh">
+                <v-table density="compact" height="60vh">
                     <thead>
                         <tr>
-                            <th>Code</th>
-                            <th>Description</th>
-                            <th>Remarks</th>
+                            <th>Consultant Name</th>
+                            <th>Specialization</th>
+                            <th>PHIC Type</th>
+                            <th>Role Type</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -23,13 +24,13 @@
         </v-row>
         <v-divider></v-divider>
         <v-card-actions>
-            <v-btn color="blue-darken-1 border border-info" @click="openHmoList">
+            <v-btn color="blue-darken-1 border border-info" @click="openConsultantsList" :disabled="clicked_option === 'view'">
                 <v-icon class="mr-2">mdi-account-multiple-plus-outline</v-icon>
-                Add Allergies
+                Add Physician
             </v-btn>
         </v-card-actions>
     </v-card>
-    <allergies-list :open_allergy_list="open_allergy_list" @close-dialog="closeAllergyList" @handle-select="handleAddAllegy" />
+    <consultant-list :open_consultants_list="open_consultants_list" @close-dialog="closeConsultantsList" @handle-select="handleAddConsultant" />
 </template>
 
 <script setup>
@@ -38,26 +39,30 @@ const props = defineProps({
         type: Object,
         required: true,
         default: () => ({})
+    },
+    clicked_option: {
+        type: String,
+        default: () => ''
     }
 })
 
-const open_allergy_list = ref(false);
+const open_consultants_list = ref(false);
 
 const deleteRow = () => {
     alert('delete row');
 }
 
-const openHmoList = () => {
-    open_allergy_list.value = true;
+const openConsultantsList = () => {
+    open_consultants_list.value = true;
 }
 
-const handleAddAllegy = () => {
-    alert('Allergy Added');
-    open_allergy_list.value = false;
+const handleAddConsultant = () => {
+    alert('Consultant Selected');
+    open_consultants_list.value = false;
 }
 
-const closeAllergyList = () => {
-    open_allergy_list.value = false;
+const closeConsultantsList = () => {
+    open_consultants_list.value = false;
 }
 
 </script>

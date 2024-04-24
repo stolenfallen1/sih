@@ -14,6 +14,7 @@
       </v-btn>
       <v-btn
         @click="handleNew"
+        :disabled="!isSelectedUser"
         prepend-icon="mdi-plus-outline"
         width="100"
         color="primary"
@@ -97,7 +98,7 @@
     :search_payload="search_payload"
     @open-form="openAddFormDialog"
   />
-  <InPatientRegistration :form_dialog="form_dialog" @close-dialog="closeDialog" />
+  <InPatientRegistration :form_dialog="form_dialog" @close-dialog="closeAddFormDialog" />
 </template>
 
 <script setup>
@@ -174,7 +175,6 @@ const selectedUser = (item) => {
   }
 };
 const handleView = () => {
-  
 };
 const handleEdit = () => {
   
@@ -188,7 +188,7 @@ const closeCentralFormDialog = () => {
 const openAddFormDialog = () => {
   form_dialog.value = true;
 };
-const closeDialog = () => {
+const closeAddFormDialog = () => {
   form_dialog.value = false;
 };
 const selectedEmergencyPatient = () => {
