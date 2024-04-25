@@ -38,10 +38,10 @@
                     placeholder="Select Case Type"
                     v-model="payload.case_type"
                     :readonly="clicked_option === 'view'"
+                    :clearable="clicked_option === 'new' || clicked_option === 'edit'"
                     required
                     hide-details
-                    clearable
-                    :items="[]"
+                    :items="['New', 'Old']"
                     density="compact"
                     variant="solo"
                 ></v-autocomplete>
@@ -56,9 +56,9 @@
                     placeholder="Select How Admitted"
                     v-model="payload.how_admitted"
                     :readonly="clicked_option === 'view'"
+                    :clearable="clicked_option === 'new' || clicked_option === 'edit'"
                     required
                     hide-details
-                    clearable
                     :items="[]"
                     density="compact"
                     variant="solo"
@@ -73,8 +73,8 @@
                     item-value="id"
                     v-model="payload.area_bed_no"
                     :readonly="clicked_option === 'view'"
+                    :clearable="clicked_option === 'new' || clicked_option === 'edit'"
                     hide-details
-                    clearable
                     :items="[]"
                     density="compact"
                     variant="solo"
@@ -88,9 +88,9 @@
                     placeholder="Select Transaction Type"
                     v-model="payload.mscAccount_trans_types"
                     :readonly="clicked_option === 'view'"
+                    :clearable="clicked_option === 'new' || clicked_option === 'edit'"
                     required
                     hide-details
-                    clearable
                     :items="[]"
                     density="compact"
                     variant="solo"
@@ -105,9 +105,9 @@
                     placeholder="Select Patient Category"
                     v-model="payload.mscPatient_category"
                     :readonly="clicked_option === 'view'"
+                    :clearable="clicked_option === 'new' || clicked_option === 'edit'"
                     required
                     hide-details
-                    clearable
                     :items="[]"
                     density="compact"
                     variant="solo"
@@ -121,9 +121,9 @@
                     placeholder="Select Hospital Plan"
                     v-model="payload.hosp_plan"
                     :readonly="clicked_option === 'view'"
+                    :clearable="clicked_option === 'new' || clicked_option === 'edit'"
                     required
                     hide-details
-                    clearable
                     :items="hospitalizationPlans"
                     density="compact"
                     variant="solo"
@@ -138,8 +138,8 @@
                     placeholder="Select Classification"
                     v-model="payload.classification"
                     :readonly="clicked_option === 'view'"
+                    :clearable="clicked_option === 'new' || clicked_option === 'edit'"
                     hide-details
-                    clearable
                     :items="[]"
                     density="compact"
                     variant="solo"
@@ -153,8 +153,8 @@
                     placeholder="Select Membership"
                     v-model="payload.msc_PHIC_Memberships"
                     :readonly="clicked_option === 'view'"
+                    :clearable="clicked_option === 'new' || clicked_option === 'edit'"
                     hide-details
-                    clearable
                     :items="[]"
                     density="compact"
                     variant="solo"
@@ -170,8 +170,8 @@
                     placeholder="Select Service Type"
                     v-model="payload.mscService_type"
                     :readonly="clicked_option === 'view'"
+                    :clearable="clicked_option === 'new' || clicked_option === 'edit'"
                     hide-details
-                    clearable
                     :items="[]"
                     density="compact"
                     variant="solo"
@@ -185,8 +185,8 @@
                     placeholder="Select Sub Service Type"
                     v-model="payload.mscService_type2"
                     :readonly="clicked_option === 'view'"
+                    :clearable="clicked_option === 'new' || clicked_option === 'edit'"
                     hide-details
-                    clearable
                     :items="[]"
                     density="compact"
                     variant="solo"
@@ -200,9 +200,9 @@
                     placeholder="Select Price Group"
                     v-model="payload.mscPrice_Groups"
                     :readonly="clicked_option === 'view'"
+                    :clearable="clicked_option === 'new' || clicked_option === 'edit'"
                     required
                     hide-details
-                    clearable
                     :items="[]"
                     density="compact"
                     variant="solo"
@@ -216,9 +216,9 @@
                     placeholder="Select Price Schemes"
                     v-model="payload.mscPrice_Schemes"
                     :readonly="clicked_option === 'view'"
+                    :clearable="clicked_option === 'new' || clicked_option === 'edit'"
                     required
                     hide-details
-                    clearable
                     :items="[]"
                     density="compact"
                     variant="solo"
@@ -245,8 +245,8 @@
                     placeholder="Select Reffered From"
                     v-model="payload.referred_from_HCI"
                     :readonly="clicked_option === 'view'"
+                    :clearable="clicked_option === 'new' || clicked_option === 'edit'"
                     hide-details
-                    clearable
                     :items="[]"
                     density="compact"
                     variant="solo"
@@ -344,8 +344,8 @@
                     placeholder="Select Department"
                     v-model="payload.department"
                     :readonly="clicked_option === 'view'"
+                    :clearable="clicked_option === 'new' || clicked_option === 'edit'"
                     hide-details
-                    clearable
                     :items="[]"
                     density="compact"
                     variant="solo"
@@ -358,8 +358,8 @@
                     item-value="id"
                     v-model="payload.newborn_status"
                     :readonly="clicked_option === 'view'"
+                    :clearable="clicked_option === 'new' || clicked_option === 'edit'"
                     hide-details
-                    clearable
                     :items="[]"
                     density="compact"
                     variant="solo"
@@ -373,8 +373,8 @@
                     placeholder="Select Source of Admission"
                     v-model="payload.source_of_admission"
                     :readonly="clicked_option === 'view'"
+                    :clearable="clicked_option === 'new' || clicked_option === 'edit'"
                     hide-details
-                    clearable
                     :items="[]"
                     density="compact"
                     variant="solo"
@@ -388,8 +388,8 @@
                     placeholder="Select Medical Social Service"
                     v-model="payload.medical_social_service"
                     :readonly="clicked_option === 'view'"
+                    :clearable="clicked_option === 'new' || clicked_option === 'edit'"
                     hide-details
-                    clearable
                     :items="['A', 'B', 'C']"
                     density="compact"
                     variant="solo"

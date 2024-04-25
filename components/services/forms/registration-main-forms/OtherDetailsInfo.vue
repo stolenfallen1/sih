@@ -21,7 +21,7 @@
                     v-model="payload.religion_id"
                     :readonly="clicked_option === 'view'"
                     hide-details
-                    clearable
+                    :clearable="clicked_option === 'new' || clicked_option === 'edit'"
                     :items="['Catholic', 'Muslim', 'Christian']"
                     density="compact"
                     variant="solo"
@@ -36,7 +36,7 @@
                     v-model="payload.nationality_id"
                     :readonly="clicked_option === 'view'"
                     hide-details
-                    clearable
+                    :clearable="clicked_option === 'new' || clicked_option === 'edit'"
                     :items="['Spanish', 'Japanese', 'Filipino']"
                     density="compact"
                     variant="solo"
@@ -101,7 +101,7 @@
                         :disabled="!payload.dead_on_arrival"
                         :readonly="clicked_option === 'view'"
                         hide-details
-                        clearable
+                        :clearable="clicked_option === 'new' || clicked_option === 'edit'"
                         :items="[]"
                         density="compact"
                         variant="solo"
