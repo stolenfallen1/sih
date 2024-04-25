@@ -3,7 +3,7 @@
     <v-card-actions>
       <v-spacer></v-spacer>
       <v-btn
-        @click="handleView"
+        @click="handleView('view')"
         :disabled="isSelectedUser"
         prepend-icon="mdi-eye-outline"
         width="100"
@@ -13,7 +13,7 @@
         View
       </v-btn>
       <v-btn
-        @click="handleNew"
+        @click="handleNew('new')"
         :disabled="!isSelectedUser"
         prepend-icon="mdi-plus-outline"
         width="100"
@@ -23,7 +23,7 @@
         New
       </v-btn>
       <v-btn
-        @click="handleEdit"
+        @click="handleEdit('edit')"
         prepend-icon="mdi-pencil"
         :disabled="isSelectedUser"
         width="100"
@@ -98,7 +98,7 @@
     :search_payload="search_payload"
     @open-form="openAddFormDialog"
   />
-  <EmergencyRegistration :form_dialog="form_dialog" @close-dialog="closeAddFormDialog" />
+  <EmergencyRegistration :clicked_option="clicked_option" :form_dialog="form_dialog" @close-dialog="closeAddFormDialog" />
 </template>
 
 <script setup>
@@ -118,6 +118,7 @@ const central_form_dialog = ref(false);
 const search_results = ref([]);
 const search_payload = ref({});
 const form_dialog = ref(false);
+const clicked_option = ref("");
 
 const totalItems = ref(0);
 const itemsPerPage = ref(15);
@@ -174,12 +175,16 @@ const selectedUser = (item) => {
     isSelectedUser.value = true;
   }
 };
-const handleView = () => {
+const handleView = (clickedOption) => {
+  clicked_option.value = clickedOption;
+  form_dialog.value = true;
 };
-const handleEdit = () => {
-  
+const handleEdit = (clickedOption) => {
+  clicked_option.value = clickedOption;
+  form_dialog.value = true;
 };
-const handleNew = () => {
+const handleNew = (clickedOption) => {
+  clicked_option.value = clickedOption;
   central_form_dialog.value = true;
 };
 const closeCentralFormDialog = () => {

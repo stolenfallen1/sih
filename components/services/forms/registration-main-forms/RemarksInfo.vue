@@ -1,21 +1,17 @@
 <template>
-    <v-card>
-        <v-card-text>
-                <v-row>
-                    <v-col cols="12">
-                        <v-list-subheader class="form-header">Remarks</v-list-subheader>
-                        <v-textarea
-                            variant="solo"
-                            placeholder="Enter remarks here..."
-                            v-model="payload.registration_remarks"
-                            hide-details
-                            density="compact"
-                            :readonly="clicked_option === 'view'"
-                        ></v-textarea>
-                    </v-col>
-                </v-row>
-            </v-card-text>
-        </v-card>
+    <v-row>
+        <v-col cols="12">
+            <v-list-subheader class="form-header">Remarks</v-list-subheader>
+            <v-textarea
+                variant="solo"
+                placeholder="Enter remarks here..."
+                v-model="payload.registration_remarks"
+                hide-details
+                density="compact"
+                :readonly="clicked_option === 'view'"
+            ></v-textarea>
+        </v-col>
+    </v-row>
 </template>
 
 <script setup>

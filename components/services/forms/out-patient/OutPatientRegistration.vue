@@ -66,7 +66,9 @@
                         density="compact"
                     ></v-checkbox>
                     <v-spacer></v-spacer>
-                    <v-btn v-if="clicked_option === 'new' || clicked_option === 'edit'" class="bg-primary text-white" type="submit" @click="testSubmit">Register</v-btn>
+                    <v-btn v-if="clicked_option === 'new' || clicked_option === 'edit'" class="bg-primary text-white" type="submit" @click="validateBeforeSubmit">
+                        {{ clicked_option === 'new' ? 'Register Patient' : 'Update Patient' }}
+                    </v-btn>
                 </v-card-actions>
             </v-card>
         </form>
@@ -85,14 +87,14 @@ const props = defineProps({
         default: () => ''
     }
 });
-const checkType = ref(false);
 let tab = ref("0");
 const formType = ref('outpatient');
 
 const payload = ref({});
+const checkType = ref(false);
 const tab_payload = ref({
-    tab1_status: true,
-    tab2_status: true,
+    patient_basic_info: true,
+    registry_information: true,
 })
 
 const emits = defineEmits(['close-dialog']);
@@ -105,30 +107,36 @@ const closeDialog = () => {
 
 const validation = () => {
     if(!payload.value.lastname || !payload.value.firstname || !payload.value.sex_id || !payload.value.civilstatus_id || !payload.value.birthdate) {
-        console.log('Please fill up all required fields');
+        alert('Please fill up all required fields');
         tab.value = "0";
         checkType.value = true;
-        tab_payload.value.tab1_status = false;
+        tab_payload.value.patient_basic_info = false;
     } else {
-        if(!payload.value.case_datetime || !payload.value.case_type || !payload.value.how_admitted || !payload.value.mscAccount_trans_types || !payload.value.mscPatient_category || !payload.value.hosp_plan || !payload.value.mscPrice_Groups || !payload.value.mscPrice_Schemes) {
-            console.log('Please fill up all required fields');
+        if(!payload.value.case_datetime || !payload.value.case_type || !payload.value.mscAccount_trans_types || !payload.value.mscPatient_category || !payload.value.hosp_plan || !payload.value.mscPrice_Groups || !payload.value.mscPrice_Schemes) {
+            alert('Please fill up all required fields');
             tab.value = "1";
             checkType.value = true;
-            tab_payload.value.tab2_status = false;
+            tab_payload.value.registry_information = false;
         } 
     }
 }
 
-const testSubmit = () => {
+const validateBeforeSubmit = () => {
     validation();
 }
 
 const onSubmit = () => {
-    if(tab_payload.value.tab1_status && tab_payload.value.tab2_status) {
-        console.log('Please fill up all required fields');
+    if(tab_payload.value.patient_basic_info && tab_payload.value.registry_information) {
+        alert('Please fill up all required fields');
     } else {
         alert('Successfully Registered Patient!');
+        tab.value = "0";
         payload.value = {};
+        checkType.value = false;
+        tab_payload.value = {
+            patient_basic_info: true,
+            registry_information: true,
+        }
     }
 }
 </script>

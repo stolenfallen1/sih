@@ -63,11 +63,11 @@
                     item-title="suffix_name"
                     item-value="id"
                     placeholder="Select Suffix"
-                    :items="[]"
+                    items="suffix"
                     v-model="payload.suffix_id"
                     :readonly="clicked_option === 'view'"
                     hide-details
-                    clearable
+                    :clearable="clicked_option === 'new' || clicked_option === 'edit'"
                     density="compact"
                     variant="solo"
                 ></v-autocomplete>
@@ -95,8 +95,8 @@
                     :items="[]"
                     v-model="payload.sex_id"
                     :readonly="clicked_option === 'view'"
+                    :clearable="clicked_option === 'new' || clicked_option === 'edit'"
                     hide-details
-                    clearable
                     density="compact"
                     variant="solo"
                 ></v-autocomplete>
@@ -111,8 +111,8 @@
                     :items="[]"
                     v-model="payload.civilstatus_id"
                     :readonly="clicked_option === 'view'"
+                    :clearable="clicked_option === 'new' || clicked_option === 'edit'"
                     hide-details
-                    clearable
                     density="compact"
                     variant="solo"
                 ></v-autocomplete>
@@ -279,6 +279,8 @@ const props = defineProps({
         default: () => ''
     }
 })
+
+const suffix = ref(['Jr.', 'Sr.', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII',])
 </script>
 
 <style scoped>
