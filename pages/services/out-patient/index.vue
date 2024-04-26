@@ -106,10 +106,13 @@
   <OpdPostDiagnosticPackageDialog :show="OpdPostDiagnosticMedicalPackage" @close-dialog="useSubComponents('OpdPostDiagnosticMedicalPackage', false)"/> 
   <OpdPostAdjustmentDialog :show="OpdPostAdjustments" @close-dialog="useSubComponents('OpdPostAdjustments', false)" />
   <OpdPostProfessionalFeesDialog :show="OpdPostProfessionalFees" @close-dialog="useSubComponents('OpdPostProfessionalFees', false)" />
+  <OpdPostArTransferDialog :show="OpdPostArTransfer" @close-dialog="useSubComponents('OpdPostArTransfer', false)" />
   <OpdViewExamUpshotDialog :show="OpdViewExaminationUpshot" @close-dialog="useSubComponents('OpdViewExaminationUpshot', false)" />
+  <OpdApplyPromissoryNoteDialog :show="OpdApplyPromissoryNote" @close-dialog="useSubComponents('OpdApplyPromissoryNote', false)" />
   <OpdTagAsMghDialog :show="OpdTagAsMgh" @close-dialog="useSubComponents('OpdTagAsMgh', false)" />
   <OpdUntagAsMghDialog :show="OpdUntagAsMgh" @close-dialog="useSubComponents('OpdUntagAsMgh', false)" />
   <OpdDischargeDialog :show="OpdDischarge" @close-dialog="useSubComponents('OpdDischarge', false)" />
+  <OpdDischargeInstructionDialog :show="OpdDischargeInstruction" @close-dialog="useSubComponents('OpdDischargeInstruction', false)" />
   <OpdPostFinalDiagnosisDialog :show="OpdPostFinalDiagnosis" @close-dialog="useSubComponents('OpdPostFinalDiagnosis', false)" />
   <OpdSoaBillingDialog :show="OpdSoaBillingStatement" @close-dialog="useSubComponents('OpdSoaBillingStatement', false)" />
   <OpdViewPrintReportsDialog :show="OpdViewPrintReports" @close-dialog="useSubComponents('OpdViewPrintReports', false)" />
@@ -127,10 +130,13 @@ const {
   OpdPostDiagnosticMedicalPackage,
   OpdPostAdjustments,
   OpdPostProfessionalFees,
+  OpdPostArTransfer,
   OpdViewExaminationUpshot,
+  OpdApplyPromissoryNote,
   OpdTagAsMgh,
   OpdUntagAsMgh,
   OpdDischarge,
+  OpdDischargeInstruction,
   OpdPostFinalDiagnosis,
   OpdSoaBillingStatement,
   OpdViewPrintReports,

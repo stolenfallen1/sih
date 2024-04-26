@@ -879,6 +879,7 @@ export default [
                     {
                         label: "Post A/R Transfer",
                         icon: "mdi-file-document-edit",
+                        form: "OpdPostArTransfer",
                         rule: "",
                     },
                     {
@@ -895,6 +896,7 @@ export default [
                     {
                         label: "Apply Promissory Note",
                         icon: "mdi-file-document-edit",
+                        form: "OpdApplyPromissoryNote",
                         rule: "",
                     },
                     {
@@ -923,6 +925,7 @@ export default [
                     {
                         label: "Discharge Instruction",
                         icon: "mdi-file-document-edit",
+                        form: "OpdDischargeInstruction",
                         rule: "",
                     },
                     {
