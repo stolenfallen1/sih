@@ -42,6 +42,15 @@
       >
         Deactive</v-btn
       >
+      <v-btn
+        @click="ViewSummary"
+        prepend-icon="mdi-information-box-outline"
+        width="150"
+        color="primary"
+        class="bg-warning text-white"
+      >
+        Summary</v-btn
+      >
     </v-card-actions>
   </v-card>
   <v-card class="mb-2" elevation="4">
@@ -99,6 +108,13 @@
     @close="closeConfirmation"
     @submit="submitRoomsandBedForm"
   />
+
+  <SummaryModal 
+    :show="open_summary_modal"
+    :summary_header="'Rooms and Beds'"
+    :data="rooms_beds_test_data"
+    @close-dialog="closeViewSummary"
+  />
 </template>
 
 <script setup>
@@ -125,6 +141,19 @@ const itemsPerPage = ref(15);
 const search = ref("");
 const params = ref("");
 const form_payload = ref({});
+const open_summary_modal = ref(false);
+const rooms_beds_test_data = ref([
+  { label: "Total No. of Rooms", value: "123" },
+  { label: "Available Rooms", value: "456" },
+  { label: "For Renovation", value: "789" },
+  { label: "Fully Occupied", value: "333" },
+  { label: "Total No. of Beds", value: "666" },
+  { label: "Available Beds", value: "999" },
+  { label: "Occupied Beds", value: "111" },
+  { label: "Beds for Cleaning", value: "222" },
+  { label: "Beds for Repair", value: "846" },
+]);  
+
 const headers = [
   {
     title: "Building",
@@ -202,6 +231,13 @@ const DeactiveUser = () => {
   form_payload.value.type = 'edit';
   form_dialog.value = true;
 };
+
+const ViewSummary = () => {
+  open_summary_modal.value = true;
+}
+const closeViewSummary = () => {
+  open_summary_modal.value = false;
+}
 
 const closeConfirmation = ()=>{
   confirmationDialog.value = false;
