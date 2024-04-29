@@ -1,36 +1,14 @@
 <template>
-    <v-dialog :model-value="show" rounded="lg" scrollable @update:model-value="closeDialog" max-width="950px">
+    <v-dialog :model-value="show" rounded="lg" scrollable @update:model-value="closeDialog" max-width="1120px">
         <v-card rounded="lg">
             <v-toolbar density="compact" color="#6984ff" hide-details>
-                <v-toolbar-title>Consultant's Patient List {{ selectedRowDetails.id }}</v-toolbar-title>
+                <v-toolbar-title>Room and Beds Occupants {{ selectedRowDetails.id }}</v-toolbar-title>
                 <v-btn color="white" @click="closeDialog">
                     <v-icon>mdi-close</v-icon>
                 </v-btn>
             </v-toolbar>
             <v-divider></v-divider>
             <v-card-text>
-                <v-row>
-                    <v-col cols="4">
-                        <v-autocomplete 
-                            label="Select Patient Type"
-                            variant="outlined"
-                            density="compact"
-                            hide-details
-                        ></v-autocomplete>
-                    </v-col>
-                    <v-col cols="8">
-                        <v-text-field
-                            label="Search by Description"
-                            density="compact"
-                            variant="outlined"
-                            prepend-inner-icon="mdi-magnify"
-                            v-model="data.keyword"
-                            @keyup.enter="search"
-                        >
-                        </v-text-field>
-                    </v-col>
-                </v-row>
-                <v-divider></v-divider>
                 <v-data-table-server 
                     class="animated animatedFadeInUp fadeInUp"
                     v-model:items-per-page="itemsPerPage"
@@ -81,12 +59,14 @@ const { selectedRowDetails } = storeToRefs(useSubcomponentSelectedRowDetailsStor
 
 const emits = defineEmits(['close-dialog'])
 const headers = [
-    { title: 'Registry DateTime', key: 'registry_datetime', align: 'start', width:"15%" },
-    { title: 'ID', key: 'id', align: 'start', width:"10%" },
-    { title: 'Patient Name', key: 'patient_name', align: 'start', width:"25%" },
-    { title: 'Birthdate', key: 'birthdate', align: 'start', width:"15%" },
-    { title: 'Gender', key: 'gender', align: 'start', width: "10" },
-    { title: 'Citizenship', key: 'citizenship', align: 'start', width: "10" },
+    { title: 'Bed No.', key: 'bed_no', align: 'start', },
+    { title: 'Bed Status', key: 'bed_status', align: 'start', },
+    { title: 'Case No.', key: 'case_no', align: 'start', },
+    { title: 'Case Date', key: 'casedate', align: 'start', },
+    { title: 'Patient Name', key: 'patient_name', align: 'start', },
+    { title: 'Gender', key: 'gender', align: 'start', },
+    { title: 'Service Type', key: 'service_type', align: 'start', },
+    { title: 'Sub-Service Type', key: 'sub_service_type', align: 'start', },
 ];
 const data = ref({
     title: "List of Item Examination",
@@ -114,9 +94,6 @@ const loadItems = async(page = null,itemsPerPage = null,sortBy = null)=>{
         totalItems.value = response.total;
         data.value.loading = false;
     }
-}
-const search = ()=>{
-    loadItems();
 }
 const closeDialog = () => {
     emits('close-dialog')

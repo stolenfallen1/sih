@@ -50,6 +50,7 @@
                     <template #bottom></template>
                 </v-data-table-server>
             </v-card-text>
+            <v-divider></v-divider>
             <v-card-actions>
                 <v-btn color="blue-darken-1 border border-info" @click="closeDialog"> Close </v-btn>
                 <v-spacer></v-spacer>

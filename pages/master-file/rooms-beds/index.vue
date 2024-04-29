@@ -115,11 +115,16 @@
     :data="rooms_beds_test_data"
     @close-dialog="closeViewSummary"
   />
+
+  <MFRoomOccupantsDialog :show="MFRoomOccupants" @close-dialog="useSubComponents('MFRoomOccupants', false)" />
 </template>
 
 <script setup>
 import RoomsandBedsForm from "./Form.vue";
 import ReusableTable from "~/components/reusables/ReusableTable.vue";
+const {
+  MFRoomOccupants,
+} = storeToRefs(MFRoomsAndBedsDialog());
 
 definePageMeta({
   layout: "root-layout",

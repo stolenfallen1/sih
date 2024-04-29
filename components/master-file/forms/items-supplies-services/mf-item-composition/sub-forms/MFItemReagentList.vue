@@ -1,9 +1,9 @@
 <template>
-    <v-dialog :model-value="open_selection_list" rounded="lg" scrollable @update:model-value="closeDialog" max-width="700px">
+    <v-dialog :model-value="open_reagent_list" rounded="lg" scrollable @update:model-value="closeDialog" max-width="750px">
         <form @submit.prevent="onSubmit">
             <v-card rounded="lg">
                 <v-toolbar density="compact" color="#6984ff" hide-details>
-                    <v-toolbar-title>Item Selection List {{ selectedRowDetails.id }}</v-toolbar-title>
+                    <v-toolbar-title>Item Reagent Selection List {{ selectedRowDetails.id }}</v-toolbar-title>
                     <v-btn color="white" @click="closeDialog">
                         <v-icon>mdi-close</v-icon>
                     </v-btn>
@@ -61,7 +61,7 @@
 
 <script setup>
 const props = defineProps({
-    open_selection_list: {
+    open_reagent_list: {
         type: Boolean,
         default: () => false,
         required: true,
@@ -82,7 +82,7 @@ const headers = [
         width: '15%',
     },
     { title: 'Item Description', key: 'item_description', align: 'start', width:"50%" },
-    { title: 'Category', key: 'category', align: 'start', width:"30%" },
+    { title: 'Unit', key: 'unit', align: 'start', width:"30%" },
 ];
 const data = ref({
     title: "List of Item Examination",
