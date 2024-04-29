@@ -125,6 +125,10 @@
       @close-dialog="closeViewSummary"
     />
   </v-card>
+  <!-- Master File Consultants Sub components -->
+  <MFItemExaminationDialog :show="MFListOfItemExaminations" @close-dialog="useSubComponents('MFListOfItemExaminations', false)" />
+  <MFListOfPatientsDialog :show="MFListOfPatients" @close-dialog="useSubComponents('MFListOfPatients', false)" />
+  <MFGetDoctorAccreditationNoDialog :show="MFGetDoctorAccreditationNo" @close-dialog="useSubComponents('MFGetDoctorAccreditationNo', false)" />
 </template>
 
 <script setup>
@@ -136,6 +140,12 @@ let userdetails = JSON.parse(nuxtStorage.localStorage.getData("user_details"));
 // import { storeToRefs } from "pinia";
 // import { useSnackBarStore } from "~/store/SnackBar";
 // const { setSnackbar } = useSnackBarStore();
+const {
+  MFListOfItemExaminations,
+  MFListOfPatients,
+  MFGetDoctorAccreditationNo,
+  MFDoctorsAccreditationCheck,
+} = storeToRefs(MFConsultantsDialog());
 
 definePageMeta({
   layout: "root-layout",
