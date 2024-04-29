@@ -127,7 +127,7 @@
 import { storeToRefs } from "pinia";
 import ReusableTable from "~/components/reusables/ReusableTable.vue";
 import CentralSupplyLookUp from "~/components/reusables/CentralSupplyLookUp.vue";
-import ItemSuppliesForm from "~/components/master-file/forms/items-supplies/Form.vue";
+import ItemSuppliesForm from "~/components/master-file/forms/items-supplies-services/ItemSuppliesForm.vue";
 
 definePageMeta({
     layout: "root-layout",

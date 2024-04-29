@@ -85,7 +85,7 @@
       </template>
     </ReusableTable>
   </v-card>
-  <FormContainer
+  <ServicesForm
     :form_payload="form_payload"
     @submit-form="confirmation"
     :item_supplies_form="form_container"
@@ -120,13 +120,18 @@
     :data="services_test_data"
     @close-dialog="closeViewSummary"
   />
+
+  <MFItemCompositionDialog :show="MFItemComposition" @close-dialog="useSubComponents('MFItemComposition', false)" />
 </template>
 
 <script setup>
 import { storeToRefs } from "pinia";
 import ReusableTable from "~/components/reusables/ReusableTable.vue";
-import FormContainer from "~/components/master-file/forms/services/Form.vue";
+import ServicesForm from "~/components/master-file/forms/items-supplies-services/ServicesForm.vue";
 import CentralSupplyLookUp from "~/components/reusables/CentralSupplyLookUp.vue";
+const {
+  MFItemComposition,
+} = storeToRefs(MFItemsAndServicesDialog());
 
 definePageMeta({
   layout: "root-layout",
