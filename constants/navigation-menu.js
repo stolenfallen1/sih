@@ -186,23 +186,27 @@ export default [
                     {
                         label: "Item Examinations",
                         icon: "mdi-file-document-edit",
+                        form: "MFListOfItemExaminations",
                         rule: "",
                     },
                     {
                         label: "List of Patients",
                         icon: "mdi-file-document-edit",
+                        form: "MFListOfPatients",
                         rule: "",
                     },
                     {
                         label: "Get Doctor's PHIC Accredition No.",
                         icon: "mdi-file-document-edit",
+                        form: "MFGetDoctorAccreditationNo",
                         rule: "",
                     },
-                    {
-                        label: "Doctor's Accreditation Check",
-                        icon: "mdi-file-document-edit",
-                        rule: "",
-                    },
+                    // {
+                    //     label: "Doctor's Accreditation Check",
+                    //     icon: "mdi-file-document-edit",
+                    //     form: "MFDoctorsAccreditationCheck",
+                    //     rule: "",
+                    // },
                 ],
                 processing_and_queries: [
                     {
