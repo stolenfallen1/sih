@@ -43,6 +43,15 @@
             >
                 Deactive</v-btn
             >
+            <v-btn
+                @click="ViewSummary"
+                prepend-icon="mdi-information-box-outline"
+                width="150"
+                color="primary"
+                class="bg-warning text-white"
+            >
+                Summary</v-btn
+            >
         </v-card-actions>
     </v-card>
     <v-card class="mb-2" elevation="4">
@@ -94,17 +103,23 @@
             @submit="submitItemandSuppliesForm"
         />
 
-          <!-- Central Lookup Search Form -->
-            <CentralSupplyLookUp 
-                :central_form_dialog="central_form_dialog"
-                @close-dialog="closeCentralFormDialog"
-                :headers="center_form_headers"
-                @search="SearchItemandSupplies"
-                @selected-row="selectedItemAndSupplies"
-                :search_results="search_results"
-                :search_payload="search_payload"
-                @open-form="openAddFormDialog"
-            />
+        <!-- Central Lookup Search Form -->
+        <CentralSupplyLookUp 
+            :central_form_dialog="central_form_dialog"
+            @close-dialog="closeCentralFormDialog"
+            :headers="center_form_headers"
+            @search="SearchItemandSupplies"
+            @selected-row="selectedItemAndSupplies"
+            :search_results="search_results"
+            :search_payload="search_payload"
+            @open-form="openAddFormDialog"
+        />
+        <SummaryModal 
+            :show="open_summary_modal"
+            :summary_header="'Items and Supplies'"
+            :data="items_supplies_test_data"
+            @close-dialog="closeViewSummary"
+        />
     </v-card>
 </template>
 
@@ -146,6 +161,13 @@ const params = ref("");
 const loading = ref(true);
 const search_results = ref([]);
 const search_payload = ref({});
+const open_summary_modal = ref(false);
+const items_supplies_test_data = ref([
+    { label: "Drugs and Medicines", value: "123" },
+    { label: "Supplies", value: "456" },
+    { label: "Assets .Equipment", value: "666" },
+    { label: "Others", value: "999" },
+]);  
 
 const center_form_headers = ref([
    {
@@ -369,6 +391,13 @@ const closeFormDialog = () => {
 };
 
 const DeactiveUser = () => {};
+
+const ViewSummary = () => {
+    open_summary_modal.value = true;
+}
+const closeViewSummary = () => {
+    open_summary_modal.value = false;
+}
 
 const SearchItemandSupplies = async (payload) => {
  

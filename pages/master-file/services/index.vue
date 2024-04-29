@@ -42,6 +42,15 @@
       >
         Deactive</v-btn
       >
+      <v-btn
+        @click="ViewSummary"
+        prepend-icon="mdi-information-box-outline"
+        width="150"
+        color="primary"
+        class="bg-warning text-white"
+      >
+        Summary</v-btn
+      >
     </v-card-actions>
   </v-card>
   <v-card class="mb-2" elevation="4">
@@ -103,7 +112,14 @@
     :loading="loading"
     @close="closeConfirmation"
     @submit="submitItemandSuppliesForm"
-    />
+  />
+
+  <SummaryModal 
+    :show="open_summary_modal"
+    :summary_header="'Services'"
+    :data="services_test_data"
+    @close-dialog="closeViewSummary"
+  />
 </template>
 
 <script setup>
@@ -144,6 +160,12 @@ const form_payload = ref({
 const search_payload = ref({});
 const form_container = ref(false);
 const central_form_dialog = ref(false);
+const open_summary_modal = ref(false);
+const services_test_data = ref([
+  { label: "Examinations", value: "123" },
+  { label: "Procedures", value: "456" },
+]);  
+
 const center_form_headers = ref([
   {
     title: "Code",
@@ -375,6 +397,13 @@ const handleNew = () => {
   central_form_dialog.value = true;
 };
 const DeactiveUser = () => {};
+
+const ViewSummary = () => {
+  open_summary_modal.value = true;
+}
+const closeViewSummary = () => {
+  open_summary_modal.value = false;
+}
 
 const loadItems = async (options = null, searchkeyword = null, item_group_id = null) => {
   try {

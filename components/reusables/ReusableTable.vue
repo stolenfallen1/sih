@@ -69,8 +69,6 @@
 </template>
 
 <script setup>
-import "../../../styes/animation.css";
-
 const emits = defineEmits([
     "fetchPage",
     "tab-change",

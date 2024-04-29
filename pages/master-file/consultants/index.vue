@@ -42,6 +42,15 @@
       >
         Deactive</v-btn
       >
+      <v-btn
+        @click="ViewSummary"
+        prepend-icon="mdi-information-box-outline"
+        width="150"
+        color="primary"
+        class="bg-warning text-white"
+      >
+        Summary</v-btn
+      >
     </v-card-actions>
   </v-card>
   <v-card class="mb-2" elevation="4">
@@ -108,7 +117,13 @@
     :loading="loading"
     @close="closeConfirmation"
     @submit="submitDoctorsForm"
-  />
+    />
+    <SummaryModal 
+      :show="open_summary_modal"
+      :summary_header="'Consultant'"
+      :data="consultant_test_data"
+      @close-dialog="closeViewSummary"
+    />
   </v-card>
 </template>
 
@@ -148,6 +163,12 @@ const search_payload = ref({
 const form_dialog = ref(false);
 const central_form_dialog = ref(false);
 const search_results = ref([]);
+const open_summary_modal = ref(false);
+const consultant_test_data = ref([
+  { label: "Residents", value: "123" },
+  { label: "Regular Consultants", value: "456" },
+  { label: "Visiting Consultants", value: "789" },
+]);  
 
 const headers = [
   {
@@ -325,6 +346,13 @@ const handleNew = () => {
   central_form_dialog.value = true;
 };
 const DeactiveUser = () => {};
+
+const ViewSummary = () => {
+  open_summary_modal.value = true;
+}
+const closeViewSummary = () => {
+  open_summary_modal.value = false;
+}
 
 const closeCentralFormDialog = () => {
   central_form_dialog.value = false;
