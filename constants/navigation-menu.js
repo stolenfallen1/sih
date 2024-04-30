@@ -342,7 +342,7 @@ export default [
                     },
                 ],
             },
-            {
+            { 
                 label: "Services",
                 icon: "mdi-account-wrench-outline",
                 path: "/master-file/services",
@@ -351,6 +351,7 @@ export default [
                     {
                         label: "Item .Service Details",
                         icon: "mdi-file-document-edit",
+                        form: "",
                         rule: "",
                     },
                     {
@@ -384,9 +385,27 @@ export default [
                         rule: "",
                     },
                     {
+                        label: "Consultant Reader List",
+                        icon: "mdi-file-document-edit",
+                        form: "MFConsultantReaderList",
+                        rule: "",
+                    },
+                    {
                         label: "Medical Packages",
                         icon: "mdi-file-document-edit",
                         form: "MFMedicalPackages",
+                        rule: "",
+                    },
+                    {
+                        label: "Result Entries per Item",
+                        icon: "mdi-file-document-edit",
+                        form: "MFResultEntriesPerItem",
+                        rule: "",
+                    },
+                    {
+                        label: "Result Entries in General",
+                        icon: "mdi-file-document-edit",
+                        form: "MFResultEntriesInGeneral",
                         rule: "",
                     },
                     {
