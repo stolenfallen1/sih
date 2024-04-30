@@ -122,6 +122,13 @@
   />
 
   <MFItemCompositionDialog :show="MFItemComposition" @close-dialog="useSubComponents('MFItemComposition', false)" />
+  <MFManageDepartmentalAccessDialog :show="MFManageDepartmentalAccess" @close-dialog="useSubComponents('MFManageDepartmentalAccess', false)" />
+  <MFManageItemPricesDialog :show="MFManageItemPrices" @close-dialog="useSubComponents('MFManageItemPrices', false)" />
+  <MFManageItemDiscountsDialog :show="MFManageItemDiscounts" @close-dialog="useSubComponents('MFManageItemDiscounts', false)" />
+  <MFUpdateItemSellingPriceDialog :show="MFUpdateItemSellingPrice" @close-dialog="useSubComponents('MFUpdateItemSellingPrice', false)" />
+  <MFItemManufacturerDialog :show="MFItemManufacturer" @close-dialog="useSubComponents('MFItemManufacturer', false)" />
+  <MFConsultantReaderListDialog :show="MFConsultantReaderList" @close-dialog="useSubComponents('MFConsultantReaderList', false)" />
+  <MFResultEntriesInGeneralDialog :show="MFResultEntriesInGeneral" @close-dialog="useSubComponents('MFResultEntriesInGeneral', false)" />
 </template>
 
 <script setup>
@@ -131,6 +138,13 @@ import ServicesForm from "~/components/master-file/forms/items-supplies-services
 import CentralSupplyLookUp from "~/components/reusables/CentralSupplyLookUp.vue";
 const {
   MFItemComposition,
+  MFManageDepartmentalAccess,
+  MFManageItemPrices,
+  MFManageItemDiscounts,
+  MFUpdateItemSellingPrice,
+  MFItemManufacturer,
+  MFConsultantReaderList,
+  MFResultEntriesInGeneral,
 } = storeToRefs(MFItemsAndServicesDialog());
 
 definePageMeta({

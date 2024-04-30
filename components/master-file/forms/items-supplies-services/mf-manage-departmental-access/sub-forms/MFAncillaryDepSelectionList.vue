@@ -1,41 +1,24 @@
 <template>
-    <v-dialog :model-value="show" rounded="lg" scrollable @update:model-value="closeDialog" max-width="900px">
+    <v-dialog :model-value="open_ancillary_department_list" rounded="lg" scrollable @update:model-value="closeDialog" max-width="750px">
         <v-card rounded="lg">
             <v-toolbar density="compact" color="#6984ff" hide-details>
-                <v-toolbar-title>Select Items and Services for Selling Price Update Processing {{ selectedRowDetails.id }}</v-toolbar-title>
+                <v-toolbar-title>Ancillary Department Selection List {{ selectedRowDetails.id }}</v-toolbar-title>
                 <v-btn color="white" @click="closeDialog">
                     <v-icon>mdi-close</v-icon>
                 </v-btn>
             </v-toolbar>
             <v-divider></v-divider>
             <v-card-text>
-                <v-row>
-                    <v-col cols="12">
-                        <v-autocomplete
-                            label="Department"
-                            variant="outlined"
-                            density="compact"
-                            hide-details
-                        ></v-autocomplete>
-                    </v-col>
-                    <v-col cols="6" class="form-col">
-                        <v-autocomplete
-                            label="Item Group"
-                            variant="outlined"
-                            density="compact"
-                            hide-details
-                        ></v-autocomplete>
-                    </v-col>
-                    <v-col cols="6" class="form-col">
-                        <v-autocomplete
-                            label="Category"
-                            variant="outlined"
-                            density="compact"
-                            hide-details
-                        ></v-autocomplete>
-                    </v-col>
-                </v-row>
-                <v-divider class="mt-4"></v-divider>
+                <v-text-field
+                    label="Search here..."
+                    density="compact"
+                    variant="outlined"
+                    prepend-inner-icon="mdi-magnify"
+                    v-model="data.keyword"
+                    @keyup.enter="search"
+                >
+                </v-text-field>
+                <v-divider></v-divider>
                 <v-data-table-server 
                     class="animated animatedFadeInUp fadeInUp"
                     v-model:items-per-page="itemsPerPage"
@@ -53,7 +36,7 @@
                     height="50vh"
                     >
                     <template
-                        v-for="(head, index) of headers"  v-slot:[`item.${head.value}`]="props" >
+                        v-for="(head, index) of headers"  v-slot:[`item.${head.value}`]="props">
                         <td class="test" :props="props" :key="index">
                         <slot :name="head.value" :item="props.item">
                             {{ props.item[head.value] || "..." }}
@@ -67,38 +50,33 @@
             <v-card-actions>
                 <v-btn color="blue-darken-1 border border-info" @click="closeDialog"> Close </v-btn>
                 <v-spacer></v-spacer>
-                <v-btn class="bg-primary text-white" @click="openPriceUpdateDialog">Continue</v-btn>
+                <v-btn class="bg-primary text-white" @click="openFormDialog">Select</v-btn>
             </v-card-actions>
         </v-card>
     </v-dialog>
-    <MFPriceUpdateDialog :open_price_update_dialog="open_price_update_dialog" @close-dialog="closePriceUpdateDialog" @handle-submit="onSubmitEditedPrice" />
+    <MFManageWarehouseAccess :open_form_dialog="open_form_dialog" @close-dialog="closeFormDialog" @handle-submit="onSubmit" />
 </template>
 
 <script setup>
-import MFPriceUpdateDialog from "./sub-forms/MFPriceUpdateDialog.vue";
+import MFManageWarehouseAccess from './MFManageWarehouseAccess.vue';
 
 const props = defineProps({
-    show: {
+    open_ancillary_department_list: {
         type: Boolean,
         default: () => false,
         required: true,
     },
 });
 
-const payload = ref({});
-const open_price_update_dialog = ref(false);
-
 const { selectedRowDetails } = storeToRefs(useSubcomponentSelectedRowDetailsStore()); 
 
 const emits = defineEmits(['close-dialog'])
+const open_form_dialog = ref(false)
 const headers = [
-    { title: 'Item ID', key: 'item_id', align: 'center' },
-    { title: 'Item Description', key: 'item_description', align: 'start' },
-    { title: 'Unit', key: 'unit', align: 'start' },
-    { title: 'Cost', key: 'cost', align: 'start' },
+    { title: 'Department Name', key: 'department_name', align: 'center' },
 ];
 const data = ref({
-    title: "List of Item Composition",
+    title: "List of Item Examination",
     keyword: "",
     loading: false,
     filter: {},
@@ -124,16 +102,22 @@ const loadItems = async(page = null,itemsPerPage = null,sortBy = null)=>{
         data.value.loading = false;
     }
 }
+const search = ()=>{
+    loadItems();
+}
 
-const openPriceUpdateDialog = () => {
-    open_price_update_dialog.value = true;
+const openFormDialog = () => {
+    open_form_dialog.value = true;
 }
-const onSubmitEditedPrice = () => {
-    alert('Updated Successfully');
+
+const closeFormDialog = () => {
+    open_form_dialog.value = false;
+}
+
+
+const onSubmit = async (payload) => {
+    alert("Item Selected");
     emits('close-dialog');
-}
-const closePriceUpdateDialog = () => {
-    open_price_update_dialog.value = false;
 }
 
 const closeDialog = () => {
@@ -141,8 +125,5 @@ const closeDialog = () => {
 }
 </script>
 
-<style>
-.form-col {
-    margin-top: -16px !important;
-}
+<style scoped>
 </style>
