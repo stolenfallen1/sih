@@ -120,6 +120,12 @@
             :data="items_supplies_test_data"
             @close-dialog="closeViewSummary"
         />
+
+        <MFManageDepartmentalAccessDialog :show="MFManageDepartmentalAccess" @close-dialog="useSubComponents('MFManageDepartmentalAccess', false)" />
+        <MFManageItemPricesDialog :show="MFManageItemPrices" @close-dialog="useSubComponents('MFManageItemPrices', false)" />
+        <MFManageItemDiscountsDialog :show="MFManageItemDiscounts" @close-dialog="useSubComponents('MFManageItemDiscounts', false)" />
+        <MFUpdateItemSellingPriceDialog :show="MFUpdateItemSellingPrice" @close-dialog="useSubComponents('MFUpdateItemSellingPrice', false)" />
+        <MFItemManufacturerDialog :show="MFItemManufacturer" @close-dialog="useSubComponents('MFItemManufacturer', false)" />
     </v-card>
 </template>
 
@@ -128,6 +134,13 @@ import { storeToRefs } from "pinia";
 import ReusableTable from "~/components/reusables/ReusableTable.vue";
 import CentralSupplyLookUp from "~/components/reusables/CentralSupplyLookUp.vue";
 import ItemSuppliesForm from "~/components/master-file/forms/items-supplies-services/ItemSuppliesForm.vue";
+const {
+    MFManageDepartmentalAccess,
+    MFManageItemPrices,
+    MFManageItemDiscounts,
+    MFUpdateItemSellingPrice,
+    MFItemManufacturer,
+} = storeToRefs(MFItemsAndServicesDialog());
 
 definePageMeta({
     layout: "root-layout",
