@@ -4,8 +4,8 @@ export default defineNuxtConfig({
    runtimeConfig: {
     apiSecret:"1234",
     public: {
-      // apiBase: "http://10.4.15.12:8000/api" // Llyodieeee
-      apiBase: "http://10.4.15.15/api" // Sir Jucel Gwapooo
+      apiBase: "http://10.4.15.12:8000/api" // Llyodieeee
+      // apiBase: "http://10.4.15.15/api" // Sir Jucel Gwapooo
     },
   },
   app: {
@@ -21,7 +21,7 @@ export default defineNuxtConfig({
     transpile: ["vuetify"],
   },
   css: [
-    "~/assets/css/animation.css"
+    "~/assets/css/main.css",
   ],
   components: [
     {

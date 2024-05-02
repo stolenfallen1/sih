@@ -351,7 +351,7 @@ export default [
                     {
                         label: "Item .Service Details",
                         icon: "mdi-file-document-edit",
-                        form: "",
+                        form: "MFItemServicesDetails",
                         rule: "",
                     },
                     {
@@ -393,7 +393,7 @@ export default [
                     {
                         label: "Medical Packages",
                         icon: "mdi-file-document-edit",
-                        form: "MFMedicalPackages",
+                        // form: "MFMedicalPackages",
                         rule: "",
                     },
                     {
@@ -612,6 +612,7 @@ export default [
                     {
                         label: "Item .Service Details",
                         icon: "mdi-file-document-edit",
+                        form: "MFItemServicesDetails",
                         rule: "",
                     },
                     {
@@ -641,7 +642,7 @@ export default [
                     {
                         label: "Medical Packages",
                         icon: "mdi-file-document-edit",
-                        form: "MFMedicalPackages",
+                        // form: "MFMedicalPackages",
                         rule: "",
                     },
                     {

@@ -1,10 +1,11 @@
 export const MFItemsAndServicesDialog = defineStore('MFItemsAndServicesDialog',{
     state: () => ({
+        // MFItemServicesDetails: false,
         MFManageDepartmentalAccess: false,
         MFManageItemPrices: false,
         MFManageItemDiscounts: false,
         MFUpdateItemSellingPrice: false,
-        MFMedicalPackages: false,
+        // MFMedicalPackages: false,
         MFItemManufacturer: false,
         MFItemComposition: false,
         MFResultEntriesInGeneral: false,

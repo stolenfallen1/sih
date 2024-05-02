@@ -16,6 +16,8 @@
                                 label="Department"
                                 density="compact"
                                 variant="outlined"
+                                v-model="payload.department"
+                                readonly
                             ></v-autocomplete>
                         </v-col>
                         <v-col cols="6">
@@ -23,6 +25,7 @@
                                 label="Search by Description"
                                 density="compact"
                                 variant="outlined"
+                                v-model="payload.search_by_description"
                             ></v-text-field>
                         </v-col>
                     </v-row>
@@ -36,6 +39,7 @@
                                     <v-textarea
                                         label="Enter Examination Result Template Content here..."
                                         variant="outlined"
+                                        v-model="payload.examination_result_template_content"
                                         density="compact"
                                         hide-details
                                     ></v-textarea>
@@ -62,11 +66,14 @@ const props = defineProps({
         default: () => false,
         required: true,
     },
+    payload: {
+        type: Object,
+        default: () => ({}),
+    },
 });
 
 const { selectedRowDetails } = storeToRefs(useSubcomponentSelectedRowDetailsStore()); 
 
-const confirmation = ref(false);
 const emits = defineEmits(['close-dialog'])
 
 const onSubmit = () => {
