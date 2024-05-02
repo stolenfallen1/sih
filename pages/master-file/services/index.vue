@@ -129,6 +129,7 @@
   <MFItemManufacturerDialog :show="MFItemManufacturer" @close-dialog="useSubComponents('MFItemManufacturer', false)" />
   <MFConsultantReaderListDialog :show="MFConsultantReaderList" @close-dialog="useSubComponents('MFConsultantReaderList', false)" />
   <MFResultEntriesInGeneralDialog :show="MFResultEntriesInGeneral" @close-dialog="useSubComponents('MFResultEntriesInGeneral', false)" />
+  <MFResultEntriesPerItemDialog :show="MFResultEntriesPerItem" @close-dialog="useSubComponents('MFResultEntriesPerItem', false)" />
 </template>
 
 <script setup>
@@ -145,6 +146,7 @@ const {
   MFItemManufacturer,
   MFConsultantReaderList,
   MFResultEntriesInGeneral,
+  MFResultEntriesPerItem,
 } = storeToRefs(MFItemsAndServicesDialog());
 
 definePageMeta({

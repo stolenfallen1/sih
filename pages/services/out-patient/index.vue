@@ -42,6 +42,15 @@
       >
         Deactive</v-btn
       >
+      <v-btn
+        @click="ViewSummary"
+        prepend-icon="mdi-information-box-outline"
+        width="150"
+        color="primary"
+        class="bg-warning text-white"
+      >
+        Summary</v-btn
+      >
     </v-card-actions>
   </v-card>
   <v-card class="mb-2" elevation="4">
@@ -98,6 +107,14 @@
     :search_payload="search_payload"
     @open-form="openAddFormDialog"
   />
+
+  <SummaryModal 
+    :show="open_summary_modal"
+    :summary_header="'Outpatient'"
+    :data="outpatients_test_data"
+    @close-dialog="closeViewSummary"
+  />
+
   <OutPatientRegistration :clicked_option="clicked_option" :form_dialog="form_dialog" @close-dialog="closeAddFormDialog" />
   <!-- Out-patients Sub components -->
   <OpdSuspendDialog :show="OpdSuspend" @close-dialog="useSubComponents('OpdSuspend', false)" />
@@ -166,6 +183,16 @@ const itemsPerPage = ref(15);
 const search = ref("");
 const params = ref("");
 const loading = ref(true);
+const open_summary_modal = ref(false);
+const outpatients_test_data = ref([
+  { label: "Active", value: "1", color: "green" },
+  { label: "Discharged", value: "2", color: "lightblue" },
+  { label: "May Go Home", value: "3", color: "yellow" },
+  { label: "Untagged as MGH", value: "4", color: "lightgreen" },
+  { label: "Cancelled", value: "5", color: "red" },
+  { label: "Died", value: "6", color: "black" },
+]); 
+
 const headers = [
   {
     title: "Building",
@@ -246,6 +273,13 @@ const SearchOutPatient = () => {
 const DeactiveUser = () => {
   
 };
+
+const ViewSummary = () => {
+  open_summary_modal.value = true;
+}
+const closeViewSummary = () => {
+  open_summary_modal.value = false;
+}
 
 const loadItems = async (options = null, searchkeyword = null) => {
   try {

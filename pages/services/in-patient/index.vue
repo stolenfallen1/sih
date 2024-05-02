@@ -42,6 +42,15 @@
       >
         Deactive</v-btn
       >
+      <v-btn
+        @click="ViewSummary"
+        prepend-icon="mdi-information-box-outline"
+        width="150"
+        color="primary"
+        class="bg-warning text-white"
+      >
+        Summary</v-btn
+      >
     </v-card-actions>
   </v-card>
   <v-card class="mb-2" elevation="4">
@@ -98,6 +107,14 @@
     :search_payload="search_payload"
     @open-form="openAddFormDialog"
   />
+
+  <SummaryModal 
+    :show="open_summary_modal"
+    :summary_header="'Inpatient'"
+    :data="outpatients_test_data"
+    @close-dialog="closeViewSummary"
+  />
+
   <InPatientRegistration :clicked_option="clicked_option" :form_dialog="form_dialog" @close-dialog="closeAddFormDialog" />
 </template>
 
@@ -119,6 +136,15 @@ const search_results = ref([]);
 const search_payload = ref({});
 const form_dialog = ref(false);
 const clicked_option = ref("");
+const open_summary_modal = ref(false);
+const outpatients_test_data = ref([
+  { label: "Active", value: "1", color: "green" },
+  // { label: "Discharged", value: "2", color: "lightblue" },
+  { label: "May Go Home", value: "3", color: "yellow" },
+  { label: "Untagged as MGH", value: "4", color: "lightgreen" },
+  // { label: "Cancelled", value: "5", color: "red" },
+  { label: "Died", value: "6", color: "black" },
+]); 
 
 const totalItems = ref(0);
 const itemsPerPage = ref(15);
@@ -204,6 +230,13 @@ const SearchEmergencyPatient = () => {
 const DeactiveUser = () => {
   
 };
+
+const ViewSummary = () => {
+  open_summary_modal.value = true;
+}
+const closeViewSummary = () => {
+  open_summary_modal.value = false;
+}
 
 const loadItems = async (options = null, searchkeyword = null) => {
   try {

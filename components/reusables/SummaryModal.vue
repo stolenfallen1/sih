@@ -9,7 +9,8 @@
             </v-toolbar>
             <v-card-text>
                 <v-row>
-                    <v-col cols="12" v-for="(item, index) in data" :key="index" :class="index === 0 ? '' : 'form-col'">
+                    <v-col cols="12" style="display: flex;" v-for="(item, index) in data" :key="index" :class="index === 0 ? '' : 'form-col'">
+                        <div :style="{ backgroundColor: item.color, width: '5px', marginRight: '5px' }"></div>
                         <v-text-field 
                             :label="item.label"
                             :model-value="item.value"
