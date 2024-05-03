@@ -20,6 +20,7 @@
             <v-col cols="12">
               <v-text-field
                 label="Description"
+                placeholder="Enter description"
                 v-model="payload.description"
                 hide-details
                 density="compact"
@@ -30,6 +31,7 @@
             <v-col cols="12" class="form-col">
               <v-textarea
                   label="Remarks"
+                  placeholder="Enter remarks"
                   class="cursor-pointer"
                   v-model="payload.desc_remarks"
                   density="compact"

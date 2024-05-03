@@ -19,40 +19,18 @@
         <v-card-text>
           <v-row>
             <v-col cols="12">
-              <v-text-field
+              <v-textarea
                 label="Description"
+                placeholder="Enter description"
+                v-model="payload.disposition_description"
                 hide-details
                 required
                 density="compact"
                 variant="outlined"
-              ></v-text-field>
+              ></v-textarea>
             </v-col>
-            <v-col cols="12">
-              <v-card elevation="4">
-                <v-card-text>
-                  <v-radio-group  hide-details density="compact">
-                      <v-list-subheader inset>
-                        Applicable Registry
-                      </v-list-subheader>
-                      <v-checkbox label="Emergency" value="0" hide-details density="compact"></v-checkbox>
-                      <v-checkbox label="Inpatient" value="1" hide-details density="compact"></v-checkbox>
-                      <v-checkbox label="Outpatient" value="2" hide-details density="compact"></v-checkbox>
-                  </v-radio-group>
-                </v-card-text>
-              </v-card>
-            </v-col>
-            <v-col cols="12">
-              <v-checkbox label="Active" hide-details density="compact"></v-checkbox>
-            </v-col>
-            <v-col cols="12">
-              <v-autocomplete
-                  label="PHIC Disposition Code"
-                  :items="phic_disposition_code"
-                  hide-details
-                  clearable
-                  density="compact"
-                  variant="outlined"
-              ></v-autocomplete>
+            <v-col cols="12" class="form-col">
+              <v-checkbox v-model="payload.isactive" label="Status" hide-details density="compact"></v-checkbox>
             </v-col>
           </v-row>
         </v-card-text>
@@ -74,22 +52,14 @@ const props = defineProps({
     default: () => false,
     required: true,
   },
-  // payload: {
-  //   type: Object,
-  //   default: () => {},
-  // },
-  // isloading: {
-  //   type: Boolean,
-  //   default: () => false,
-  // },
+  payload: {
+    type: Object,
+    default: () => {},
+  },
 });
-
-const phic_disposition_code = []
 
 const emits = defineEmits(["handle-submit", "close-dialog"]);
 const handleSubmit = () => {
-  // console.log(props.payload);
-  // emits("handle-submit", props.payload);
   emits("handle-submit");
 };
 
@@ -98,4 +68,8 @@ const closeDialog = () => {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.form-col {
+    margin-top: -16px !important;
+}
+</style>

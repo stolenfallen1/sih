@@ -15,6 +15,7 @@
                   density="compact"
                   variant="outlined"
                   prepend-inner-icon="mdi-magnify"
+                  clearable
                   v-model="data.keyword"
                   @keyup.enter="search"
               >
@@ -45,20 +46,12 @@
                       </td>
                   </template>
                   <template v-slot:item.isactive="{ item }">
-                      {{ item.isactive == 1 ? "Active" : "In-active" }}
+                      <v-chip color="green" v-if="item.isactive == 1">Active</v-chip>
+                      <v-chip color="red" v-else>Inactive</v-chip>
                   </template>
-                  <!-- <template v-slot:item.erd_apply="{ item }">
-                    <v-checkbox density="compact" hide-details></v-checkbox>
-                  </template>
-                  <template v-slot:item.ipd_apply="{ item }">
-                    <v-checkbox density="compact" hide-details></v-checkbox>
-                  </template>
-                  <template v-slot:item.opd_apply="{ item }">
-                    <v-checkbox density="compact" hide-details></v-checkbox>
-                  </template> -->
                   <template v-slot:item.actions="{ item }">
-                      <v-icon color="green mr-3" @click="onEdit(item)">mdi-pencil</v-icon>
-                      <v-icon color="red" @click="onDelete(item)">mdi-trash-can</v-icon>
+                      <v-icon color="green mr-2" @click="onEdit(item)">mdi-pencil</v-icon>
+                      <v-icon color="red mr-2" @click="onDelete(item)">mdi-trash-can</v-icon>
                   </template>
               </v-data-table-server>
           </v-card-text>
@@ -70,7 +63,7 @@
           </v-card-actions>
       </v-card>
   </v-dialog>
-  <disposition-types-form :open_form_dialog="open_form_dialog" @close-dialog="closeFormDialog" @handle-submit="onSubmit" />
+  <disposition-types-form :open_form_dialog="open_form_dialog" :payload="payload" @close-dialog="closeFormDialog" @handle-submit="onSubmit(payload)" />
   <deleteConfirmation :show="confirmation" @confirm="confirm" @close="closeconfirmation" />
 </template>
 
@@ -97,12 +90,8 @@ const headers = [
       sortable: false,
       key: 'id',
   },
-  { title: 'Description', key: 'description', align: 'start', width:"40%" },
-  // { title: '?', key: 'erd_apply', align: 'start' }, // ERD Apply
-  // { title: '?', key: 'ipd_apply', align: 'start' }, // IPD Apply
-  // { title: '?', key: 'opd_apply', align: 'start' }, // OPD Apply
-  { title: 'Is Active', key: 'is_active', align: 'start' },
-  { title: 'PHIC Disposition Code', key: 'phic_disposition_code', align: 'start' },
+  { title: 'Description', key: 'disposition_description', align: 'start', width:"40%" },
+  { title: 'Is Active', key: 'isactive', align: 'start' },
   { title: '', key: 'actions', align: 'start', width: "15%" },
 ];
 const data = ref({
@@ -117,15 +106,15 @@ const itemsPerPage = ref(10);
 const totalItems = ref(0);
 const serverItems = ref([]);
 const initialize =  ({ page, itemsPerPage, sortBy }) => {
-  // loadItems(page,itemsPerPage,sortBy) 
-  null
+  loadItems(page,itemsPerPage,sortBy) 
+  // null
 }
 const loadItems = async(page = null,itemsPerPage = null,sortBy = null)=>{
   data.value.loading = true;
   let pageno = page || 1;
   let itemPerpageno = itemsPerPage || 10;
   let params = "page=" +pageno + "&per_page=" + itemPerpageno + "&keyword=" + data.value.keyword;
-  const response = await useMethod("get","get-warehouse-group?","",params);
+  const response = await useMethod("get","disposition-type?","",params);
   if(response){
       serverItems.value = response.data;
       totalItems.value = response.total;
@@ -137,64 +126,59 @@ const search = ()=>{
 }
 
 const openFormDialog = () => {
-  // payload.value = Object.assign({});
+  payload.value = Object.assign({});
   open_form_dialog.value = true;
 }
 
 const closeFormDialog = () => {
-  // payload.value = Object.assign({});
+  payload.value = Object.assign({});
   open_form_dialog.value = false;
 }
 
 const onEdit = (item) => {
   openFormDialog();
-  // payload.value = Object.assign({});
-  // payload.value = Object.assign({},item);
-  // payload.value.isactive = item.isactive == 1 ? true:false;
+  payload.value = Object.assign({});
+  payload.value = Object.assign({},item);
+  payload.value.isactive = item.isactive == 1 ? true:false;
 }
 
 
 const onSubmit = async (payload) => {
-  alert("Submitted");
-//   let response;
-//   isloading.value = true;
-//   if(payload.id){
-//       response = await useMethod("put","update-warehouse-group",payload,"",payload.id);
-//   }else{
-//       response = await useMethod("post","create-warehouse-group",payload);
-//   }
-//   if(response){
-//       useSnackbar(true,"green",response.msg);
-//       loadItems();
-//       closeFormDialog();
-//       payload.value = Object.assign({});
-//       isloading.value = false;
-//   }
-// }
-// const confirm = async () => {
-//   if(payload.value.id){
-//       let response = await useMethod("delete","delete-warehouse-group",payload.value,"",payload.value.id);
-//       if(response){
-//           confirmation.value = false;
-//           useSnackbar(true,"green",response.msg);
-//           loadItems();
-//           closeFormDialog();
-//           payload.value = Object.assign({});
-//           isloading.value = false;
-//       }
-//   }
-
+  let response;
+  isloading.value = true;
+  if(payload.id){
+      response = await useMethod("put", "disposition-type",payload, "", payload.id);
+  }else{
+      response = await useMethod("post", "disposition-type", payload);
+  }
+  if(response){
+      useSnackbar(true,"green",response.msg);
+      loadItems();
+      closeFormDialog();
+      payload.value = Object.assign({});
+      isloading.value = false;
+  }
+}
+const confirm = async () => {
+  if(payload.value.id){
+      let response = await useMethod("delete","disposition-type",payload.value,"",payload.value.id);
+      if(response){
+          confirmation.value = false;
+          useSnackbar(true,"green",response.msg);
+          loadItems();
+          closeFormDialog();
+          payload.value = Object.assign({});
+          isloading.value = false;
+      }
+  }
 }
 
-const confirm = () => {
-  confirmation.value = false;
-}
 const closeconfirmation = () => {
 confirmation.value = false;
 }
 const onDelete = (item) => {
-  // payload.value = Object.assign({});
-  // payload.value = Object.assign({},item);
+  payload.value = Object.assign({});
+  payload.value = Object.assign({},item);
   confirmation.value = true;
 }
 const closeDialog = () => {

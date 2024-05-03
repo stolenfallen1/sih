@@ -1,5 +1,5 @@
 <template>
-  <v-dialog :model-value="show" rounded="lg" @update:model-value="closeDialog" scrollable max-width="700px">
+  <v-dialog :model-value="show" rounded="lg" @update:model-value="closeDialog" scrollable max-width="800px">
       <v-card rounded="lg">
           <v-toolbar density="compact" color="#6984ff" hide-details>
               <v-toolbar-title>Bad Habits</v-toolbar-title>
@@ -25,7 +25,7 @@
                   v-model:items-per-page="itemsPerPage"
                   :headers="headers"
                   :items="serverItems"
-                  :items-length="totalItems"
+                  :items-length="reset_indicator ? 0 : totalItems"
                   :loading="data.loading"
                   item-value="id"
                   :hover="true"
@@ -45,10 +45,11 @@
                       </td>
                   </template>
                   <template v-slot:item.isactive="{ item }">
-                      {{ item.isactive == 1 ? "Active" : "In-active" }}
+                      <v-chip color="green" v-if="item.isactive == 1">Active</v-chip>
+                      <v-chip color="red" v-else>Inactive</v-chip>
                   </template>
                   <template v-slot:item.actions="{ item }">
-                      <v-icon color="green mr-3" @click="onEdit(item)">mdi-pencil</v-icon>
+                      <v-icon color="green mr-2" @click="onEdit(item)">mdi-pencil</v-icon>
                       <v-icon color="red" @click="onDelete(item)">mdi-trash-can</v-icon>
                   </template>
               </v-data-table-server>
@@ -88,9 +89,10 @@ const headers = [
       sortable: false,
       key: 'id',
   },
-  { title: 'Description', key: 'description', align: 'start', width:"60%" },
-  { title: 'Remarks', key: 'desc_remarks', align: 'start',width:"25%" },
-  { title: '', key: 'actions', align: 'start' },
+  { title: 'Description', key: 'description', align: 'start', width:"30%" },
+  { title: 'Remarks', key: 'desc_remarks', align: 'start',width:"30%" },
+  { title: 'Status', key: 'isactive', align: 'start', width: "5%" },
+  { title: '', key: 'actions', align: 'start', width: "25%" },
 ];
 const data = ref({
   title: "List of Bad Habits",
@@ -103,16 +105,18 @@ const data = ref({
 const itemsPerPage = ref(15);
 const totalItems = ref(0);
 const serverItems = ref([]);
+const default_page = ref(1);
+const reset_indicator = ref(false);
 const initialize =  ({ page, itemsPerPage, sortBy }) => {
   loadItems(page,itemsPerPage,sortBy) 
 }
-const loadItems = async(page = null,itemsPerPage = null, sortBy = null)=>{
+const loadItems = async(page = null,itemsPerPage = null, sortBy = null) => {
   data.value.loading = true;
-  let pageno = page || 1;
+  let pageno = page || default_page.value;
   let itemPerpageno = itemsPerPage || 15;
   let params = "page=" +pageno + "&per_page=" + itemPerpageno + "&keyword=" + data.value.keyword;
   const response = await useMethod("get","bad-habits?","",params);
-  if(response){
+  if(response) {
       serverItems.value = response.data;
       totalItems.value = response.total;
       data.value.loading = false;
@@ -130,6 +134,7 @@ const openFormDialog = () => {
 const closeFormDialog = () => {
   payload.value = Object.assign({});
   open_form_dialog.value = false;
+  default_page.value = 1;
 }
 
 const onEdit = (item) => {
@@ -152,8 +157,13 @@ const onSubmit = async (payload) => {
       useSnackbar(true, "green", response.msg);
       loadItems();
       closeFormDialog();
+      reset_indicator.value = true;
       payload.value = Object.assign({});
+      default_page.value = 1;
       isloading.value = false;
+      setTimeout(() => {
+          reset_indicator.value = false;
+      }, 100);
   }
 }
 const confirm = async () => {
@@ -165,13 +175,14 @@ const confirm = async () => {
           loadItems();
           closeFormDialog();
           payload.value = Object.assign({});
+          default_page.value = 1;
           isloading.value = false;
       }
   }
 }
 
 const closeconfirmation = () => {
-confirmation.value = false;
+  confirmation.value = false;
 }
 const onDelete = (item) => {
   payload.value = Object.assign({});
@@ -180,6 +191,7 @@ const onDelete = (item) => {
 }
 const closeDialog = () => {
   emits('close-dialog')
+  data.value.keyword = "";
 }
 
 </script>
