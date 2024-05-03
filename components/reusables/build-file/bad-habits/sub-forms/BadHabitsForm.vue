@@ -20,20 +20,25 @@
             <v-col cols="12">
               <v-text-field
                 label="Description"
+                v-model="payload.description"
                 hide-details
                 density="compact"
                 variant="outlined"
                 required
               ></v-text-field>
             </v-col>
-            <v-col cols="12">
+            <v-col cols="12" class="form-col">
               <v-textarea
                   label="Remarks"
                   class="cursor-pointer"
+                  v-model="payload.desc_remarks"
                   density="compact"
                   hide-details
                   variant="outlined"
               ></v-textarea>
+            </v-col>
+            <v-col cols="12" class="form-col">
+              <v-checkbox label="Status" density="compact" hide-details v-model="payload.isactive"></v-checkbox>
             </v-col>
           </v-row>
         </v-card-text>
@@ -55,20 +60,14 @@ const props = defineProps({
     default: () => false,
     required: true,
   },
-  // payload: {
-  //   type: Object,
-  //   default: () => {},
-  // },
-  // isloading: {
-  //   type: Boolean,
-  //   default: () => false,
-  // },
+  payload: {
+    type: Object,
+    default: () => {},
+  },
 });
 
 const emits = defineEmits(["handle-submit", "close-dialog"]);
 const handleSubmit = () => {
-  // console.log(props.payload);
-  // emits("handle-submit", props.payload);
   emits("handle-submit");
 };
 
@@ -77,4 +76,8 @@ const closeDialog = () => {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.form-col {
+    margin-top: -16px !important;
+}
+</style>

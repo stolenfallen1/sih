@@ -61,7 +61,7 @@
           </v-card-actions>
       </v-card>
   </v-dialog>
-  <bad-habits-form :open_form_dialog="open_form_dialog" @close-dialog="closeFormDialog" @handle-submit="onSubmit" />
+  <bad-habits-form :open_form_dialog="open_form_dialog" :payload="payload" @close-dialog="closeFormDialog" @handle-submit="onSubmit(payload)" />
   <deleteConfirmation :show="confirmation" @confirm="confirm" @close="closeconfirmation" />
 </template>
 
@@ -89,30 +89,29 @@ const headers = [
       key: 'id',
   },
   { title: 'Description', key: 'description', align: 'start', width:"60%" },
-  { title: 'Remarks', key: 'remarks', align: 'start',width:"25%" },
+  { title: 'Remarks', key: 'desc_remarks', align: 'start',width:"25%" },
   { title: '', key: 'actions', align: 'start' },
 ];
 const data = ref({
-  title: "List of Unit",
+  title: "List of Bad Habits",
   keyword: "",
   loading: false,
   filter: {},
   tab: 0,
   param_tab: 1,
 });
-const itemsPerPage = ref(10);
+const itemsPerPage = ref(15);
 const totalItems = ref(0);
 const serverItems = ref([]);
 const initialize =  ({ page, itemsPerPage, sortBy }) => {
-  // loadItems(page,itemsPerPage,sortBy) 
-  null
+  loadItems(page,itemsPerPage,sortBy) 
 }
-const loadItems = async(page = null,itemsPerPage = null,sortBy = null)=>{
+const loadItems = async(page = null,itemsPerPage = null, sortBy = null)=>{
   data.value.loading = true;
   let pageno = page || 1;
-  let itemPerpageno = itemsPerPage || 10;
+  let itemPerpageno = itemsPerPage || 15;
   let params = "page=" +pageno + "&per_page=" + itemPerpageno + "&keyword=" + data.value.keyword;
-  const response = await useMethod("get","get-warehouse-group?","",params);
+  const response = await useMethod("get","bad-habits?","",params);
   if(response){
       serverItems.value = response.data;
       totalItems.value = response.total;
@@ -124,64 +123,59 @@ const search = ()=>{
 }
 
 const openFormDialog = () => {
-  // payload.value = Object.assign({});
+  payload.value = Object.assign({});
   open_form_dialog.value = true;
 }
 
 const closeFormDialog = () => {
-  // payload.value = Object.assign({});
+  payload.value = Object.assign({});
   open_form_dialog.value = false;
 }
 
 const onEdit = (item) => {
   openFormDialog();
-  // payload.value = Object.assign({});
-  // payload.value = Object.assign({},item);
-  // payload.value.isactive = item.isactive == 1 ? true:false;
+  payload.value = Object.assign({});
+  payload.value = Object.assign({},item);
+  payload.value.isactive = item.isactive == 1 ? true:false;
 }
 
 
 const onSubmit = async (payload) => {
-  alert("Submitted");
-//   let response;
-//   isloading.value = true;
-//   if(payload.id){
-//       response = await useMethod("put","update-warehouse-group",payload,"",payload.id);
-//   }else{
-//       response = await useMethod("post","create-warehouse-group",payload);
-//   }
-//   if(response){
-//       useSnackbar(true,"green",response.msg);
-//       loadItems();
-//       closeFormDialog();
-//       payload.value = Object.assign({});
-//       isloading.value = false;
-//   }
-// }
-// const confirm = async () => {
-//   if(payload.value.id){
-//       let response = await useMethod("delete","delete-warehouse-group",payload.value,"",payload.value.id);
-//       if(response){
-//           confirmation.value = false;
-//           useSnackbar(true,"green",response.msg);
-//           loadItems();
-//           closeFormDialog();
-//           payload.value = Object.assign({});
-//           isloading.value = false;
-//       }
-//   }
-
+  let response;
+  isloading.value = true;
+  if(payload.id) {
+      response = await useMethod("put", "bad-habits", payload, "", payload.id);
+  }else{
+      response = await useMethod("post", "bad-habits", payload);
+  }
+  if(response) {
+      useSnackbar(true, "green", response.msg);
+      loadItems();
+      closeFormDialog();
+      payload.value = Object.assign({});
+      isloading.value = false;
+  }
+}
+const confirm = async () => {
+  if(payload.value.id){
+      let response = await useMethod("delete","bad-habits", payload.value, "", payload.value.id);
+      if(response){
+          confirmation.value = false;
+          useSnackbar(true,"green",response.msg);
+          loadItems();
+          closeFormDialog();
+          payload.value = Object.assign({});
+          isloading.value = false;
+      }
+  }
 }
 
-const confirm = () => {
-  confirmation.value = false;
-}
 const closeconfirmation = () => {
 confirmation.value = false;
 }
 const onDelete = (item) => {
-  // payload.value = Object.assign({});
-  // payload.value = Object.assign({},item);
+  payload.value = Object.assign({});
+  payload.value = Object.assign({},item);
   confirmation.value = true;
 }
 const closeDialog = () => {
