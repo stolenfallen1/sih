@@ -289,8 +289,8 @@
     @close-dialog="useTableAndTemplate('PriceSchemes', false)"
   />
   <HospitalizationTransactionTypesDialog 
-    :show="HospitalTransactionTypes"
-    @close-dialog="useTableAndTemplate('HospitalTransactionTypes', false)"
+    :show="TransactionType"
+    @close-dialog="useTableAndTemplate('TransactionType', false)"
   />
   <HospitalizationTypesDialog 
     :show="HospitalizationTypes"
@@ -389,9 +389,9 @@
     :show="DietType"
     @close-dialog="useTableAndTemplate('DietType', false)"
   />
-  <DietClassificationsDialog 
-    :show="DietClassification"
-    @close-dialog="useTableAndTemplate('DietClassification', false)"
+  <DietSubTypesDialog 
+    :show="DietSubTypes"
+    @close-dialog="useTableAndTemplate('DietSubTypes', false)"
   />
 
   <!-- Settings and Others -->
@@ -664,7 +664,7 @@ const {
   // MedicalServiceTypes, 
   // MedicalSubServiceTypes, 
   // PriceSchemes, 
-  HospitalTransactionTypes,
+  // TransactionType, 
   HospitalizationTypes,
   HospitalizationPlans,
   HospitalizationCaseTypes,
@@ -702,7 +702,7 @@ const {
   // HospitalizationTypes, 
   HospitalizationPlan,  
   // HospitalizationCaseTypes,  
-  // HospitalTransactionTypes, 
+  // TransactionType, 
   // InternalControlTable, 
   // ListOfAttendant,
   // SurgicalProcedures,  
@@ -734,7 +734,7 @@ const {
   // HospitalizationTypes,
   // HospitalizationPlan,
   // HospitalizationCaseTypes,
-  // HospitalTransactionTypes,
+  // TransactionType,
   // InternalControlTable,
   // ListOfAttendant,
   // SurgicalProcedures,
@@ -751,7 +751,7 @@ const {
   DietList,
   DietMealType,
   DietType,
-  DietClassification,
+  DietSubTypes,
 } = storeToRefs(DietaryServicesTemplateDialog())
 // Nursing Services
 const { 

@@ -13,7 +13,7 @@ export const OutPatientsTemplateDialog = defineStore('OutPatientsTemplateDialog'
     MedicalServiceTypes: false,
     MedicalSubServiceTypes: false,
     PriceSchemes: false,
-    HospitalTransactionTypes: false,
+    TransactionType: false,
     HospitalizationTypes: false,
     HospitalizationPlans: false,
     HospitalizationCaseTypes: false,

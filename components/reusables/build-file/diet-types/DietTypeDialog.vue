@@ -31,7 +31,6 @@
           item-value="id"
           :hover="true"
           @update:options="initialize"
-          show-select
           select-strategy="single"
           fixed-header
           density="compact"
@@ -136,7 +135,7 @@ const isloading = ref(false);
 const open_form_dialog = ref(false);
 const headers = [
   {
-    title: "code",
+    title: "Code",
     align: "start",
     sortable: false,
     key: "id",

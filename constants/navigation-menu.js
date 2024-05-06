@@ -1125,9 +1125,9 @@ export default [
                         rule: "",
                     },
                     {
-                        label: "Hospital Transaction Types",
+                        label: "Hospitalization Transaction Types",
                         icon: "mdi-file-document-edit",
-                        form: "HospitalTransactionTypes",
+                        form: "TransactionType",
                         rule: "",
                     },
                     {
@@ -1482,7 +1482,7 @@ export default [
                     {
                         label: "Hospitalization Transaction Types",
                         icon: "mdi-file-document-edit",
-                        form: "HospitalTransactionTypes",
+                        form: "TransactionType",
                         rule: "",
                     },
                     {
@@ -1844,7 +1844,7 @@ export default [
                     {
                         label: "Hospitalization Transaction Types",
                         icon: "mdi-file-document-edit",
-                        form: "HospitalTransactionTypes",
+                        form: "TransactionType",
                         rule: "",
                     },
                     {
@@ -2102,7 +2102,7 @@ export default [
                 ],
                 table_and_template: [
                     {
-                        label: "Diet List",
+                        label: "Diet Meals",
                         icon: "mdi-file-document-edit",
                         form: "DietList",
                         rule: "",
@@ -2120,9 +2120,9 @@ export default [
                         rule: "",
                     },
                     {
-                        label: "Diet Classifications",
+                        label: "Diet Sub Types",
                         icon: "mdi-file-document-edit",
-                        form: "DietClassification",
+                        form: "DietSubTypes",
                         rule: "",
                     },
                 ]

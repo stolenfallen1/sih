@@ -30,7 +30,6 @@
           item-value="id"
           :hover="true"
           @update:options="initialize"
-          show-select
           select-strategy="single"
           fixed-header
           density="compact"
@@ -45,6 +44,10 @@
                 {{ props.item[head.value] || "..." }}
               </slot>
             </td>
+          </template>
+          <template v-slot:item.isactive="{ item }">
+              <v-chip color="green" v-if="item.isactive == 1">Active</v-chip>
+              <v-chip color="red" v-else>Inactive</v-chip>
           </template>
           <template v-slot:item.actions="{ item }">
             <v-icon color="green mr-3" @click="onEdit(item)">mdi-pencil</v-icon>
@@ -65,8 +68,8 @@
 
   <v-dialog
     :model-value="open_form_dialog"
-rounded="lg"
-@update:model-value="closeForm"
+    rounded="lg"
+    @update:model-value="closeForm"
     scrollable
     max-width="600px"
   >
@@ -81,25 +84,20 @@ rounded="lg"
         <v-divider></v-divider>
         <v-card-text>
           <v-row>
-            <v-col cols="4">
-                <v-text-field
-                  variant="outlined"
-                  density="compact"
-                  label="Code"
-                  readonly
-                  hide-details
-                ></v-text-field>
-              </v-col>
               <v-col cols="12">
                 <v-textarea
                   variant="outlined"
                   density="compact"
-                  label="Enter description"
+                  label="Diet Meal Description"
+                  placeholder="Enter Diet Meal Description"
                   required
-                  v-model="payload.id_description"
+                  v-model="payload.description"
                   clearable
                   hide-details
                 ></v-textarea>
+              </v-col>
+              <v-col cols="12" class="form-col">
+                <v-checkbox label="Status" v-model="payload.isactive" density="compact" hide-details></v-checkbox>
               </v-col>
           </v-row>
         </v-card-text>
@@ -136,16 +134,17 @@ const isloading = ref(false);
 const open_form_dialog = ref(false);
 const headers = [
   {
-    title: "code",
+    title: "Code",
     align: "start",
     sortable: false,
     key: "id",
   },
-  { title: "Description", key: "id_description", align: "start", width: "60%" },
+  { title: "Description", key: "description", align: "start", width: "60%" },
+  { title: "Status", key: "isactive", align: "start", width: "20%"},
   { title: "", key: "actions", align: "start", width: "20%" },
 ];
 const data = ref({
-  title: "List of ID Types",
+  title: "List of Diet Meal Types",
   keyword: "",
   loading: false,
   filter: {},
@@ -157,8 +156,8 @@ const itemsPerPage = ref(10);
 const totalItems = ref(0);
 const serverItems = ref([]);
 const initialize = ({ page, itemsPerPage, sortBy }) => {
-  // loadItems(page, itemsPerPage, sortBy);
-  null
+  loadItems(page, itemsPerPage, sortBy);
+  // null
 };
 const loadItems = async (page = null, itemsPerPage = null, sortBy = null) => {
   data.value.loading = true;
@@ -166,7 +165,7 @@ const loadItems = async (page = null, itemsPerPage = null, sortBy = null) => {
   let itemPerpageno = itemsPerPage || 10;
   let params =
     "page=" + pageno + "&per_page=" + itemPerpageno + "&keyword=" + data.value.keyword;
-  const response = await useMethod("get", "id-types?", "", params);
+  const response = await useMethod("get", "diet-meal-type?", "", params);
   if (response) {
     serverItems.value = response.data;
     totalItems.value = response.total;
@@ -178,65 +177,63 @@ const search = () => {
 };
 
 const openForm = () => {
-  // payload.value = Object.assign({});
+  payload.value = Object.assign({});
   open_form_dialog.value = true;
 };
 
 const closeForm = () => {
-  // payload.value = Object.assign({});
+  payload.value = Object.assign({});
   open_form_dialog.value = false;
 };
 
 const onEdit = (item) => {
   openForm();
-  // payload.value = Object.assign({});
-  // payload.value = Object.assign({}, item);
-  // payload.value.isActive = item.isActive == 1 ? true : false;
+  payload.value = Object.assign({});
+  payload.value = Object.assign({}, item);
+  payload.value.isactive = item.isactive == 1 ? true : false;
 };
 
 const onSubmit = async () => {
-  alert("Submitted")
-  // let response;
-  // isloading.value = true;
-  // if (payload.value.id) {
-  //   response = await useMethod("put", "id-types", payload.value, "", payload.value.id);
-  // } else {
-  //   response = await useMethod("post", "id-types", payload.value);
-  // }
-  // if (response) {
-  //   useSnackbar(true, "green", response.msg);
-  //   loadItems();
-  //   closeForm();
-  //   payload.value = Object.assign({});
-  //   isloading.value = false;
-  // }
+  let response;
+  isloading.value = true;
+  if (payload.value.id) {
+    response = await useMethod("put", "diet-meal-type", payload.value, "", payload.value.id);
+  } else {
+    response = await useMethod("post", "diet-meal-type", payload.value);
+  }
+  if (response) {
+    useSnackbar(true, "green", response.msg);
+    loadItems();
+    closeForm();
+    payload.value = Object.assign({});
+    isloading.value = false;
+  }
 };
 const confirm = async () => {
-  confirmation.value = false;
-  // if (payload.value.id) {
-  //   let response = await useMethod(
-  //     "delete",
-  //     "id-types",
-  //     payload.value,
-  //     "",
-  //     payload.value.id
-  //   );
-  //   if (response) {
-  //     confirmation.value = false;
-  //     useSnackbar(true, "green", response.msg);
-  //     loadItems();
-  //     closeForm();
-  //     payload.value = Object.assign({});
-  //     isloading.value = false;
-  //   }
-  // }
+  if (payload.value.id) {
+    let response = await useMethod(
+      "delete",
+      "diet-meal-type",
+      payload.value,
+      "",
+      payload.value.id
+    );
+    if (response) {
+      confirmation.value = false;
+      useSnackbar(true, "green", response.msg);
+      loadItems();
+      closeForm();
+      payload.value = Object.assign({});
+      isloading.value = false;
+    }
+  }
 };
 const closeconfirmation = () => {
   confirmation.value = false;
 };
 const onDelete = (item) => {
-  // payload.value = Object.assign({});
-  // payload.value = Object.assign({}, item);
+  payload.value = Object.assign({});
+  payload.value = Object.assign({}, item);
   confirmation.value = true;
 };
 const closeDialog = () => {
@@ -244,4 +241,8 @@ const closeDialog = () => {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.form-col {
+    margin-top: -16px !important;
+}
+</style>

@@ -30,7 +30,6 @@
                     item-value="id"
                     :hover="true"
                     @update:options="initialize"
-                    show-select
                     select-strategy="single"
                     fixed-header
                     density="compact"
@@ -45,6 +44,10 @@
                             {{ props.item[head.value] || "..." }}
                         </slot>
                         </td>
+                    </template>
+                    <template v-slot:item.isActive="{ item }">
+                        <v-chip color="green" v-if="item.isActive == 1">Active</v-chip>
+                        <v-chip color="red" v-else>Inactive</v-chip>
                     </template>
                     <template v-slot:item.actions="{ item }">
                         <v-icon color="green mr-3" @click="onEdit(item)">mdi-pencil</v-icon>
@@ -80,12 +83,18 @@
             <v-card-text>
                 <v-row>
                     <v-col cols="12" class="pa-1">
-                        <v-text-field
-                            class="mt-3"
+                        <v-textarea
                             variant="outlined"
+                            v-model="payload.room_description"
                             label="Description"
+                            required
                             density="compact"
-                        ></v-text-field>
+                            hide-details
+                        ></v-textarea>
+                    </v-col>
+                    <v-col cols="12" class="form-col">
+                        <v-checkbox v-model="payload.isActive" label="Status" density="compact" hide-details></v-checkbox>
+                        <v-checkbox v-model="payload.isSystemDefault" label="System Default" density="compact" hide-details></v-checkbox>
                     </v-col>
                 </v-row>
             </v-card-text>
@@ -127,8 +136,9 @@ const headers = [
         sortable: false,
         key: "id",
     },
-    { title: "Description", key: "description", align: "start", width: "55%" },
-    { title: "", key: "actions", align: "start", width: "15%" },
+    { title: "Description", key: "room_description", align: "start", width: "55%" },
+    { title: "Status", key: "isActive", align: "start", width: "15%" },
+    { title: "", key: "actions", align: "start", width: "20%" },
 ];
 const data = ref({
     title: "List of Room Status Templates",
@@ -139,96 +149,85 @@ const data = ref({
     param_tab: 1,
 });
 
-const itemsPerPage = ref(10);
+const itemsPerPage = ref(15);
 const totalItems = ref(0);
 const serverItems = ref([]);
-const initialize = ({ page, itemsPerPage, sortBy }) => {
-    // loadItems(page, itemsPerPage, sortBy);
-    null
-};
-const loadItems = async (page = null, itemsPerPage = null, sortBy = null) => {
+const default_page = ref(1);
+const initialize =  ({ page, itemsPerPage, sortBy }) => {
+    loadItems(page,itemsPerPage,sortBy) 
+}
+const loadItems = async(page = null,itemsPerPage = null, sortBy = null) => {
     data.value.loading = true;
-    let pageno = page || 1;
-    let itemPerpageno = itemsPerPage || 10;
-    let params =
-        "page=" + pageno + "&per_page=" + itemPerpageno + "&keyword=" + data.value.keyword;
-    const response = await useMethod("get", "religions?", "", params);
-    if (response) {
+    let pageno = page || default_page.value;
+    let itemPerpageno = itemsPerPage || 15;
+    let params = "page=" +pageno + "&per_page=" + itemPerpageno + "&keyword=" + data.value.keyword;
+    const response = await useMethod("get","hospital-room-status?","",params);
+    if(response) {
         serverItems.value = response.data;
         totalItems.value = response.total;
         data.value.loading = false;
     }
-};
-const search = () => {
+}
+const search = ()=>{
     loadItems();
-};
+}
 
 const openForm = () => {
-    // payload.value = Object.assign({});
+    payload.value = Object.assign({});
     open_form_dialog.value = true;
 };
 
 const closeForm = () => {
-    // payload.value = Object.assign({});
+    payload.value = Object.assign({});
     open_form_dialog.value = false;
 };
 
 const onEdit = (item) => {
     openForm();
-    // payload.value = Object.assign({});
-    // payload.value = Object.assign({}, item);
-    // payload.value.isactive = item.isactive == 1 ? true : false;
+    payload.value = Object.assign({});
+    payload.value = Object.assign({}, item);
+    payload.value.isActive = item.isActive == 1 ? true : false;
+    payload.value.isSystemDefault = item.isSystemDefault == 1 ? true : false;
 };
 
 const onSubmit = async () => {
-    alert("submitted");
-    // let response;
-    // isloading.value = true;
-    // if (payload.value.id) {
-    //     response = await useMethod(
-    //     "put",
-    //     "religions",
-    //     payload.value,
-    //     "",
-    //     payload.value.id
-    //     );
-    // } else {
-    //     response = await useMethod("post", "religions", payload.value);
-    // }
-    // if (response) {
-    //     useSnackbar(true, "green", response.msg);
-    //     loadItems();
-    //     closeForm();
-    //     payload.value = Object.assign({});
-    //     isloading.value = false;
-    // }
-};
-
-const confirm = async () => {
-if (payload.value.id) {
-    let response = await useMethod(
-    "delete",
-    "religions",
-    payload.value,
-    "",
-    payload.value.id
-    );
-    if (response) {
-    confirmation.value = false;
-    useSnackbar(true, "green", response.msg);
-    loadItems();
-    closeForm();
-    payload.value = Object.assign({});
-    isloading.value = false;
+    let response;
+    isloading.value = true;
+    if(payload.value.id) {
+        response = await useMethod("put", "hospital-room-status", payload.value, "", payload.value.id);
+    }else{
+        response = await useMethod("post", "hospital-room-status", payload.value);
+    }
+    if(response) {
+        useSnackbar(true, "green", response.msg);
+        closeForm();
+        loadItems();
+        payload.value = Object.assign({});
+        default_page.value = 1;
+        isloading.value = false;
     }
 }
+
+const confirm = async () => {
+    if(payload.value.id){
+        let response = await useMethod("delete","hospital-room-status", payload.value, "", payload.value.id);
+        if(response){
+            confirmation.value = false;
+            useSnackbar(true,"green",response.msg);
+            loadItems();
+            closeFormDialog();
+            payload.value = Object.assign({});
+            default_page.value = 1;
+            isloading.value = false;
+        }
+    }
 };
 const closeconfirmation = () => {
     confirmation.value = false;
 };
 const onDelete = (item) => {
-    // payload.value = Object.assign({});
-    // payload.value = Object.assign({}, item);
+    payload.value = Object.assign({});
+    payload.value = Object.assign({}, item);
     confirmation.value = true;
 };
 const closeDialog = () => {
