@@ -30,7 +30,6 @@
                   item-value="id"
                   :hover="true"
                   @update:options="initialize"
-                  show-select
                   select-strategy="single"
                   fixed-header
                   density="compact" 
