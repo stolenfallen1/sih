@@ -1,9 +1,9 @@
 <template>
-  <v-dialog :model-value="open_form_dialog" rounded="lg" @update:model-value="closeDialog" scrollable max-width="600px">
+  <v-dialog :model-value="open_form_dialog" rounded="lg" @update:model-value="closeDialog" scrollable max-width="700px">
     <form @submit.prevent="handleSubmit">
       <v-card rounded="lg">
           <v-toolbar color="#6984ff" hide-details density="compact">
-              <v-toolbar-title>Diet Details</v-toolbar-title>
+              <v-toolbar-title>Diet Meals Details</v-toolbar-title>
               <v-btn color="white" @click="closeDialog">
                 <v-icon>mdi-close</v-icon>
               </v-btn>
@@ -11,57 +11,70 @@
             <v-card-text>
                 <v-container>
                     <v-row>
-                        <v-col cols="4">
-                            <v-text-field
-                                readonly
-                                variant="outlined"
-                                label="Code"
-                                hide-details
-                                density="compact"
-                            ></v-text-field>
-                        </v-col>
-                        <v-col cols="12">
+                        <v-col cols="12" class="form-col">
                             <v-text-field
                             variant="outlined"
                             density="compact"
                             label="Description"
+                            placeholder="Enter Description"
+                            v-model="payload.meal_description"
                             required
                             clearable
                             hide-details
                             ></v-text-field>
                         </v-col>
-                        <v-col cols="12">
-                            <v-text-field
-                                variant="outlined"
-                                hide-details
-                                label="Type"
-                                density="compact"
-                                prepend-icon="mdi-plus-box"
-                                @click.prepend="openTypeDialog"
-                            ></v-text-field>
-                        </v-col>
-                        <v-col cols="12">
-                            <v-text-field
-                                variant="outlined"
-                                hide-details
-                                label="Class"
-                                density="compact"
-                                prepend-icon="mdi-plus-box"
-                                @click.prepend="openClassDialog"
-                            ></v-text-field>
-                        </v-col>
-                        <v-col cols="12">
+                        <v-col cols="12" class="form-col">
                           <v-textarea
                             variant="outlined"
                             density="compact"
                             label="Remarks"
+                            placeholder="Enter Remarks"
+                            v-model="payload.meal_remarks"
                             required
                             clearable
                             hide-details
                           ></v-textarea>
                         </v-col>
-                        <v-col cols="12">
-                          <v-checkbox label="Osterized Diet?" density="compact" hide-details></v-checkbox>
+                        <v-col cols="12" class="form-col">
+                            <v-autocomplete
+                                :items="diet_type_data"
+                                item-title="description"
+                                item-value="id"
+                                v-model="payload.diet_type_id"
+                                variant="outlined"
+                                density="compact"
+                                hide-details
+                                label="Diet Type"
+                                placeholder="Select Diet Type"
+                            ></v-autocomplete>
+                        </v-col>
+                        <v-col cols="12" class="form-col">
+                            <v-autocomplete
+                                :items="diet_sub_type_data"
+                                item-title="description"
+                                item-value="id"
+                                v-model="payload.diet_subtype_id"
+                                variant="outlined"
+                                density="compact"
+                                hide-details
+                                label="Diet Sub Type"
+                                placeholder="Select Diet Sub Type"
+                            ></v-autocomplete>
+                        </v-col>
+                        <v-col cols="12" class="form-col">
+                            <v-text-field
+                            variant="outlined"
+                            type="number"
+                            density="compact"
+                            label="Meal Cost"
+                            placeholder="Enter Meal Cost"
+                            v-model="payload.meal_cost"
+                            clearable
+                            hide-details
+                            ></v-text-field>
+                        </v-col>
+                        <v-col cols="12" class="form-col">
+                          <v-checkbox label="Status" v-model="payload.isactive" density="compact" hide-details></v-checkbox>
                         </v-col>
                     </v-row>
                 </v-container>
@@ -75,50 +88,50 @@
       </v-card>
     </form>
   </v-dialog>
-  <select-diet-type-list :open_diet_type_dialog="open_diet_type_dialog" @close-dialog="closeTypeDialog" @handle-submit="saveTypeDialog" />
-  <select-diet-class-list :open_diet_class_dialog="open_diet_class_dialog" @close-dialog="closeClassDialog" @handle-submit="saveClassDialog" />
 </template>
 
 <script setup>
-import SelectDietTypeList from './SelectDietTypeList.vue';
-import SelectDietClassList from './SelectDietClassList.vue';
-
 const props = defineProps({
   open_form_dialog: {
       type: Boolean,
       default: () => false,
       required: true,
   },
+  payload: {
+      type: Object,
+      default: () => ({}),
+  },
 })
+
+const diet_type_loading = ref(false);
+const diet_type_data = ref([]);
+const diet_sub_type_loading = ref(false);
+const diet_sub_type_data = ref([]);
 
 const emits = defineEmits(['close-dialog', 'handle-submit'])
 
-const open_diet_type_dialog = ref(false)
-const open_diet_class_dialog = ref(false)
+const getDietType = async () => {
+  diet_type_loading.value = true;
+  const response = await useMethod("get", "diet-type", "", "");
+  if (response) {
+    diet_type_data.value = response.data;
+    diet_type_loading.value = false;
+  } 
+};
 
-const openTypeDialog = () => {
-  open_diet_type_dialog.value = true
-}
+const getDietSubType = async () => {
+  diet_sub_type_loading.value = true;
+  const response = await useMethod("get", "diet-sub-type", "", "");
+  if (response) {
+    diet_sub_type_data.value = response.data;
+    diet_sub_type_loading.value = false;
+  } 
+};
 
-const closeTypeDialog = () => {
-  open_diet_type_dialog.value = false
-}
-
-const saveTypeDialog = () => {
-  alert("Save Type Dialog")
-}
-
-const openClassDialog = () => {
-  open_diet_class_dialog.value = true
-}
-
-const closeClassDialog = () => {
-  open_diet_class_dialog.value = false
-}
-
-const saveClassDialog = () => {
-  alert("Save Class Dialog")
-}
+onMounted(() => {
+  getDietType();
+  getDietSubType();
+});
 
 const handleSubmit = () => {
   emits('handle-submit')
@@ -130,4 +143,7 @@ const closeDialog = () => {
 </script>
 
 <style scoped>
+.form-col {
+    margin-top: -16px !important;
+}
 </style>

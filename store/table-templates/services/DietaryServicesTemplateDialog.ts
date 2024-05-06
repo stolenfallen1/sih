@@ -3,7 +3,7 @@ export const DietaryServicesTemplateDialog = defineStore('DietaryServicesTemplat
     DietList: false,
     DietMealType: false,
     DietType: false,
-    DietClassification: false,
+    DietSubTypes: false,
   }),
   actions: {
     setDietaryServicesDialog(dialog: any, type: Boolean) {
