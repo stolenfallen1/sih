@@ -87,8 +87,9 @@
           {{ item.birthdate ? formatDate(item.birthdate) : "" }}</span
         >
         <span v-if="column.key === 'isactive'" :key="column.key">
-          {{ item.isactive == 1 ? "Active" : "In Active" }}</span
-        >
+            <v-chip color="green" v-if="item.isactive == 1">Active</v-chip>
+            <v-chip color="red" v-else>Inactive</v-chip>
+        </span>
         <!-- Add more custom logic for other columns -->
       </template>
     </ReusableTable>
@@ -181,6 +182,13 @@ const consultant_test_data = ref([
 ]);  
 
 const headers = [
+  {
+    title: "ID",
+    align: "start",
+    sortable: true,
+    key: "id",
+    width: "5%",
+  },
   {
     title: "Code",
     align: "start",

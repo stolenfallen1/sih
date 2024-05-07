@@ -12,8 +12,9 @@
                     <v-col cols="12" style="display: flex;" v-for="(item, index) in data" :key="index" :class="index === 0 ? '' : 'form-col'">
                         <div :style="{ backgroundColor: item.color, width: '5px', marginRight: '5px' }"></div>
                         <v-text-field 
-                            :label="item.label"
-                            :model-value="item.value"
+                            :loading="isLoading"
+                            :label="item.name"
+                            :model-value="item.total"
                             variant="outlined"
                             density="compact"
                             hide-details 
@@ -45,6 +46,10 @@ const props = defineProps({
     data: {
         type: Array,
         default: () => [],
+    },
+    isLoading: {
+        type: Boolean,
+        default: () => false,
     },
 });
 

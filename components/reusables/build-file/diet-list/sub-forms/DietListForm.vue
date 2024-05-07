@@ -128,11 +128,6 @@ const getDietSubType = async () => {
   } 
 };
 
-onMounted(() => {
-  getDietType();
-  getDietSubType();
-});
-
 const handleSubmit = () => {
   emits('handle-submit')
 }

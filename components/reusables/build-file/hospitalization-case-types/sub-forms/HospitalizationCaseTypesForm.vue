@@ -20,7 +20,9 @@
           <v-row>
             <v-col cols="12">
               <v-text-field
-                label="Description"
+                label="Case Type Description"
+                placeholder="Enter Case Type Description"
+                v-model="payload.description"
                 required
                 hide-details
                 density="compact"
@@ -28,11 +30,7 @@
               ></v-text-field>
             </v-col>
             <v-col cols="12">
-              <v-radio-group  hide-details density="compact">
-                  <v-checkbox label="Applies to Inpatient Transaction?" value="0" hide-details density="compact"></v-checkbox>
-                  <v-checkbox label="Applies to Outpatient Transaction?" value="1" hide-details density="compact"></v-checkbox>
-                  <v-checkbox label="Applies to Emergency Transaction?" value="2" hide-details density="compact"></v-checkbox>
-              </v-radio-group>
+              <v-checkbox label="Status" v-model="payload.isactive" hide-details density="compact"></v-checkbox>
             </v-col>
           </v-row>
         </v-card-text>
@@ -54,22 +52,14 @@ const props = defineProps({
     default: () => false,
     required: true,
   },
-  // payload: {
-  //   type: Object,
-  //   default: () => {},
-  // },
-  // isloading: {
-  //   type: Boolean,
-  //   default: () => false,
-  // },
+  payload: {
+    type: Object,
+    default: () => {},
+  },
 });
-
-const groups = ["Excellence Center"]
 
 const emits = defineEmits(["handle-submit", "close-dialog"]);
 const handleSubmit = () => {
-  // console.log(props.payload);
-  // emits("handle-submit", props.payload);
   emits("handle-submit");
 };
 
