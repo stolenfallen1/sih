@@ -44,8 +44,9 @@
                       </slot>
                       </td>
                   </template>
-                  <template v-slot:item.is_pathologist="{ item }">
-                      {{ item.is_pathologist == 1 ? "Yes" : "No" }}
+                  <template v-slot:item.isactive="{ item }">
+                      <v-chip color="green" v-if="item.isactive == 1">Active</v-chip>
+                      <v-chip color="red" v-else>Inactive</v-chip>
                   </template>
                   <template v-slot:item.actions="{ item }">
                       <v-icon color="green mr-3" @click="onEdit(item)">mdi-pencil</v-icon>
@@ -61,7 +62,7 @@
           </v-card-actions>
       </v-card>
   </v-dialog>
-  <consultant-specialization-form :open_form_dialog="open_form_dialog" @close-dialog="closeFormDialog" @handle-submit="onSubmit" />
+  <consultant-specialization-form :payload="payload" :open_form_dialog="open_form_dialog" @close-dialog="closeFormDialog" @handle-submit="onSubmit(payload)" />
   <deleteConfirmation :show="confirmation" @confirm="confirm" @close="closeconfirmation" />
 </template>
 
@@ -88,31 +89,31 @@ const headers = [
       sortable: false,
       key: 'id',
   },
-  { title: 'Description', key: 'description', align: 'start',width:"60%" },
-  { title: 'Pathologist', key: 'is_pathologist', align: 'start' },
-  { title: '', key: 'actions', align: 'start' },
+  { title: 'Description', key: 'specialization_description', align: 'start',width:"60%" },
+  { title: 'Status', key: 'isactive', align: 'start' },
+  { title: '', key: 'actions', align: 'start', width: "20%" },
 ];
 const data = ref({
-  title: "List of Unit",
+  title: "List of Consultant Specializations",
   keyword: "",
   loading: false,
   filter: {},
   tab: 0,
   param_tab: 1,
 });
-const itemsPerPage = ref(10);
+const itemsPerPage = ref(15);
 const totalItems = ref(0);
 const serverItems = ref([]);
+const default_page = ref(1);
 const initialize =  ({ page, itemsPerPage, sortBy }) => {
-  // loadItems(page,itemsPerPage,sortBy) 
-  null
+  loadItems(page,itemsPerPage,sortBy) 
 }
 const loadItems = async(page = null,itemsPerPage = null,sortBy = null)=>{
   data.value.loading = true;
-  let pageno = page || 1;
-  let itemPerpageno = itemsPerPage || 10;
+  let pageno = page || default_page.value;
+  let itemPerpageno = itemsPerPage || 15;
   let params = "page=" +pageno + "&per_page=" + itemPerpageno + "&keyword=" + data.value.keyword;
-  const response = await useMethod("get","get-warehouse-group?","",params);
+  const response = await useMethod("get","doctor-specialization?","",params);
   if(response){
       serverItems.value = response.data;
       totalItems.value = response.total;
@@ -124,64 +125,61 @@ const search = ()=>{
 }
 
 const openFormDialog = () => {
-  // payload.value = Object.assign({});
+  payload.value = Object.assign({});
   open_form_dialog.value = true;
 }
 
 const closeFormDialog = () => {
-  // payload.value = Object.assign({});
+  payload.value = Object.assign({});
   open_form_dialog.value = false;
+  default_page.value = 1;
 }
 
 const onEdit = (item) => {
   openFormDialog();
-  // payload.value = Object.assign({});
-  // payload.value = Object.assign({},item);
-  // payload.value.isactive = item.isactive == 1 ? true:false;
+  payload.value = Object.assign({});
+  payload.value = Object.assign({},item);
+  payload.value.isactive = item.isactive == 1 ? true:false;
 }
 
 
 const onSubmit = async (payload) => {
-  alert("Submitted");
-//   let response;
-//   isloading.value = true;
-//   if(payload.id){
-//       response = await useMethod("put","update-warehouse-group",payload,"",payload.id);
-//   }else{
-//       response = await useMethod("post","create-warehouse-group",payload);
-//   }
-//   if(response){
-//       useSnackbar(true,"green",response.msg);
-//       loadItems();
-//       closeFormDialog();
-//       payload.value = Object.assign({});
-//       isloading.value = false;
-//   }
-// }
-// const confirm = async () => {
-//   if(payload.value.id){
-//       let response = await useMethod("delete","delete-warehouse-group",payload.value,"",payload.value.id);
-//       if(response){
-//           confirmation.value = false;
-//           useSnackbar(true,"green",response.msg);
-//           loadItems();
-//           closeFormDialog();
-//           payload.value = Object.assign({});
-//           isloading.value = false;
-//       }
-//   }
-
+  let response;
+  isloading.value = true;
+  if(payload.id){
+      response = await useMethod("put","doctor-specialization",payload,"",payload.id);
+  }else{
+      response = await useMethod("post","doctor-specialization",payload);
+  }
+  if(response){
+      useSnackbar(true,"green",response.msg);
+      loadItems();
+      closeFormDialog();
+      payload.value = Object.assign({});
+      default_page.value = 1;
+      isloading.value = false;
+  }
 }
-
-const confirm = () => {
-  confirmation.value = false;
+const confirm = async () => {
+  if(payload.value.id){
+      let response = await useMethod("delete","doctor-specialization",payload.value,"",payload.value.id);
+      if(response){
+          confirmation.value = false;
+          useSnackbar(true,"green",response.msg);
+          loadItems();
+          closeFormDialog();
+          payload.value = Object.assign({});
+          default_page.value = 1;
+          isloading.value = false;
+      }
+  }
 }
 const closeconfirmation = () => {
-confirmation.value = false;
+  confirmation.value = false;
 }
 const onDelete = (item) => {
-  // payload.value = Object.assign({});
-  // payload.value = Object.assign({},item);
+  payload.value = Object.assign({});
+  payload.value = Object.assign({},item);
   confirmation.value = true;
 }
 const closeDialog = () => {

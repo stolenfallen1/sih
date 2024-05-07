@@ -86,11 +86,10 @@
                 <span v-if="column.key === 'unit'" :key="column.key">
                     {{ item.unit ? item.unit.name : "" }}</span
                 >
-                <span v-if="column.key === 'isactive'" :key="column.key">
-                    {{ item.isactive == 1 ? "Active" : "In Active" }}</span
-                >
-
-                <!-- Add more custom logic for other columns -->
+                <span v-if="column.key === 'isActive'" :key="column.key">
+                    <v-chip color="green" v-if="item.isActive == 1">Active</v-chip>
+                    <v-chip color="red" v-else>Inactive</v-chip>
+                </span>
             </template>
         </ReusableTable>
         <ItemSuppliesForm :form_payload="form_payload" @submit-form="confirmation" :item_supplies_form="item_supplies_form" :currentTabValue="currentTabValue" @close-dialog="closeFormDialog" />
@@ -117,7 +116,8 @@
         <SummaryModal 
             :show="open_summary_modal"
             :summary_header="'Items and Supplies'"
-            :data="items_supplies_test_data"
+            :data="report_data"
+            :isLoading="report_data_loading"
             @close-dialog="closeViewSummary"
         />
 
@@ -174,13 +174,9 @@ const params = ref("");
 const loading = ref(true);
 const search_results = ref([]);
 const search_payload = ref({});
-const open_summary_modal = ref(false);
-const items_supplies_test_data = ref([
-    { label: "Drugs and Medicines", value: "123" },
-    { label: "Supplies", value: "456" },
-    { label: "Assets .Equipment", value: "666" },
-    { label: "Others", value: "999" },
-]);  
+const open_summary_modal = ref(false); 
+const report_data = ref({}); 
+const report_data_loading = ref(false);
 
 const center_form_headers = ref([
    {
@@ -223,6 +219,13 @@ const headers = [
     {
         title: "Unit",
         key: "unit",
+        align: "start",
+        width: "10%",
+        sortable: false,
+    },
+    {
+        title: "Status",
+        key: "isActive",
         align: "start",
         width: "10%",
         sortable: false,
@@ -407,6 +410,7 @@ const DeactiveUser = () => {};
 
 const ViewSummary = () => {
     open_summary_modal.value = true;
+    getReport();
 }
 const closeViewSummary = () => {
     open_summary_modal.value = false;
@@ -510,6 +514,16 @@ const submitItemandSuppliesForm = async (details) => {
     }, 3000);
   }
 };
+
+const getReport = async () => {
+    report_data_loading.value = true;
+    const response = await useMethod("get", "report-count", "", "");
+    if (response) {
+        report_data.value = response;
+        report_data_loading.value = false;
+    } 
+};
+
 const updateTotalItems = (newTotalItems) => {
     totalItems.value = newTotalItems;
 };

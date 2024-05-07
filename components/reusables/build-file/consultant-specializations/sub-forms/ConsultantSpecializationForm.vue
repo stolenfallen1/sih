@@ -18,18 +18,11 @@
 
         <v-card-text>
           <v-row>
-            <v-col cols="4">
-              <v-text-field
-                label="Custom Code"
-                hide-details
-                readonly
-                density="compact"
-                variant="outlined"
-              ></v-text-field>
-            </v-col>
-            <v-col cols="8">
+            <v-col cols="12">
               <v-text-field
                 label="Description"
+                placeholder="Enter description"
+                v-model="payload.specialization_description"
                 hide-details
                 density="compact"
                 variant="outlined"
@@ -37,7 +30,8 @@
             </v-col>
             <v-col cols="12">
               <v-checkbox 
-                label="Include Consultants with this type of Specialization in Pathologist List for filtering purposes"
+                label="Status"
+                v-model="payload.isactive"
                 hide-details
                 density="compact"
               ></v-checkbox>
@@ -62,20 +56,14 @@ const props = defineProps({
     default: () => false,
     required: true,
   },
-  // payload: {
-  //   type: Object,
-  //   default: () => {},
-  // },
-  // isloading: {
-  //   type: Boolean,
-  //   default: () => false,
-  // },
+  payload: {
+    type: Object,
+    default: () => {},
+  },
 });
 
 const emits = defineEmits(["handle-submit", "close-dialog"]);
 const handleSubmit = () => {
-  // console.log(props.payload);
-  // emits("handle-submit", props.payload);
   emits("handle-submit");
 };
 
