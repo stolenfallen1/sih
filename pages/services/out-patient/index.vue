@@ -117,49 +117,51 @@
 
   <OutPatientRegistration :clicked_option="clicked_option" :form_dialog="form_dialog" @close-dialog="closeAddFormDialog" />
   <!-- Out-patients Sub components -->
-  <OpdSuspendDialog :show="OpdSuspend" @close-dialog="useSubComponents('OpdSuspend', false)" />
-  <OpdPrintTransReceiptDialog :show="OpdPrintTransactionReceipt" @close-dialog="useSubComponents('OpdPrintTransactionReceipt', false)"/>
-  <OpdPostCorporatePackageDialog :show="OpdPostCorporateMedicalPackage" @close-dialog="useSubComponents('OpdPostCorporateMedicalPackage', false)"/>
-  <OpdPostDiagnosticPackageDialog :show="OpdPostDiagnosticMedicalPackage" @close-dialog="useSubComponents('OpdPostDiagnosticMedicalPackage', false)"/> 
-  <OpdPostAdjustmentDialog :show="OpdPostAdjustments" @close-dialog="useSubComponents('OpdPostAdjustments', false)" />
-  <OpdPostProfessionalFeesDialog :show="OpdPostProfessionalFees" @close-dialog="useSubComponents('OpdPostProfessionalFees', false)" />
-  <OpdPostArTransferDialog :show="OpdPostArTransfer" @close-dialog="useSubComponents('OpdPostArTransfer', false)" />
-  <OpdViewExamUpshotDialog :show="OpdViewExaminationUpshot" @close-dialog="useSubComponents('OpdViewExaminationUpshot', false)" />
-  <OpdApplyPromissoryNoteDialog :show="OpdApplyPromissoryNote" @close-dialog="useSubComponents('OpdApplyPromissoryNote', false)" />
-  <OpdTagAsMghDialog :show="OpdTagAsMgh" @close-dialog="useSubComponents('OpdTagAsMgh', false)" />
-  <OpdUntagAsMghDialog :show="OpdUntagAsMgh" @close-dialog="useSubComponents('OpdUntagAsMgh', false)" />
-  <OpdDischargeDialog :show="OpdDischarge" @close-dialog="useSubComponents('OpdDischarge', false)" />
-  <OpdDischargeInstructionDialog :show="OpdDischargeInstruction" @close-dialog="useSubComponents('OpdDischargeInstruction', false)" />
-  <OpdPostFinalDiagnosisDialog :show="OpdPostFinalDiagnosis" @close-dialog="useSubComponents('OpdPostFinalDiagnosis', false)" />
-  <OpdSoaBillingDialog :show="OpdSoaBillingStatement" @close-dialog="useSubComponents('OpdSoaBillingStatement', false)" />
-  <OpdViewPrintReportsDialog :show="OpdViewPrintReports" @close-dialog="useSubComponents('OpdViewPrintReports', false)" />
-  <OpdAdmitPatientDialog :show="OpdAdmitPatient" @close-dialog="useSubComponents('OpdAdmitPatient', false)" />
-  <OpdTransferErDialog :show="OpdTransferToEr" @close-dialog="useSubComponents('OpdTransferToEr', false)" />
-  <OpdClaimForm4ProcessingDialog :show="OpdClaimForm4Processing" @close-dialog="useSubComponents('OpdClaimForm4Processing', false)" />
+  <SuspendDialog :show="Suspend" @close-dialog="useSubComponents('Suspend', false)" />
+  <PrintTransReceiptDialog :show="PrintTransactionReceipt" @close-dialog="useSubComponents('PrintTransactionReceipt', false)"/>
+  <PostCorporatePackageDialog :show="PostCorporateMedicalPackage" @close-dialog="useSubComponents('PostCorporateMedicalPackage', false)"/>
+  <PostDiagnosticPackageDialog :show="PostDiagnosticMedicalPackage" @close-dialog="useSubComponents('PostDiagnosticMedicalPackage', false)"/> 
+  <PostAdjustmentDialog :show="PostAdjustments" @close-dialog="useSubComponents('PostAdjustments', false)" />
+  <PostProfessionalFeesDialog :show="PostProfessionalFees" @close-dialog="useSubComponents('PostProfessionalFees', false)" />
+  <PostArTransferDialog :show="PostArTransfer" @close-dialog="useSubComponents('PostArTransfer', false)" />
+  <ViewExamUpshotDialog :show="ViewExaminationUpshot" @close-dialog="useSubComponents('ViewExaminationUpshot', false)" />
+  <ApplyPromissoryNoteDialog :show="ApplyPromissoryNote" @close-dialog="useSubComponents('ApplyPromissoryNote', false)" />
+  <ApplyMedicalPackageDialog :show="ApplyMedicalPackage" @close-dialog="useSubComponents('ApplyMedicalPackage', false)" />
+  <TagAsMghDialog :show="TagAsMgh" @close-dialog="useSubComponents('TagAsMgh', false)" />
+  <UntagAsMghDialog :show="UntagAsMgh" @close-dialog="useSubComponents('UntagAsMgh', false)" />
+  <DischargeDialog :show="Discharge" @close-dialog="useSubComponents('Discharge', false)" />
+  <DischargeInstructionDialog :show="DischargeInstruction" @close-dialog="useSubComponents('DischargeInstruction', false)" />
+  <PostFinalDiagnosisDialog :show="PostFinalDiagnosis" @close-dialog="useSubComponents('PostFinalDiagnosis', false)" />
+  <SoaBillingDialog :show="SoaBillingStatement" @close-dialog="useSubComponents('SoaBillingStatement', false)" />
+  <ViewPrintReportsDialog :show="ViewPrintReports" @close-dialog="useSubComponents('ViewPrintReports', false)" />
+  <AdmitPatientDialog :show="AdmitPatient" @close-dialog="useSubComponents('AdmitPatient', false)" />
+  <TransferErDialog :show="TransferToEr" @close-dialog="useSubComponents('TransferToEr', false)" />
+  <ClaimForm4ProcessingDialog :show="ClaimForm4Processing" @close-dialog="useSubComponents('ClaimForm4Processing', false)" />
 </template>
 
 <script setup>
 import ReusableTable from "~/components/reusables/ReusableTable.vue";
 const {
-  OpdSuspend,
-  OpdPrintTransactionReceipt,
-  OpdPostCorporateMedicalPackage,
-  OpdPostDiagnosticMedicalPackage,
-  OpdPostAdjustments,
-  OpdPostProfessionalFees,
-  OpdPostArTransfer,
-  OpdViewExaminationUpshot,
-  OpdApplyPromissoryNote,
-  OpdTagAsMgh,
-  OpdUntagAsMgh,
-  OpdDischarge,
-  OpdDischargeInstruction,
-  OpdPostFinalDiagnosis,
-  OpdSoaBillingStatement,
-  OpdViewPrintReports,
-  OpdAdmitPatient,
-  OpdTransferToEr,
-  OpdClaimForm4Processing,
+  Suspend,
+  PrintTransactionReceipt,
+  PostCorporateMedicalPackage,
+  PostDiagnosticMedicalPackage,
+  PostAdjustments,
+  PostProfessionalFees,
+  PostArTransfer,
+  ViewExaminationUpshot,
+  ApplyPromissoryNote,
+  ApplyMedicalPackage,
+  TagAsMgh,
+  UntagAsMgh,
+  Discharge,
+  DischargeInstruction,
+  PostFinalDiagnosis,
+  SoaBillingStatement,
+  ViewPrintReports,
+  AdmitPatient,
+  TransferToEr,
+  ClaimForm4Processing,
 } = storeToRefs(OpdSubComponentsDialog());
 
 definePageMeta({
@@ -195,27 +197,58 @@ const outpatients_test_data = ref([
 
 const headers = [
   {
-    title: "Building",
+    title: "ID",
     align: "start",
     sortable: true,
-    key: "building",
-    width: "10%",
+    key: "id",
+    width: "5%",
   },
-  { title: "Floor Name", key: "floor", align: "center", width: "10%", sortable: false },
-  { title: "Room No.", key: "room_code", align: "center", width: "10%", sortable: false },
   {
-    title: "No.Of Beds",
-    key: "total_beds",
-    align: "center",
+    title: "Code",
+    align: "start",
+    sortable: true,
+    key: "doctor_code",
+    width: "5%",
+  },
+  {
+    title: "Category",
+    key: "category",
+    align: "start",
+    width: "5%",
+    sortable: false,
+  },
+  {
+    title: "Specialization",
+    key: "specialization_id",
+    align: "start",
+    width: "5%",
+    sortable: false,
+  },
+  {
+    title: "Consultant Name",
+    key: "doctor_name",
+    align: "start",
+    width: "40%",
+    sortable: false,
+  },
+  {
+    title: "PHIC No.",
+    key: "philhealth_accreditation_no",
+    align: "start",
     width: "10%",
     sortable: false,
   },
-  { title: "Room Status", key: "roomstatus", align: "center", width: "15%", sortable: false },
-  { title: "Room Type", key: "roomClass", align: "center", width: "15%", sortable: false },
   {
-    title: "Nursing Station",
-    key: "station",
-    align: "center",
+    title: "Email",
+    key: "email",
+    align: "start",
+    width: "30%",
+    sortable: false,
+  },
+   {
+    title: "Status",
+    key: "isactive",
+    align: "start",
     width: "30%",
     sortable: false,
   },
@@ -288,7 +321,7 @@ const loadItems = async (options = null, searchkeyword = null) => {
     let keyword = searchkeyword || "";
       params.value = options  ? "page=" + options.page + "&per_page=" + options.itemsPerPage + "&keyword=" + options.keyword
     : "page=1&per_page=10&keyword=" + keyword;
-    const response = await fetch(useApiUrl()+'/rooms-and-beds'+ "?" + params.value || "", {
+    const response = await fetch(useApiUrl()+'/doctors'+ "?" + params.value || "", {
       headers: {
         Authorization: `Bearer `+ useToken(),
       },

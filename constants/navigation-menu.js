@@ -866,7 +866,7 @@ export default [
                     {
                         label: "Suspend",
                         icon: "mdi-file-document-edit",
-                        form: "OpdSuspend",
+                        form: "Suspend",
                         rule: "",
                     },
                     {
@@ -882,31 +882,31 @@ export default [
                     {
                         label: "Print Transaction Receipt",
                         icon: "mdi-file-document-edit",
-                        form: "OpdPrintTransactionReceipt",
+                        form: "PrintTransactionReceipt",
                         rule: "",
                     },
                     {
                         label: "Post Corporate Medical Package",
                         icon: "mdi-file-document-edit",
-                        form: "OpdPostCorporateMedicalPackage",
+                        form: "PostCorporateMedicalPackage",
                         rule: "",
                     },
                     {
                         label: "Post Diagnostic Medical Package",
                         icon: "mdi-file-document-edit",
-                        form: "OpdPostDiagnosticMedicalPackage",
+                        form: "PostDiagnosticMedicalPackage",
                         rule: "",
                     },
                     {
                         label: "Post Adjustments",
                         icon: "mdi-file-document-edit",
-                        form: "OpdPostAdjustments",
+                        form: "PostAdjustments",
                         rule: "",
                     },
                     {
                         label: "Post Professional Fees",
                         icon: "mdi-file-document-edit",
-                        form: "OpdPostProfessionalFees",
+                        form: "PostProfessionalFees",
                         rule: "",
                     },
                     {
@@ -917,7 +917,7 @@ export default [
                     {
                         label: "Post A/R Transfer",
                         icon: "mdi-file-document-edit",
-                        form: "OpdPostArTransfer",
+                        form: "PostArTransfer",
                         rule: "",
                     },
                     {
@@ -928,42 +928,43 @@ export default [
                     {
                         label: "View Examination Upshot",
                         icon: "mdi-file-document-edit",
-                        form: "OpdViewExaminationUpshot",
+                        form: "ViewExaminationUpshot",
                         rule: "",
                     },
                     {
                         label: "Apply Promissory Note",
                         icon: "mdi-file-document-edit",
-                        form: "OpdApplyPromissoryNote",
+                        form: "ApplyPromissoryNote",
                         rule: "",
                     },
                     {
                         label: "Apply Medical Package",
                         icon: "mdi-file-document-edit",
+                        form: "ApplyMedicalPackage",
                         rule: "",
                     },
                     {
                         label: "Tag as MGH",
                         icon: "mdi-file-document-edit",
-                        form: "OpdTagAsMgh",
+                        form: "TagAsMgh",
                         rule: "",
                     },
                     {
                         label: "Untag as MGH",
                         icon: "mdi-file-document-edit",
-                        form: "OpdUntagAsMgh",
+                        form: "UntagAsMgh",
                         rule: "",
                     },
                     {
                         label: "Discharge",
                         icon: "mdi-file-document-edit",
-                        form: "OpdDischarge",
+                        form: "Discharge",
                         rule: "",
                     },
                     {
                         label: "Discharge Instruction",
                         icon: "mdi-file-document-edit",
-                        form: "OpdDischargeInstruction",
+                        form: "DischargeInstruction",
                         rule: "",
                     },
                     {
@@ -974,25 +975,25 @@ export default [
                     {
                         label: "Post Final Diagnosis",
                         icon: "mdi-file-document-edit",
-                        form: "OpdPostFinalDiagnosis",
+                        form: "PostFinalDiagnosis",
                         rule: "",
                     },
                     {
                         label: "SOA. Billing Statement",
                         icon: "mdi-file-document-edit",
-                        form: "OpdSoaBillingStatement",
+                        form: "SoaBillingStatement",
                         rule: "",
                     },
                     {
                         label: "View. Print Reports",
                         icon: "mdi-file-document-edit",
-                        form: "OpdViewPrintReports",
+                        form: "ViewPrintReports",
                         rule: "",
                     },
                     {
                         label: "Admit Patient",
                         icon: "mdi-file-document-edit",
-                        form: "OpdAdmitPatient",
+                        form: "AdmitPatient",
                         rule: "",
                     },
                     {
@@ -1008,7 +1009,7 @@ export default [
                     {
                         label: "Transfer to ER",
                         icon: "mdi-file-document-edit",
-                        form: "OpdTransferToEr",
+                        form: "TransferToEr",
                         rule: "",
                     },
                     {
@@ -1019,7 +1020,7 @@ export default [
                     {
                         label: "Claim Form 4 Processing",
                         icon: "mdi-file-document-edit",
-                        form: "OpdClaimForm4Processing",
+                        form: "ClaimForm4Processing",
                         rule: "",
                     },
                 ],
@@ -1226,7 +1227,7 @@ export default [
                 label: "Emergency",
                 icon: "mdi-ambulance",
                 path: "/services/emergency",
-                rule: "browse_emergencies",
+                rule: "browse_emergency",
                 subcomponents: [
                     {
                         label: "Emergency Case Details",
@@ -1241,6 +1242,7 @@ export default [
                     {
                         label: "Suspend",
                         icon: "mdi-file-document-edit",
+                        form: "Suspend",
                         rule: "",
                     },
                     {
@@ -1256,21 +1258,25 @@ export default [
                     {
                         label: "Post Corporate Medical Package",
                         icon: "mdi-file-document-edit",
+                        form: "PostCorporateMedicalPackage",
                         rule: "",
                     },
                     {
                         label: "Post Diagnostic Medical Package",
                         icon: "mdi-file-document-edit",
+                        form: "PostDiagnosticMedicalPackage",
                         rule: "",
                     },
                     {
                         label: "Post Adjustments",
                         icon: "mdi-file-document-edit",
+                        form: "PostAdjustments",
                         rule: "",
                     },
                     {
                         label: "Post Professional Fees",
                         icon: "mdi-file-document-edit",
+                        form: "PostProfessionalFees",
                         rule: "",
                     },
                     {
@@ -1281,6 +1287,7 @@ export default [
                     {
                         label: "Post A/R Transfer",
                         icon: "mdi-file-document-edit",
+                        form: "PostArTransfer",
                         rule: "",
                     },
                     {
@@ -1291,36 +1298,43 @@ export default [
                     {
                         label: "View Examination Upshot",
                         icon: "mdi-file-document-edit",
+                        form: "ViewExaminationUpshot",
                         rule: "",
                     },
                     {
                         label: "Apply Promissory Note",
                         icon: "mdi-file-document-edit",
+                        form: "ApplyPromissoryNote",
                         rule: "",
                     },
                     {
                         label: "Apply Medical Package",
                         icon: "mdi-file-document-edit",
+                        form: "ApplyMedicalPackage",
                         rule: "",
                     },
                     {
                         label: "Tag as MGH",
                         icon: "mdi-file-document-edit",
+                        form: "TagAsMgh",
                         rule: "",
                     },
                     {
                         label: "Untag as MGH",
                         icon: "mdi-file-document-edit",
+                        form: "UntagAsMgh",
                         rule: "",
                     },
                     {
                         label: "Discharge",
                         icon: "mdi-file-document-edit",
+                        form: "Discharge",
                         rule: "",
                     },
                     {
                         label: "Discharge Instruction",
                         icon: "mdi-file-document-edit",
+                        form: "DischargeInstruction",
                         rule: "",
                     },
                     {
@@ -1331,21 +1345,25 @@ export default [
                     {
                         label: "Post Final Diagnosis",
                         icon: "mdi-file-document-edit",
+                        form: "PostFinalDiagnosis",
                         rule: "",
                     },
                     {
                         label: "SOA. Billing Statement",
                         icon: "mdi-file-document-edit",
+                        form: "SoaBillingStatement",
                         rule: "",
                     },
                     {
                         label: "View. Print Reports",
                         icon: "mdi-file-document-edit",
+                        form: "ViewPrintReports",
                         rule: "",
                     },
                     {
-                        label: "Admit Registry Account",
+                        label: "Admit Patient",
                         icon: "mdi-file-document-edit",
+                        form: "AdmitPatient",
                         rule: "",
                     },
                     {
@@ -1356,6 +1374,7 @@ export default [
                     {
                         label: "Claim Form 4 Processing",
                         icon: "mdi-file-document-edit",
+                        form: "ClaimForm4Processing",
                         rule: "",
                     },
                 ],
@@ -2359,24 +2378,11 @@ export default [
                 table_and_template: []
             },
             {
-                label: "Build File",
+                label: "Build File / Templates",
                 icon: "mdi-form-select",
                 path: "/build-file",
-                // rule: "browse_reports", no rule like this yet
-                rule: "browse_settings", // for now so that I can access the page
-                subcomponents: [
-                    {
-                        label: "Nurse Stations",
-                        icon: "mdi-file-document",
-                        form: "NurseStationDialog",
-                        path: "/system-settings/system-users/nurse-stations",
-                    },
-                    {
-                        label: "Reports",
-                        icon: "mdi-file-document",
-                        path: "/system-settings/system-users/reports",
-                    },
-                ],
+                rule: "browse_settings", 
+                subcomponents: [],
                 processing_and_queries: [],
                 table_and_template: [
                     {
