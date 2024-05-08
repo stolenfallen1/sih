@@ -3,7 +3,10 @@
         <form @submit.prevent="onSubmit">
             <v-card rounded="lg">
                 <v-toolbar density="compact" color="#6984ff" hide-details>
-                    <v-toolbar-title>Suspend Outpatient Registry Account Window {{ selectedRowDetails.id }}</v-toolbar-title>
+                    <v-toolbar-title>
+                        {{ form_type === 'outpatient' ? 'Suspend Outpatient Registry Account Window' : (form_type === 'emergency' ? 'Suspend Emergency Registry Account Window' : 'Suspend Inpatient Registry Account Window') }} 
+                        {{ selectedRowDetails.id }}
+                    </v-toolbar-title>
                     <v-btn color="white" @click="closeDialog">
                         <v-icon>mdi-close</v-icon>
                     </v-btn>
@@ -38,8 +41,8 @@
                                 </v-col>
                                 <v-col cols="6">
                                     <v-text-field 
-                                        label="Outpatient No." 
-                                        v-model="payload.find(item => item.outpatient_case_no).outpatient_case_no"
+                                        :label="form_type === 'outpatient' ? 'Outpatient Case No' : (form_type === 'emergency' ? 'Emergency Case No' : 'Admission No')" 
+                                        v-model="payload.find(item => item.case_no).case_no"
                                         variant="outlined" 
                                         density="compact" 
                                         hide-details 
@@ -59,8 +62,8 @@
                                 <v-col cols="4">
                                     <v-text-field 
                                         type="date"
-                                        label="Outpatient Date" 
-                                        v-model="payload.find(item => item.outpatient_date).outpatient_date"
+                                        :label="form_type === 'outpatient' ? 'Outpatient Date' : (form_type === 'emergency' ? 'Emergency Date' : 'Admission Date')" 
+                                        v-model="payload.find(item => item.case_date).case_date"
                                         variant="outlined" 
                                         density="compact" 
                                         hide-details 
@@ -152,6 +155,10 @@ const props = defineProps({
         default: () => false,
         required: true,
     },
+    form_type: {
+        type: String,
+        default: () => '',
+    }
 });
 
 const { selectedRowDetails } = storeToRefs(useSubcomponentSelectedRowDetailsStore()); 
@@ -164,10 +171,10 @@ const payload = ref([
         registry_case_type: 'Outpatient',
     },
     {
-        outpatient_case_no: '123',
+        case_no: '123',
     },
     {
-        outpatient_date: '2024-04-15',
+        case_date: '2024-04-15',
     },
     {
         account_balance: '00.00',

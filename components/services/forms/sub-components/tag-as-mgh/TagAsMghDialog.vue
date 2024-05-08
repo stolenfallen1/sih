@@ -3,7 +3,9 @@
         <form @submit.prevent="onSubmit">
             <v-card rounded="lg">
                 <v-toolbar density="compact" color="#6984ff" hide-details>
-                    <v-toolbar-title>Outpatient Case May Go Home Tagging {{ selectedRowDetails.id }}</v-toolbar-title>
+                    <v-toolbar-title>
+                        {{ form_type === 'outpatient' ? 'Outpatient Case May Go Home Tagging' : (form_type === 'emergency' ? 'Emergency Case May Go Home Tagging' : 'Inpatient Case May Go Home Tagging') }} {{ selectedRowDetails.id }}
+                    </v-toolbar-title>
                     <v-btn color="white" @click="closeDialog">
                         <v-icon>mdi-close</v-icon>
                     </v-btn>
@@ -32,8 +34,8 @@
                         </v-col>
                         <v-col cols="3">
                             <v-text-field
-                                label="Outpatient Case No."
-                                v-model="payload.find(item => item.outpatient_case_no).outpatient_case_no"
+                                :label="form_type === 'outpatient' ? 'Outpatient Case No.' : (form_type === 'emergency' ? 'ER Case No.' : 'Admission No.')"
+                                v-model="payload.find(item => item.case_no).case_no"
                                 variant="outlined"
                                 density="compact"
                                 hide-details
@@ -43,15 +45,15 @@
                         <v-col cols="3">
                             <v-text-field
                                 type="date"
-                                label="Outpatient Case DateTime"
-                                v-model="payload.find(item => item.outpatient_date).outpatient_date"
+                                :label="form_type === 'outpatient' ? 'Outpatient Date' : (form_type === 'emergency' ? 'ER Case Date' : 'Admission Date')"
+                                v-model="payload.find(item => item.case_date).case_date"
                                 variant="outlined"
                                 density="compact"
                                 hide-details
                                 readonly
                             ></v-text-field>
                         </v-col>
-                        <v-col cols="4">
+                        <v-col :cols="form_type === 'inpatient' ? 3 : 4" class="form-col">
                             <v-text-field
                                 label="Patient ID"
                                 v-model="selectedRowDetails.id"
@@ -61,7 +63,7 @@
                                 readonly
                             ></v-text-field>
                         </v-col>
-                        <v-col cols="4">
+                        <v-col :cols="form_type === 'inpatient' ? 3 : 4" class="form-col">
                             <v-text-field
                                 label="Patient Name"
                                 v-model="payload.find(item => item.patient_name).patient_name"
@@ -71,7 +73,7 @@
                                 readonly
                             ></v-text-field>
                         </v-col>
-                        <v-col cols="4">
+                        <v-col :cols="form_type === 'inpatient' ? 3 : 4" class="form-col">
                             <v-autocomplete
                                 label="Disposition"
                                 v-model="payload.disposition"
@@ -80,7 +82,16 @@
                                 hide-details
                             ></v-autocomplete>
                         </v-col>
-                        <v-col cols="12">
+                        <v-col v-if="form_type === 'inpatient'" cols="3" class="form-col">
+                            <v-text-field
+                                label="Room No."
+                                variant="outlined"
+                                density="compact"
+                                hide-details
+                                readonly
+                            ></v-text-field>
+                        </v-col>
+                        <v-col cols="12" class="form-col" v-if="form_type === 'outpatient' || form_type === 'inpatient'">
                             <v-autocomplete
                                 label="Referred to"
                                 v-model="payload.referred_to"
@@ -90,7 +101,7 @@
                                 hide-details
                             ></v-autocomplete>
                         </v-col>
-                        <v-col cols="6">
+                        <v-col cols="6" class="form-col" v-if="form_type === 'outpatient' || form_type === 'inpatient'">
                             <v-text-field
                                 class="cursor-pointer"
                                 label="Referred HCI / Code"
@@ -102,7 +113,7 @@
                                 prepend-icon="mdi-plus-box"         
                             ></v-text-field>
                         </v-col>
-                        <v-col cols="6">
+                        <v-col cols="6" class="form-col" v-if="form_type === 'outpatient' || form_type === 'inpatient'">
                             <v-text-field
                                 class="cursor-pointer"
                                 label="Referred HCI Address"
@@ -114,7 +125,7 @@
                                 prepend-icon="mdi-plus-box"
                             ></v-text-field>
                         </v-col>
-                        <v-col cols="12">
+                        <v-col cols="12" class="form-col" v-if="form_type === 'outpatient' || form_type === 'inpatient'">
                             <v-textarea
                                 label="Referreal Reason"
                                 v-model="payload.referreal_reason"
@@ -124,7 +135,7 @@
                                 readonly
                             ></v-textarea>
                         </v-col>
-                        <v-col cols="12">
+                        <v-col cols="12" class="form-col" v-if="form_type === 'outpatient' || form_type === 'inpatient'">
                             <v-text-field
                                 label="Causes of Referral"
                                 v-model="payload.causes_of_referral"
@@ -134,9 +145,9 @@
                                 readonly
                             ></v-text-field>
                         </v-col>
-                        <v-col cols="12">
+                        <v-col cols="12" class="form-col">
                             <v-autocomplete
-                                label="Outpatient Result"
+                                :label="form_type === 'outpatient' ? 'Outpatient Result' : (form_type === 'emergency' ? 'ER Result' : 'Admission Result')"
                                 variant="outlined"
                                 density="compact"
                                 :items="outpatient_result"
@@ -173,7 +184,25 @@
                                 hide-details
                             ></v-autocomplete>
                         </v-col>
-                        <v-col cols="12">
+                        <v-col cols="6" class="form-col" v-if="form_type === 'inpatient'">
+                            <v-autocomplete
+                                label="Type of Delivery"
+                                variant="outlined"
+                                density="compact"
+                                readonly
+                                hide-details
+                            ></v-autocomplete>
+                        </v-col>
+                        <v-col cols="6" class="form-col" v-if="form_type === 'inpatient'">
+                            <v-autocomplete
+                                label="Indication for CS"
+                                variant="outlined"
+                                density="compact"
+                                readonly
+                                hide-details
+                            ></v-autocomplete>
+                        </v-col>
+                        <v-col cols="12" class="form-col">
                             <v-textarea
                                 label="Initial Impression"
                                 v-model="payload.initial_impression"
@@ -183,7 +212,7 @@
                                 readonly
                             ></v-textarea>
                         </v-col>
-                        <v-col cols="12">
+                        <v-col cols="12" class="form-col">
                             <v-autocomplete
                                 label="Patient Status"
                                 v-model="payload.patient_status"
@@ -192,7 +221,7 @@
                                 hide-details
                             ></v-autocomplete>
                         </v-col>
-                        <v-col cols="12">
+                        <v-col cols="12" class="form-col">
                             <v-textarea
                                 label="Discharge Diagnosis"
                                 v-model="payload.discharge_diagnosis"
@@ -222,6 +251,10 @@ const props = defineProps({
         default: () => false,
         required: true,
     },
+    form_type: {
+        type: String,
+        default: () => '',
+    },
 });
 
 const emits = defineEmits(['close-dialog']);
@@ -238,10 +271,10 @@ const payload = ref([
         registry_case_no: '456',
     },
     {
-        outpatient_case_no: '999',
+        case_no: '999',
     },
     {
-        outpatient_date: '2024-04-15',
+        case_date: '2024-04-15',
     },
     {
         patient_name: 'John Doe',
@@ -260,4 +293,7 @@ const onSubmit = () => {
 </script>
 
 <style scoped>
+.form-col {
+    margin-top: -16px !important;
+}
 </style>

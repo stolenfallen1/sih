@@ -37,8 +37,8 @@
                                 </v-col>
                                 <v-col cols="4" class="form-col">
                                     <v-text-field 
-                                        label="Outpatient No." 
-                                        v-model="payload.find(item => item.outpatient_case_no).outpatient_case_no"
+                                        :label="form_type === 'outpatient' ? 'Outpatient Case No.' : (form_type === 'emergency' ? 'ER Case No.' : 'Admission No.')" 
+                                        v-model="payload.find(item => item.case_no).case_no"
                                         variant="outlined" 
                                         density="compact" 
                                         hide-details 
@@ -58,8 +58,8 @@
                                 <v-col cols="4" class="form-col">
                                     <v-text-field 
                                         type="date"
-                                        label="Outpatient Date" 
-                                        v-model="payload.find(item => item.outpatient_date).outpatient_date"
+                                        :label="form_type === 'outpatient' ? 'Outpatient Date' : (form_type === 'emergency' ? 'ER Date' : 'Admission Date')" 
+                                        v-model="payload.find(item => item.case_date).case_date"
                                         variant="outlined" 
                                         density="compact" 
                                         hide-details 
@@ -256,6 +256,10 @@ const props = defineProps({
         default: () => false,
         required: true,
     },
+    form_type: {
+        type: String,
+        default: () => '',
+    },
 });
 
 const open_tag_transactions = ref(false); 
@@ -267,10 +271,10 @@ const payload = ref([
         registry_case_type: 'Outpatient',
     },
     {
-        outpatient_case_no: '123',
+        case_no: '123',
     },
     {
-        outpatient_date: '2024-04-15',
+        case_date: '2024-04-15',
     },
     {
         room_no: 'N/A',

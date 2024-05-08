@@ -28,29 +28,29 @@
                                 </v-col>
                                 <v-col cols="6">
                                     <v-text-field 
-                                        label="Outpatient Case No." 
-                                        v-model="payload.find(item => item.outpatient_case_no).outpatient_case_no"
+                                        :label="form_type === 'outpatient' ? 'Outpatient Case No.' : (form_type === 'emergency' ? 'ER Case No.' : 'Admission No.')" 
+                                        v-model="payload.find(item => item.case_no).case_no"
                                         variant="outlined" 
                                         density="compact" 
                                         hide-details 
                                         readonly
                                     ></v-text-field>
                                 </v-col>
-                                <v-col cols="6">
+                                <v-col cols="6" class="form-col">
                                     <v-text-field 
                                         type="date"
-                                        label="Outpatient Case DateTime" 
-                                        v-model="payload.find(item => item.outpatient_date).outpatient_date"
+                                        :label="form_type === 'outpatient' ? 'Outpatient Case Date' : (form_type === 'emergency' ? 'ER Case Date' : 'Admission Date')" 
+                                        v-model="payload.find(item => item.case_date).case_date"
                                         variant="outlined" 
                                         density="compact" 
                                         hide-details 
                                         readonly
                                     ></v-text-field>
                                 </v-col>
-                                <v-col cols="6">
+                                <v-col cols="6" class="form-col">
                                     <v-text-field 
                                         type="date"
-                                        label="Discharge DateTime" 
+                                        label="Discharge Date Time" 
                                         v-model="payload.find(item => item.discharge_date).discharge_date"
                                         variant="outlined" 
                                         density="compact" 
@@ -58,7 +58,7 @@
                                         readonly
                                     ></v-text-field>
                                 </v-col>
-                                <v-col cols="4">
+                                <v-col cols="4" class="form-col">
                                     <v-text-field 
                                         label="Debit" 
                                         variant="outlined" 
@@ -68,7 +68,7 @@
                                         readonly
                                     ></v-text-field>
                                 </v-col>
-                                <v-col cols="4">
+                                <v-col cols="4" class="form-col">
                                     <v-text-field 
                                         label="Credit" 
                                         variant="outlined" 
@@ -78,7 +78,7 @@
                                         readonly
                                     ></v-text-field>
                                 </v-col>
-                                <v-col cols="4">
+                                <v-col cols="4" class="form-col">
                                     <v-text-field 
                                         label="Balance" 
                                         variant="outlined" 
@@ -164,6 +164,10 @@ const props = defineProps({
         default: () => false,
         required: true,
     },
+    form_type: {
+        type: String,
+        default: () => '',
+    },
 });
 
 const { selectedRowDetails } = storeToRefs(useSubcomponentSelectedRowDetailsStore()); 
@@ -173,10 +177,10 @@ const payload = ref([
         patient_name: 'John Doe',
     },
     {
-        outpatient_case_no: '123',
+        case_no: '123',
     },
     {
-        outpatient_date: '2024-04-15',
+        case_date: '2024-04-15',
     },
     {
         discharge_date: '2024-04-20',
@@ -209,5 +213,8 @@ const closeDialog = () => {
     font-size: 16px; 
     font-style: italic; 
     text-align: center;
+}
+.form-col {
+    margin-top: -16px !important;
 }
 </style>
