@@ -32,7 +32,7 @@
               sm="6"
               md="6"
               lg="6"
-              class="pa-1"
+              class="pa-1 text-left"
             >
               <template v-for="(template_item, index) in template.child" :key="index">
                 <template v-if="template_item.table_and_template.length > 0">
@@ -40,12 +40,8 @@
                     <v-list density="compact" class="ma-1">
                       <v-card-title><div style="font-weight:bold; color:#117dad !important;">{{ template_item.label }}</div></v-card-title>
                       <v-divider></v-divider>
-                        <v-list-item v-for="(item, index) in filteredTableAndTemplate(template_item.table_and_template)" :key="index" @click="computeTableAndTemplate(item.form)">
-                          <p style="font-size: large; font-weight: 500" > {{ item.label }} </p>
-                           <!-- <template v-slot:prepend>
-                            <v-btn class="mr-2 pa-1" size="medium" color="#6984FF" :icon="item.icon"></v-btn>
-                            </template> -->
-                          <!-- <v-btn color="#6984FF" @click="handleOpenTemplate">Open Template</v-btn> -->
+                        <v-list-item v-for="(item, index) in filteredTableAndTemplate(template_item.table_and_template)" :key="index" @click="computeTableAndTemplate(item.form)" class="hover-label">
+                          <p style="font-size: large; font-weight: 500"> {{ item.label }} </p>
                         </v-list-item>
                     </v-list>
                   </v-card>
@@ -67,15 +63,6 @@ const emits = defineEmits(["search"]);
 
 const searchQuery = ref("");
 // const filteredTemplates = ref(templates.value)
-
-
-const handleRefresh = () => {
-  searchQuery.value = ''
-}
-
-const handleOpenTemplate = () => {
-  alert("Open Template");
-};
 
 const computeTableAndTemplate = (dialog,type)=>{
     if(dialog){
@@ -122,4 +109,8 @@ const filteredItems = computed(() => {
   
 </script>
 
-<style scoped></style>
+<style scoped>
+.hover-label:hover{
+  color: #117dad !important;
+}
+</style>

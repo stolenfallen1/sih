@@ -143,8 +143,4 @@ const onSubmit = () => {
 </script>
 
 <style scoped>
-.expansion-title {
-    font-size: 18px; 
-    font-style: italic;
-}
 </style>
