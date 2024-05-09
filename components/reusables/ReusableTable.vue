@@ -17,6 +17,9 @@
             </v-btn>
             <span>|</span>
             <v-toolbar-title>{{ tableTitle }}</v-toolbar-title>
+            <!-- <v-radio-group v-for="radioItem in radios" v-if="showRadioButtons" :key="radioItem.value" inline density="compact" hide-details>
+                <v-radio :label="radioItem.label" :value="radioItem.value" density="compact" hide-details></v-radio>
+            </v-radio-group> -->
             <v-spacer></v-spacer>
             <v-text-field
                 class="mt-5 mr-2"
@@ -100,6 +103,10 @@ const props = defineProps({
         type: Array,
         default: () => [],
     },
+    // radios: {
+    //     type: Array,
+    //     default: () => [],
+    // },
     tableTitle: {
         type: String,
         default: "",
@@ -112,6 +119,10 @@ const props = defineProps({
         type: Boolean,
         default: false,
     },
+    // showRadioButtons: {
+    //     type: Boolean,
+    //     default: false,
+    // },
 });
 
 const tab = ref("");
