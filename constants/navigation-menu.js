@@ -1992,26 +1992,31 @@ export default [
                     {
                         label: "View Examination Upshots",
                         icon: "mdi-file-document-edit",
+                        form: "ViewExaminationUpshot",
                         rule: "",
                     },
                     {
                         label: "Tag as MGH",
                         icon: "mdi-file-document-edit",
+                        form: "TagAsMgh",
                         rule: "",
                     },
                     {
                         label: "Untag as MGH",
                         icon: "mdi-file-document-edit",
+                        form: "UntagAsMgh",
                         rule: "",
                     },
                     {
                         label: "Discharge",
                         icon: "mdi-file-document-edit",
+                        form: "Discharge",
                         rule: "",
                     },
                     {
                         label: "Discharge Instruction",
                         icon: "mdi-file-document-edit",
+                        form: "DischargeInstruction",
                         rule: "",
                     },
                     {
@@ -2042,6 +2047,7 @@ export default [
                     {
                         label: "Claim Form 4 Processing",
                         icon: "mdi-file-document-edit",
+                        form: "ClaimForm4Processing",
                         rule: "",
                     },
                 ],
@@ -2109,21 +2115,25 @@ export default [
                     {
                         label: "Acknowledge Posted Diet",
                         icon: "mdi-file-document-edit",
+                        form: "AcknowledgePostedDiet",
                         rule: "",
                     },
                     {
                         label: "Post Diet Meal as Served",
                         icon: "mdi-file-document-edit",
+                        form: "PostDietMealasServed",
                         rule: "",
                     },
                     {
                         label: "View .Print Diet Card",
                         icon: "mdi-file-document-edit",
+                        form: "ViewPrintDietCard",
                         rule: "",
                     },
                     {
                         label: "View Patient Diet History",
                         icon: "mdi-file-document-edit",
+                        form: "ViewPatientDietHistory",
                         rule: "",
                     },
                 ],

@@ -6,6 +6,8 @@ import { MFItemsAndServicesDialog } from "~/store/sub-components/master-file/MFI
 import { OpdSubComponentsDialog } from "~/store/sub-components/services/OpdSubComponentsDialog";
 import { ERSubComponentsDialog } from "~/store/sub-components/services/ERSubComponentsDialog";
 import { IpdSubComponentsDialog } from "~/store/sub-components/services/IpdSubComponentsDialog";
+import { NursingSubComponentsDialog } from "~/store/sub-components/services/NursingSubComponentsDialog";
+import { DietarySubComponentsDialog } from "~/store/sub-components/services/DietarySubComponentsDialog";
 
 export const useSubComponents = async (dialog: any, type: Boolean = true) => {
     // Master file sub components dialog states
@@ -17,6 +19,8 @@ export const useSubComponents = async (dialog: any, type: Boolean = true) => {
     const { setOpdSubComponentsDialog } = OpdSubComponentsDialog();
     const { setERSubComponentsDialog } = ERSubComponentsDialog();
     const { setIpdSubComponentsDialog } = IpdSubComponentsDialog();
+    const { setNursingSubComponentsDialog } = NursingSubComponentsDialog();
+    const { setDietarySubComponentsDialog } = DietarySubComponentsDialog();
 
     // Master file
     setMFConsultantsDialog(dialog, type);
@@ -26,4 +30,6 @@ export const useSubComponents = async (dialog: any, type: Boolean = true) => {
     setOpdSubComponentsDialog(dialog, type);
     setERSubComponentsDialog(dialog, type);
     setIpdSubComponentsDialog(dialog, type);
+    setNursingSubComponentsDialog(dialog, type);
+    setDietarySubComponentsDialog(dialog, type);
 };

@@ -14,7 +14,7 @@
       </v-btn>
       <v-btn
         @click="handleNew"
-        :disabled="serverItems.length > 0 ? true : false"
+        disabled
         prepend-icon="mdi-plus-outline"
         width="100"
         color="primary"
@@ -35,7 +35,7 @@
       <v-btn
         @click="DeactiveUser"
         prepend-icon="mdi-toggle-switch"
-        :disabled="isSelectedUser"
+        disabled
         width="150"
         color="primary"
         class="bg-error text-white"
@@ -88,10 +88,27 @@
       </template>
     </ReusableTable>
   </v-card>
+
+  <!-- Out-patients Sub components -->
+  <ViewExamUpshotDialog :show="ViewExaminationUpshot" @close-dialog="useSubComponents('ViewExaminationUpshot', false)" />
+  <TagAsMghDialog :show="TagAsMgh" :form_type="form_type" @close-dialog="useSubComponents('TagAsMgh', false)" />
+  <UntagAsMghDialog :show="UntagAsMgh" @close-dialog="useSubComponents('UntagAsMgh', false)" />
+  <DischargeDialog :show="Discharge" :form_type="form_type" @close-dialog="useSubComponents('Discharge', false)" />
+  <DischargeInstructionDialog :show="DischargeInstruction" @close-dialog="useSubComponents('DischargeInstruction', false)" />
+  <ClaimForm4ProcessingDialog :show="ClaimForm4Processing" @close-dialog="useSubComponents('ClaimForm4Processing', false)" />
 </template>
 
 <script setup>
 import ReusableTable from "~/components/reusables/ReusableTable.vue";
+const {
+  ViewExaminationUpshot,
+  TagAsMgh,
+  UntagAsMgh,
+  Discharge,
+  DischargeInstruction,
+  ClaimForm4Processing,
+} = storeToRefs(NursingSubComponentsDialog());
+
 definePageMeta({
   layout: "root-layout",
 });
@@ -110,27 +127,58 @@ const params = ref("");
 const loading = ref(true);
 const headers = [
   {
-    title: "Building",
+    title: "ID",
     align: "start",
     sortable: true,
-    key: "building",
-    width: "10%",
+    key: "id",
+    width: "5%",
   },
-  { title: "Floor Name", key: "floor", align: "center", width: "10%", sortable: false },
-  { title: "Room No.", key: "room_code", align: "center", width: "10%", sortable: false },
   {
-    title: "No.Of Beds",
-    key: "total_beds",
-    align: "center",
+    title: "Code",
+    align: "start",
+    sortable: true,
+    key: "doctor_code",
+    width: "5%",
+  },
+  {
+    title: "Category",
+    key: "category",
+    align: "start",
+    width: "5%",
+    sortable: false,
+  },
+  {
+    title: "Specialization",
+    key: "specialization_id",
+    align: "start",
+    width: "5%",
+    sortable: false,
+  },
+  {
+    title: "Consultant Name",
+    key: "doctor_name",
+    align: "start",
+    width: "40%",
+    sortable: false,
+  },
+  {
+    title: "PHIC No.",
+    key: "philhealth_accreditation_no",
+    align: "start",
     width: "10%",
     sortable: false,
   },
-  { title: "Room Status", key: "roomstatus", align: "center", width: "15%", sortable: false },
-  { title: "Room Type", key: "roomClass", align: "center", width: "15%", sortable: false },
   {
-    title: "Nursing Station",
-    key: "station",
-    align: "center",
+    title: "Email",
+    key: "email",
+    align: "start",
+    width: "30%",
+    sortable: false,
+  },
+   {
+    title: "Status",
+    key: "isactive",
+    align: "start",
     width: "30%",
     sortable: false,
   },
@@ -178,7 +226,7 @@ const loadItems = async (options = null, searchkeyword = null) => {
     let keyword = searchkeyword || "";
       params.value = options  ? "page=" + options.page + "&per_page=" + options.itemsPerPage + "&keyword=" + options.keyword
     : "page=1&per_page=10&keyword=" + keyword;
-    const response = await fetch(useApiUrl()+'/rooms-and-beds'+ "?" + params.value || "", {
+    const response = await fetch(useApiUrl()+'/doctors'+ "?" + params.value || "", {
       headers: {
         Authorization: `Bearer `+ useToken(),
       },
