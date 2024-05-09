@@ -89,6 +89,27 @@
                             </v-row>
                         </v-card-text>
                     </v-card>
+                    <v-card elevation="4" class="mt-4">
+                        <v-toolbar density="compact" hide-details>
+                            <v-toolbar-title class="toolbar-title">Check Up</v-toolbar-title>
+                        </v-toolbar>
+                        <v-card-text>
+                            <v-table>
+                                <thead>
+                                    <tr>
+                                        <th>Doctor Name</th>
+                                        <th>Checkup Date</th>
+                                        <th>Venue Schedule</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <!-- Contents here -->
+                                    </tr>
+                                </tbody>
+                            </v-table>
+                        </v-card-text>
+                    </v-card>
                     <v-row class="mt-2" style="display: flex; justify-content: center;">
                         <v-list-subheader>Pharmacist on duty: </v-list-subheader>
                         <v-col cols="3">

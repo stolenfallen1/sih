@@ -4,6 +4,8 @@ import { MFRoomsAndBedsDialog } from "~/store/sub-components/master-file/MFRooms
 import { MFItemsAndServicesDialog } from "~/store/sub-components/master-file/MFItemsAndServicesDialog";
 // Services sub components dialog imports
 import { OpdSubComponentsDialog } from "~/store/sub-components/services/OpdSubComponentsDialog";
+import { ERSubComponentsDialog } from "~/store/sub-components/services/ERSubComponentsDialog";
+import { IpdSubComponentsDialog } from "~/store/sub-components/services/IpdSubComponentsDialog";
 
 export const useSubComponents = async (dialog: any, type: Boolean = true) => {
     // Master file sub components dialog states
@@ -13,6 +15,8 @@ export const useSubComponents = async (dialog: any, type: Boolean = true) => {
 
     // Services sub components dialog states
     const { setOpdSubComponentsDialog } = OpdSubComponentsDialog();
+    const { setERSubComponentsDialog } = ERSubComponentsDialog();
+    const { setIpdSubComponentsDialog } = IpdSubComponentsDialog();
 
     // Master file
     setMFConsultantsDialog(dialog, type);
@@ -20,4 +24,6 @@ export const useSubComponents = async (dialog: any, type: Boolean = true) => {
     setMFItemsAndServicesDialog(dialog, type);
     // Services
     setOpdSubComponentsDialog(dialog, type);
+    setERSubComponentsDialog(dialog, type);
+    setIpdSubComponentsDialog(dialog, type);
 };

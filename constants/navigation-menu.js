@@ -1590,6 +1590,7 @@ export default [
                     {
                         label: "Suspend",
                         icon: "mdi-file-document-edit",
+                        form: "Suspend",
                         rule: "",
                     },
                     {
@@ -1615,21 +1616,25 @@ export default [
                     {
                         label: "Post Corporate Medical Package",
                         icon: "mdi-file-document-edit",
+                        form: "PostCorporateMedicalPackage",
                         rule: "",
                     },
                     {
                         label: "Post Diagnostic Medical Package",
                         icon: "mdi-file-document-edit",
+                        form: "PostDiagnosticMedicalPackage",
                         rule: "",
                     },
                     {
                         label: "Post Adjustments",
                         icon: "mdi-file-document-edit",
+                        form: "PostAdjustments",
                         rule: "",
                     },
                     {
                         label: "Post Professional Fees",
                         icon: "mdi-file-document-edit",
+                        form: "PostProfessionalFees",
                         rule: "",
                     },
                     {
@@ -1640,6 +1645,7 @@ export default [
                     {
                         label: "Post A/R Transfer",
                         icon: "mdi-file-document-edit",
+                        form: "PostArTransfer",
                         rule: "",
                     },
                     {
@@ -1650,11 +1656,13 @@ export default [
                     {
                         label: "Apply Promissory Note",
                         icon: "mdi-file-document-edit",
+                        form: "ApplyPromissoryNote",
                         rule: "",
                     },
                     {
                         label: "Apply Medical Package",
                         icon: "mdi-file-document-edit",
+                        form: "ApplyMedicalPackage",
                         rule: "",
                     },
                     {
@@ -1670,31 +1678,37 @@ export default [
                     {
                         label: "Tag as MGH",
                         icon: "mdi-file-document-edit",
+                        form: "TagAsMgh",
                         rule: "",
                     },
                     {
                         label: "Untag as MGH",
                         icon: "mdi-file-document-edit",
+                        form: "UntagAsMgh",
                         rule: "",
                     },
                     {
                         label: "Discharge",
                         icon: "mdi-file-document-edit",
+                        form: "Discharge",
                         rule: "",
                     },
                     {
                         label: "Post Final Diagnosis",
                         icon: "mdi-file-document-edit",
+                        form: "PostFinalDiagnosis",
                         rule: "",
                     },
                     {
                         label: "SOA. Billing Statement",
                         icon: "mdi-file-document-edit",
+                        form: "SoaBillingStatement",
                         rule: "",
                     },
                     {
                         label: "View. Print Reports",
                         icon: "mdi-file-document-edit",
+                        form: "ViewPrintReports",
                         rule: "",
                     },
                     {
@@ -1705,6 +1719,7 @@ export default [
                     {
                         label: "Claim Form 4 Processing",
                         icon: "mdi-file-document-edit",
+                        form: "ClaimForm4Processing",
                         rule: "",
                     },
                 ],

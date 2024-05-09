@@ -43,8 +43,8 @@
                         </v-col>
                         <v-col cols="12">
                             <v-text-field
-                                label="OPD Case No."
-                                v-model="payload.find(item => item.outpatient_case_no).outpatient_case_no"
+                                :label="form_type === 'outpatient' ? 'OPD Case No.' : 'ER Case No.'"
+                                v-model="payload.find(item => item.case_no).case_no"
                                 variant="outlined"
                                 density="compact"
                                 hide-details
@@ -54,8 +54,8 @@
                         <v-col cols="12">
                             <v-text-field
                                 type="date"
-                                label="Case Date"
-                                v-model="payload.find(item => item.outpatient_date).outpatient_date"
+                                :label="form_type === 'outpatient' ? 'Outpatient Case Date' : 'ER Case Date'"
+                                v-model="payload.find(item => item.case_date).case_date"
                                 variant="outlined"
                                 density="compact"
                                 hide-details
@@ -92,6 +92,10 @@ const props = defineProps({
         default: () => false,
         required: true,
     },
+    form_type: {
+        type: String,
+        default: () => '',
+    },
 });
 
 const { selectedRowDetails } = storeToRefs(useSubcomponentSelectedRowDetailsStore()); 
@@ -104,10 +108,10 @@ const payload = ref([
         registry_case_type: 'Outpatient',
     },
     {
-        outpatient_case_no: '123',
+        case_no: '123',
     },
     {
-        outpatient_date: '2024-04-15',
+        case_date: '2024-04-15',
     },
     {
         account_balance: '00.00',

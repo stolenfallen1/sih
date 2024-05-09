@@ -116,10 +116,49 @@
   />
 
   <EmergencyRegistration :clicked_option="clicked_option" :form_dialog="form_dialog" @close-dialog="closeAddFormDialog" />
+  <!-- Out-patients Sub components -->
+  <SuspendDialog :show="Suspend" :form_type="form_type" @close-dialog="useSubComponents('Suspend', false)" />
+  <PostCorporatePackageDialog :show="PostCorporateMedicalPackage" @close-dialog="useSubComponents('PostCorporateMedicalPackage', false)"/>
+  <PostDiagnosticPackageDialog :show="PostDiagnosticMedicalPackage" @close-dialog="useSubComponents('PostDiagnosticMedicalPackage', false)"/> 
+  <PostAdjustmentDialog :show="PostAdjustments" @close-dialog="useSubComponents('PostAdjustments', false)" />
+  <PostProfessionalFeesDialog :show="PostProfessionalFees" @close-dialog="useSubComponents('PostProfessionalFees', false)" />
+  <PostArTransferDialog :show="PostArTransfer" :form_type="form_type" @close-dialog="useSubComponents('PostArTransfer', false)" />
+  <ViewExamUpshotDialog :show="ViewExaminationUpshot" @close-dialog="useSubComponents('ViewExaminationUpshot', false)" />
+  <ApplyPromissoryNoteDialog :show="ApplyPromissoryNote" @close-dialog="useSubComponents('ApplyPromissoryNote', false)" />
+  <ApplyMedicalPackageDialog :show="ApplyMedicalPackage" @close-dialog="useSubComponents('ApplyMedicalPackage', false)" />
+  <TagAsMghDialog :show="TagAsMgh" :form_type="form_type" @close-dialog="useSubComponents('TagAsMgh', false)" />
+  <UntagAsMghDialog :show="UntagAsMgh" @close-dialog="useSubComponents('UntagAsMgh', false)" />
+  <DischargeDialog :show="Discharge" :form_type="form_type" @close-dialog="useSubComponents('Discharge', false)" />
+  <DischargeInstructionDialog :show="DischargeInstruction" @close-dialog="useSubComponents('DischargeInstruction', false)" />
+  <PostFinalDiagnosisDialog :show="PostFinalDiagnosis" @close-dialog="useSubComponents('PostFinalDiagnosis', false)" />
+  <SoaBillingDialog :show="SoaBillingStatement" @close-dialog="useSubComponents('SoaBillingStatement', false)" />
+  <ViewPrintReportsDialog :show="ViewPrintReports" @close-dialog="useSubComponents('ViewPrintReports', false)" />
+  <AdmitPatientDialog :show="AdmitPatient" :form_type="form_type" @close-dialog="useSubComponents('AdmitPatient', false)" />
+  <ClaimForm4ProcessingDialog :show="ClaimForm4Processing" @close-dialog="useSubComponents('ClaimForm4Processing', false)" />
 </template>
 
 <script setup>
 import ReusableTable from "~/components/reusables/ReusableTable.vue";
+const {
+  Suspend, 
+  PostCorporateMedicalPackage, 
+  PostDiagnosticMedicalPackage, 
+  PostAdjustments, 
+  PostProfessionalFees, 
+  PostArTransfer, 
+  ViewExaminationUpshot, 
+  ApplyPromissoryNote, 
+  ApplyMedicalPackage, 
+  TagAsMgh, 
+  UntagAsMgh, 
+  Discharge, 
+  DischargeInstruction, 
+  PostFinalDiagnosis, 
+  SoaBillingStatement, 
+  ViewPrintReports, 
+  AdmitPatient, 
+  ClaimForm4Processing, 
+} = storeToRefs(ERSubComponentsDialog());
 
 definePageMeta({
   layout: "root-layout",
@@ -136,6 +175,7 @@ const search_results = ref([]);
 const search_payload = ref({});
 const form_dialog = ref(false);
 const clicked_option = ref("");
+const form_type = ref("emergency")
 
 const totalItems = ref(0);
 const itemsPerPage = ref(15);
