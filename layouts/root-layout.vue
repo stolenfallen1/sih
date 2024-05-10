@@ -321,6 +321,9 @@ onMounted(async () => {
 const logout = () => {
   logUserOut();
   router.push("/");
+  subcomponents.value = [];
+  processing_and_queries.value = [];
+  table_and_template.value = [];
 };
 </script>
 

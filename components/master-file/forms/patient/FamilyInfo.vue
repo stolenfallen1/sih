@@ -2,7 +2,7 @@
   <v-row>
     <v-col cols="12">
       <v-card density="compact" min-height="20vh">
-        <v-toolbar density="compact" color="#2a73c5">
+        <v-toolbar density="compact">
           <v-card-title class="d-flex align-center pe-2">
             <v-icon icon="mdi-form-select"></v-icon> &nbsp; Spouse Information
             <v-spacer></v-spacer>
@@ -86,10 +86,12 @@
     </v-col>
     <v-col cols="6">
       <v-card density="compact" min-height="20vh">
-        <v-card-title class="d-flex align-center pe-2">
-          <v-icon icon="mdi-form-select"></v-icon> &nbsp; Father's Information
-          <v-spacer></v-spacer>
-        </v-card-title>
+        <v-toolbar density="compact">
+          <v-card-title class="d-flex align-center pe-2">
+            <v-icon icon="mdi-form-select"></v-icon> &nbsp; Father's Information
+            <v-spacer></v-spacer>
+          </v-card-title>
+        </v-toolbar>
         <v-divider></v-divider>
         <v-card-text>
           <v-row no-gutters>
@@ -157,10 +159,12 @@
     </v-col>
     <v-col cols="6">
       <v-card density="compact" min-height="20vh">
-        <v-card-title class="d-flex align-center pe-2">
-          <v-icon icon="mdi-form-select"></v-icon> &nbsp; Mother's Information
-          <v-spacer></v-spacer>
-        </v-card-title>
+        <v-toolbar density="compact">
+          <v-card-title class="d-flex align-center pe-2">
+            <v-icon icon="mdi-form-select"></v-icon> &nbsp; Mother's Information
+            <v-spacer></v-spacer>
+          </v-card-title>
+        </v-toolbar>
         <v-divider></v-divider>
         <v-card-text>
           <v-row no-gutters>
@@ -228,10 +232,12 @@
     </v-col>
     <v-col cols="12">
       <v-card density="compact" min-height="20vh">
-        <v-card-title class="d-flex align-center pe-2">
-          <v-icon icon="mdi-form-select"></v-icon> &nbsp; Other's Information
-          <v-spacer></v-spacer>
-        </v-card-title>
+        <v-toolbar density="compact">
+          <v-card-title class="d-flex align-center pe-2">
+            <v-icon icon="mdi-form-select"></v-icon> &nbsp; Other's Information
+            <v-spacer></v-spacer>
+          </v-card-title>
+        </v-toolbar>
         <v-divider></v-divider>
         <v-card-text>
           <v-table density="compact">

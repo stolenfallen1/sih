@@ -1,5 +1,6 @@
 export const ERSubComponentsDialog = defineStore('ERSubComponentsDialog',{
     state: () => ({
+        PatientProfile: false,
         Suspend: false, 
         PostCorporateMedicalPackage: false, 
         PostDiagnosticMedicalPackage: false, 

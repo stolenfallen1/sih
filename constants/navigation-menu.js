@@ -854,13 +854,9 @@ export default [
                 rule: "browse_outpatients",
                 subcomponents: [
                     {
-                        label: "Outpatient Details",
-                        icon: "mdi-file-document-edit",
-                        rule: "",
-                    },
-                    {
                         label: "Patient Profile",
                         icon: "mdi-file-document-edit",
+                        form: "PatientProfile",
                         rule: "",
                     },
                     {
@@ -872,6 +868,7 @@ export default [
                     {
                         label: "Requisitions",
                         icon: "mdi-file-document-edit",
+                        form: "Requisitions",
                         rule: "",
                     },
                     {
@@ -912,6 +909,7 @@ export default [
                     {
                         label: "Post Discounts",
                         icon: "mdi-file-document-edit",
+                        form: "PostDiscounts",
                         rule: "",
                     },
                     {
@@ -965,11 +963,6 @@ export default [
                         label: "Discharge Instruction",
                         icon: "mdi-file-document-edit",
                         form: "DischargeInstruction",
-                        rule: "",
-                    },
-                    {
-                        label: "Tag as Active",
-                        icon: "mdi-file-document-edit",
                         rule: "",
                     },
                     {
@@ -1230,13 +1223,9 @@ export default [
                 rule: "browse_emergency",
                 subcomponents: [
                     {
-                        label: "Emergency Case Details",
-                        icon: "mdi-file-document-edit",
-                        rule: "",
-                    },
-                    {
                         label: "Patient Profile",
                         icon: "mdi-file-document-edit",
+                        form: "PatientProfile",
                         rule: "",
                     },
                     {
@@ -1335,11 +1324,6 @@ export default [
                         label: "Discharge Instruction",
                         icon: "mdi-file-document-edit",
                         form: "DischargeInstruction",
-                        rule: "",
-                    },
-                    {
-                        label: "Tag as Active",
-                        icon: "mdi-file-document-edit",
                         rule: "",
                     },
                     {
@@ -1573,13 +1557,9 @@ export default [
                 rule: "browse_inpatients",
                 subcomponents: [
                     {
-                        label: "Inpatient Details",
-                        icon: "mdi-file-document-edit",
-                        rule: "",
-                    },
-                    {
                         label: "Patient Profile",
                         icon: "mdi-file-document-edit",
+                        form: "PatientProfile",
                         rule: "",
                     },
                     {
@@ -1987,6 +1967,7 @@ export default [
                     {
                         label: "Apply Credit Note",
                         icon: "mdi-file-document-edit",
+                        form: "ApplyCreditNote",
                         rule: "",
                     },
                     {
@@ -2020,28 +2001,33 @@ export default [
                         rule: "",
                     },
                     {
-                        label: "Relocate",
+                        label: "Relocate Patient",
                         icon: "mdi-file-document-edit",
+                        form: "RelocatePatient",
                         rule: "",
                     },
                     {
                         label: "Nursing Endorsement Sheet",
                         icon: "mdi-file-document-edit",
+                        form: "NurseEndorsementForm",
                         rule: "",
                     },
                     {
                         label: "View Patient Diet History",
                         icon: "mdi-file-document-edit",
+                        form: "ViewPatientDietHistory",
                         rule: "",
                     },
                     {
                         label: "View Drugs and Medicines",
                         icon: "mdi-file-document-edit",
+                        form: "ViewDrugsAndMedicines",
                         rule: "",
                     },
                     {
                         label: "View Statement of Account",
                         icon: "mdi-file-document-edit",
+                        form: "ViewStatementOfAccount",
                         rule: "",
                     },
                     {

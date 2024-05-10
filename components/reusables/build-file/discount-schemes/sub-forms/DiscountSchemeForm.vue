@@ -37,7 +37,7 @@
                 variant="outlined"
             ></v-autocomplete>
             </v-col>
-            <v-col cols="6">
+            <v-col cols="6" class="form-col">
               <v-autocomplete
                 label="Room Class"
                 :items="room_class"
@@ -47,7 +47,7 @@
                 variant="outlined"
             ></v-autocomplete>
             </v-col>
-            <v-col cols="6">
+            <v-col cols="6" class="form-col">
               <v-autocomplete
                 label="Journal Account"
                 :items="journal_account"
@@ -87,7 +87,7 @@
                 </v-toolbar>
                 <v-divider></v-divider>
                 <v-card-text>
-                  <v-col col="12">
+                  <v-col col="12" class="form-col">
                     <v-text-field
                       label="Drugs and Medicines"
                       type="number"
@@ -96,7 +96,7 @@
                       variant="outlined"
                     ></v-text-field>
                   </v-col>
-                  <v-col col="12">
+                  <v-col col="12" class="form-col">
                     <v-text-field
                       label="Supplies"
                       type="number"
@@ -105,7 +105,7 @@
                       variant="outlined"
                     ></v-text-field>
                   </v-col>
-                  <v-col col="12">
+                  <v-col col="12" class="form-col">
                     <v-text-field
                       label="Examinations"
                       type="number"
@@ -114,7 +114,7 @@
                       variant="outlined"
                     ></v-text-field>
                   </v-col>
-                  <v-col col="12">
+                  <v-col col="12" class="form-col">
                     <v-text-field
                       label="Procedures"
                       type="number"
@@ -123,7 +123,7 @@
                       variant="outlined"
                     ></v-text-field>
                   </v-col>
-                  <v-col col="12">
+                  <v-col col="12" class="form-col">
                     <v-text-field
                       label="Others"
                       type="number"
@@ -132,7 +132,7 @@
                       variant="outlined"
                     ></v-text-field>
                   </v-col>
-                  <v-col col="12">
+                  <v-col col="12" class="form-col">
                     <v-text-field
                       label="Adjustments"
                       type="number"
@@ -141,7 +141,7 @@
                       variant="outlined"
                     ></v-text-field>
                   </v-col>
-                  <v-col col="12">
+                  <v-col col="12" class="form-col">
                     <v-text-field
                       label="Readers Fee"
                       type="number"
@@ -214,4 +214,8 @@ const closeDialog = () => {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.form-col {
+    margin-top: -16px !important;
+}
+</style>

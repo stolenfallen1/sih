@@ -2,7 +2,7 @@
   <v-row>
     <v-col lg="12">
       <v-card>
-        <v-toolbar density="compact" color="#2a73c5">
+        <v-toolbar density="compact">
           <v-card-title class="d-flex align-center pe-2">
             <v-icon icon="mdi-form-select"></v-icon> &nbsp; List of Allergies
             <v-spacer></v-spacer>

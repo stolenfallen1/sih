@@ -2,7 +2,7 @@
   <v-row>
     <v-col lg="12">
       <v-card>
-        <v-toolbar density="compact" color="#2a73c5">
+        <v-toolbar density="compact">
           <v-card-title class="d-flex align-center pe-2">
             <v-icon icon="mdi-form-select"></v-icon> &nbsp; Dispensary Registration
             History
@@ -19,10 +19,12 @@
     </v-col>
     <v-col lg="12">
       <v-card>
-        <v-card-title class="d-flex align-center pe-2">
-          <v-icon icon="mdi-form-select"></v-icon> &nbsp; Medical Cases
-          <v-spacer></v-spacer>
-        </v-card-title>
+        <v-toolbar density="compact">
+          <v-card-title class="d-flex align-center pe-2">
+            <v-icon icon="mdi-form-select"></v-icon> &nbsp; Medical Cases
+            <v-spacer></v-spacer>
+          </v-card-title>
+        </v-toolbar>
         <v-divider></v-divider>
         <v-card-text>
           <v-data-table density="compact" height="23vh" :headers="headers" :items="items">

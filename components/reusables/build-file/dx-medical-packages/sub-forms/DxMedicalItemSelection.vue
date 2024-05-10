@@ -11,28 +11,32 @@
           <v-row>
             <v-col cols="3">
               <v-card elevation="4">
-                  <v-text-field
-                    class="mb-2 pa-2"
-                    label="Search by Department"
-                    hide-details
-                    density="compact"
-                    variant="outlined"
-                    prepend-inner-icon="mdi-magnify"
-                  ></v-text-field>
-                <v-data-table density="compact" height="40vh" :headers="department_header" :items="department_data" hide-details>
+                <v-row>
+                  <v-col cols="12">
+                    <v-text-field
+                      class="mb-2 pa-2"
+                      label="Search by Department"
+                      density="compact"
+                      hide-details
+                      variant="outlined"
+                      prepend-inner-icon="mdi-magnify"
+                    ></v-text-field>
+                  </v-col>
+                </v-row>
+                <v-data-table density="compact" height="43.5vh" :headers="department_header" :items="department_data" hide-details>
                   <template v-slot:item="{ item }">
                       <tr>
                           <td>{{ item.department_name }}</td>
                       </tr>
-                    </template>
-                    <template #bottom></template>
-                  </v-data-table>
+                  </template>
+                  <template #bottom></template>
+                </v-data-table>
               </v-card>
             </v-col>
             <v-col cols="9">
               <v-card elevation="4">
                 <v-row>
-                  <v-col cols="7">
+                  <v-col cols="12">
                     <v-text-field
                       class="mb-2 pa-2"
                       label="Search what your looking for..."
@@ -42,36 +46,36 @@
                       prepend-inner-icon="mdi-magnify"
                     ></v-text-field>
                   </v-col>
-                  <v-col cols="5">
-                    <v-autocomplete
-                        v-model="dropdownOptions"
-                        class="mb-2 pa-2"
-                        label="Dropdown"
-                        hide-details
-                        clearable
-                        :items="dropdownOptions"
-                        density="compact"
-                        variant="outlined"
-                    ></v-autocomplete>
-                  </v-col>
                 </v-row>
                 <v-card-text>
-                  <v-data-table density="compact" height="35vh" :headers="items_headers" :items="items_data" hide-details>
-                    <template v-slot:item="{ item }">
-                        <tr>
-                            <!-- <td><v-checkbox density="compact" hide-details/></td> -->
-                            <td>{{ item.item_id }}</td>
-                            <td>{{ item.description }}</td>
-                            <td>{{ item.category }}</td>
-                            <td>{{ item.generic_name }}</td>
-                            <td>{{ item.cpt_code }}</td>
-                            <td>{{ item.price }}</td>
-                            <td>{{ item.inventory_balance }}</td>
-                            <td>{{ item.section }}</td>
-                        </tr>
+                  <v-data-table-server
+                    class="animated animatedFadeInUp fadeInUp"
+                    v-model:items-per-page="itemsPerPage"
+                    :headers="headers"
+                    :items="serverItems"
+                    :items-length="totalItems"
+                    :loading="data.loading"
+                    item-value="id"
+                    show-select
+                    :hover="true"
+                    @update:options="initialize"
+                    select-strategy="single"
+                    fixed-header
+                    density="compact"
+                    height="40vh"
+                    >
+                    <template
+                        v-for="(head, index) of headers"
+                        v-slot:[`item.${head.value}`]="props"
+                    >
+                        <td class="test" :props="props" :key="index">
+                        <slot :name="head.value" :item="props.item">
+                            {{ props.item[head.value] || "..." }}
+                        </slot>
+                        </td>
                     </template>
                     <template #bottom></template>
-                  </v-data-table>
+                  </v-data-table-server>
                 </v-card-text>
               </v-card>
             </v-col>
@@ -79,8 +83,8 @@
           <v-row>
             <v-col cols="12">
               <v-card elevation="4">
-                <v-toolbar>
-                  <v-toolbar-title style="font-size: medium; text-align: center;">Selected Items</v-toolbar-title>
+                <v-toolbar density="compact">
+                  <v-toolbar-title class="toolbar-title">Selected Items</v-toolbar-title>
                 </v-toolbar>
                 <v-card-text>
                   <v-data-table density="compact" :headers="selected_item_headers" :items="selected_item_data" hide-details>
@@ -95,7 +99,6 @@
                             <td>{{ item.price }}</td>
                             <td>{{ item.unit }}</td>
                             <td>
-                                <v-icon color="green mr-3" @click="onEdit">mdi-pencil</v-icon>
                                 <v-icon color="red" @click="onDelete">mdi-trash-can</v-icon>
                             </td>
                         </tr>
@@ -133,8 +136,6 @@ const props = defineProps({
 
 const open_medical_template_selection = ref(false)
 
-const dropdownOptions = [ 'Not Applicable' ]
-
 const department_header = [
   {
       title: "Department", 
@@ -153,67 +154,47 @@ const department_data = [
   { department_id: 7, department_name: 'QA' },
 ]
 
-const items_headers = [
-  // {
-  //   title: "", 
-  //   align: "start",
-  //   sortable: true,
-  // },
-  {
-      title: "Item ID", 
-      align: "start",
-      sortable: true,
-  },
-  {
-      title: "Category", 
-      align: "start",
-      sortable: true,
-  },
-  {
-      title: "Description",
-      align: "start",
-      sortable: false,
-      width: "35%",
-  },
-  {
-      title: "Generic Name",
-      align: "start",
-      sortable: false,
-  },
-  {
-      title: "CPT Code",
-      align: "start",
-      sortable: false,
-      width: "35%",
-  },
-  {
-      title: "Price",
-      align: "start",
-      sortable: false,
-  },
-  {
-      title: "Special Price",
-      align: "start",
-      sortable: false,
-  },
-  {
-      title: "Inventory Balance",
-      align: "start",
-      sortable: false,
-  },
-  {
-      title: "Section",
-      align: "start",
-      sortable: false,
-  },
-]
+const headers = [
+    { title: "Item ID",  align: "start", sortable: false, key: "id" },
+    { title: "Item Category",  align: "start", sortable: false, key: "item_category" },
+    { title: "Item Description",  align: "start", sortable: false, key: "item_description" },
+    { title: "Generic Name",  align: "start", sortable: false, key: "generic_name" },
+    { title: "CPT Code",  align: "start", sortable: false, key: "cpt_code" },
+    { title: "Price",  align: "start", sortable: false, key: "price" },
+    { title: "Special Price",  align: "start", sortable: false, key: "special_price" },
+    { title: "Inventory Balance",  align: "start", sortable: false, key: "inventory_balance" },
+    { title: "Section",  align: "start", sortable: false, key: "section" },
+];
 
-const items_data = [
-  { item_id: '123', category: 'Medical Supplies', description: "Lorem Lorem Test", generic_name: "", cpt_code: "", price: 12, special_price: 149.99, inventory_balance: 0.00, section: "" },
-  { item_id: '456', category: 'Other Supplies', description: "Lorem Lorem Test", generic_name: "", cpt_code: "", price: 12, special_price: 149.99, inventory_balance: 0.00, section: "" },
-  { item_id: '789', category: 'IT Supplies', description: "Lorem Lorem Test", generic_name: "", cpt_code: "", price: 12, special_price: 149.99, inventory_balance: 0.00, section: "" },
-]
+const data = ref({
+    title: "List of payment-methods",
+    keyword: "",
+    loading: false,
+    filter: {},
+    tab: 0,
+    param_tab: 1,
+});
 
+const itemsPerPage = ref(10);
+const totalItems = ref(0);
+const serverItems = ref([]);
+const initialize = ({ page, itemsPerPage, sortBy }) => {
+    loadItems(page, itemsPerPage, sortBy);
+};
+const loadItems = async (page = null, itemsPerPage = null, sortBy = null) => {
+    data.value.loading = true;
+    let pageno = page || 1;
+    let itemPerpageno = itemsPerPage || 10;
+    let params =
+        "page=" + pageno + "&per_page=" + itemPerpageno + "&keyword=" + data.value.keyword;
+    const response = await useMethod("get", "payment-methods?", "", params);
+    if (response) {
+        serverItems.value = response.data;
+        totalItems.value = response.total;
+        data.value.loading = false;
+    }
+};
+// Sample 
 const selected_item_headers = [
   {
       title: "Item ID", 
@@ -263,7 +244,7 @@ const selected_item_headers = [
       width: "7%",
   },
 ];
-
+// Sample
 const selected_item_data = [
   { item_id: '123', category: 'Medical Supplies', description: "Lorem Lorem Test", requesting_physician: "totoy brown", section: "section123", quantity: 12, price: 149.99, unit: "Liter" },
   { item_id: '456', category: 'I.T Supplies', description: "Lorem Lorem Test", requesting_physician: "black brown", section: "section456", quantity: 4, price: 5567.123, unit: "ML"  },
@@ -283,10 +264,6 @@ const submitSelectedTemplate = () => {
   alert("Save selected template")
 }
 
-const onEdit = () => {
-    alert("Edit")
-}
-
 const onDelete = () => {
     alert("Delete")
 }
@@ -301,4 +278,9 @@ const closeDialog = () => {
 </script>
 
 <style scoped>
+.toolbar-title {
+    font-size: 16px; 
+    font-style: italic; 
+    text-align: center;
+}
 </style>

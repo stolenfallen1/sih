@@ -117,6 +117,7 @@
 
   <InPatientRegistration :clicked_option="clicked_option" :form_dialog="form_dialog" @close-dialog="closeAddFormDialog" />
   <!-- In-patients Sub components -->
+  <PatientProfileDialog :show="PatientProfile" :form_payload="form_payload" @close-dialog="useSubComponents('PatientProfile', false)" />
   <SuspendDialog :show="Suspend" :form_type="form_type" @close-dialog="useSubComponents('Suspend', false)" />
   <PostCorporatePackageDialog :show="PostCorporateMedicalPackage" @close-dialog="useSubComponents('PostCorporateMedicalPackage', false)"/>
   <PostDiagnosticPackageDialog :show="PostDiagnosticMedicalPackage" @close-dialog="useSubComponents('PostDiagnosticMedicalPackage', false)"/> 
@@ -137,8 +138,11 @@
 </template>
 
 <script setup>
+import PatientProfileDialog from "../../../components/master-file/forms/patient/FormContainer.vue";
+
 import ReusableTable from "~/components/reusables/ReusableTable.vue";
 const {
+  PatientProfile,
   Suspend,
   PostCorporateMedicalPackage,
   PostDiagnosticMedicalPackage,
@@ -173,6 +177,7 @@ const search_payload = ref({});
 const form_dialog = ref(false);
 const clicked_option = ref("");
 const form_type = ref("inpatient")
+const form_payload = ref({});
 
 const open_summary_modal = ref(false);
 const outpatients_test_data = ref([

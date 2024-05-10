@@ -2,7 +2,7 @@
   <v-row>
     <v-col lg="12">
       <v-card density="compact" min-height="20vh">
-        <v-toolbar density="compact" color="#2a73c5">
+        <v-toolbar density="compact">
           <v-card-title class="d-flex align-center pe-2">
             <v-icon icon="mdi-form-select"></v-icon> &nbsp; Contact and Address
             Information
@@ -64,10 +64,12 @@
     </v-col>
     <v-col lg="6">
       <v-card density="compact" min-height="30vh">
-        <v-card-title class="d-flex align-center pe-2">
-          <v-icon icon="mdi-form-select"></v-icon> &nbsp; Next of Kin Information
-          <v-spacer></v-spacer>
-        </v-card-title>
+        <v-toolbar density="compact">
+          <v-card-title class="d-flex align-center pe-2">
+            <v-icon icon="mdi-form-select"></v-icon> &nbsp; Next of Kin Information
+            <v-spacer></v-spacer>
+          </v-card-title>
+        </v-toolbar>
         <v-divider></v-divider>
         <v-card-text>
           <v-row>
@@ -122,10 +124,12 @@
     </v-col>
     <v-col lg="6">
       <v-card density="compact" min-height="30vh">
-        <v-card-title class="d-flex align-center pe-2">
-          <v-icon icon="mdi-form-select"></v-icon> &nbsp; In-charge of Account
-          <v-spacer></v-spacer>
-        </v-card-title>
+        <v-toolbar density="compact">
+          <v-card-title class="d-flex align-center pe-2">
+            <v-icon icon="mdi-form-select"></v-icon> &nbsp; In-charge of Account
+            <v-spacer></v-spacer>
+          </v-card-title>
+        </v-toolbar>
         <v-divider></v-divider>
         <v-card-text>
           <v-row>
@@ -180,11 +184,13 @@
     </v-col>
     <v-col lg="6">
       <v-card density="compact" min-height="30vh">
-        <v-card-title class="d-flex align-center pe-2">
-          <v-icon icon="mdi-form-select"></v-icon> &nbsp; Contact Person in case of
-          Emergency Information
-          <v-spacer></v-spacer>
-        </v-card-title>
+        <v-toolbar density="compact">
+          <v-card-title class="d-flex align-center pe-2">
+            <v-icon icon="mdi-form-select"></v-icon> &nbsp; Contact Person in case of
+            Emergency Information
+            <v-spacer></v-spacer>
+          </v-card-title>
+        </v-toolbar>
         <v-divider></v-divider>
         <v-card-text>
           <v-row>
@@ -248,11 +254,12 @@
     </v-col>
     <v-col lg="6">
       <v-card density="compact">
-        <v-card-title class="d-flex align-center pe-2">
-          <v-icon icon="mdi-form-select"></v-icon> &nbsp; Employment Information
-          Information
-          <v-spacer></v-spacer>
-        </v-card-title>
+        <v-toolbar density="compact">
+          <v-card-title class="d-flex align-center pe-2">
+            <v-icon icon="mdi-form-select"></v-icon> &nbsp; Employment Information
+            <v-spacer></v-spacer>
+          </v-card-title>
+        </v-toolbar>
         <v-divider></v-divider>
         <v-card-text>
           <v-row>

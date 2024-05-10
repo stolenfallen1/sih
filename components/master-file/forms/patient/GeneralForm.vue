@@ -2,7 +2,7 @@
   <v-row>
     <v-col cols="9" xl="9">
       <v-card density="compact">
-        <v-toolbar density="compact" color="#2a73c5">
+        <v-toolbar density="compact">
           <v-card-title class="d-flex align-center pe-2">
             <v-icon icon="mdi-form-select"></v-icon> &nbsp;Personal Information
             <v-spacer></v-spacer>
@@ -337,7 +337,7 @@
     <v-col cols="3" xl="3" class="pa-0">
       <v-col cols="12">
         <v-card>
-          <v-toolbar density="compact" color="#2a73c5">
+          <v-toolbar density="compact">
             <v-card-title class="d-flex align-center pe-2">
               <v-icon icon="mdi-account-circle-outline"></v-icon> &nbsp;Profile
               <v-spacer></v-spacer>
@@ -364,7 +364,6 @@
         @update:model-value="checkfile"
         @change="onFileChange"
         variant="outlined"
-        bg-color="#2a73c5"
         clearable
         accept="image/png, image/gif, image/jpeg"
         label="Manage Picture"
