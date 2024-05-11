@@ -1,5 +1,6 @@
 export const IpdSubComponentsDialog = defineStore('IpdSubComponentsDialog',{
     state: () => ({
+        PatientProfile: false,
         Suspend: false,
         PostCorporateMedicalPackage: false,
         PostDiagnosticMedicalPackage: false,

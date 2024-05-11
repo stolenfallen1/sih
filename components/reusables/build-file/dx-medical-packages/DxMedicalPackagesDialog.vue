@@ -1,5 +1,5 @@
 <template>
-  <v-dialog :model-value="show" rounded="lg" @update:model-value="closeDialog" scrollable max-width="700px">
+  <v-dialog :model-value="show" rounded="lg" @update:model-value="closeDialog" scrollable max-width="800px">
     <v-card rounded="lg">
         <v-toolbar density="compact" color="#6984ff" hide-details>
             <v-toolbar-title>Diagnostic Package Deals</v-toolbar-title>
@@ -8,34 +8,46 @@
                 <v-icon>mdi-close</v-icon>
             </v-btn>
         </v-toolbar>
-          <v-card-title>
-              <v-spacer></v-spacer>
-              <v-text-field
-                  label="Search by Description"
-                  rounded
-                  hide-details
-                  density="compact"
-                  variant="outlined"
-                  prepend-inner-icon="mdi-magnify"
-              >
-              </v-text-field>
-          </v-card-title>
           <v-card-text>
-              <v-data-table density="compact" height="60vh" :headers="headers" :items="data" hide-details>
-                  <template v-slot:item="{ item }">
-                      <tr>
-                          <td>{{ item.code }}</td>
-                          <td>{{ item.description }}</td>
-                          <td>{{ item.amount }}</td>
-                          <td>{{ item.status === true ? "Acive" : "Inactive" }}</td>
-                          <td>
-                              <v-icon color="green mr-3" @click="onEdit">mdi-pencil</v-icon>
-                              <v-icon color="red" @click="onDelete">mdi-trash-can</v-icon>
-                          </td>
-                      </tr>
-                  </template>
-                  <template #bottom></template>
-              </v-data-table>
+            <v-row>
+              <v-col cols="12">
+                  <v-text-field
+                      label="Searh here..."
+                      variant="outlined"
+                      density="compact"
+                      prepend-inner-icon="mdi-magnify"
+                      v-model="data.keyword"
+                      @keyup.enter="search"
+                  ></v-text-field>
+              </v-col>
+            </v-row>
+            <v-data-table-server
+                class="animated animatedFadeInUp fadeInUp mt-4"
+                v-model:items-per-page="itemsPerPage"
+                :headers="headers"
+                :items="serverItems"
+                :items-length="totalItems"
+                :loading="data.loading"
+                item-value="id"
+                :hover="true"
+                @update:options="initialize"
+                select-strategy="single"
+                fixed-header
+                density="compact"
+                height="40vh"
+                >
+                <template
+                    v-for="(head, index) of headers"
+                    v-slot:[`item.${head.value}`]="props"
+                >
+                    <td class="test" :props="props" :key="index">
+                    <slot :name="head.value" :item="props.item">
+                        {{ props.item[head.value] || "..." }}
+                    </slot>
+                    </td>
+                </template>
+                <template #bottom></template>
+            </v-data-table-server>
           </v-card-text>
           <v-divider></v-divider>
           <v-card-actions>
@@ -64,41 +76,44 @@ const emits = defineEmits(['close-dialog'])
 const open_medical_package_details = ref(false)
 
 const headers = [
-  {
-      title: "Code", 
-      align: "start",
-      sortable: true,
-      width: "15%",
-  },
-  {
-      title: "Description",
-      align: "start",
-      sortable: false,
-      width: "40%",
-  },
-  {
-      title: "Amount",
-      align: "start",
-      sortable: false,
-      width: "15%",
-  },
-  {
-      title: "Status",
-      align: "start",
-      sortable: false,
-  },
-  {
-      title: "Actions",
-      align: "start",
-      sortable: false,
-  },
+  { title: "Code",  align: "start", sortable: false, key: "id" },
+  { title: "Description",  align: "start", sortable: false, key: "description" },
+  { title: "Amount",  align: "start", sortable: false, key: "amount" },
+  { title: "Status",  align: "start", sortable: false, key: "isactive" },
 ];
 
-const data = [
-  { code: 'Code1', description: 'Description1', amount: '1249.15', status: true },
-  { code: 'Code2', description: 'Description2', amount: '1949.75', status: true },
-  { code: 'Code3', description: 'Description3', amount: '2049.29', status: false },
-];
+const data = ref({
+    title: "List of payment-methods",
+    keyword: "",
+    loading: false,
+    filter: {},
+    tab: 0,
+    param_tab: 1,
+});
+
+const itemsPerPage = ref(10);
+const totalItems = ref(0);
+const serverItems = ref([]);
+const initialize = ({ page, itemsPerPage, sortBy }) => {
+    loadItems(page, itemsPerPage, sortBy);
+};
+const loadItems = async (page = null, itemsPerPage = null, sortBy = null) => {
+    data.value.loading = true;
+    let pageno = page || 1;
+    let itemPerpageno = itemsPerPage || 10;
+    let params =
+        "page=" + pageno + "&per_page=" + itemPerpageno + "&keyword=" + data.value.keyword;
+    const response = await useMethod("get", "payment-methods?", "", params);
+    if (response) {
+        serverItems.value = response.data;
+        totalItems.value = response.total;
+        data.value.loading = false;
+    }
+};
+
+const search = () => {
+  loadItems();
+}
 
 const openMedicalPackagesDetails = () => {
   open_medical_package_details.value = true;

@@ -117,12 +117,15 @@
 
   <OutPatientRegistration :clicked_option="clicked_option" :form_dialog="form_dialog" @close-dialog="closeAddFormDialog" />
   <!-- Out-patients Sub components -->
+  <PatientProfileDialog :show="PatientProfile" :form_payload="form_payload" @close-dialog="useSubComponents('PatientProfile', false)" />
   <SuspendDialog :show="Suspend" :form_type="form_type" @close-dialog="useSubComponents('Suspend', false)" />
+  <RequisitionsDialog :show="Requisitions" @close-dialog="useSubComponents('Requisitions', false)" />
   <PrintTransReceiptDialog :show="PrintTransactionReceipt" @close-dialog="useSubComponents('PrintTransactionReceipt', false)"/>
   <PostCorporatePackageDialog :show="PostCorporateMedicalPackage" @close-dialog="useSubComponents('PostCorporateMedicalPackage', false)"/>
   <PostDiagnosticPackageDialog :show="PostDiagnosticMedicalPackage" @close-dialog="useSubComponents('PostDiagnosticMedicalPackage', false)"/> 
   <PostAdjustmentDialog :show="PostAdjustments" @close-dialog="useSubComponents('PostAdjustments', false)" />
   <PostProfessionalFeesDialog :show="PostProfessionalFees" @close-dialog="useSubComponents('PostProfessionalFees', false)" />
+  <PostDiscountsDialog :show="PostDiscounts" @close-dialog="useSubComponents('PostDiscounts', false)" />
   <PostArTransferDialog :show="PostArTransfer" :form_type="form_type" @close-dialog="useSubComponents('PostArTransfer', false)" />
   <ViewExamUpshotDialog :show="ViewExaminationUpshot" @close-dialog="useSubComponents('ViewExaminationUpshot', false)" />
   <ApplyPromissoryNoteDialog :show="ApplyPromissoryNote" @close-dialog="useSubComponents('ApplyPromissoryNote', false)" />
@@ -140,14 +143,19 @@
 </template>
 
 <script setup>
+import PatientProfileDialog from "../../../components/master-file/forms/patient/FormContainer.vue";
+
 import ReusableTable from "~/components/reusables/ReusableTable.vue";
 const {
+  PatientProfile,
   Suspend,
+  Requisitions,
   PrintTransactionReceipt,
   PostCorporateMedicalPackage,
   PostDiagnosticMedicalPackage,
   PostAdjustments,
   PostProfessionalFees,
+  PostDiscounts,
   PostArTransfer,
   ViewExaminationUpshot,
   ApplyPromissoryNote,
@@ -180,6 +188,7 @@ const search_payload = ref({});
 const form_dialog = ref(false);
 const clicked_option = ref("");
 const form_type = ref("outpatient")
+const form_payload = ref({});
 
 const totalItems = ref(0);
 const itemsPerPage = ref(15);

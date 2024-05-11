@@ -90,22 +90,34 @@
   </v-card>
 
   <!-- Out-patients Sub components -->
+  <ApplyCreditNoteDialog :show="ApplyCreditNote" @close-dialog="useSubComponents('ApplyCreditNote', false)" />
   <ViewExamUpshotDialog :show="ViewExaminationUpshot" @close-dialog="useSubComponents('ViewExaminationUpshot', false)" />
   <TagAsMghDialog :show="TagAsMgh" :form_type="form_type" @close-dialog="useSubComponents('TagAsMgh', false)" />
   <UntagAsMghDialog :show="UntagAsMgh" @close-dialog="useSubComponents('UntagAsMgh', false)" />
   <DischargeDialog :show="Discharge" :form_type="form_type" @close-dialog="useSubComponents('Discharge', false)" />
   <DischargeInstructionDialog :show="DischargeInstruction" @close-dialog="useSubComponents('DischargeInstruction', false)" />
+  <RelocatePatientDialog :show="RelocatePatient" @close-dialog="useSubComponents('RelocatePatient', false)" />
+  <NurseEndorsementFormDialog :show="NurseEndorsementForm" @close-dialog="useSubComponents('NurseEndorsementForm', false)" />
+  <ViewPatientDietHistoryDialog :show="ViewPatientDietHistory" @close-dialog="useSubComponents('ViewPatientDietHistory', false)" />
+  <ViewDrugsAndMedicinesDialog :show="ViewDrugsAndMedicines" @close-dialog="useSubComponents('ViewDrugsAndMedicines', false)" />
+  <ViewStatementOfAccountDialog :show="ViewStatementOfAccount" @close-dialog="useSubComponents('ViewStatementOfAccount', false)" />
   <ClaimForm4ProcessingDialog :show="ClaimForm4Processing" @close-dialog="useSubComponents('ClaimForm4Processing', false)" />
 </template>
 
 <script setup>
 import ReusableTable from "~/components/reusables/ReusableTable.vue";
 const {
+  ApplyCreditNote,
   ViewExaminationUpshot,
   TagAsMgh,
   UntagAsMgh,
   Discharge,
   DischargeInstruction,
+  RelocatePatient,
+  NurseEndorsementForm,
+  ViewPatientDietHistory,
+  ViewDrugsAndMedicines,
+  ViewStatementOfAccount,
   ClaimForm4Processing,
 } = storeToRefs(NursingSubComponentsDialog());
 

@@ -1,5 +1,5 @@
 <template>
-    <v-dialog :model-value="open_medical_template_selection" rounded="lg" @update:model-value="closeDialog"scrollable max-width="875px">
+    <v-dialog :model-value="open_medical_template_selection" rounded="lg" @update:model-value="closeDialog"scrollable max-width="1120px">
         <v-card rounded="lg">
             <v-toolbar color="#6984ff" hide-details density="compact">
                 <v-toolbar-title>Item Template Selection List</v-toolbar-title>
@@ -22,7 +22,7 @@
                                 variant="outlined"
                                 prepend-inner-icon="mdi-magnify"
                             ></v-text-field>
-                            <v-data-table density="compact" height="40vh" :headers="template_list_header" :items="template_list_data" hide-details>
+                            <v-data-table density="compact" height="35vh" :headers="template_list_header" :items="template_list_data" hide-details>
                                 <template v-slot:item="{ item }">
                                     <tr>
                                         <td>{{ item.description }}</td>
@@ -37,14 +37,37 @@
                             <v-list-subheader inset class="text-black px-2">
                                 Template Line Item(s)
                             </v-list-subheader>
-                            <v-data-table density="compact" height="47.5vh" :headers="template_line_items_header" :items="template_line_items_data" hide-details>
-                                <template v-slot:item="{ item }">
-                                    <tr>
-                                        <td>{{ item.department_name }}</td>
-                                    </tr>
+                            <v-data-table-server
+                                class="animated animatedFadeInUp fadeInUp"
+                                v-model:items-per-page="itemsPerPage"
+                                :headers="headers"
+                                :items="serverItems"
+                                :items-length="totalItems"
+                                :loading="data.loading"
+                                item-value="id"
+                                show-select
+                                :hover="true"
+                                @update:options="initialize"
+                                select-strategy="single"
+                                fixed-header
+                                density="compact"
+                                height="40vh"
+                                >
+                                <template
+                                    v-for="(head, index) of headers"
+                                    v-slot:[`item.${head.value}`]="props"
+                                >
+                                    <td class="test" :props="props" :key="index">
+                                    <slot :name="head.value" :item="props.item">
+                                        {{ props.item[head.value] || "..." }}
+                                    </slot>
+                                    </td>
+                                </template>
+                                <template v-slot:item.actions="{ item }">
+                                    <v-icon color="red" @click="onDelete(item)">mdi-trash-can</v-icon>
                                 </template>
                                 <template #bottom></template>
-                            </v-data-table>
+                            </v-data-table-server>
                         </v-card>
                     </v-col>
                 </v-row>
@@ -84,33 +107,44 @@ const template_list_data = [
     { department_id: 4, description: 'Description4' },
     { department_id: 5, description: 'Description5' },
     { department_id: 6, description: 'Description6' },
-    { department_id: 7, description: 'Description7' },
 ]
 
-const template_line_items_header = [
-    {
-        title: "Item ID", 
-        align: "start",
-        sortable: true,
-    },
-    {
-        title: "Description", 
-        align: "start",
-        sortable: true,
-    },
-    {
-        title: "Qty", 
-        align: "start",
-        sortable: true,
-    },
-    {
-        title: "Unit", 
-        align: "start",
-        sortable: true,
-    },
-]
+const headers = [
+    { title: "Item ID",  align: "start", sortable: false, key: "id" },
+    { title: "Description",  align: "start", sortable: false, key: "description" },
+    { title: "Qty",  align: "start", sortable: false, key: "quantity" },
+    { title: "Unit",  align: "start", sortable: false, key: "unit" },
+    { title: "", align: "start", sortable: false, key: "actions" },
+];
 
-const template_line_items_data = []
+const data = ref({
+    title: "List of payment-methods",
+    keyword: "",
+    loading: false,
+    filter: {},
+    tab: 0,
+    param_tab: 1,
+});
+
+const itemsPerPage = ref(10);
+const totalItems = ref(0);
+const serverItems = ref([]);
+const initialize = ({ page, itemsPerPage, sortBy }) => {
+    loadItems(page, itemsPerPage, sortBy);
+};
+const loadItems = async (page = null, itemsPerPage = null, sortBy = null) => {
+    data.value.loading = true;
+    let pageno = page || 1;
+    let itemPerpageno = itemsPerPage || 10;
+    let params =
+        "page=" + pageno + "&per_page=" + itemPerpageno + "&keyword=" + data.value.keyword;
+    const response = await useMethod("get", "payment-methods?", "", params);
+    if (response) {
+        serverItems.value = response.data;
+        totalItems.value = response.total;
+        data.value.loading = false;
+    }
+};
 
 
 const emits = defineEmits(['close-dialog', 'handle-submit'])

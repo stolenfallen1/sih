@@ -83,7 +83,7 @@
     @open-form="openAddFormDialog"
   />
   <FormContainer
-    :form_container="form_dialog"
+    :show="form_dialog"
     :form_payload="form_payload"
     @close-dialog="closeFormContainer"
   />

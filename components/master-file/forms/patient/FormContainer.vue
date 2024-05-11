@@ -1,6 +1,6 @@
 <template>
     <v-dialog 
-        :model-value="form_container"
+        :model-value="show"
         fullscreen
         :scrim="false"
         transition="dialog-bottom-transition"
@@ -111,7 +111,7 @@ import SocialHistory from "./SocialHistory.vue";
 import HmoGuantorsHistory from "./HmoGuantorsHistory.vue";
 
 const props = defineProps({
-    form_container: {
+    show: {
         type: Boolean,
         default: () => false,
     },

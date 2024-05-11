@@ -2,13 +2,13 @@
   <v-row>
     <v-col lg="12">
       <v-card>
-        <v-toolbar density="compact" color="#2a73c5">
+        <v-toolbar density="compact">
           <v-card-title class="d-flex align-center pe-2">
             <v-icon icon="mdi-form-select"></v-icon> &nbsp; List of Family Medical History
           </v-card-title>
           <v-spacer></v-spacer>
-          <v-btn class="bg-primary text-white" type="submit" @click="openTemplateDialog">
-            Add New Family Medical History
+          <v-btn color="blue-darken-1 bg-white border border-info" @click="openTemplateDialog">
+              + <v-icon class="mr-2">mdi-pill</v-icon> Add New Family Medical History
           </v-btn>
         </v-toolbar>
         <v-divider></v-divider>
