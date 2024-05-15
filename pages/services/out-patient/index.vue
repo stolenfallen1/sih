@@ -119,7 +119,8 @@
   <!-- Out-patients Sub components -->
   <PatientProfileDialog :show="PatientProfile" :form_payload="form_payload" @close-dialog="useSubComponents('PatientProfile', false)" />
   <SuspendDialog :show="Suspend" :form_type="form_type" @close-dialog="useSubComponents('Suspend', false)" />
-  <RequisitionsDialog :show="Requisitions" @close-dialog="useSubComponents('Requisitions', false)" />
+  <RequisitionsDialog :show="Requisitions" :form_type="form_type" @close-dialog="useSubComponents('Requisitions', false)" />
+  <PostChargesDialog :show="PostCharges" @close-dialog="useSubComponents('PostCharges', false)" />
   <PrintTransReceiptDialog :show="PrintTransactionReceipt" @close-dialog="useSubComponents('PrintTransactionReceipt', false)"/>
   <PostCorporatePackageDialog :show="PostCorporateMedicalPackage" @close-dialog="useSubComponents('PostCorporateMedicalPackage', false)"/>
   <PostDiagnosticPackageDialog :show="PostDiagnosticMedicalPackage" @close-dialog="useSubComponents('PostDiagnosticMedicalPackage', false)"/> 
@@ -139,6 +140,7 @@
   <ViewPrintReportsDialog :show="ViewPrintReports" @close-dialog="useSubComponents('ViewPrintReports', false)" />
   <AdmitPatientDialog :show="AdmitPatient" :form_type="form_type" @close-dialog="useSubComponents('AdmitPatient', false)" />
   <TransferErDialog :show="TransferToEr" @close-dialog="useSubComponents('TransferToEr', false)" />
+  <PrintClaimFormsDialog :show="PrintClaimForms" @close-dialog="useSubComponents('PrintClaimForms', false)" />
   <ClaimForm4ProcessingDialog :show="ClaimForm4Processing" @close-dialog="useSubComponents('ClaimForm4Processing', false)" />
 </template>
 
@@ -150,6 +152,7 @@ const {
   PatientProfile,
   Suspend,
   Requisitions,
+  PostCharges,
   PrintTransactionReceipt,
   PostCorporateMedicalPackage,
   PostDiagnosticMedicalPackage,
@@ -169,6 +172,7 @@ const {
   ViewPrintReports,
   AdmitPatient,
   TransferToEr,
+  PrintClaimForms,
   ClaimForm4Processing,
 } = storeToRefs(OpdSubComponentsDialog());
 

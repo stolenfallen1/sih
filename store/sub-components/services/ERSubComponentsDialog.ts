@@ -2,10 +2,13 @@ export const ERSubComponentsDialog = defineStore('ERSubComponentsDialog',{
     state: () => ({
         PatientProfile: false,
         Suspend: false, 
+        Requisitions: false,
+        PostCharges: false,
         PostCorporateMedicalPackage: false, 
         PostDiagnosticMedicalPackage: false, 
         PostAdjustments: false, 
         PostProfessionalFees: false, 
+        PostDiscounts: false,
         PostArTransfer: false, 
         ViewExaminationUpshot: false, 
         ApplyPromissoryNote: false, 
@@ -18,6 +21,7 @@ export const ERSubComponentsDialog = defineStore('ERSubComponentsDialog',{
         SoaBillingStatement: false, 
         ViewPrintReports: false, 
         AdmitPatient: false, 
+        PrintClaimForms: false,
         ClaimForm4Processing: false, 
     }),
     actions:{

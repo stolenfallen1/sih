@@ -11,48 +11,51 @@ export default [
                 rule: "browse_patients",
                 subcomponents: [
                     {
-                        label: "Patient Profile",
-                        icon: "mdi-file-document-edit",
-                        rule: "",
-                    },
-                    {
-                        label: "Hold/Release Account",
-                        icon: "mdi-file-document-edit",
-                        rule: "",
-                    },
-                    {
-                        label: "Medical Records Summary",
-                        icon: "mdi-file-document-edit",
-                        rule: "",
-                    },
-                    {
-                        label: "Inpatient Case History",
-                        icon: "mdi-file-document-edit",
-                        rule: "",
-                    },
-                    {
                         label: "Outpatient Case History",
                         icon: "mdi-file-document-edit",
+                        form: "OutpatientCaseHistory",
                         rule: "",
                     },
                     {
                         label: "Emergency Case History",
                         icon: "mdi-file-document-edit",
+                        form: "EmergencyCaseHistory",
                         rule: "",
                     },
                     {
+                        label: "Inpatient Case History",
+                        icon: "mdi-file-document-edit",
+                        form: "InpatientCaseHistory",
+                        rule: "",
+                    },
+                    {
+                        label: "Hold/Release Account",
+                        icon: "mdi-file-document-edit",
+                        form: "HoldReleaseAccount",
+                        rule: "",
+                    },
+                    // {
+                    //     label: "Medical Records Summary",
+                    //     icon: "mdi-file-document-edit",
+                    //     form: "MedicalRecordsSummary",
+                    //     rule: "",
+                    // },
+                    {
                         label: "View HS7 Historical Data",
                         icon: "mdi-file-document-edit",
+                        form: "ViewHs7HistoricalData",
                         rule: "",
                     },
                     {
                         label: "Viewing of Result Image",
                         icon: "mdi-file-document-edit",
+                        form: "ViewingOfResultImage",
                         rule: "",
                     },
                     {
                         label: "Diet Counseling",
                         icon: "mdi-file-document-edit",
+                        form: "DietCounseling",
                         rule: "",
                     },
                 ],
@@ -874,6 +877,7 @@ export default [
                     {
                         label: "Post Charges",
                         icon: "mdi-file-document-edit",
+                        form: "PostCharges",
                         rule: "",
                     },
                     {
@@ -1008,6 +1012,7 @@ export default [
                     {
                         label: "Print Claim Forms",
                         icon: "mdi-file-document-edit",
+                        form: "PrintClaimForms",
                         rule: "",
                     },
                     {
@@ -1237,11 +1242,13 @@ export default [
                     {
                         label: "Requisitions",
                         icon: "mdi-file-document-edit",
+                        form: "Requisitions",
                         rule: "",
                     },
                     {
                         label: "Post Charges",
                         icon: "mdi-file-document-edit",
+                        form: "PostCharges",
                         rule: "",
                     },
                     {
@@ -1271,6 +1278,7 @@ export default [
                     {
                         label: "Post Discounts",
                         icon: "mdi-file-document-edit",
+                        form: "PostDiscounts",
                         rule: "",
                     },
                     {
@@ -1353,6 +1361,7 @@ export default [
                     {
                         label: "Print Claim Forms",
                         icon: "mdi-file-document-edit",
+                        form: "PrintClaimForms",
                         rule: "",
                     },
                     {
@@ -1565,6 +1574,7 @@ export default [
                     {
                         label: "Room Inquiry",
                         icon: "mdi-file-document-edit",
+                        form: "RoomInquiry",
                         rule: "",
                     },
                     {
@@ -1576,21 +1586,24 @@ export default [
                     {
                         label: "Relocate",
                         icon: "mdi-file-document-edit",
+                        form: "RelocatePatient",
                         rule: "",
                     },
-                    {
-                        label: "Manage Secondary Rooms",
-                        icon: "mdi-file-document-edit",
-                        rule: "",
-                    },
+                    // {
+                    //     label: "Manage Secondary Rooms",
+                    //     icon: "mdi-file-document-edit",
+                    //     rule: "",
+                    // },
                     {
                         label: "Requisitions",
                         icon: "mdi-file-document-edit",
+                        form: "Requisitions",
                         rule: "",
                     },
                     {
                         label: "Post Charges",
                         icon: "mdi-file-document-edit",
+                        form: "PostCharges",
                         rule: "",
                     },
                     {
@@ -1620,6 +1633,7 @@ export default [
                     {
                         label: "Post Discounts",
                         icon: "mdi-file-document-edit",
+                        form: "PostDiscounts",
                         rule: "",
                     },
                     {
@@ -1648,6 +1662,7 @@ export default [
                     {
                         label: "Debit Room Charge",
                         icon: "mdi-file-document-edit",
+                        form: "DebitRoomCharges",
                         rule: "",
                     },
                     {
@@ -1694,6 +1709,7 @@ export default [
                     {
                         label: "Print Claim Forms",
                         icon: "mdi-file-document-edit",
+                        form: "PrintClaimForms",
                         rule: "",
                     },
                     {
@@ -1947,21 +1963,19 @@ export default [
                     {
                         label: "Patient Profile",
                         icon: "mdi-file-document-edit",
-                        rule: "",
-                    },
-                    {
-                        label: "Inpatient Details",
-                        icon: "mdi-file-document-edit",
+                        form: "PatientProfile",
                         rule: "",
                     },
                     {
                         label: "Requisitions",
                         icon: "mdi-file-document-edit",
+                        form: "Requisitions",
                         rule: "",
                     },
                     {
                         label: "Post Charges",
                         icon: "mdi-file-document-edit",
+                        form: "PostCharges",
                         rule: "",
                     },
                     {

@@ -1,5 +1,8 @@
 export const NursingSubComponentsDialog = defineStore('NursingSubComponentsDialog',{
     state: () => ({
+        PatientProfile: false,
+        Requisitions: false,
+        PostCharges: false,
         ApplyCreditNote: false,
         ViewExaminationUpshot: false,
         TagAsMgh: false,

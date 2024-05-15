@@ -90,6 +90,9 @@
   </v-card>
 
   <!-- Out-patients Sub components -->
+  <PatientProfileDialog :show="PatientProfile" :form_payload="form_payload" @close-dialog="useSubComponents('PatientProfile', false)" />
+  <RequisitionsDialog :show="Requisitions" :form_type="form_type" @close-dialog="useSubComponents('Requisitions', false)" />
+  <PostChargesDialog :show="PostCharges" @close-dialog="useSubComponents('PostCharges', false)" />
   <ApplyCreditNoteDialog :show="ApplyCreditNote" @close-dialog="useSubComponents('ApplyCreditNote', false)" />
   <ViewExamUpshotDialog :show="ViewExaminationUpshot" @close-dialog="useSubComponents('ViewExaminationUpshot', false)" />
   <TagAsMghDialog :show="TagAsMgh" :form_type="form_type" @close-dialog="useSubComponents('TagAsMgh', false)" />
@@ -105,8 +108,13 @@
 </template>
 
 <script setup>
+import PatientProfileDialog from "../../../components/master-file/forms/patient/FormContainer.vue";
+
 import ReusableTable from "~/components/reusables/ReusableTable.vue";
 const {
+  PatientProfile,
+  Requisitions,
+  PostCharges,
   ApplyCreditNote,
   ViewExaminationUpshot,
   TagAsMgh,
@@ -131,6 +139,7 @@ const pageTitle = ref("Nursing Services");
 const currentTab = ref(false);
 const showTabs = ref(false);
 const tableTabs = ref([]);
+const form_payload = ref({});
 
 const totalItems = ref(0);
 const itemsPerPage = ref(15);

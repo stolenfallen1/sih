@@ -87,11 +87,28 @@
     :form_payload="form_payload"
     @close-dialog="closeFormContainer"
   />
+
+  <!-- Out-patients Sub components -->
+  <OutpatientCaseHistoryDialog :show="OutpatientCaseHistory" @close-dialog="useSubComponents('OutpatientCaseHistory', false)" />
+  <EmergencyCaseHistoryDialog :show="EmergencyCaseHistory" @close-dialog="useSubComponents('EmergencyCaseHistory', false)" />
+  <InpatientCaseHistoryDialog :show="InpatientCaseHistory" @close-dialog="useSubComponents('InpatientCaseHistory', false)" />
+  <HoldReleaseAccountDialog :show="HoldReleaseAccount" @close-dialog="useSubComponents('HoldReleaseAccount', false)" />
+  <ViewHs7HistoricalDataDialog :show="ViewHs7HistoricalData" @close-dialog="useSubComponents('ViewHs7HistoricalData', false)" />
 </template>
 
 <script setup>
 import ReusableTable from "~/components/reusables/ReusableTable.vue";
 import FormContainer from "~/components/master-file/forms/patient/FormContainer.vue";
+
+const {
+  OutpatientCaseHistory,
+  EmergencyCaseHistory,
+  InpatientCaseHistory,
+  HoldReleaseAccount,
+  ViewHs7HistoricalData,
+  ViewingOfResultImage,
+  DietCounseling, 
+} = storeToRefs(MFPatientsDialog());
 
 definePageMeta({
   layout: "root-layout",
