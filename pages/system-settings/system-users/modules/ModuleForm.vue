@@ -29,7 +29,7 @@
           ></v-text-field>
           <v-checkbox
             required
-            label="Is Active"
+            label="Status"
             density="compact"
             color="#117dad"
             v-model="usergroup_payload.isactive"

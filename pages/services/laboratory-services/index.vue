@@ -110,27 +110,58 @@ const params = ref("");
 const loading = ref(true);
 const headers = [
   {
-    title: "Building",
+    title: "ID",
     align: "start",
     sortable: true,
-    key: "building",
-    width: "10%",
+    key: "id",
+    width: "5%",
   },
-  { title: "Floor Name", key: "floor", align: "center", width: "10%", sortable: false },
-  { title: "Room No.", key: "room_code", align: "center", width: "10%", sortable: false },
   {
-    title: "No.Of Beds",
-    key: "total_beds",
-    align: "center",
+    title: "Code",
+    align: "start",
+    sortable: true,
+    key: "doctor_code",
+    width: "5%",
+  },
+  {
+    title: "Category",
+    key: "category",
+    align: "start",
+    width: "5%",
+    sortable: false,
+  },
+  {
+    title: "Specialization",
+    key: "specialization_id",
+    align: "start",
+    width: "5%",
+    sortable: false,
+  },
+  {
+    title: "Consultant Name",
+    key: "doctor_name",
+    align: "start",
+    width: "40%",
+    sortable: false,
+  },
+  {
+    title: "PHIC No.",
+    key: "philhealth_accreditation_no",
+    align: "start",
     width: "10%",
     sortable: false,
   },
-  { title: "Room Status", key: "roomstatus", align: "center", width: "15%", sortable: false },
-  { title: "Room Type", key: "roomClass", align: "center", width: "15%", sortable: false },
   {
-    title: "Nursing Station",
-    key: "station",
-    align: "center",
+    title: "Email",
+    key: "email",
+    align: "start",
+    width: "30%",
+    sortable: false,
+  },
+   {
+    title: "Status",
+    key: "isactive",
+    align: "start",
     width: "30%",
     sortable: false,
   },
@@ -178,7 +209,7 @@ const loadItems = async (options = null, searchkeyword = null) => {
     let keyword = searchkeyword || "";
       params.value = options  ? "page=" + options.page + "&per_page=" + options.itemsPerPage + "&keyword=" + options.keyword
     : "page=1&per_page=10&keyword=" + keyword;
-    const response = await fetch(useApiUrl()+'/rooms-and-beds'+ "?" + params.value || "", {
+    const response = await fetch(useApiUrl()+'/doctors'+ "?" + params.value || "", {
       headers: {
         Authorization: `Bearer `+ useToken(),
       },

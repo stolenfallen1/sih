@@ -90,7 +90,7 @@ const headers = [
       key: 'id',
   },
   { title: 'Description', key: 'disposition_description', align: 'start', width:"40%" },
-  { title: 'Is Active', key: 'isactive', align: 'start' },
+  { title: 'Status', key: 'isactive', align: 'start' },
   { title: '', key: 'actions', align: 'start', width: "15%" },
 ];
 const data = ref({

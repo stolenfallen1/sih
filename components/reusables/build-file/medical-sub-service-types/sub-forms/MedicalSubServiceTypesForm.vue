@@ -38,7 +38,7 @@
             <v-col cols="6">
               <v-checkbox 
                 v-model="is_active"
-                label="Is Active"
+                label="Status"
                 hide-details
                 density="compact"
               ></v-checkbox>

@@ -157,8 +157,8 @@ const headers = [
     sortable: false,
     key: "id",
   },
-  { title: "Account Type", key: "account_type", align: "start", width: "40%" },
-  { title: "Description", key: "account_description", align: "start", width: "40%" },
+  { title: "Account Type", key: "acct_type", align: "start", width: "40%" },
+  { title: "Description", key: "acct_description", align: "start", width: "40%" },
   { title: "", key: "actions", align: "start", width: "20%" },
 ];
 const data = ref({
