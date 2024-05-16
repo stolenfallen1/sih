@@ -4,7 +4,7 @@
             <v-card rounded="lg">
                 <v-card-title class="pa-0">
                     <v-toolbar density="compact" color="#6984ff" hide-details>
-                        <v-toolbar-title>PhilHealth Claim Form for Processing {{ selectedRowDetails.id }}</v-toolbar-title>
+                        <v-toolbar-title>PhilHealth Claim Form 4 {{ selectedRowDetails.id }}</v-toolbar-title>
                         <v-btn color="white" @click="closeDialog">
                             <v-icon>mdi-close</v-icon>
                         </v-btn>
@@ -943,12 +943,8 @@ const payload = ref({});
 payload.value.isReferredFromHCI = '0';
 payload.value.isGeneralSurvey = '0';
 
-const test = () => {
-    console.log(payload.isReferredFromHCI);
-}
-
 const onSubmit = () => {
-    alert('PhilHealth Claim Form for Processing submitted!');
+    alert('PhilHealth Claim Form 4');
     payload.value = {};
     emits('close-dialog');
     payload.value.isReferredFromHCI = '0';

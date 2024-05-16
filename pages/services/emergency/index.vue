@@ -119,10 +119,13 @@
   <!-- Out-patients Sub components -->
   <PatientProfileDialog :show="PatientProfile" :form_payload="form_payload" @close-dialog="useSubComponents('PatientProfile', false)" />
   <SuspendDialog :show="Suspend" :form_type="form_type" @close-dialog="useSubComponents('Suspend', false)" />
+  <RequisitionsDialog :show="Requisitions" :form_type="form_type" @close-dialog="useSubComponents('Requisitions', false)" />
+  <PostChargesDialog :show="PostCharges" @close-dialog="useSubComponents('PostCharges', false)" />
   <PostCorporatePackageDialog :show="PostCorporateMedicalPackage" @close-dialog="useSubComponents('PostCorporateMedicalPackage', false)"/>
   <PostDiagnosticPackageDialog :show="PostDiagnosticMedicalPackage" @close-dialog="useSubComponents('PostDiagnosticMedicalPackage', false)"/> 
   <PostAdjustmentDialog :show="PostAdjustments" @close-dialog="useSubComponents('PostAdjustments', false)" />
   <PostProfessionalFeesDialog :show="PostProfessionalFees" @close-dialog="useSubComponents('PostProfessionalFees', false)" />
+  <PostDiscountsDialog :show="PostDiscounts" @close-dialog="useSubComponents('PostDiscounts', false)" />
   <PostArTransferDialog :show="PostArTransfer" :form_type="form_type" @close-dialog="useSubComponents('PostArTransfer', false)" />
   <ViewExamUpshotDialog :show="ViewExaminationUpshot" @close-dialog="useSubComponents('ViewExaminationUpshot', false)" />
   <ApplyPromissoryNoteDialog :show="ApplyPromissoryNote" @close-dialog="useSubComponents('ApplyPromissoryNote', false)" />
@@ -135,6 +138,7 @@
   <SoaBillingDialog :show="SoaBillingStatement" @close-dialog="useSubComponents('SoaBillingStatement', false)" />
   <ViewPrintReportsDialog :show="ViewPrintReports" @close-dialog="useSubComponents('ViewPrintReports', false)" />
   <AdmitPatientDialog :show="AdmitPatient" :form_type="form_type" @close-dialog="useSubComponents('AdmitPatient', false)" />
+  <PrintClaimFormsDialog :show="PrintClaimForms" @close-dialog="useSubComponents('PrintClaimForms', false)" />
   <ClaimForm4ProcessingDialog :show="ClaimForm4Processing" @close-dialog="useSubComponents('ClaimForm4Processing', false)" />
 </template>
 
@@ -145,10 +149,13 @@ import ReusableTable from "~/components/reusables/ReusableTable.vue";
 const {
   PatientProfile,
   Suspend, 
+  Requisitions,
+  PostCharges,
   PostCorporateMedicalPackage, 
   PostDiagnosticMedicalPackage, 
   PostAdjustments, 
   PostProfessionalFees, 
+  PostDiscounts,
   PostArTransfer, 
   ViewExaminationUpshot, 
   ApplyPromissoryNote, 
@@ -161,6 +168,7 @@ const {
   SoaBillingStatement, 
   ViewPrintReports, 
   AdmitPatient, 
+  PrintClaimForms,
   ClaimForm4Processing, 
 } = storeToRefs(ERSubComponentsDialog());
 

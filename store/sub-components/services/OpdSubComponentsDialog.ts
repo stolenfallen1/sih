@@ -3,6 +3,7 @@ export const OpdSubComponentsDialog = defineStore('OpdSubComponentsDialog',{
         PatientProfile: false,
         Suspend: false,
         Requisitions: false,
+        PostCharges: false,
         PrintTransactionReceipt: false,
         PostCorporateMedicalPackage: false,
         PostDiagnosticMedicalPackage: false,
@@ -22,6 +23,7 @@ export const OpdSubComponentsDialog = defineStore('OpdSubComponentsDialog',{
         ViewPrintReports: false,
         AdmitPatient: false,
         TransferToEr: false,
+        PrintClaimForms: false,
         ClaimForm4Processing: false,
     }),
     actions:{

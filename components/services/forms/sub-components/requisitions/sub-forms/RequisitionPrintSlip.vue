@@ -20,8 +20,8 @@
                             <v-row class="mt-2">
                                 <v-col cols="12">
                                     <v-text-field
-                                        label="OPD Case No."
-                                        v-model="payload.opd_case_no"
+                                        :label="form_type === 'outpatient' ? 'OPD Case No.' : (form_type === 'emergency' ? 'ER Case No.' : 'IPD Case No.')"
+                                        v-model="payload.case_no"
                                         variant="outlined"
                                         density="compact"
                                         hide-details
@@ -96,7 +96,11 @@ const props = defineProps({
     payload: {
         type: Object,
         default: () => ({}),
-    }
+    },
+    form_type: {
+        type: String,
+        default: () => '',
+    },
 })
 
 const { selectedRowDetails } = storeToRefs(useSubcomponentSelectedRowDetailsStore()); 

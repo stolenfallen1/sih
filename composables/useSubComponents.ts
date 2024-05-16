@@ -1,4 +1,5 @@
 // Master file sub components dialog imports
+import { MFPatientsDialog } from "~/store/sub-components/master-file/MFPatientsDialog";
 import { MFConsultantsDialog } from "~/store/sub-components/master-file/MFConsultantsDialog";
 import { MFRoomsAndBedsDialog } from "~/store/sub-components/master-file/MFRoomsAndBedsDialog";
 import { MFItemsAndServicesDialog } from "~/store/sub-components/master-file/MFItemsAndServicesDialog";
@@ -11,6 +12,7 @@ import { DietarySubComponentsDialog } from "~/store/sub-components/services/Diet
 
 export const useSubComponents = async (dialog: any, type: Boolean = true) => {
     // Master file sub components dialog states
+    const { setMFPatientsDialog } = MFPatientsDialog();
     const { setMFConsultantsDialog } = MFConsultantsDialog();
     const { setMFRoomsAndBedsDialog } = MFRoomsAndBedsDialog();
     const { setMFItemsAndServicesDialog } = MFItemsAndServicesDialog();
@@ -23,6 +25,7 @@ export const useSubComponents = async (dialog: any, type: Boolean = true) => {
     const { setDietarySubComponentsDialog } = DietarySubComponentsDialog();
 
     // Master file
+    setMFPatientsDialog(dialog, type);
     setMFConsultantsDialog(dialog, type);
     setMFRoomsAndBedsDialog(dialog, type);
     setMFItemsAndServicesDialog(dialog, type);

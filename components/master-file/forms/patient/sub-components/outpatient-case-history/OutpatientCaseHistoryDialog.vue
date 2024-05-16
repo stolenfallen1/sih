@@ -1,8 +1,8 @@
 <template>
-    <v-dialog :model-value="show" rounded="lg" scrollable @update:model-value="closeDialog" max-width="750px">
+    <v-dialog :model-value="show" rounded="lg" scrollable @update:model-value="closeDialog" max-width="950px">  
         <v-card rounded="lg">
             <v-toolbar density="compact" color="#6984ff" hide-details>
-                <v-toolbar-title>Post Discounts {{ selectedRowDetails.id }}</v-toolbar-title>
+                <v-toolbar-title>Outpatient Case History {{ selectedRowDetails.id }}</v-toolbar-title>
                 <v-btn color="white" @click="closeDialog">
                     <v-icon>mdi-close</v-icon>
                 </v-btn>
@@ -19,7 +19,6 @@
                     item-value="id"
                     :hover="true"
                     @update:options="initialize"
-                    show-select
                     select-strategy="single"
                     fixed-header
                     density="compact"
@@ -30,9 +29,9 @@
                         v-slot:[`item.${head.value}`]="props"
                     >
                         <td class="test" :props="props" :key="index">
-                            <slot :name="head.value" :item="props.item">
-                                {{ props.item[head.value] || "..." }}
-                            </slot>
+                        <slot :name="head.value" :item="props.item">
+                            {{ props.item[head.value] || "..." }}
+                        </slot>
                         </td>
                     </template>
                     <template #bottom></template>
@@ -42,16 +41,13 @@
             <v-card-actions>
                 <v-btn color="blue-darken-1 border border-info" @click="closeDialog"> Close </v-btn>
                 <v-spacer></v-spacer>
-                <v-btn class="bg-primary text-white" @click.prevent="openItemizedDiscount">Add</v-btn>
+                <v-btn class="bg-primary text-white">View Print Reports</v-btn>
             </v-card-actions>
         </v-card>
     </v-dialog>
-    <ItemizedDiscountApplication :open_itemized_discount_application="open_itemized_discount_application" @close-dialog="closeItemizedDiscount" />
 </template>
 
 <script setup>
-import ItemizedDiscountApplication from "./sub-forms/ItemizedDiscountApplication.vue";
-
 const props = defineProps({
     show: {
         type: Boolean,
@@ -60,31 +56,33 @@ const props = defineProps({
     },
 });
 
-const open_itemized_discount_application = ref(false);
-
 const { selectedRowDetails } = storeToRefs(useSubcomponentSelectedRowDetailsStore()); 
 
 const headers = [
-    { title: "Description", key: "description", align: "center" },
-];
-
-const payload = ref({});
-
+    { title: "SOA", key: "soa", sortable: false },
+    { title: "", key: "view_case_registry_details", sortable: false },
+    { title: "", key: "view_examination_upshot", sortable: false },
+    { title: "OPD DateTime", key: "opd_datetime", sortable: false },
+    { title: "Hospitalization plan", key: "hospitalization_plan", sortable: false },
+    { title: "Medical Service Type", key: "medical_service_type", sortable: false },
+    { title: "Medical Sub Service Type", key: "medical_sub_service_type", sortable: false },
+    { title: "Membership", key: "membership", sortable: false },
+]
 
 const data = ref({
-    title: "List of Bank",
+    title: "",
     keyword: "",
     loading: false,
     filter: {},
     tab: 0,
     param_tab: 1,
 });
+
 const itemsPerPage = ref(10);
 const totalItems = ref(0);
 const serverItems = ref([]);
 const initialize = ({ page, itemsPerPage, sortBy }) => {
-    // loadItems(page, itemsPerPage, sortBy);
-    null
+    loadItems(page, itemsPerPage, sortBy);
 };
 
 const loadItems = async (page = null, itemsPerPage = null, sortBy = null) => {
@@ -93,21 +91,15 @@ const loadItems = async (page = null, itemsPerPage = null, sortBy = null) => {
     let itemPerpageno = itemsPerPage || 10;
     let params =
         "page=" + pageno + "&per_page=" + itemPerpageno + "&keyword=" + data.value.keyword;
-    const response = await useMethod("get", "banks?", "", params);
+    const response = await useMethod("get", "get-provinces?", "", params);
     if (response) {
         serverItems.value = response.data;
         totalItems.value = response.total;
         data.value.loading = false;
     }
 };
-const emits = defineEmits(['close-dialog'])
 
-const openItemizedDiscount = () => {
-    open_itemized_discount_application.value = true;
-}
-const closeItemizedDiscount = () => {
-    open_itemized_discount_application.value = false;
-}
+const emits = defineEmits(['close-dialog'])
 
 const closeDialog = () => {
     emits('close-dialog');

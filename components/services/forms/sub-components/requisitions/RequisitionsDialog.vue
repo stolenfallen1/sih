@@ -59,7 +59,7 @@
         </v-card>
     </v-dialog>
     <DxMedicalItemSelection :open_medical_item_selection="open_medical_item_selection" @close-dialog="closeMultiDepartmentSelection" @handle-submit="onSubmitSelectedItem" />
-    <RequisitionPrintSlip :print_slip="print_slip" @close-dialog="closePrintSlip" />
+    <RequisitionPrintSlip :print_slip="print_slip" :form_type="form_type" @close-dialog="closePrintSlip" />
 </template>
 
 <script setup>
@@ -70,6 +70,10 @@ const props = defineProps({
     show: {
         type: Boolean,
         default: () => false,
+    },
+    form_type: {
+        type: String,
+        default: () => '',
     },
 })
 

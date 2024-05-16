@@ -183,37 +183,129 @@
                         </v-row>
                     </v-col>
                 </v-row>
+                <v-card elevation="4" class="mt-4">
+                    <v-tabs 
+                        v-model="tab"
+                        color="primary"
+                    >
+                        <v-tab value="0"><v-icon start>mdi-form-select</v-icon> Items and Services </v-tab>
+                        <v-tab value="1"><v-icon start>mdi-form-select</v-icon> Miscellaneous </v-tab>
+                    </v-tabs>
+                    <v-card-text>
+                        <v-window v-model="tab">
+                            <v-window-item class="pa-1">
+                                <v-row>
+                                    <v-col cols="4">
+                                        <v-autocomplete
+                                            label="Department"
+                                            placeholder="Select Department"
+                                            variant="outlined"
+                                            density="compact"
+                                            hide-details
+                                        ></v-autocomplete>
+                                    </v-col>
+                                    <v-col cols="4">
+                                        <v-autocomplete
+                                            label="Item Group"
+                                            placeholder="Select Item Group"
+                                            variant="outlined"
+                                            density="compact"
+                                            hide-details
+                                        ></v-autocomplete>
+                                    </v-col>
+                                    <v-col cols="4">
+                                        <v-text-field
+                                            label="Tagged Amount"
+                                            variant="outlined"
+                                            density="compact"
+                                            hide-details
+                                            readonly
+                                        ></v-text-field>
+                                    </v-col>
+                                    <v-divider></v-divider>
+                                </v-row>
+                                <v-table class="mt-4" height="40vh">
+                                    <thead>
+                                        <tr>
+                                            <th width="4"></th>
+                                            <th>Type</th>
+                                            <th>Document No.</th>
+                                            <th>Document Date</th>
+                                            <th>Description</th>
+                                            <th>Rendered Qty</th>
+                                            <th>Rendered Price</th>
+                                            <th>Amount</th>
+                                            <th>Discount Rate</th>
+                                            <th>Discount Amount</th>
+                                            <th>Credit Amount</th>
+                                            <th>Allowed Amount</th>
+                                            <th>RF Discount</th>
+                                            <th>Net of RF Discount</th>
+                                            <th>Net of Discount</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <!-- Contents -->
+                                        </tr>
+                                    </tbody>
+                                </v-table>
+                            </v-window-item>
+                            <v-window-item class="pa-1">
+                                <v-row style="display: flex; justify-content: flex-end">
+                                    <v-col cols="4">
+                                        <v-text-field
+                                            label="Tagged Amount"
+                                            variant="outlined"
+                                            density="compact"
+                                            hide-details
+                                            readonly
+                                        ></v-text-field>
+                                    </v-col>
+                                    <v-divider></v-divider>
+                                </v-row>
+                                <v-table class="mt-4" height="40vh">
+                                    <thead>
+                                        <tr>
+                                            <th width="4"></th>
+                                            <th>Document Date</th>
+                                            <th>Document No.</th>
+                                            <th>Description</th>
+                                            <th>Amount</th>
+                                            <th>Credit Amount</th>
+                                            <th>Allowed Amount</th>
+                                            <th>Discount Rate</th>
+                                            <th>Discount Amount</th>
+                                            <th>Net of Discount</th>
+                                            <th width="4"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <!-- Contents -->
+                                        </tr>
+                                    </tbody>
+                                </v-table>
+                            </v-window-item>
+                        </v-window>
+                    </v-card-text>
+                </v-card>
             </v-card-text>
-            <v-card elevation="4" class="mt-3 mx-6">
-                <v-tabs 
-                    v-model="tab"
-                    color="primary"
-                >
-                    <v-tab value="0"><v-icon start>mdi-form-select</v-icon> Promissory Note. Billing Information </v-tab>
-                    <v-tab value="1"><v-icon start>mdi-form-select</v-icon> Obligor List </v-tab>
-                </v-tabs>
-                <v-card-text>
-                    <v-window v-model="tab">
-                        <v-window-item class="pa-1">
-                            <h1>TEST</h1>
-                        </v-window-item>
-                        <v-window-item class="pa-1">
-                            <h1>TEST</h1>
-                        </v-window-item>
-                    </v-window>
-                </v-card-text>
-            </v-card>
             <v-divider></v-divider>
             <v-card-actions>
                 <v-btn color="blue-darken-1 border border-info" @click="closeDialog"> Close </v-btn>
+                <v-btn class="bg-info text-white" @click="openDiscountHistory">Discount History</v-btn>
                 <v-spacer></v-spacer>
                 <v-btn class="bg-primary text-white">Apply</v-btn>
             </v-card-actions>
         </v-card>
     </v-dialog>
+    <AppliedDiscountHistory :open_applied_discount_history="open_applied_discount_history" @close-dialog="closeDiscountHistory" />
 </template>
 
 <script setup>
+import AppliedDiscountHistory from './AppliedDiscountHistory.vue';
+
 const props = defineProps({
     open_itemized_discount_application: {
         type: Boolean,
@@ -222,11 +314,20 @@ const props = defineProps({
     },
 });
 
+const open_applied_discount_history = ref(false);
+
 const { selectedRowDetails } = storeToRefs(useSubcomponentSelectedRowDetailsStore()); 
 
 let tab = ref("0");
 
 const emits = defineEmits(['close-dialog'])
+
+const openDiscountHistory = () => {
+    open_applied_discount_history.value = true;
+}
+const closeDiscountHistory = () => {
+    open_applied_discount_history.value = false;
+}
 
 const closeDialog = () => {
     emits('close-dialog');
