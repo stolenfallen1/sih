@@ -69,6 +69,7 @@
       @selected-row="selectedUser"
       @action-search="handleSearch"
       @action-refresh="handleRefresh"
+      @open-filter="openFilterOptions"
     >
       <!-- Custom templates for each column -->
       <template v-for="column in headers" v-slot:[`column-${column.key}`]="{ item }">
@@ -114,9 +115,42 @@
     :data="outpatients_test_data"
     @close-dialog="closeViewSummary"
   />
+  <v-menu
+    v-model="open_filter_options"
+    :close-on-content-click="false"
+    offset-y
+    activator="#filter-button"
+  >
+    <template v-slot:activator="{ on, attrs }">
+      <div></div>
+    </template>
+    <v-card width="450px" rounded="lg">
+      <v-toolbar density="compact">
+        <v-toolbar-title>Filter Options</v-toolbar-title>
+        <v-spacer></v-spacer>
+        <v-btn icon @click="closeFilterOptions">
+          <v-icon>mdi-close</v-icon>
+        </v-btn>
+      </v-toolbar>
+      <v-divider></v-divider>
+      <v-card-text>
+        <v-row>
+          <!-- <v-col cols="12" md="6">
+            <v-select label="Status" variant="outlined" density="compact" v-model="filter.status"></v-select>
+          </v-col> -->
+          <!-- Add filter options as needed -->
+        </v-row>
+      </v-card-text>
+      <v-card-actions>
+        <v-spacer></v-spacer>
+        <v-btn class="bg-primary text-white" @click="applyFilters">Apply Filters</v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-menu>
 
   <EmergencyRegistration :clicked_option="clicked_option" :form_dialog="form_dialog" @close-dialog="closeAddFormDialog" />
-  <!-- Out-patients Sub components -->
+  
+  <!-- Emergency Sub components -->
   <PatientProfileDialog :show="PatientProfile" :form_payload="form_payload" @close-dialog="useSubComponents('PatientProfile', false)" />
   <SuspendDialog :show="Suspend" :form_type="form_type" @close-dialog="useSubComponents('Suspend', false)" />
   <RequisitionsDialog :show="Requisitions" :form_type="form_type" @close-dialog="useSubComponents('Requisitions', false)" />
@@ -193,6 +227,8 @@ const form_payload = ref({});
 const totalItems = ref(0);
 const itemsPerPage = ref(15);
 const search = ref("");
+const filter = ref({});
+const open_filter_options = ref(false);
 const params = ref("");
 const loading = ref(true);
 const open_summary_modal = ref(false);
@@ -270,6 +306,17 @@ const handleRefresh = () => {
 const handleSearch = (keyword) => {
   // Handle search action
    loadItems(null, keyword);
+};
+const openFilterOptions = () => {
+  setTimeout(() => {
+    open_filter_options.value = true;
+  }, 100);
+};
+const closeFilterOptions = () => {
+  open_filter_options.value = false;
+};
+const applyFilters = () => {
+  console.log('Filters applied:', filter.value);
 };
 const selectedUser = (item) => {
   isSelectedUser.value = true;

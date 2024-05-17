@@ -31,14 +31,12 @@
                                                                 class="mt-2"
                                                                 density="compact"
                                                                 :items="reportItem.dropdown_values"
-                                                                dense
                                                             ></v-select>
                                                         </template>
                                                         <template v-else-if="value === 'text'">
                                                             <v-text-field
                                                                 class="mt-2"
                                                                 density="compact"
-                                                                dense
                                                             ></v-text-field>
                                                         </template>
                                                     </template>

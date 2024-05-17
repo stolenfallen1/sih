@@ -21,17 +21,18 @@
                 <v-radio :label="radioItem.label" :value="radioItem.value" density="compact" hide-details></v-radio>
             </v-radio-group> -->
             <v-spacer></v-spacer>
-            <v-text-field
-                class="mt-5 mr-2"
-                label="Search"
-                rounded
-                v-model="keyword"
-                @keyup.enter="handleSearch"
-                density="compact"
-                variant="outlined"
-                prepend-inner-icon="mdi-magnify"
-            >
+                <v-text-field
+                    class="mt-5 mr-2"
+                    label="Search"
+                    rounded
+                    v-model="keyword"
+                    @keyup.enter="handleSearch"
+                    density="compact"
+                    variant="outlined"
+                    prepend-inner-icon="mdi-magnify"
+                >
             </v-text-field>
+            <v-btn id="filter-button" class="bg-success text-white m;-3" @click="openFilterOptions">Filter&nbsp;<v-icon>mdi-filter-outline</v-icon></v-btn>
         </v-toolbar>
         <v-divider></v-divider>
         <v-data-table-server
@@ -77,6 +78,7 @@ const emits = defineEmits([
     "tab-change",
     "selected-row",
     "action-search",
+    "open-filter",
 ]);
 const options = reactive({
     itemsPerPage: 50,
@@ -176,13 +178,14 @@ const handleTabClick = (tabValue) => {
     emits("tab-change", tabValue);
 };
 
-const search = () => {
-    emits("action-search", "");
-};
-
 const handleSearch = () => {
     emits("action-search", keyword.value);
 };
+
+const openFilterOptions = () => {
+    emits("open-filter");
+};
+
 // options.itemsPerPage.value = props
 
 onMounted(() => {
