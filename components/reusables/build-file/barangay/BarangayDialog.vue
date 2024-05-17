@@ -56,7 +56,8 @@
             {{ item.muncipalities ? item.muncipalities.municipality_name :'' }}
           </template>
           <template v-slot:item.isactive="{ item }">
-            {{ item.isactive == 1 ? "Active" : "In-active" }}
+              <v-chip color="green" v-if="item.isactive == 1">Active</v-chip>
+              <v-chip color="red" v-else>Inactive</v-chip>
           </template>
           <template v-slot:item.actions="{ item }">
             <v-icon color="green mr-3" @click="onEdit(item)">mdi-pencil</v-icon>

@@ -103,7 +103,7 @@ const headers = [
       key: 'id',
   },
   { title: 'Description', key: 'description', align: 'start',width:"60%" },
-  { title: 'Is Active', key: 'is_active', align: 'start' },
+  { title: 'Status', key: 'is_active', align: 'start' },
   { title: '', key: 'actions', align: 'start' },
 ];
 const data = ref({

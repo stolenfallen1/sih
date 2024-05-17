@@ -158,7 +158,7 @@
         key: 'id',
     },
     { title: 'Description', key: 'description', align: 'start', width:"40%" },
-    { title: 'Is Active', key: 'is_active', align: 'start' },
+    { title: 'Status', key: 'is_active', align: 'start' },
     // { title: '?', key: 'erd_apply', align: 'start' }, // ERD Apply
     // { title: '?', key: 'opd_apply', align: 'start' }, // OPD Apply
     // { title: '?', key: 'ipd_apply', align: 'start' }, // IPD Apply

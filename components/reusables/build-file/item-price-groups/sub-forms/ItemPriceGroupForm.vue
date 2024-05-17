@@ -31,7 +31,7 @@
                         class="mt-0 mb-0"
                         v-model="payload.isactive"
                         hide-details
-                        label="Is Active"
+                        label="Status"
                         ></v-checkbox>
                     </v-col>
                 </v-row>

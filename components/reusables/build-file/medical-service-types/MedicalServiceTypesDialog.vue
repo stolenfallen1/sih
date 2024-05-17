@@ -98,7 +98,7 @@ const headers = [
   { title: 'Description', key: 'description', align: 'start',width:"60%" },
   { title: 'Allocated Beds (Pay)', key: 'allocated_beds_pay', align: 'start' },
   { title: 'Allocated Beds (Service)', key: 'allocated_beds_service', align: 'start' },
-  { title: 'Is Active', key: 'is_active', align: 'start' },
+  { title: 'Status', key: 'is_active', align: 'start' },
   { title: '', key: 'actions', align: 'start' },
 ];
 const data = ref({

@@ -9,6 +9,7 @@ import { ERSubComponentsDialog } from "~/store/sub-components/services/ERSubComp
 import { IpdSubComponentsDialog } from "~/store/sub-components/services/IpdSubComponentsDialog";
 import { NursingSubComponentsDialog } from "~/store/sub-components/services/NursingSubComponentsDialog";
 import { DietarySubComponentsDialog } from "~/store/sub-components/services/DietarySubComponentsDialog";
+import { AncillarySubComponentsDialog } from "~/store/sub-components/services/AncillarySubComponentsDialog";
 
 export const useSubComponents = async (dialog: any, type: Boolean = true) => {
     // Master file sub components dialog states
@@ -23,6 +24,7 @@ export const useSubComponents = async (dialog: any, type: Boolean = true) => {
     const { setIpdSubComponentsDialog } = IpdSubComponentsDialog();
     const { setNursingSubComponentsDialog } = NursingSubComponentsDialog();
     const { setDietarySubComponentsDialog } = DietarySubComponentsDialog();
+    const { setAncillarySubComponentsDialog } = AncillarySubComponentsDialog();
 
     // Master file
     setMFPatientsDialog(dialog, type);
@@ -35,4 +37,5 @@ export const useSubComponents = async (dialog: any, type: Boolean = true) => {
     setIpdSubComponentsDialog(dialog, type);
     setNursingSubComponentsDialog(dialog, type);
     setDietarySubComponentsDialog(dialog, type);
+    setAncillarySubComponentsDialog(dialog, type);
 };

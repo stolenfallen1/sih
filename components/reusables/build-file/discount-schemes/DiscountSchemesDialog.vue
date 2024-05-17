@@ -91,7 +91,7 @@ const headers = [
   { title: 'Discount basis', key: 'discount_basis', align: 'start' },
   { title: 'Room class', key: 'room_class', align: 'start' },
   { title: 'Description', key: 'description', align: 'start',width:"40%" },
-  { title: 'Is Active', key: 'isactive', align: 'start' },
+  { title: 'Status', key: 'isactive', align: 'start' },
   { title: '', key: 'actions', align: 'start' },
 ];
 const data = ref({

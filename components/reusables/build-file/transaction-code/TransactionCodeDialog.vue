@@ -50,7 +50,8 @@
             {{ item.medicare_type ? item.medicare_type.medicare_description : "" }}
           </template>
           <template v-slot:item.isActive="{ item }">
-            {{ item.isActive == 1 ? "Active" : "In-active" }}
+              <v-chip color="green" v-if="item.isActive == 1">Active</v-chip>
+              <v-chip color="red" v-else>Inactive</v-chip>
           </template>
           <template v-slot:item.actions="{ item }">
             <v-icon color="green mr-3" @click="onEdit(item)">mdi-pencil</v-icon>
@@ -157,7 +158,7 @@
                   hide-details
                   density="compact"
                   v-model="payload.isActive"
-                  label="Is Active"
+                  label="Status"
                 ></v-checkbox>
               </v-col>
           </v-row>

@@ -423,9 +423,12 @@
                                     </tr>
                                 </tbody>
                             </v-table>
-                            <div class="mt-4" style="display: flex; justify-content: flex-start; gap: 20px;">
-                                <v-btn class="bg-info text-white" @click="openItemMasterFile">Select from Item Master File</v-btn> 
-                                <v-btn class="bg-info text-white" @click="openItemTemplate">Select from Item Template</v-btn>
+                            <div class="button-container mt-4">
+                                <button class="text-blue-darken-1 border border-primary px-3 py-1 rounded" @click="openItemMasterFile">Select from Item Master File</button> 
+                                <button class="text-blue-darken-1 border border-primary px-3 py-1 rounded" @click="openItemTemplate">Select from Item Template</button>
+                                <button class="text-blue-darken-1 border border-primary px-3 py-1 rounded">CPT Modifier</button> 
+                                <button class="text-blue-darken-1 border border-primary px-3 py-1 rounded">Select Service Fee</button>
+                                <button class="text-blue-darken-1 border border-primary px-3 py-1 rounded">Item Notes. Remarks</button> 
                             </div>
                         </v-expansion-panel-text>
                     </v-expansion-panel>
@@ -530,5 +533,14 @@ const closeDialog = () => {
 }
 .form-col {
     margin-top: -16px !important;
+}
+.button-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+.button-container v-btn {
+    flex: 1 1 auto;
+    margin-bottom: 5px;
 }
 </style>
