@@ -69,6 +69,7 @@
       @selected-row="selectedUser"
       @action-search="handleSearch"
       @action-refresh="handleRefresh"
+      @open-filter="openFilterOptions"
     >
       <!-- Custom templates for each column -->
       <template v-for="column in headers" v-slot:[`column-${column.key}`]="{ item }">
@@ -126,6 +127,39 @@
       @close-dialog="closeViewSummary"
     />
   </v-card>
+  <v-menu
+    v-model="open_filter_options"
+    :close-on-content-click="false"
+    offset-y
+    activator="#filter-button"
+  >
+    <template v-slot:activator="{ on, attrs }">
+      <div></div>
+    </template>
+    <v-card width="450px" rounded="lg">
+      <v-toolbar density="compact">
+        <v-toolbar-title>Filter Options</v-toolbar-title>
+        <v-spacer></v-spacer>
+        <v-btn icon @click="closeFilterOptions">
+          <v-icon>mdi-close</v-icon>
+        </v-btn>
+      </v-toolbar>
+      <v-divider></v-divider>
+      <v-card-text>
+        <v-row>
+          <!-- <v-col cols="12" md="6">
+            <v-select label="Status" variant="outlined" density="compact" v-model="filter.status"></v-select>
+          </v-col> -->
+          <!-- Add filter options as needed -->
+        </v-row>
+      </v-card-text>
+      <v-card-actions>
+        <v-spacer></v-spacer>
+        <v-btn class="bg-primary text-white" @click="applyFilters">Apply Filters</v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-menu>
+
   <!-- Master File Consultants Sub components -->
   <MFItemExaminationDialog :show="MFListOfItemExaminations" @close-dialog="useSubComponents('MFListOfItemExaminations', false)" />
   <MFListOfPatientsDialog :show="MFListOfPatients" @close-dialog="useSubComponents('MFListOfPatients', false)" />
@@ -171,6 +205,8 @@ const loading = ref(true);
 const search_payload = ref({
   isloading:false
 });
+const filter = ref({});
+const open_filter_options = ref(false);
 const form_dialog = ref(false);
 const central_form_dialog = ref(false);
 const search_results = ref([]);
@@ -302,7 +338,17 @@ const handleSearch = (keyword) => {
   search_payload.value.firstname = useSeperateName(keyword,'firstname');
   loadItems(null, keyword);
 };
-
+const openFilterOptions = () => {
+  setTimeout(() => {
+    open_filter_options.value = true;
+  }, 100);
+};
+const closeFilterOptions = () => {
+  open_filter_options.value = false;
+};
+const applyFilters = () => {
+  console.log('Filters applied:', filter.value);
+};
 
 const selectedUser = (item) => {
   isSelectedUser.value = true;
