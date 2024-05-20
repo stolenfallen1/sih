@@ -269,7 +269,7 @@
 
 <script setup>
 import Claim3Form3Details from "./sub-forms/ClaimForm3Details.vue";
-import Claim4Processing from "../claim-form4processing/ClaimForm4ProcessingDialog.vue";
+import ClaimForm4ProcessingDialog from "../clam-form4processing/ClaimForm4ProcessingDialog.vue";
 
 const props = defineProps({
     show: {

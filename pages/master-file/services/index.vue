@@ -171,6 +171,7 @@ import { storeToRefs } from "pinia";
 import ReusableTable from "~/components/reusables/ReusableTable.vue";
 import ServicesForm from "~/components/master-file/forms/items-supplies-services/ServicesForm.vue";
 import CentralSupplyLookUp from "~/components/reusables/CentralSupplyLookUp.vue";
+import { PQItemsServicesDialog } from "~/store/processing-queries/master-file/PQItemsServicesDialog";
 const {
   MFItemComposition,
   MFManageDepartmentalAccess,
@@ -182,6 +183,11 @@ const {
   MFResultEntriesInGeneral,
   MFResultEntriesPerItem,
 } = storeToRefs(MFItemsAndServicesDialog());
+
+const { 
+  BorrowedItems,
+  GeneratePricesAndDiscounts,
+} = storeToRefs(PQItemsServicesDialog());
 
 definePageMeta({
   layout: "root-layout",

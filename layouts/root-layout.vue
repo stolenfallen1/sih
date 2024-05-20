@@ -22,7 +22,7 @@
         </template>
 
         <v-list>
-          <v-list-item>
+          <v-list-item @click="openUserProfile">
             <v-list-item-title
               ><v-icon class="mr-4">mdi-account-circle</v-icon>View
               Profile</v-list-item-title
@@ -203,6 +203,7 @@
     </v-main>
     <Snackbar />
     <GlobalTemplateDialog />
+    <UserProfile :open_user_profile="open_user_profile" @close-dialog="closeUserProfile" />
   </v-app>
 </template>
 
@@ -214,6 +215,7 @@ import { ref, onUpdated, onMounted } from "vue";
 import ModalSettings from "~/components/system-settings/forms/global-settings/ModalSettings.vue";
 import navigation_items from "../constants/navigation-menu";
 import GlobalTemplateDialog from "~/components/GlobalTemplateDialog.vue";
+import UserProfile from "../pages/UserProfile.vue";
 
 const router = useRouter();
 const route = useRoute();
@@ -231,6 +233,7 @@ const table_and_template = ref([]);
 const processing_and_queries = ref([]);
 const rightSidebarDisplay = ref(false);
 const showWarning = ref(false);
+const open_user_profile = ref(false);
 
 // Current time state and update function
 const currentTime = ref(new Date().toLocaleTimeString());
@@ -317,7 +320,12 @@ onMounted(async () => {
   }
 
 });
-
+const openUserProfile = () => {
+  open_user_profile.value = true;
+}
+const closeUserProfile = () => {
+  open_user_profile.value = false;
+}
 const logout = () => {
   logUserOut();
   router.push("/");

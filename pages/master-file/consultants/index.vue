@@ -171,6 +171,7 @@ import ReusableTable from "~/components/reusables/ReusableTable.vue";
 import CentralLookUpForm from "~/components/reusables/CentralLookUpForm.vue";
 import ConsultantForm from "./Form.vue";
 import nuxtStorage from "nuxt-storage";
+import { PQConsultantsDialog } from "~/store/processing-queries/master-file/PQConsultantsDialog";
 let userdetails = JSON.parse(nuxtStorage.localStorage.getData("user_details"));
 // import { storeToRefs } from "pinia";
 // import { useSnackBarStore } from "~/store/SnackBar";
@@ -181,6 +182,11 @@ const {
   MFGetDoctorAccreditationNo,
   MFDoctorsAccreditationCheck,
 } = storeToRefs(MFConsultantsDialog());
+
+const { 
+  PFItemsPerServiceType,
+  DoctorsWithExpiringLicense,
+} = storeToRefs(PQConsultantsDialog());
 
 definePageMeta({
   layout: "root-layout",

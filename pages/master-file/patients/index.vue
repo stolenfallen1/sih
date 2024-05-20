@@ -132,6 +132,7 @@
 <script setup>
 import ReusableTable from "~/components/reusables/ReusableTable.vue";
 import FormContainer from "~/components/master-file/forms/patient/FormContainer.vue";
+import { PQPatientMasterDialog } from "~/store/processing-queries/master-file/PQPatientMasterDialog";
 
 const {
   OutpatientCaseHistory,
@@ -142,6 +143,11 @@ const {
   ViewingOfResultImage,
   DietCounseling, 
 } = storeToRefs(MFPatientsDialog());
+
+const {
+  DocumentArchives,
+  ReissuePrivilegeCard,
+} = storeToRefs(PQPatientMasterDialog());
 
 definePageMeta({
   layout: "root-layout",
