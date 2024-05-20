@@ -61,18 +61,15 @@ export default [
                 ],
                 processing_and_queries: [
                     {
-                        label: "Print Patient Address Label",
-                        icon: "mdi-file-document-edit",
-                        rule: "",
-                    },
-                    {
                         label: "Document Archives",
                         icon: "mdi-file-document-edit",
+                        form: "DocumentArchives",
                         rule: "",
                     },
                     {
                         label: "Reissue Privilege Card",
                         icon: "mdi-file-document-edit",
+                        form: "ReissuePrivilegeCard",
                         rule: "",
                     },
                 ],
@@ -215,11 +212,13 @@ export default [
                     {
                         label: "PF Items/Services Per Service Type",
                         icon: "mdi-file-document-edit",
+                        form: "PFItemsPerServiceType",
                         rule: "",
                     },
                     {
                         label: "Doctors with Expiring License",
                         icon: "mdi-file-document-edit",
+                        form: "DoctorsWithExpiringLicense",
                         rule: "",
                     },
                 ],
@@ -422,18 +421,20 @@ export default [
                     {
                         label: "Borrowed Items",
                         icon: "mdi-file-document-edit",
+                        form: "BorrowedItems",
                         rule: "",
                     },
                     {
                         label: "Generate Prices and Discounts",
                         icon: "mdi-file-document-edit",
+                        form: "GeneratePricesAndDiscounts",
                         rule: "",
                     },
-                    {
-                        label: "EDPMS Drug Code Mapping",
-                        icon: "mdi-file-document-edit",
-                        rule: "",
-                    },
+                    // {
+                    //     label: "EDPMS Drug Code Mapping",
+                    //     icon: "mdi-file-document-edit",
+                    //     rule: "",
+                    // },
                 ],
                 table_and_template: [
                     {
@@ -659,18 +660,20 @@ export default [
                     {
                         label: "Borrowed Items",
                         icon: "mdi-file-document-edit",
+                        form: "BorrowedItems",
                         rule: "",
                     },
                     {
                         label: "Generate Prices and Discounts",
                         icon: "mdi-file-document-edit",
+                        form: "GeneratePricesAndDiscounts",
                         rule: "",
                     },
-                    {
-                        label: "EDPMS Drug Code Mapping",
-                        icon: "mdi-file-document-edit",
-                        rule: "",
-                    },
+                    // {
+                    //     label: "EDPMS Drug Code Mapping",
+                    //     icon: "mdi-file-document-edit",
+                    //     rule: "",
+                    // },
                 ],
                 table_and_template: [
                     {
@@ -2249,11 +2252,11 @@ export default [
                         icon: "mdi-file-document-edit",
                         rule: "",
                     },
-                    {
-                        label: "Select Warning Sound",
-                        icon: "mdi-file-document-edit",
-                        rule: "",
-                    },
+                    // {
+                    //     label: "Select Warning Sound",
+                    //     icon: "mdi-file-document-edit",
+                    //     rule: "",
+                    // },
                 ],
                 table_and_template: [
                     {
