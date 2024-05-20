@@ -206,6 +206,12 @@ const {
   ClaimForm4Processing, 
 } = storeToRefs(ERSubComponentsDialog());
 
+const { 
+  MayGoHomePatientList,
+  DocumentArchives,
+  Cf4ForDischargedPatients,
+} = storeToRefs(PQEmergencyPatientDialog());
+
 definePageMeta({
   layout: "root-layout",
 });

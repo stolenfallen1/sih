@@ -121,12 +121,15 @@
     </v-card>
   </v-menu>
 
-  <!-- Out-patients Sub components -->
+  <!-- Patients Master Sub components -->
   <OutpatientCaseHistoryDialog :show="OutpatientCaseHistory" @close-dialog="useSubComponents('OutpatientCaseHistory', false)" />
   <EmergencyCaseHistoryDialog :show="EmergencyCaseHistory" @close-dialog="useSubComponents('EmergencyCaseHistory', false)" />
   <InpatientCaseHistoryDialog :show="InpatientCaseHistory" @close-dialog="useSubComponents('InpatientCaseHistory', false)" />
   <HoldReleaseAccountDialog :show="HoldReleaseAccount" @close-dialog="useSubComponents('HoldReleaseAccount', false)" />
   <ViewHs7HistoricalDataDialog :show="ViewHs7HistoricalData" @close-dialog="useSubComponents('ViewHs7HistoricalData', false)" />
+
+  <!-- Patients Master Processing and Queries -->
+  <ReissuePrivilegeCardDialog :show="ReissuePrivilegeCard" @close-dialog="useProcessingQueries('ReissuePrivilegeCard', false)" />
 </template>
 
 <script setup>
