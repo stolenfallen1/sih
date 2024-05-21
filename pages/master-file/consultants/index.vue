@@ -164,6 +164,9 @@
   <MFItemExaminationDialog :show="MFListOfItemExaminations" @close-dialog="useSubComponents('MFListOfItemExaminations', false)" />
   <MFListOfPatientsDialog :show="MFListOfPatients" @close-dialog="useSubComponents('MFListOfPatients', false)" />
   <MFGetDoctorAccreditationNoDialog :show="MFGetDoctorAccreditationNo" @close-dialog="useSubComponents('MFGetDoctorAccreditationNo', false)" />
+
+  <!-- Master File Consultants Processing and Queries -->
+  <PFItemsPerServiceTypeDialog :show="PFItemsPerServiceType" @close-dialog="useProcessingQueries('PFItemsPerServiceType', false)" />
 </template>
 
 <script setup>

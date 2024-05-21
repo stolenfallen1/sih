@@ -150,7 +150,7 @@
             :key="item.label"
             :title="item.label"
             :value="item.label"
-            :to="item.path"
+            @click="computeProcessingQueries(item.form, selectedRowDetails)"
             density="compact"
             :exact="true"
             :slim="true"
@@ -259,6 +259,12 @@ const computeSubcomponent = (dialog,type) => {
 const computeTableAndTemplate = (dialog,type)=>{
     if(dialog){
       useTableAndTemplate(dialog)
+    }
+}
+const computeProcessingQueries = (dialog,type) => {
+    if(!selectedRowDetails.value.id) return  useSnackbar(true,'red','Please select a record first');
+    if(dialog){
+      useProcessingQueries(dialog)
     }
 }
 

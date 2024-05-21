@@ -161,6 +161,9 @@
     <MFManageItemDiscountsDialog :show="MFManageItemDiscounts" @close-dialog="useSubComponents('MFManageItemDiscounts', false)" />
     <MFUpdateItemSellingPriceDialog :show="MFUpdateItemSellingPrice" @close-dialog="useSubComponents('MFUpdateItemSellingPrice', false)" />
     <MFItemManufacturerDialog :show="MFItemManufacturer" @close-dialog="useSubComponents('MFItemManufacturer', false)" />
+
+    <!-- Master File Items and Supplies Processing and Queries -->
+    <BorrowedItemsDialog :show="BorrowedItems" @close-dialog="useProcessingQueries('BorrowedItems', false)" />
 </template>
 
 <script setup>

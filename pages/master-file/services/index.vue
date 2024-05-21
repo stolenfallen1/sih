@@ -164,6 +164,9 @@
   <MFConsultantReaderListDialog :show="MFConsultantReaderList" @close-dialog="useSubComponents('MFConsultantReaderList', false)" />
   <MFResultEntriesInGeneralDialog :show="MFResultEntriesInGeneral" @close-dialog="useSubComponents('MFResultEntriesInGeneral', false)" />
   <MFResultEntriesPerItemDialog :show="MFResultEntriesPerItem" @close-dialog="useSubComponents('MFResultEntriesPerItem', false)" />
+
+  <!-- Master File Items and Supplies Processing and Queries -->
+  <BorrowedItemsDialog :show="BorrowedItems" @close-dialog="useProcessingQueries('BorrowedItems', false)" />
 </template>
 
 <script setup>

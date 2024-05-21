@@ -176,6 +176,8 @@
   <TransferErDialog :show="TransferToEr" @close-dialog="useSubComponents('TransferToEr', false)" />
   <PrintClaimFormsDialog :show="PrintClaimForms" @close-dialog="useSubComponents('PrintClaimForms', false)" />
   <ClaimForm4ProcessingDialog :show="ClaimForm4Processing" @close-dialog="useSubComponents('ClaimForm4Processing', false)" />
+
+  <!-- Out-patients Processing Querires -->
 </template>
 
 <script setup>
@@ -209,6 +211,13 @@ const {
   PrintClaimForms,
   ClaimForm4Processing,
 } = storeToRefs(OpdSubComponentsDialog());
+
+const { 
+  ItemsAndServicesStatusReport,
+  DocumentArchives,
+  MayGoHomePatientList,
+  Cf4ForDischargedPatients,
+} = storeToRefs(PQOutpatientDialog());
 
 definePageMeta({
   layout: "root-layout",

@@ -209,6 +209,16 @@ const {
   ClaimForm4Processing,
 } = storeToRefs(IpdSubComponentsDialog());
 
+const { 
+  ReAdmit,
+  PostFinalDiagnosisForDischargedPatients,
+  ForBillingRecalculation,
+  MayGoHomePatientList,
+  RoomStatusAvailability,
+  DocumentArchives,
+  Cf4ForDischargedPatients,
+} = storeToRefs(PQInPatientDialog());
+
 definePageMeta({
   layout: "root-layout",
 });

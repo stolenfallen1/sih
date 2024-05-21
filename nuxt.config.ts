@@ -38,6 +38,10 @@ export default defineNuxtConfig({
       'store/sub-components/master-file',
       'store/sub-components/services',
       'store/sub-components/transactions',
+      'store/processing-queries/master-file',
+      'store/processing-queries/services',
+      // 'store/processing-queries/services',
+      // 'store/processing-queries/transactions',
       "composables/build",
       "composables/address"
     ]
