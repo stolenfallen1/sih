@@ -42,6 +42,15 @@
       >
         Deactive</v-btn
       >
+      <v-btn
+        @click="ViewSummary"
+        prepend-icon="mdi-information-box-outline"
+        width="150"
+        color="primary"
+        class="bg-warning text-white"
+      >
+        Summary</v-btn
+      >
     </v-card-actions>
   </v-card>
   <v-card class="mb-2" elevation="4">
@@ -89,6 +98,12 @@
       </template>
     </ReusableTable>
   </v-card>
+  <SummaryModal 
+    :show="open_summary_modal"
+    :summary_header="'Nursing Services'"
+    :data="nursing_services_test_data"
+    @close-dialog="closeViewSummary"
+  />
   <v-menu
     v-model="open_filter_options"
     :close-on-content-click="false"
@@ -138,6 +153,11 @@
   <ViewDrugsAndMedicinesDialog :show="ViewDrugsAndMedicines" @close-dialog="useSubComponents('ViewDrugsAndMedicines', false)" />
   <ViewStatementOfAccountDialog :show="ViewStatementOfAccount" @close-dialog="useSubComponents('ViewStatementOfAccount', false)" />
   <ClaimForm4ProcessingDialog :show="ClaimForm4Processing" @close-dialog="useSubComponents('ClaimForm4Processing', false)" />
+
+  <!-- Nursing Services Processing Queries -->
+  <DietaryTransactionDialog :show="DietaryTransactions" @close-dialog="useProcessingQueries('DietaryTransactions', false)" />
+  <MayGoHomePatientListDialog :show="MayGoHomePatientList" @close-dialog="useProcessingQueries('MayGoHomePatientList', false)" />
+  <RoomStatusAvailabilityDialog :show="RoomStatusAvailability" @close-dialog="useProcessingQueries('RoomStatusAvailability', false)" /> 
 </template>
 
 <script setup>
@@ -162,6 +182,12 @@ const {
   ClaimForm4Processing,
 } = storeToRefs(NursingSubComponentsDialog());
 
+const { 
+  DietaryTransactions,
+  MayGoHomePatientList,
+  RoomStatusAvailability,
+} = storeToRefs(PQNursingServicesDialog());
+
 definePageMeta({
   layout: "root-layout",
 });
@@ -181,6 +207,12 @@ const filter = ref({});
 const open_filter_options = ref(false);
 const params = ref("");
 const loading = ref(true);
+const open_summary_modal = ref(false);
+const nursing_services_test_data = ref([
+  { label: "Admissions", value: "1" },
+  { label: "MGH", value: "2" },
+]); 
+
 const headers = [
   {
     title: "ID",
@@ -231,7 +263,7 @@ const headers = [
     width: "30%",
     sortable: false,
   },
-   {
+  {
     title: "Status",
     key: "isactive",
     align: "start",
@@ -241,11 +273,11 @@ const headers = [
 ];
 const serverItems = ref([]);
 const handleRefresh = () => {
-   loadItems();
+    loadItems();
 };
 const handleSearch = (keyword) => {
   // Handle search action
-   loadItems(null, keyword);
+    loadItems(null, keyword);
 };
 const openFilterOptions = () => {
   setTimeout(() => {
@@ -285,6 +317,13 @@ const handleNew = () => {
 const DeactiveUser = () => {
   
 };
+
+const ViewSummary = () => {
+  open_summary_modal.value = true;
+}
+const closeViewSummary = () => {
+  open_summary_modal.value = false;
+}
 
 const loadItems = async (options = null, searchkeyword = null) => {
   try {

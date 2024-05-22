@@ -42,6 +42,15 @@
       >
         Deactive</v-btn
       >
+      <v-btn
+        @click="ViewSummary"
+        prepend-icon="mdi-information-box-outline"
+        width="150"
+        color="primary"
+        class="bg-warning text-white"
+      >
+        Summary</v-btn
+      >
     </v-card-actions>
   </v-card>
   <v-card class="mb-2" elevation="4">
@@ -89,6 +98,12 @@
       </template>
     </ReusableTable>
   </v-card>
+  <SummaryModal 
+    :show="open_summary_modal"
+    :summary_header="'Ancillary Services'"
+    :data="ancillary_services_test_data"
+    @close-dialog="closeViewSummary"
+  />
   <v-menu
     v-model="open_filter_options"
     :close-on-content-click="false"
@@ -142,6 +157,10 @@ const {
   CentralizedCreditNote,
 } = storeToRefs(AncillarySubComponentsDialog());
 
+const { 
+  PrintPendingRequisition
+} = storeToRefs(PQAncillaryServicesDialog());
+
 definePageMeta({
   layout: "root-layout",
 });
@@ -161,6 +180,16 @@ const filter = ref({});
 const open_filter_options = ref(false);
 const params = ref("");
 const loading = ref(true);
+const open_summary_modal = ref(false);
+const ancillary_services_test_data = ref([
+  { label: "For Rendering", value: "1" },
+  { label: "Fully Rendered", value: "2" },
+  { label: "Partially Rendered", value: "3" },
+  { label: "Cancelled", value: "4" },
+  { label: "Credit Notes", value: "5" },
+  { label: "Package Deals", value: "6" },
+]); 
+
 const headers = [
   {
     title: "ID",
@@ -265,6 +294,13 @@ const handleNew = () => {
 const DeactiveUser = () => {
   
 };
+
+const ViewSummary = () => {
+  open_summary_modal.value = true;
+}
+const closeViewSummary = () => {
+  open_summary_modal.value = false;
+}
 
 const loadItems = async (options = null, searchkeyword = null) => {
   try {

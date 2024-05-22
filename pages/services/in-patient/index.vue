@@ -176,6 +176,13 @@
   <PrintClaimFormsDialog :show="PrintClaimForms" @close-dialog="useSubComponents('PrintClaimForms', false)" />
   <ClaimForm4ProcessingDialog :show="ClaimForm4Processing" @close-dialog="useSubComponents('ClaimForm4Processing', false)" />
 
+  <!-- Inpatient Processing Queries -->
+  <ReAdmitDialog :show="ReAdmit" :form_type="form_type" @close-dialog="useProcessingQueries('ReAdmit', false)" />
+  <PFDForDischargedPatients :show="PostFinalDiagnosisForDischargedPatients" @close-dialog="useProcessingQueries('PostFinalDiagnosisForDischargedPatients', false)" />
+  <BillingRecalculationDialog :show="ForBillingRecalculation" @close-dialog="useProcessingQueries('ForBillingRecalculation', false)" />
+  <MayGoHomePatientListDialog :show="MayGoHomePatientList" @close-dialog="useProcessingQueries('MayGoHomePatientList', false)" />
+  <RoomStatusAvailabilityDialog :show="RoomStatusAvailability" @close-dialog="useProcessingQueries('RoomStatusAvailability', false)" /> 
+  <Cf4DischargedPatientsDialog :show="Cf4ForDischargedPatients" :form_type="form_type" @close-dialog="useProcessingQueries('Cf4ForDischargedPatients', false)" />
 </template>
 
 <script setup>

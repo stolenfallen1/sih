@@ -178,6 +178,9 @@
   <ClaimForm4ProcessingDialog :show="ClaimForm4Processing" @close-dialog="useSubComponents('ClaimForm4Processing', false)" />
 
   <!-- Out-patients Processing Querires -->
+  <ItemServicesStatusReportDialog :show="ItemsAndServicesStatusReport" @close-dialog="useProcessingQueries('ItemsAndServicesStatusReport', false)" />
+  <MayGoHomePatientListDialog :show="MayGoHomePatientList" @close-dialog="useProcessingQueries('MayGoHomePatientList', false)" />
+  <Cf4DischargedPatientsDialog :show="Cf4ForDischargedPatients" :form_type="form_type" @close-dialog="useProcessingQueries('Cf4ForDischargedPatients', false)" />
 </template>
 
 <script setup>
