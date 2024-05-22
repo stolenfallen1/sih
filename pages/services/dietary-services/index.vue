@@ -42,6 +42,15 @@
       >
         Deactive</v-btn
       >
+      <v-btn
+        @click="ViewSummary"
+        prepend-icon="mdi-information-box-outline"
+        width="150"
+        color="primary"
+        class="bg-warning text-white"
+      >
+        Summary</v-btn
+      >
     </v-card-actions>
   </v-card>
   <v-card class="mb-2" elevation="4">
@@ -90,6 +99,12 @@
       </template>
     </ReusableTable>
   </v-card>
+  <SummaryModal 
+    :show="open_summary_modal"
+    :summary_header="'Dietary Services'"
+    :data="dietary_services_test_data"
+    @close-dialog="closeViewSummary"
+  />
   <v-menu
     v-model="open_filter_options"
     :close-on-content-click="false"
@@ -128,6 +143,9 @@
   <PostDietMealasServedDialog :show="PostDietMealasServed" @close-dialog="useSubComponents('PostDietMealasServed', false)" />
   <ViewPrintDietCardDialog :show="ViewPrintDietCard" @close-dialog="useSubComponents('ViewPrintDietCard', false)" />
   <ViewPatientDietHistoryDialog :show="ViewPatientDietHistory" @close-dialog="useSubComponents('ViewPatientDietHistory', false)" />
+
+  <!-- Dietary Processing Queries -->
+  <PatientsWithChangedDietDialog :show="ViewPatientsWithChangedDiet" @close-dialog="useProcessingQueries('ViewPatientsWithChangedDiet', false)" />
 </template>
 
 <script setup>
@@ -138,6 +156,10 @@ const {
   ViewPrintDietCard,
   ViewPatientDietHistory,
 } = storeToRefs(DietarySubComponentsDialog());
+
+const { 
+  ViewPatientsWithChangedDiet,
+} = storeToRefs(PQDietaryServicesDialog());
 
 definePageMeta({
   layout: "root-layout",
@@ -162,6 +184,13 @@ const filter = ref({});
 const open_filter_options = ref(false);
 const params = ref("");
 const loading = ref(true);
+const open_summary_modal = ref(false);
+const dietary_services_test_data = ref([
+  { label: "Breakfast", value: "1" },
+  { label: "Lunch", value: "2" },
+  { label: "Dinner", value: "3" },
+]); 
+
 const headers = [
   {
     title: "ID",
@@ -262,6 +291,13 @@ const handleNew = () => {
 };
 const DeactiveUser = () => {
 };
+
+const ViewSummary = () => {
+  open_summary_modal.value = true;
+}
+const closeViewSummary = () => {
+  open_summary_modal.value = false;
+}
 
 const loadItems = async (options = null, searchkeyword = null) => {
   try {

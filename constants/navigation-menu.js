@@ -2072,16 +2072,19 @@ export default [
                     {
                         label: "Dietary Transactions",
                         icon: "mdi-file-document-edit",
+                        form: "DietaryTransactions",
                         rule: "",
                     },
                     {
                         label: "May-Go-Home Patient List",
                         icon: "mdi-file-document-edit",
+                        form: "MayGoHomePatientList",
                         rule: "",
                     },
                     {
                         label: "Room Status Availability",
                         icon: "mdi-file-document-edit",
+                        form: "RoomStatusAvailability",
                         rule: "",
                     },
                 ],
@@ -2158,6 +2161,7 @@ export default [
                     {
                         label: "View Patients with Changed Diet",
                         icon: "mdi-file-document-edit",
+                        form: "ViewPatientsWithChangedDiet",
                         rule: "",
                     },
                 ],
@@ -2259,18 +2263,9 @@ export default [
                     {
                         label: "Print Pending Requisition",
                         icon: "mdi-file-document-edit",
+                        form: "PrintPendingRequisition",
                         rule: "",
                     },
-                    {
-                        label: "Stat Requisition",
-                        icon: "mdi-file-document-edit",
-                        rule: "",
-                    },
-                    // {
-                    //     label: "Select Warning Sound",
-                    //     icon: "mdi-file-document-edit",
-                    //     rule: "",
-                    // },
                 ],
                 table_and_template: [
                     {

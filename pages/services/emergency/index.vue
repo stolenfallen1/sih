@@ -174,6 +174,10 @@
   <AdmitPatientDialog :show="AdmitPatient" :form_type="form_type" @close-dialog="useSubComponents('AdmitPatient', false)" />
   <PrintClaimFormsDialog :show="PrintClaimForms" @close-dialog="useSubComponents('PrintClaimForms', false)" />
   <ClaimForm4ProcessingDialog :show="ClaimForm4Processing" @close-dialog="useSubComponents('ClaimForm4Processing', false)" />
+
+  <!-- Emergency Processing Queries -->
+  <MayGoHomePatientListDialog :show="MayGoHomePatientList" @close-dialog="useProcessingQueries('MayGoHomePatientList', false)" />
+  <Cf4DischargedPatientsDialog :show="Cf4ForDischargedPatients" :form_type="form_type" @close-dialog="useProcessingQueries('Cf4ForDischargedPatients', false)" />
 </template>
 
 <script setup>
