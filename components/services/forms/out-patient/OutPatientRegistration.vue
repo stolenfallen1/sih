@@ -1,6 +1,6 @@
 <template>
     <v-dialog :model-value="form_dialog" :persistent="true" hide-overlay width="1280" scrollable>
-        <form @submit.prevent="onSubmit">
+        <v-form ref="form" @submit.prevent="onSubmit">
             <v-card rounded="lg">
                 <v-toolbar density="compact" color="#6984ff" hide-details>
                     <v-toolbar-title>Outpatient Registration Form</v-toolbar-title>
@@ -71,7 +71,7 @@
                     </v-btn>
                 </v-card-actions>
             </v-card>
-        </form>
+        </v-form>
     </v-dialog>
 </template>
 
@@ -91,6 +91,7 @@ let tab = ref("0");
 const formType = ref('outpatient');
 
 const payload = ref({});
+const isLoading = ref(false);
 const checkType = ref(false);
 const tab_payload = ref({
     patient_basic_info: true,
@@ -112,7 +113,7 @@ const validation = () => {
         checkType.value = true;
         tab_payload.value.patient_basic_info = false;
     } else {
-        if(!payload.value.case_datetime || !payload.value.case_type || !payload.value.mscAccount_trans_types || !payload.value.mscPatient_category || !payload.value.hosp_plan || !payload.value.mscPrice_Groups || !payload.value.mscPrice_Schemes) {
+        if(!payload.value.registry_date || !payload.value.mscAccount_trans_types || !payload.value.mscPrice_Groups || !payload.value.mscPrice_Schemes) {
             alert('Please fill up all required fields');
             tab.value = "1";
             checkType.value = true;
@@ -125,18 +126,30 @@ const validateBeforeSubmit = () => {
     validation();
 }
 
-const onSubmit = () => {
+const onSubmit = async () => {
     if(tab_payload.value.patient_basic_info && tab_payload.value.registry_information) {
         alert('Please fill up all required fields');
     } else {
-        alert('Successfully Registered Patient!');
-        tab.value = "0";
-        payload.value = {};
-        checkType.value = false;
-        tab_payload.value = {
-            patient_basic_info: true,
-            registry_information: true,
+        let response;
+        isLoading.value = true;
+        
+        if (payload.value.id) {
+            response = await useMethod("put", "register-outpatient", payload.value, "", payload.value.id);
+        } else {
+            response = await useMethod("post", "register-outpatient", payload.value);
+            if (response) {
+                useSnackbar(true, "green", response.message);
+                isLoading.value = false;
+                payload.value = Object.assign({});
+                closeDialog();
+                tab.value = "0";
+                checkType.value = false;
+            }
         }
+    }
+    tab_payload.value = {
+        patient_basic_info: true,
+        registry_information: true,
     }
 }
 </script>

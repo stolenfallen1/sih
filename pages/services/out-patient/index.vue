@@ -55,7 +55,7 @@
   </v-card>
   <v-card class="mb-2" elevation="4">
     <ReusableTable
-      :items-per-page="10"
+      :items-per-page="50"
       :serverItems="serverItems"
       :totalItems="totalItems"
       :loading="loading"
@@ -71,30 +71,18 @@
       @action-refresh="handleRefresh"
       @open-filter="openFilterOptions"
     >
-      <!-- Custom templates for each column -->
       <template v-for="column in headers" v-slot:[`column-${column.key}`]="{ item }">
-        <!-- customize rendering for each column here -->
-        <span v-if="column.key ==='building'" :key="column.key">{{
-          item.stations.floors ? item.stations.floors.building.description : ""
-        }}</span>
-        <span v-if="column.key === 'floor'" :key="column.key">{{
-          item.stations.floors ?  item.stations.floors.description : ""
-        }}</span>
-
-        <span v-if="column.key === 'roomstatus'" :key="column.key">
-          {{ item.room_status ? item.room_status.room_description : "" }}</span
-        >
-        <span v-if="column.key === 'roomClass'" :key="column.key">
-          {{ item.room_class ? item.room_class.room_class_description : "" }}</span
-        >
-        <span v-if="column.key === 'station'" :key="column.key">
-          {{ item.stations ? item.stations.station_description : "" }}</span
-        >
-        <span v-if="column.key === 'isactive'" :key="column.key">
-          {{ item.isactive == 1 ? "Active" : "In Active" }}</span
-        >
-
-        <!-- Add more custom logic for other columns -->
+        <span v-if="column.key === 'sex'" :key="column.key" style="display: flex;">
+          <v-icon v-if="item.sex && item.sex.sex_description === 'Male'" color="primary">mdi-gender-male</v-icon>
+          <v-icon v-else color="pink">mdi-gender-female</v-icon>
+          {{ item.sex ? item.sex.sex_description : "..." }}
+        </span>
+        <span v-if="column.key === 'birthdate'" :key="column.key">
+          {{ item.birthdate ? useDateMMDDYYY(item.birthdate) : "..." }}
+        </span>
+        <span v-if="column.key === 'patient_registry'" :key="column.key">
+          {{ item.patient_registry ? useDateMMDDYYY(item.patient_registry.registry_date) : "..." }}
+        </span>
       </template>
     </ReusableTable>
   </v-card>
@@ -241,7 +229,7 @@ const form_type = ref("outpatient")
 const form_payload = ref({});
 
 const totalItems = ref(0);
-const itemsPerPage = ref(15);
+const itemsPerPage = ref(50);
 const search = ref("");
 const filter = ref({});
 const open_filter_options = ref(false);
@@ -261,57 +249,43 @@ const headers = [
   {
     title: "ID",
     align: "start",
-    sortable: true,
+    sortable: false,
     key: "id",
-    width: "5%",
   },
   {
-    title: "Code",
+    title: "Patient Code",
     align: "start",
-    sortable: true,
-    key: "doctor_code",
-    width: "5%",
+    sortable: false,
+    key: "patient_id",
   },
   {
-    title: "Category",
-    key: "category",
+    title: "Last Name",
+    key: "lastname",
     align: "start",
-    width: "5%",
     sortable: false,
   },
   {
-    title: "Specialization",
-    key: "specialization_id",
+    title: "First Name",
+    key: "firstname",
     align: "start",
-    width: "5%",
     sortable: false,
   },
   {
-    title: "Consultant Name",
-    key: "doctor_name",
+    title: "Sex",
+    key: "sex",
     align: "start",
-    width: "40%",
     sortable: false,
   },
   {
-    title: "PHIC No.",
-    key: "philhealth_accreditation_no",
+    title: "Birth Date",
+    key: "birthdate",
     align: "start",
-    width: "10%",
     sortable: false,
   },
   {
-    title: "Email",
-    key: "email",
+    title: "Registry Date",
+    key: "patient_registry",
     align: "start",
-    width: "30%",
-    sortable: false,
-  },
-   {
-    title: "Status",
-    key: "isactive",
-    align: "start",
-    width: "30%",
     sortable: false,
   },
 ];
@@ -393,8 +367,8 @@ const loadItems = async (options = null, searchkeyword = null) => {
 
     let keyword = searchkeyword || "";
       params.value = options  ? "page=" + options.page + "&per_page=" + options.itemsPerPage + "&keyword=" + options.keyword
-    : "page=1&per_page=10&keyword=" + keyword;
-    const response = await fetch(useApiUrl()+'/doctors'+ "?" + params.value || "", {
+    : "page=1&per_page=50&keyword=" + keyword;
+    const response = await fetch(useApiUrl()+'/get-outpatient'+ "?" + params.value || "", {
       headers: {
         Authorization: `Bearer `+ useToken(),
       },
@@ -403,7 +377,6 @@ const loadItems = async (options = null, searchkeyword = null) => {
     updateTotalItems(data.total);
     updateServerItems(data.data);
     loading.value = false;
-    // tableColumns.value = currentTabInfo?.columns || [];
   } catch (error) {
     console.error("Error fetching data:", error);
     loading.value = false;
