@@ -20,9 +20,8 @@
                 </v-list-subheader>
                 <v-text-field
                     variant="solo"
-                    v-model="payload.case_datetime"
+                    v-model="payload.registry_date"
                     :readonly="clicked_option === 'view'"
-                    required
                     type="date"
                     hide-details
                     density="compact"
@@ -30,18 +29,17 @@
             </v-col>
             <v-col cols="12" class="form-col">
                 <v-list-subheader class="form-header">
-                    {{ form_type === 'outpatient' ? 'OPD Case Type' : (form_type === 'emergency' ? 'ER Case Type' : 'IPD Case Type') }} <span style="color: red;" class="mdi mdi-check"></span>
+                    {{ form_type === 'outpatient' ? 'OPD Registry Type' : (form_type === 'emergency' ? 'ER Registry Type' : 'IPD Registry Type') }} <span style="color: red;" class="mdi mdi-check"></span>
                 </v-list-subheader>
                 <v-autocomplete
-                    item-title="case_type"
+                    :items="[]"
+                    item-title="description"
                     item-value="id"
-                    placeholder="Select Case Type"
+                    placeholder="Select Registry Type"
                     v-model="payload.case_type"
                     :readonly="clicked_option === 'view'"
                     :clearable="clicked_option === 'new' || clicked_option === 'edit'"
-                    required
                     hide-details
-                    :items="['New', 'Old']"
                     density="compact"
                     variant="solo"
                 ></v-autocomplete>
@@ -57,7 +55,6 @@
                     v-model="payload.how_admitted"
                     :readonly="clicked_option === 'view'"
                     :clearable="clicked_option === 'new' || clicked_option === 'edit'"
-                    required
                     hide-details
                     :items="[]"
                     density="compact"
@@ -83,15 +80,14 @@
             <v-col cols="12" class="form-col">
                 <v-list-subheader class="form-header">Transaction Type <span style="color: red;" class="mdi mdi-check"></span></v-list-subheader>
                 <v-autocomplete
-                    item-title="transaction_type"
+                    :items="transaction_type_data"
+                    item-title="description"
                     item-value="id"
                     placeholder="Select Transaction Type"
                     v-model="payload.mscAccount_trans_types"
                     :readonly="clicked_option === 'view'"
                     :clearable="clicked_option === 'new' || clicked_option === 'edit'"
-                    required
                     hide-details
-                    :items="[]"
                     density="compact"
                     variant="solo"
                 ></v-autocomplete>
@@ -106,7 +102,6 @@
                     v-model="payload.mscPatient_category"
                     :readonly="clicked_option === 'view'"
                     :clearable="clicked_option === 'new' || clicked_option === 'edit'"
-                    required
                     hide-details
                     :items="[]"
                     density="compact"
@@ -116,15 +111,14 @@
             <v-col cols="12" class="form-col">
                 <v-list-subheader class="form-header">Hospitalization Plan <span style="color: red;" class="mdi mdi-check"></span></v-list-subheader>
                 <v-autocomplete
-                    item-title="hosp_plan"
+                    :items="hospitalizationPlans"
+                    item-title="description"
                     item-value="id"
                     placeholder="Select Hospital Plan"
                     v-model="payload.hosp_plan"
                     :readonly="clicked_option === 'view'"
                     :clearable="clicked_option === 'new' || clicked_option === 'edit'"
-                    required
                     hide-details
-                    :items="hospitalizationPlans"
                     density="compact"
                     variant="solo"
                     @update:model-value="handleHospitalizationPlan"
@@ -195,15 +189,14 @@
             <v-col cols="12" class="form-col">
                 <v-list-subheader class="form-header">Price Group <span style="color: red;" class="mdi mdi-check"></span></v-list-subheader>
                 <v-autocomplete
-                    item-title="price_group"
+                    :items="price_group_data"
+                    item-title="description"
                     item-value="id"
                     placeholder="Select Price Group"
                     v-model="payload.mscPrice_Groups"
                     :readonly="clicked_option === 'view'"
                     :clearable="clicked_option === 'new' || clicked_option === 'edit'"
-                    required
                     hide-details
-                    :items="[]"
                     density="compact"
                     variant="solo"
                 ></v-autocomplete>
@@ -211,15 +204,14 @@
             <v-col cols="12" class="form-col">
                 <v-list-subheader class="form-header">Price Scheme <span style="color: red;" class="mdi mdi-check"></span></v-list-subheader>
                 <v-autocomplete
-                    item-title="price_scheme"
+                    :items="price_scheme_data"
+                    item-title="description"
                     item-value="id"
                     placeholder="Select Price Schemes"
                     v-model="payload.mscPrice_Schemes"
                     :readonly="clicked_option === 'view'"
                     :clearable="clicked_option === 'new' || clicked_option === 'edit'"
-                    required
                     hide-details
-                    :items="[]"
                     density="compact"
                     variant="solo"
                 ></v-autocomplete>
@@ -517,6 +509,53 @@ const handleDietDesc = () => {
 const closeDietDesc = () => {
     open_diet_desc.value = false;
 }
+
+// Fetch autocomplete / select items data
+const transaction_type_data = ref([]);
+const transaction_type_loading = ref(false);
+const getTransactionType = async () => {
+    transaction_type_loading.value = true;
+    const response = await useMethod("get", "get-transaction-type", "", "");
+    if (response) {
+        transaction_type_data.value = response;
+        transaction_type_loading.value = false;
+    } 
+    if (props.form_type === "outpatient") {
+        props.payload.mscAccount_trans_types = response.find(item => item.description === "Outpatient Consultation");
+    } else if (props.form_type === "emergency") {
+        props.payload.mscAccount_trans_types = response.find(item => item.description === "Emergency Case");
+    } else if (props.form_type === "inpatient") {
+        props.payload.mscAccount_trans_types = response.find(item => item.description === "Inpatient Case");
+    } else {
+        props.payload.mscAccount_trans_types = [];
+    }
+};
+const price_group_data = ref([]);
+const price_group_loading = ref(false);
+const getPriceGroup = async () => {
+    price_group_loading.value = true;
+    const response = await useMethod("get", "list-price-groups", "", "");
+    if (response) {
+        price_group_data.value = response;
+        price_group_loading.value = false;
+    } 
+};
+const price_scheme_data = ref([]);
+const price_scheme_loading = ref(false);
+const getPriceScheme = async () => {
+    price_scheme_loading.value = true;
+    const response = await useMethod("get", "list-price-schemes", "", "");
+    if (response) {
+        price_scheme_data.value = response;
+        price_scheme_loading.value = false;
+    } 
+};
+
+onMounted(() => {
+    getTransactionType();
+    getPriceGroup();
+    getPriceScheme();
+});
 </script>
 
 <style scoped>

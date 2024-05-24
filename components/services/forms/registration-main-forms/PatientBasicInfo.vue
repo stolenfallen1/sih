@@ -5,7 +5,6 @@
                 <v-list-subheader class="form-header">Patient No.</v-list-subheader>
                 <v-text-field
                     variant="solo"
-                    v-model="payload.patient_no"
                     readonly
                     hide-details
                     density="compact"
@@ -28,7 +27,6 @@
                     v-model="payload.lastname"
                     :readonly="clicked_option === 'view'"
                     type="text"
-                    required
                     hide-details
                     density="compact"
                     variant="solo"
@@ -41,7 +39,6 @@
                     placeholder="Enter Patient First Name"
                     v-model="payload.firstname"
                     :readonly="clicked_option === 'view'"
-                    required
                     hide-details
                     density="compact"
                 ></v-text-field>
@@ -88,11 +85,10 @@
             <v-col cols="12" class="form-col">
                 <v-list-subheader class="form-header">Sex <span style="color: red;" class="mdi mdi-check"></span></v-list-subheader>
                 <v-autocomplete
-                    item-title="sex"
+                    :items="sex_data"
+                    item-title="sex_description"
                     item-value="id"
                     placeholder="Select Sex"
-                    required
-                    :items="[]"
                     v-model="payload.sex_id"
                     :readonly="clicked_option === 'view'"
                     :clearable="clicked_option === 'new' || clicked_option === 'edit'"
@@ -104,11 +100,10 @@
             <v-col cols="12" class="form-col">
                 <v-list-subheader class="form-header">Civil Status <span style="color: red;" class="mdi mdi-check"></span></v-list-subheader>
                 <v-autocomplete
-                    item-title="civil_status"
+                    :items="civil_status_data"
+                    item-title="civil_status_description"
                     item-value="id"
                     placeholder="Select Civil Status"
-                    required
-                    :items="[]"
                     v-model="payload.civilstatus_id"
                     :readonly="clicked_option === 'view'"
                     :clearable="clicked_option === 'new' || clicked_option === 'edit'"
@@ -228,7 +223,6 @@
                     variant="solo"
                     v-model="payload.birthdate"
                     :readonly="clicked_option === 'view'"
-                    required
                     type="date"
                     hide-details
                     density="compact"
@@ -280,7 +274,31 @@ const props = defineProps({
     }
 })
 
-const suffix = ref(['Jr.', 'Sr.', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII',])
+const sex_data = ref([]);
+const sex_loading = ref(false);
+const getSex = async () => {
+    sex_loading.value = true;
+    const response = await useMethod("get", "get-sex", "", "");
+    if (response) {
+        sex_data.value = response;
+        sex_loading.value = false;
+    } 
+};
+const civil_status_data = ref([]);
+const civil_status_loading = ref(false);
+const getCivilStatus = async () => {
+    civil_status_loading.value = true;
+    const response = await useMethod("get", "get-civil-status", "", "");
+    if (response) {
+        civil_status_data.value = response;
+        civil_status_loading.value = false;
+    } 
+};
+
+onMounted(() => {
+    getSex();
+    getCivilStatus();
+});
 </script>
 
 <style scoped>
