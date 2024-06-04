@@ -1,7 +1,7 @@
 <template>
-  <v-snackbar :color="snackbar.color" location="top" :model-value="snackbar.show">
-    {{ snackbar.text }}
-  </v-snackbar>
+    <v-snackbar :color="snackbar.color" location="top right" :model-value="snackbar.show">
+      {{ snackbar.text }}
+    </v-snackbar>
 </template>
 <script setup>
 import { storeToRefs } from "pinia";

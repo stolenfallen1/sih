@@ -2,7 +2,7 @@
 import { storeToRefs } from "pinia";
 import { useSnackBarStore } from "~/store/SnackBar";
 
-export const useSnackbar = (showdialog:any,colordialog:any,messagedialog:any) => {
+export const useSnackbar = (showdialog:any, colordialog:any, messagedialog:any) => {
     const { show,text,color } = storeToRefs(useSnackBarStore());
     show.value = showdialog;
     text.value = messagedialog;

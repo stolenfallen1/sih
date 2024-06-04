@@ -3,7 +3,7 @@
         :model-value="address_form_dialog"
         @update:model-value="closeDialog"
         hide-overlay
-        width="650"
+        width="750"
     >
         <form @submit.prevent="handleSubmit">
             <v-card rounded="lg">
@@ -19,117 +19,89 @@
                             <v-col cols="6" class="pa-1">
                                 <v-list-subheader class="form-header">Building No. / Street <span style="color: red;" class="mdi mdi-check"></span></v-list-subheader>
                                 <v-text-field
-                                    v-model="form_data.building_no"
+                                    v-model="address_data.bldgstreet"
                                     variant="solo"
-                                    required
-                                    placeholder="Enter Building No. / Street"
                                     density="compact"
                                     hide-details
                                 ></v-text-field>
                             </v-col>
                             <v-col cols="6" class="pa-1">
-                                <v-list-subheader class="form-header">Barangay <span style="color: red;" class="mdi mdi-check"></span></v-list-subheader>
-                                <v-select
-                                    v-model="form_data.barangay"
-                                    item-title="abbreviations"
-                                    item-value="id"
-                                    placeholder="Select Barangay"
-                                    required
+                                <v-list-subheader class="form-header">Region <span style="color: red;" class="mdi mdi-check"></span></v-list-subheader>
+                                <v-autocomplete
+                                    v-model="address_data.region_id"
+                                    item-title="region_name"
+                                    item-value="region_code"
+                                    :items="region_data"
+                                    @update:model-value="getProvince"
                                     hide-details
                                     clearable
-                                    density="compact"
+                                    density="compact" 
                                     variant="solo"
-                                ></v-select>
-                            </v-col>
-                            <v-col cols="6" class="pa-1">
-                                <v-list-subheader class="form-header">Town / City <span style="color: red;" class="mdi mdi-check"></span></v-list-subheader>
-                                <v-select
-                                    v-model="form_data.town_city"
-                                    item-title="abbreviations"
-                                    item-value="id"
-                                    placeholder="Select Town / City"
-                                    required
-                                    hide-details
-                                    clearable
-                                    density="compact"
-                                    variant="solo"
-                                ></v-select>
+                                ></v-autocomplete>
                             </v-col>
                             <v-col cols="6" class="pa-1">
                                 <v-list-subheader class="form-header">Province / State <span style="color: red;" class="mdi mdi-check"></span></v-list-subheader>
-                                <v-select
-                                    v-model="form_data.province_state"
-                                    item-title="abbreviations"
-                                    item-value="id"
-                                    placeholder="Select Province / State"
-                                    required
+                                <v-autocomplete
+                                    v-model="address_data.province_id"
+                                    item-title="province_name"
+                                    item-value="province_code"
+                                    :items="province_data"
+                                    @update:model-value="getMunicipality"
                                     hide-details
                                     clearable
                                     density="compact"
                                     variant="solo"
-                                ></v-select>
+                                ></v-autocomplete>
                             </v-col>
                             <v-col cols="6" class="pa-1">
-                                <v-list-subheader class="form-header">Region <span style="color: red;" class="mdi mdi-check"></span></v-list-subheader>
-                                <v-select
-                                    v-model="form_data.region"
-                                    item-title="abbreviations"
-                                    item-value="id"
-                                    placeholder="Select Region"
-                                    required
+                                <v-list-subheader class="form-header">Town / Municipality <span style="color: red;" class="mdi mdi-check"></span></v-list-subheader>
+                                <v-autocomplete
+                                    v-model="address_data.municipality_id"
+                                    item-title="municipality_name"
+                                    item-value="municipality_code"
+                                    :items="municipality_data"
+                                    @update:model-value="getBarangay"
                                     hide-details
                                     clearable
                                     density="compact"
                                     variant="solo"
-                                ></v-select>
+                                ></v-autocomplete>
                             </v-col>
                             <v-col cols="6" class="pa-1">
-                                <v-list-subheader class="form-header">Country <span style="color: red;" class="mdi mdi-check"></span></v-list-subheader>
-                                <v-select
-                                    v-model="form_data.country"
-                                    item-title="abbreviations"
+                                <v-list-subheader class="form-header">Barangay <span style="color: red;" class="mdi mdi-check"></span></v-list-subheader>
+                                <v-autocomplete
+                                    v-model="address_data.barangay_id"
+                                    item-title="barangay_name"
                                     item-value="id"
-                                    placeholder="Select Country"
-                                    required
+                                    :items="barangay_data"
                                     hide-details
                                     clearable
                                     density="compact"
                                     variant="solo"
-                                ></v-select>
+                                ></v-autocomplete>
                             </v-col>
-                            <v-col cols="6" class="pa-1">
-                                <v-list-subheader class="form-header">Area </v-list-subheader>
-                                <v-select
-                                    v-model="form_data.area"
-                                    item-title="abbreviations"
-                                    item-value="id"
-                                    placeholder="Select Area"
-                                    hide-details
-                                    clearable
-                                    density="compact"
-                                    variant="solo"
-                                ></v-select>
-                            </v-col>
-                            <v-col cols="6" class="pa-1">
+                            <!-- <v-col cols="6" class="pa-1">
                                 <v-list-subheader class="form-header">Zip Code</v-list-subheader>
-                                <v-select
-                                    v-model="form_data.zip_code"
-                                    item-title="abbreviations"
+                                <v-text-field
+                                    v-model="zipcode_data"
+                                    hide-details
+                                    readonly
+                                    density="compact"
+                                    variant="solo"
+                                ></v-text-field>
+                            </v-col> -->
+                            <v-col cols="6" class="pa-1">
+                                <v-list-subheader class="form-header">Country </v-list-subheader>
+                                <v-autocomplete
+                                    v-model="address_data.country_id"
+                                    item-title="country_name"
                                     item-value="id"
-                                    placeholder="Select Zip Code"
+                                    :items="country_data"
                                     hide-details
                                     clearable
                                     density="compact"
                                     variant="solo"
-                                ></v-select>
-                            </v-col>
-                            <v-col lg="12" class="pa-1">
-                                <v-textarea
-                                    v-model="form_data.full_address"
-                                    class="cursor-pointer"
-                                    readonly
-                                    variant="solo"
-                                ></v-textarea>
+                                ></v-autocomplete>
                             </v-col>
                         </v-row>
                     </v-container>
@@ -158,20 +130,74 @@ const props = defineProps({
         default: () => false,
         required: true,
     },
-    form_data: {
-        type: Object,
-        default: () => ({}),
-        required: false, // Change to true if required na for dyanmic purposes
-    },
 })
 
+const address_data = ref({});
+
 const handleSubmit = () => {
-    emits("handle-submit");
+    emits("handle-submit", address_data.value);
+    closeDialog();
 };
 
 const closeDialog = () => {
     emits("close-dialog");
 };
+
+const region_data = ref([]);
+const getRegion = async () => {
+    const response = await useMethod("get", "get-regions", "", "");
+    if (response) {
+        region_data.value = response;
+    }
+};
+
+const province_data = ref([]);
+const getProvince = async () => {
+    const response = await useMethod("get" , "get-province?region_code=" + address_data.value.region_id, "" , "" );
+    if (response) {
+        province_data.value = response.data;
+    }
+}
+
+const municipality_data = ref([]);
+const getMunicipality = async () => {
+    const params = "?region_code=" + address_data.value.region_id + "&province_code=" + address_data.value.province_id;
+    const response = await useMethod("get", "get-municipality" + params, "", "");
+    if (response) {
+        municipality_data.value = response.data;
+    }
+}
+
+const barangay_data = ref([]);
+const getBarangay = async () => {
+    const params = "?region_code=" + address_data.value.region_id + "&province_code=" + address_data.value.province_id + "&municipality_code=" + address_data.value.municipality_id;
+    const response = await useMethod("get", "get-barangays" + params, "", "");
+    if (response) {
+        barangay_data.value = response.data;
+    }
+}
+
+// const zipcode_data = ref("");
+// const getZipCode = async () => {
+//     const params = "?region_code=" + address_data.value.region_id + "&province_code=" + address_data.value.province_id + "&municipality_code=" + address_data.value.municipality_id + "&barangay_code=" + address_data.value.barangay_id;
+//     const response = await useMethod("get", "zip-code-list" + params, "", "");
+//     if (response) {
+//         zipcode_data.value = response.data[0].zip_code;
+//     }
+// }
+
+const country_data = ref([]);
+const getCountry = async () => {
+    const response = await useMethod("get", "get-country-list", "", "");
+    if (response) {
+        country_data.value = response;
+    }
+}
+
+onMounted(() => {
+    getRegion();
+    getCountry();
+})
 </script>
 
 <style scoped>

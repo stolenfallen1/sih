@@ -1,4 +1,3 @@
-import { TableAndTemplateFormDialog } from "~/store/TableAndTemplateFormDialog";
 // Master file table and template form dialog imports
 import { PatientsTemplateDialog } from "~/store/table-templates/master-file/PatientsTemplateDialog";
 import { ConsultantsTemplateDialog } from "~/store/table-templates/master-file/ConsultantsTemplateDialog";
@@ -30,8 +29,6 @@ export const useTableAndTemplate = async (dialog:any, type:Boolean = true) => {
     const { setDietaryServicesDialog } = DietaryServicesTemplateDialog()
     const { setAncillaryServicesDialog } = AncillaryServicesTemplateDialog()
 
-    const { setDialog } = TableAndTemplateFormDialog(); // Only system users dialog ang nabilin dre sir cel
-
     
     // Master file
     setPatientsDialog(dialog, type);
@@ -45,10 +42,6 @@ export const useTableAndTemplate = async (dialog:any, type:Boolean = true) => {
     setNursingServicesDialog(dialog, type);
     setDietaryServicesDialog(dialog, type);
     setAncillaryServicesDialog(dialog, type);
-
-    // Transactions
-    setDialog(dialog); 
-    
     // build File 
     setBuildFileDialog(dialog,type);
 }

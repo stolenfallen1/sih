@@ -2,7 +2,7 @@
     <v-card rounded="lg">
         <v-row>
             <v-col cols="12">
-                <v-table density="compact" height="60vh">
+                <v-table density="compact" height="40vh">
                     <thead>
                         <tr>
                             <th>Code</th>

@@ -40,16 +40,16 @@
                                 <other-details-info :clicked_option="clicked_option" :payload="payload" :form_type="formType" />
                             </v-window-item>
                             <v-window-item class="pa-1">
-                                <hmo-info :clicked_option="clicked_option"payload="payload" />
+                                <hmo-info :clicked_option="clicked_option" :payload="payload" />
                             </v-window-item>
                             <v-window-item class="pa-1">
-                                <consultant-info :clicked_option="clicked_option":payload="payload" />
+                                <consultant-info :clicked_option="clicked_option" :payload="payload" />
                             </v-window-item>
                             <v-window-item class="pa-1">
                                 <allergies-info :clicked_option="clicked_option" :payload="payload" />
                             </v-window-item>
                             <v-window-item class="pa-1">
-                                <remarks-info :clicked_option="clicked_option" ayload="payload" />
+                                <remarks-info :clicked_option="clicked_option" :payload="payload" />
                             </v-window-item>
                         </v-window>
                         </v-col>
@@ -66,13 +66,14 @@
                         density="compact"
                     ></v-checkbox>
                     <v-spacer></v-spacer>
-                    <v-btn v-if="clicked_option === 'new' || clicked_option === 'edit'" class="bg-primary text-white" type="submit" @click="validateBeforeSubmit">
+                    <v-btn v-if="clicked_option === 'new' || clicked_option === 'edit'" class="bg-primary text-white" type="submit">
                         {{ clicked_option === 'new' ? 'Register Patient' : 'Update Patient' }}
                     </v-btn>
                 </v-card-actions>
             </v-card>
         </v-form>
     </v-dialog>
+    <Snackbar />
 </template>
 
 <script setup>
@@ -85,18 +86,16 @@ const props = defineProps({
     clicked_option: {
         type: String,
         default: () => ''
-    }
+    },
 });
 let tab = ref("0");
 const formType = ref('outpatient');
-
-const payload = ref({});
+const { selectedRowDetails } = storeToRefs(useSubcomponentSelectedRowDetailsStore());
+const payload = ref({
+    selectedGuarantor: [],
+    selectedConsultant: [],
+});
 const isLoading = ref(false);
-const checkType = ref(false);
-const tab_payload = ref({
-    patient_basic_info: true,
-    registry_information: true,
-})
 
 const emits = defineEmits(['close-dialog']);
 
@@ -106,52 +105,90 @@ const closeDialog = () => {
     payload.value = {};
 }
 
-const validation = () => {
-    if(!payload.value.lastname || !payload.value.firstname || !payload.value.sex_id || !payload.value.civilstatus_id || !payload.value.birthdate) {
-        alert('Please fill up all required fields');
-        tab.value = "0";
-        checkType.value = true;
-        tab_payload.value.patient_basic_info = false;
-    } else {
-        if(!payload.value.registry_date || !payload.value.mscAccount_trans_types || !payload.value.mscPrice_Groups || !payload.value.mscPrice_Schemes) {
-            alert('Please fill up all required fields');
-            tab.value = "1";
-            checkType.value = true;
-            tab_payload.value.registry_information = false;
-        } 
-    }
-}
-
-const validateBeforeSubmit = () => {
-    validation();
-}
-
 const onSubmit = async () => {
-    if(tab_payload.value.patient_basic_info && tab_payload.value.registry_information) {
-        alert('Please fill up all required fields');
+    // console.log('Payload:', payload.value);
+    let response;
+    isLoading.value = true;
+    const errors = validation();
+    
+    if (errors.length > 0) {
+        for (let i = 0; i < errors.length; i++) {
+            useSnackbar(true, "red", errors[i].msg);
+            await new Promise(resolve => setTimeout(resolve, 1000)); 
+        }
+        isLoading.value = false;
+        return;
+    } 
+
+    if (payload.value.id) {
+        response = await useMethod("put", "register-outpatient", payload.value, "", payload.value.id);
     } else {
-        let response;
-        isLoading.value = true;
-        
-        if (payload.value.id) {
-            response = await useMethod("put", "register-outpatient", payload.value, "", payload.value.id);
-        } else {
-            response = await useMethod("post", "register-outpatient", payload.value);
-            if (response) {
-                useSnackbar(true, "green", response.message);
-                isLoading.value = false;
-                payload.value = Object.assign({});
-                closeDialog();
-                tab.value = "0";
-                checkType.value = false;
-            }
+        response = await useMethod("post", "register-outpatient", payload.value);
+        if (response) {
+            useSnackbar(true, "green", response.message);
+            isLoading.value = false;
+            payload.value = Object.assign({});
+            closeDialog();
+            tab.value = "0";
         }
     }
-    tab_payload.value = {
-        patient_basic_info: true,
-        registry_information: true,
-    }
 }
+const validation = ()=>{
+    let error_msg = [];
+    if(!payload.value.lastname) {
+        error_msg.push({msg:"Lastname is required"});
+    }
+    if(!payload.value.firstname) {
+        error_msg.push({msg:"Firstname is required"});
+    }
+    if(!payload.value.sex_id) {
+        error_msg.push({msg:"Sex is required"});
+    }
+    if(!payload.value.civilstatus_id) {
+        error_msg.push({msg:"Civil Status is required"});
+    }
+    if(!payload.value.birthdate) {
+        error_msg.push({msg:"Birthdate is required"});
+    }
+    if(!payload.value.registry_date) {
+        error_msg.push({msg:"Registry Date is required"});
+    }
+    // if(!payload.value.registry_type) {
+    //     error_msg.push({msg:"Registry Type is required"});
+    // }
+    if(!payload.value.mscAccount_trans_types) {
+        error_msg.push({msg:"Transaction Type is required"});
+    }
+    // if(!payload.value.hosp_plan) { 
+    //     error_msg.push({msg:"Hospitalization Plan is required"});
+    // }
+    if(!payload.value.mscPrice_Groups) {
+        error_msg.push({msg:"Price Group is required"});
+    }
+    if(!payload.value.mscPrice_Schemes) {
+        error_msg.push({msg:"Price Scheme is required"});
+    }
+    // Inpatient only
+    // if(!payload.value.how_admitted) {
+    //     error_msg.push({msg:"How Admitted is required"});
+    // }
+    return error_msg;
+}
+onUpdated(() => {
+    if (selectedRowDetails.value) {
+        payload.value = Object.assign({}, selectedRowDetails.value);
+        payload.value.sex_id = parseInt(selectedRowDetails.value.sex_id) ? parseInt(selectedRowDetails.value.sex_id) : '';
+        payload.value.suffix_id = parseInt(selectedRowDetails.value.suffix_id) ? parseInt(selectedRowDetails.value.suffix_id) : '';
+        payload.value.civilstatus_id = parseInt(selectedRowDetails.value.civilstatus_id) ? parseInt(selectedRowDetails.value.civilstatus_id) : '';
+        payload.value.birthdate = useDateMMDDYYY(selectedRowDetails.value.birthdate) ? useDateMMDDYYY(selectedRowDetails.value.birthdate) : '';
+        payload.value.registry_date = useDateMMDDYYY(selectedRowDetails.value.registry_date) ? useDateMMDDYYY(selectedRowDetails.value.registry_date) : '';
+        payload.value.mscPrice_Groups = selectedRowDetails.value.patient_registry && parseInt(selectedRowDetails.value.patient_registry.mscPrice_Groups) ? parseInt(selectedRowDetails.value.patient_registry.mscPrice_Groups) : '';
+        payload.value.mscPrice_Schemes = selectedRowDetails.value.patient_registry && parseInt(selectedRowDetails.value.patient_registry.mscPrice_Schemes) ? parseInt(selectedRowDetails.value.patient_registry.mscPrice_Schemes) : '';
+        payload.value.religion_id = parseInt(selectedRowDetails.value.religion_id) ? parseInt(selectedRowDetails.value.religion_id) : '';
+        payload.value.nationality_id = parseInt(selectedRowDetails.value.nationality_id) ? parseInt(selectedRowDetails.value.nationality_id) : '';
+        console.log('Selected Row Details:', selectedRowDetails.value);
+    } 
+});
 </script>
 
 <style scoped>

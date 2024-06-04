@@ -2,28 +2,27 @@
     <v-card rounded="lg">
         <v-row>
             <v-col cols="12">
-                <v-table density="compact" height="60vh">
+                <v-table density="compact" height="40vh">
                     <thead>
                         <tr>
-                            <th>Guarantor Fullname</th>
-                            <th>Document Date</th>
-                            <th>HMO Account No.</th>
-                            <th>LOE No.</th>
+                            <th>Guarantor Name</th>
                             <th>Approval Code</th>
                             <th>Approval No.</th>
                             <th>Approval Date</th>
-                            <th>Card Expiry Date / No</th>
+                            <th>Validity Date</th>
                             <th>Credit Limit</th>
-                            <th>Amount</th>
-                            <th>Co-Pay</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <template>
-                            <tr class="cursor-pointer">
-                                <!-- contents -->
-                            </tr>
-                        </template>
+                        <tr v-for="(item, index) in payload.selectedGuarantor" :key="index">
+                            <td width="100%"> <input v-model="item.guarantor_name" class="hmo-input" readonly/> </td>
+                            <td width="100%"> <input v-model="item.guarantor_approval_code" class="hmo-input fillable"/> </td>
+                            <td width="100%"> <input v-model="item.guarantor_approval_no" class="hmo-input fillable"/> </td>
+                            <td width="100%"> <input v-model="item.guarantor_approval_date" type="date" class="hmo-input fillable"/> </td>
+                            <td width="100%"> <input v-model="item.guarantor_validity_date" type="date" class="hmo-input fillable"/> </td>
+                            <td width="100%"> <input v-model="item.guarantor_credit_Limit" class="hmo-input fillable"/> </td>
+                            <td><v-icon color="red" @click="removeGuarantor(index)">mdi-delete</v-icon></td>
+                        </tr>
                     </tbody>
                     <v-divider></v-divider>
                 </v-table>
@@ -34,8 +33,8 @@
             <v-btn 
                 color="blue-darken-1 border border-info" 
                 @click="openHmoList" 
-                :disabled="(payload.hosp_plan === 'Insurance' || payload.hosp_plan === 'Company') || clicked_option === 'view'"
-                >
+                :disabled="payload.hosp_plan !== 'Insurance' && payload.hosp_plan !== 'Company'"
+            >
                 <v-icon class="mr-2">mdi-account-multiple-plus-outline</v-icon>
                 Add HMO Guarantor
             </v-btn>
@@ -54,22 +53,21 @@ const props = defineProps({
     clicked_option: {
         type: String,
         default: () => ''
-    }
+    },
 })
 
 const open_hmo_list = ref(false);
-
-const deleteRow = () => {
-    alert('delete row');
-}
 
 const openHmoList = () => {
     open_hmo_list.value = true;
 }
 
-const handleHmoList = () => {
-    alert('HMO Guarantor Selected');
-    open_hmo_list.value = false;
+const handleHmoList = (selected_item) => {
+    props.payload.selectedGuarantor = selected_item;
+};
+
+const removeGuarantor = (index) => {
+    props.payload.selectedGuarantor.splice(index, 1);
 }
 
 const closeHmoList = () => {
@@ -82,5 +80,18 @@ const closeHmoList = () => {
 .form-col {
     padding: 3.25px 0px 3.25px 0px !important;
     margin: 0px !important;
+}
+.hmo-input {
+    width: 100%;
+    padding: 0px;
+    margin: 0px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #000;
+}
+.fillable {
+    border: 1px solid #A9A9A9;
+    border-radius: 5px;
+    padding: 2.5px;
 }
 </style>

@@ -7,7 +7,6 @@
                     variant="solo"
                     v-model="payload.birthplace"
                     :readonly="clicked_option === 'view'"
-                    placeholder="Enter Birth Place"
                     hide-details
                     density="compact"
                 ></v-text-field>
@@ -15,14 +14,13 @@
             <v-col cols="12" class="form-col">
                 <v-list-subheader class="form-header">Religion</v-list-subheader>
                 <v-autocomplete
-                    item-title="religion"
+                    item-title="religion_name"
                     item-value="id"
-                    placeholder="Select Religion"
                     v-model="payload.religion_id"
                     :readonly="clicked_option === 'view'"
                     hide-details
                     :clearable="clicked_option === 'new' || clicked_option === 'edit'"
-                    :items="['Catholic', 'Muslim', 'Christian']"
+                    :items="religion_data"
                     density="compact"
                     variant="solo"
                 ></v-autocomplete>
@@ -32,12 +30,11 @@
                 <v-autocomplete
                     item-title="nationality"
                     item-value="id"
-                    placeholder="Select Nationality"
                     v-model="payload.nationality_id"
                     :readonly="clicked_option === 'view'"
                     hide-details
                     :clearable="clicked_option === 'new' || clicked_option === 'edit'"
-                    :items="['Spanish', 'Japanese', 'Filipino']"
+                    :items="nationality_data"
                     density="compact"
                     variant="solo"
                 ></v-autocomplete>
@@ -52,9 +49,6 @@
                     hide-details
                     density="compact"
                 ></v-text-field>
-            </v-col>
-            <v-col v-if="form_type === 'outpatient'" cols="12" class="form-col">
-                <v-checkbox label="Hemodialysis Patient?" hide-details density="compact" :readonly="clicked_option === 'view'"></v-checkbox>
             </v-col>
             <v-col cols="12" class="form-col">
                 <v-checkbox v-model="payload.isWithMedicalPackage" :readonly="clicked_option === 'view'" label="With Hospital Package?" hide-details density="compact"></v-checkbox>
@@ -108,6 +102,16 @@
                     ></v-autocomplete>
                 </v-col>
             </v-row>
+            <v-col cols="12" class="form-col">
+                    <v-list-subheader class="form-header mt-1">Chief Complaints </v-list-subheader>
+                    <v-textarea 
+                        hide-details 
+                        density="compact" 
+                        variant="solo" 
+                        v-model="payload.clinical_chief_complaint"
+                        :readonly="clicked_option === 'view'"
+                    ></v-textarea>
+            </v-col>
         </v-col>
     </v-row>
     <medical-package-list :medical_package_dialog="medical_package_dialog" @close-dialog="closeMedicalPackage" @handle-select="handleSelectPackage" />
@@ -139,9 +143,8 @@ const handleOpenAddressForm = () => {
     address_form_dialog.value = true;
 };
 
-const handleSubmitAddress = () => {
-    alert('Address submitted');
-    address_form_dialog.value = false;
+const handleSubmitAddress = (address) => {
+    props.payload.address = address;
 };
 
 const handleMedicalPackage = () => {
@@ -160,6 +163,32 @@ const closeMedicalPackage = () => {
 const closeAddressForm = () => {
     address_form_dialog.value = false;
 };
+
+const religion_data = ref([]);
+const religion_loading = ref(false);
+const getReligion = async () => {
+    religion_loading.value = true;
+    const response = await useMethod("get", "get-religions", "", "");
+    if (response) {
+        religion_data.value = response;
+        religion_loading.value = false;
+    }
+}
+const nationality_data = ref([]);
+const nationality_loading = ref(false);
+const getNationality = async () => {
+    nationality_loading.value = true;
+    const response = await useMethod("get", "get-nationalities", "", "");
+    if (response) {
+        nationality_data.value = response;
+        nationality_loading.value = false;
+    }
+}
+
+onMounted(() => {
+    getReligion();
+    getNationality();
+});
 </script>
 
 <style scoped>

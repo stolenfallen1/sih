@@ -1,6 +1,6 @@
 <template>
     <v-dialog :model-value="form_dialog" :persistent="true" hide-overlay width="1280" scrollable>
-        <form @submit.prevent="onSubmit">
+        <v-form ref="form" @submit.prevent="onSubmit">
             <v-card rounded="lg">
                 <v-toolbar density="compact" color="#6984ff" hide-details>
                     <v-toolbar-title>Inpatient Registration Form</v-toolbar-title>
@@ -66,12 +66,12 @@
                         density="compact"
                     ></v-checkbox>
                     <v-spacer></v-spacer>
-                    <v-btn v-if="clicked_option === 'new' || clicked_option === 'edit'" class="bg-primary text-white" type="submit" @click="validateBeforeSubmit">
+                    <v-btn v-if="clicked_option === 'new' || clicked_option === 'edit'" class="bg-primary text-white" type="submit">
                         {{ clicked_option === 'new' ? 'Register Patient' : 'Update Patient' }}
                     </v-btn>
                 </v-card-actions>
             </v-card>
-        </form>
+        </v-form>
     </v-dialog>
 </template>
 
@@ -92,52 +92,33 @@ let tab = ref("0");
 const formType = ref('inpatient');
 
 const payload = ref({});
-const checkType = ref(false);
-const tab_payload = ref({
-    patient_basic_info: true,
-    registry_information: true,
-});
+const isLoading = ref(false);
 
 const emits = defineEmits(['close-dialog']);
 
 const closeDialog = () => {
     emits('close-dialog');
     tab.value = "0";
+    payload.value = {};
 }
 
-const validation = () => {
-    if(!payload.value.lastname || !payload.value.firstname || !payload.value.sex_id || !payload.value.civilstatus_id || !payload.value.birthdate) {
-        alert('Please fill up all required fields');
-        tab.value = "0";
-        checkType.value = true;
-        tab_payload.value.patient_basic_info = false;
+const onSubmit = async () => {
+    let response;
+    isLoading.value = true;
+
+    if (payload.value.id) {
+        response = await useMethod("put", "register-inpatient", payload.value, "", payload.value.id);
     } else {
-        if(!payload.value.case_datetime || !payload.value.case_type || !payload.value.how_admitted || !payload.value.mscAccount_trans_types || !payload.value.mscPatient_category || !payload.value.hosp_plan || !payload.value.mscPrice_Groups || !payload.value.mscPrice_Schemes) {
-            alert('Please fill up all required fields');
-            tab.value = "1";
-            checkType.value = true;
-            tab_payload.value.registry_information = false;
-        } 
-    }
-}
-
-const validateBeforeSubmit = () => {
-    validation();
-}
-
-const onSubmit = () => {
-    if(tab_payload.value.patient_basic_info && tab_payload.value.registry_information) {
-        alert('Please fill up all required fields');
-    } else {
-        alert('Successfully Registered Patient!');
-        tab.value = "0";
-        payload.value = {};
-        checkType.value = false;
-        tab_payload.value = {
-            patient_basic_info: true,
-            registry_information: true,
+        response = await useMethod("post", "register-inpatient", payload.value);
+        if (response) {
+            useSnackbar(true, "green", response.message);
+            isLoading.value = false;
+            payload.value = Object.assign({});
+            closeDialog();
+            tab.value = "0";
         }
     }
+
 }
 </script>
 
