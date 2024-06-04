@@ -314,9 +314,9 @@ const selectedUser = (item) => {
   isrefresh.value = false;
   selectedRowDetails.value.id = ""; //clear state id for subcomponents ?id=''
   selectedRowDetails.value.role_id = ""; //clear state id for subcomponents ?id=''
-
+  selectedRowDetails.value = Object.assign({}, item); 
   if(item){
-    selectedRowDetails.value =  Object.assign({}, item);; //set state id for subcomponents ?id=item.id value
+    selectedRowDetails.value =  Object.assign({}, item); //set state id for subcomponents ?id=item.id value
     isrefresh.value = true;
     isSelectedUser.value = false;
   }else{
@@ -330,6 +330,7 @@ const handleView = (clickedOption) => {
 };
 const handleEdit = (clickedOption) => {
   form_dialog.value = true;
+  console.log(selectedRowDetails.value);
   clicked_option.value = clickedOption;
 };
 const handleNew = (clickedOption) => {

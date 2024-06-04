@@ -4,8 +4,7 @@
             <v-list-subheader class="form-header">Remarks</v-list-subheader>
             <v-textarea
                 variant="solo"
-                placeholder="Enter remarks here..."
-                v-model="payload.registration_remarks"
+                v-model="payload.registry_remarks"
                 hide-details
                 density="compact"
                 :readonly="clicked_option === 'view'"

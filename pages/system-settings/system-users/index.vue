@@ -115,15 +115,15 @@
 
   <ModuleForm
     :moduleDialog="moduleDialog"
-    @close-dialog="closeModuleDialog"
     @submit-user-group="submitUserGroup"
+    @close-dialog="closeUserGroup"
     :usergroup_payload="usergroup_payload"
   ></ModuleForm>
 
 
   <NurseStations
     :show="NurseStationDialog"
-    @close="closeNurseStation"
+    @close="useSubComponents('NurseStationDialog', false)"
   ></NurseStations>
 
   <Snackbar :show="isShowSnackBar" :text="text"></Snackbar>
@@ -137,12 +137,12 @@ import nuxtStorage from "nuxt-storage";
 import { storeToRefs } from "pinia";
 import moment from "moment";
 moment.locale("en");
-// import TableAndTemplateFormDialog state 
-const { ModuleDialog, NurseStationDialog} = storeToRefs(TableAndTemplateFormDialog());
+const { ModuleDialog, NurseStationDialog} = storeToRefs(SystemsUserSubComponentsDialog());
 
 import RegistrationForm from "~/components/system-settings/forms/system-users/RegistrationForm.vue";
 import ReusableTable from "~/components/reusables/ReusableTable.vue";
 import ModuleForm from "./modules/ModuleForm.vue";
+import { SystemsUserSubComponentsDialog } from "~/store/sub-components/settings-others/SystemsUserSubcomponentsDialog";
 const { selectedRowDetails, isrefresh } = storeToRefs(useSubcomponentSelectedRowDetailsStore()); // state id for subcomponents ?id=123
 let userdetails = JSON.parse(nuxtStorage.localStorage.getData("user_details"));
 const  {subcomponents}  = storeToRefs(useNavigationMenuStore());
@@ -223,10 +223,6 @@ const closeModule = () => {
 };
 const closeDialog = () => {
   inputDialog.value = false;
-};
-
-const closeModuleDialog = () => {
-  moduleDialog.value = false;
 };
 
 const openAddRecordDialog = () => {
@@ -501,6 +497,10 @@ const submitUserGroup = async (payload) => {
   }
 };
 
+const closeUserGroup = () => {
+  moduleDialog.value = false;
+};
+
 const snackbar = (value) => {
   isShowSnackBar.value = true;
   text.value = value;
@@ -546,10 +546,6 @@ const submitModules = async(payload)=>{
       fetchData(null, null);
     }
 }
-const closeNurseStation = ()=>{
-  NurseStationDialog.value = false;
-}
-
 </script>
 
 <style scoped></style>

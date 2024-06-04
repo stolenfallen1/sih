@@ -10,6 +10,8 @@ import { IpdSubComponentsDialog } from "~/store/sub-components/services/IpdSubCo
 import { NursingSubComponentsDialog } from "~/store/sub-components/services/NursingSubComponentsDialog";
 import { DietarySubComponentsDialog } from "~/store/sub-components/services/DietarySubComponentsDialog";
 import { AncillarySubComponentsDialog } from "~/store/sub-components/services/AncillarySubComponentsDialog";
+// Settings and Others sub components dialog imports
+import { SystemsUserSubComponentsDialog } from "~/store/sub-components/settings-others/SystemsUserSubcomponentsDialog";
 
 export const useSubComponents = async (dialog: any, type: Boolean = true) => {
     // Master file sub components dialog states
@@ -26,6 +28,9 @@ export const useSubComponents = async (dialog: any, type: Boolean = true) => {
     const { setDietarySubComponentsDialog } = DietarySubComponentsDialog();
     const { setAncillarySubComponentsDialog } = AncillarySubComponentsDialog();
 
+    // Settings and Others sub components dialog states
+    const { setSystemsUserSubComponentsDialog } = SystemsUserSubComponentsDialog();
+
     // Master file
     setMFPatientsDialog(dialog, type);
     setMFConsultantsDialog(dialog, type);
@@ -38,4 +43,6 @@ export const useSubComponents = async (dialog: any, type: Boolean = true) => {
     setNursingSubComponentsDialog(dialog, type);
     setDietarySubComponentsDialog(dialog, type);
     setAncillarySubComponentsDialog(dialog, type);
+    // Settings and Others
+    setSystemsUserSubComponentsDialog(dialog, type);
 };

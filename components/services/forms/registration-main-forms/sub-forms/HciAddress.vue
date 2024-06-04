@@ -88,7 +88,7 @@ const props = defineProps({
     },
     address_payload: {
         type: Object,
-        required: true,
+        required: false,
         default: () => ({}),
     },
 })
