@@ -334,6 +334,8 @@ const closeCentralFormDialog = () => {
   form_payload.value = Object.assign({});
   central_form_dialog.value = false;
   search_payload.value = Object.assign({});
+  search_results.value = [];
+  search_payload.value = {};
 };
 
 const SearchExamsandProcedures = async (payload) => {
@@ -367,17 +369,25 @@ const selectedExamsandProcedures = (item) => {
 };
 
 const openAddFormDialog = (type) => {
-  if (type == "new") {
-    form_payload.value = Object.assign({});
-  }
-  if (form_payload.value.id) {
-    search_results.value = [];
-    form_payload.value.type = "edit";
-    details();
-  } else {
-    form_payload.value.item_name = search_payload.value.itemname;
-  }
-  form_container.value = true;
+    if (type === 'new') {
+        form_payload.value = Object.assign({});
+        form_payload.value.item_name = search_payload.value.itemname;
+        item_supplies_form.value = true;
+        central_form_dialog.value = false;
+        search_results.value = [];
+        search_payload.value = {};
+    } else {  
+        if (form_payload.value.id) {  
+            search_results.value = [];
+            form_payload.value.type = 'edit';
+            item_supplies_form.value = true;
+            central_form_dialog.value = false;
+            search_results.value = [];
+            search_payload.value = {};
+        } else {
+            return useSnackbar(true, "error", "No item selected.");
+        }
+    } 
 };
 
 const handleTabChange = (tabValue) => {

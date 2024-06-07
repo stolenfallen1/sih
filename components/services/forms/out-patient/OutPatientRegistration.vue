@@ -106,23 +106,30 @@ const closeDialog = () => {
 }
 
 const onSubmit = async () => {
-    // console.log('Payload:', payload.value);
     let response;
     isLoading.value = true;
-    const errors = validation();
-    
-    if (errors.length > 0) {
-        for (let i = 0; i < errors.length; i++) {
-            useSnackbar(true, "red", errors[i].msg);
-            await new Promise(resolve => setTimeout(resolve, 1000)); 
-        }
-        isLoading.value = false;
-        return;
-    } 
 
     if (payload.value.id) {
-        response = await useMethod("put", "register-outpatient", payload.value, "", payload.value.id);
+        response = await useMethod("put", "update-outpatient", payload.value, "", payload.value.id);
+        if (response) {
+            useSnackbar(true, "green", response.message);
+            isLoading.value = false;
+            payload.value = Object.assign({});
+            closeDialog();
+            tab.value = "0";
+        }
     } else {
+        const errors = validation();
+
+        if (errors.length > 0) {
+            for (let i = 0; i < errors.length; i++) {
+                useSnackbar(true, "red", errors[i].msg);
+                await new Promise(resolve => setTimeout(resolve, 1000));  
+            }
+            isLoading.value = false;
+            return;
+        } 
+
         response = await useMethod("post", "register-outpatient", payload.value);
         if (response) {
             useSnackbar(true, "green", response.message);
@@ -174,6 +181,7 @@ const validation = ()=>{
     // }
     return error_msg;
 }
+
 onUpdated(() => {
     if (selectedRowDetails.value) {
         payload.value = Object.assign({}, selectedRowDetails.value);
@@ -181,11 +189,27 @@ onUpdated(() => {
         payload.value.suffix_id = parseInt(selectedRowDetails.value.suffix_id) ? parseInt(selectedRowDetails.value.suffix_id) : '';
         payload.value.civilstatus_id = parseInt(selectedRowDetails.value.civilstatus_id) ? parseInt(selectedRowDetails.value.civilstatus_id) : '';
         payload.value.birthdate = useDateMMDDYYY(selectedRowDetails.value.birthdate) ? useDateMMDDYYY(selectedRowDetails.value.birthdate) : '';
+        payload.value.register_id_no = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry.register_id_no ? selectedRowDetails.value.patient_registry.register_id_no : '';
         payload.value.registry_date = useDateMMDDYYY(selectedRowDetails.value.registry_date) ? useDateMMDDYYY(selectedRowDetails.value.registry_date) : '';
         payload.value.mscPrice_Groups = selectedRowDetails.value.patient_registry && parseInt(selectedRowDetails.value.patient_registry.mscPrice_Groups) ? parseInt(selectedRowDetails.value.patient_registry.mscPrice_Groups) : '';
         payload.value.mscPrice_Schemes = selectedRowDetails.value.patient_registry && parseInt(selectedRowDetails.value.patient_registry.mscPrice_Schemes) ? parseInt(selectedRowDetails.value.patient_registry.mscPrice_Schemes) : '';
         payload.value.religion_id = parseInt(selectedRowDetails.value.religion_id) ? parseInt(selectedRowDetails.value.religion_id) : '';
         payload.value.nationality_id = parseInt(selectedRowDetails.value.nationality_id) ? parseInt(selectedRowDetails.value.nationality_id) : '';
+
+        payload.value.address = payload.value.bldgstreet + payload.value.region_id + payload.value.province_id + payload.value.barangay_id + payload.value.country_id;
+        payload.value.bldgstreet = selectedRowDetails.value.bldgstreet ? selectedRowDetails.value.bldgstreet : '';
+        payload.value.region_id = parseInt(selectedRowDetails.value.region_id) ? parseInt(selectedRowDetails.value.region_id) : '';
+        payload.value.province_id = parseInt(selectedRowDetails.value.province_id) ? parseInt(selectedRowDetails.value.province_id) : '';
+        payload.value.barangay_id = parseInt(selectedRowDetails.value.barangay_id) ? parseInt(selectedRowDetails.value.barangay_id) : '';
+        payload.value.country_id = parseInt(selectedRowDetails.value.country_id) ? parseInt(selectedRowDetails.value.country_id) : '';
+
+        payload.value.guarantor_name = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry.guarantor_name ? selectedRowDetails.value.patient_registry.guarantor_name : '';
+        payload.value.guarantor_approval_code = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry.guarantor_approval_code ? selectedRowDetails.value.patient_registry.guarantor_approval_code : '';
+        payload.value.guarantor_approval_no = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry.guarantor_approval_no ? selectedRowDetails.value.patient_registry.guarantor_approval_no : '';
+        payload.value.guarantor_approval_date = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry.guarantor_approval_date ? selectedRowDetails.value.patient_registry.guarantor_approval_date : '';
+        payload.value.guarantor_validity_date = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry.guarantor_validity_date ? selectedRowDetails.value.patient_registry.guarantor_validity_date : ''; 
+        payload.value.guarantor_credit_Limit = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry.guarantor_credit_Limit ? selectedRowDetails.value.patient_registry.guarantor_credit_Limit : '';
+
         console.log('Selected Row Details:', selectedRowDetails.value);
     } 
 });

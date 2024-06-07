@@ -72,6 +72,9 @@
       @open-filter="openFilterOptions"
     >
       <template v-for="column in headers" v-slot:[`column-${column.key}`]="{ item }">
+        <span v-if="column.key === 'register_id_no'" :key="column.key">
+          {{ item.patient_registry ? item.patient_registry.register_id_no : "..." }}
+        </span>
         <span v-if="column.key === 'sex'" :key="column.key" style="display: flex;">
           <v-icon v-if="item.sex && item.sex.sex_description === 'Male'" color="primary">mdi-gender-male</v-icon>
           <v-icon v-else color="pink">mdi-gender-female</v-icon>
@@ -139,7 +142,7 @@
   <OutPatientRegistration :clicked_option="clicked_option" :form_dialog="form_dialog" @close-dialog="closeAddFormDialog" />
   
   <!-- Out-patients Sub components -->
-  <PatientProfileDialog :show="PatientProfile" :form_payload="form_payload" @close-dialog="useSubComponents('PatientProfile', false)" />
+  <PatientProfileDialog :show="PatientProfile" :form_payload="payload" @close-dialog="useSubComponents('PatientProfile', false)" />
   <SuspendDialog :show="Suspend" :form_type="form_type" @close-dialog="useSubComponents('Suspend', false)" />
   <RequisitionsDialog :show="Requisitions" :form_type="form_type" @close-dialog="useSubComponents('Requisitions', false)" />
   <PostChargesDialog :show="PostCharges" @close-dialog="useSubComponents('PostCharges', false)" />
@@ -226,7 +229,7 @@ const search_payload = ref({});
 const form_dialog = ref(false);
 const clicked_option = ref("");
 const form_type = ref("outpatient")
-const form_payload = ref({});
+const payload = ref({});
 
 const totalItems = ref(0);
 const itemsPerPage = ref(50);
@@ -245,18 +248,19 @@ const outpatients_test_data = ref([
   { label: "Died", value: "6", color: "black" },
 ]); 
 
+const selectedPatient = ref({});
 const headers = [
   {
-    title: "ID",
-    align: "start",
-    sortable: false,
-    key: "id",
-  },
-  {
-    title: "Patient Code",
+    title: "Patient ID",
     align: "start",
     sortable: false,
     key: "patient_id",
+  },
+  {
+    title: "Case No.",
+    align: "start",
+    sortable: false,
+    key: "register_id_no",
   },
   {
     title: "Last Name",
@@ -339,16 +343,59 @@ const handleNew = (clickedOption) => {
 };
 const closeCentralFormDialog = () => {
   central_form_dialog.value = false;
+  search_payload.value =  Object.assign({});
+  search_results.value = [];
 };
-const openAddFormDialog = () => {
-  form_dialog.value = true;
-};
+
+// const emits = defineEmits(["test"]);
+const openAddFormDialog = (type) => {
+    if (type === 'new') {
+        form_dialog.value = true;
+        central_form_dialog.value = false;
+        search_results.value = [];
+        search_payload.value = {};
+    } 
+    if (selectedPatient.value.id !== undefined) {
+        form_dialog.value = true;
+        central_form_dialog.value = false;
+        search_results.value = [];
+        search_payload.value = {};
+    } else {
+      return useSnackbar(true, "error", "No patient selected");
+    }
+  };
 const closeAddFormDialog = () => {
   form_dialog.value = false;
+  search_payload.value = {};
+  search_results.value = [];
 };
-const selectedOutPatient = () => {
+
+const SearchOutPatient = async (payload) => {
+  search_payload.value.isloading = true;
+  let lastname = payload.lastname || "";
+  let firstname = payload.firstname || "";
+  let middlename = payload.middlename || "";
+  let birthdate = payload.birthdate || "";
+  let params = "page=1&per_page=10&lastname=" + lastname + "&firstname=" + firstname + "&middlename=" + middlename + "&birthdate=" + birthdate;
+
+  const response = await fetch(
+    useApiUrl() + "/search-patient-master" + "?" + params || "",
+    {
+      headers: {
+        Authorization: `Bearer ` + useToken(),
+      },
+    }
+  );
+  if (response) {
+    const data = await response.json();
+    search_results.value = data;
+    search_payload.value.isloading = false;
+  }
 };
-const SearchOutPatient = () => {
+
+const selectedOutPatient = (item) => {
+  selectedPatient.value = item;
+  console.log(selectedPatient.value);
 };
 
 const DeactiveUser = () => {
