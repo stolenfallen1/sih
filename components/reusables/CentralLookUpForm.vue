@@ -24,6 +24,7 @@
                   variant="outlined"
                   v-model="search_payload.lastname"
                   label="Lastname"
+                  autofocus
                   required
                   hide-details
                   density="compact"
@@ -42,6 +43,7 @@
               <v-col cols="3" class="pa-1">
                 <v-text-field
                   v-model="search_payload.middlename"
+                  class="custom-active-border"
                   variant="outlined"
                   label="Middlename"
                   hide-details
@@ -60,27 +62,35 @@
                 ></v-text-field>
               </v-col>
               <v-btn
-                class="bg-info text-white mb-4 ml-1"
+                class="bg-primary text-white mb-4 ml-1"
                 type="submit"
                 :loading="search_payload.isloading"
                 density="compact"
                 ><v-icon>mdi-magnify</v-icon>Search</v-btn
               >
+              <!-- <v-btn
+                class="bg-success text-white mb-4 ml-1"
+                type="submit"
+                density="compact"
+                @click.prevent="handleClearSearch"
+                ><v-icon>mdi-close-thick</v-icon>Clear</v-btn
+              > -->
               <v-divider></v-divider>
               <v-col cols="12">
                 <v-data-table-server
                   :fixed-header="true"
                   :items-length="40"
                   density="compact"
-                  :loading="search_payload.isloading"
                   height="60vh"
-                  v-model="selectedRows"
-                  @click:row="handleSelectedRow"
+                  :items="search_results"
                   :show-select="true"
-                  :hover="true"
                   class="animated animatedFadeInUp fadeInUp"
                   :headers="headers"
-                  :items="search_results"
+                  :hover="true"
+                  :loading="search_payload.isloading"
+                  v-model="selectedRows"
+                  @click:row="handleSelectedRow"
+                  @update:modelValue="handleSelectedInput"
                   select-strategy="single"
                   item-value="id"
                 >
@@ -108,7 +118,6 @@
         <v-card-actions>
           <v-btn color="blue-darken-1 border border-info" @click="closeDialog"> Close </v-btn>
           <v-spacer></v-spacer>
-          <!-- This button should be readonly when there is no data displayed after search -->
           <v-btn
             class="bg-primary text-white"
             type="submit"
@@ -119,7 +128,7 @@
           <v-btn
             class="bg-primary text-white"
             type="submit"
-            :disabled="search_results.length == 0 ? false : true"
+            :disabled="(search_results.length == 0 && isAllowAddNew) ? false : true"
             @click="handleClickForOpeningForm('new')"
             >Add New</v-btn
           >
@@ -144,7 +153,6 @@ const props = defineProps({
     default: () => {},
   },
 });
-const selectedRows = ref([]);
 const headers = ref([
   {
     title: "ID",
@@ -183,35 +191,55 @@ const headers = ref([
   },
 ]);
 
+const selectedRows = ref([]);
+const isAllowAddNew = ref(false);
 const emits = defineEmits(['selected-row', 'search', 'close-dialog', 'open-form']);
 
-const handleSelectedRow = (event, selectedRow) => {
-  const index = selectedRows.value.indexOf(selectedRow?.item.id);
-  selectedRows.value = [];
-  let item = selectedRow.item;
-  if (index === -1) {
-    selectedRows.value.push(selectedRow?.item.id);
-  } else {
-    item = "";
-    selectedRows.value.splice(index, 1);
-  }
-  emits("selected-row", item);
-};
-
-
 const handleSearch = () => {
-  emits("search", props.search_payload);
+    isAllowAddNew.value = true;
+    emits("search", props.search_payload);
+}
 
-  console.log(props.search_payload);
+const handleSelectedInput = (selected) => {
+    let seletedrow = props.search_results.find(item=>item.id === selected[0]);
+    selectedRows.value = [];
+    const index = selectedRows.value.indexOf(selected[0]);
+    selectedRows.value = [];
+    let item = seletedrow;
+    if (index === -1) {
+        selectedRows.value.push(selected[0]);
+    } else {
+        item = "";
+        selectedRows.value.splice(index, 1);
+    }
+    emits("selected-row", item);
 };
+
+const handleSelectedRow = (event, selectedRow) => {
+    const index = selectedRows.value.indexOf(selectedRow?.item.id);
+    selectedRows.value = [];
+    let item = selectedRow.item;
+    if (index === -1) {
+        selectedRows.value.push(selectedRow?.item.id);
+    } else {
+        item = "";
+        selectedRows.value.splice(index, 1);
+    }
+    emits("selected-row", item);
+};
+
+// const handleClearSearch = () => {};
 
 const closeDialog = () => {
   emits("close-dialog");
+  selectedRows.value = [];
 };
 
 const handleClickForOpeningForm = (type) => {
   emits("open-form", type);
+  selectedRows.value = [];
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+</style>

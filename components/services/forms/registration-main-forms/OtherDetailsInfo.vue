@@ -63,7 +63,8 @@
                     density="compact" 
                     variant="solo"
                     v-model="payload.address"
-                    :readonly="clicked_option === 'view'"
+                    :value="fullAddress"
+                    readonly
                     class="cursor-pointer"
                     prepend-icon="mdi-plus-box"
                     @click:prepend="handleOpenAddressForm"
@@ -143,8 +144,20 @@ const handleOpenAddressForm = () => {
     address_form_dialog.value = true;
 };
 
+const fullAddress = ref("");
 const handleSubmitAddress = (address) => {
-    props.payload.address = address;
+    const { bldgstreet, region_name, province_name, municipality_name, barangay_name, country_name } = address;
+    const { region_id, province_id, municipality_id, barangay_id, country_id } = address;
+
+    fullAddress.value = [bldgstreet, barangay_name, municipality_name, province_name, region_name, country_name].filter(Boolean).join(', '); 
+    props.payload.address = {
+        bldgstreet,
+        region_id,
+        province_id,
+        municipality_id,
+        barangay_id,
+        country_id
+    };
 };
 
 const handleMedicalPackage = () => {

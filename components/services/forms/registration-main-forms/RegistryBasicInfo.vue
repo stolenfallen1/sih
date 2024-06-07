@@ -218,13 +218,17 @@
             </v-col>
             <v-col cols="12" class="form-col">
                 <v-list-subheader class="form-header">ID Presented </v-list-subheader>
-                <v-text-field
-                    variant="solo"
+                <v-autocomplete
+                    item-title="id_description"
+                    item-value="id"
                     v-model="payload.id_presented"
                     :readonly="clicked_option === 'view'"
+                    :clearable="clicked_option === 'new' || clicked_option === 'edit'"
                     hide-details
+                    :items="id_types_data"
                     density="compact"
-                ></v-text-field>
+                    variant="solo"
+                ></v-autocomplete>
             </v-col>
             <v-col cols="12" class="form-col">
                 <v-list-subheader class="form-header">ID Number </v-list-subheader>
@@ -443,10 +447,22 @@ const getPriceScheme = async () => {
     } 
 };
 
+const id_types_data = ref([]);
+const id_types_loading = ref(false);
+const getIdTypes = async () => {
+    id_types_loading.value = true;
+    const response = await useMethod("get", "get-id-types", "", "");
+    if (response) {
+        id_types_data.value = response;
+        id_types_loading.value = false;
+    } 
+};
+
 onMounted(() => {
     getTransactionType();
     getPriceGroup();
     getPriceScheme();
+    getIdTypes();
 });
 </script>
 

@@ -12,21 +12,13 @@
         <v-card-text>
         <v-container>
             <v-row>
-                <!-- <v-col cols="3" class="pa-1">
-                    <v-text-field
-                        variant="outlined"
-                        label="Item Code"
-                        hide-details
-                        v-model="search_payload.itemcode"
-                        density="compact"
-                    ></v-text-field>
-                </v-col> -->
                 <v-col cols="10" class="pa-1">
                     <v-text-field
                         variant="outlined"
                         label="Item Name / Description"
                         v-model="search_payload.itemname"
                         required
+                        autofocus
                         hide-details
                         density="compact"
                     ></v-text-field>
@@ -119,21 +111,6 @@ const props = defineProps({
 });
 const selectedRows = ref([]);
 const isAllowAddNew = ref(false);
-// const headers = ref([
-// {
-//     title: "Item Code",
-//     align: "start",
-//     sortable: false,
-//     width:"18%",
-//     key: "id",
-// },
-// {
-//     title: "Description",
-//     align: "start",
-//     sortable: false,
-//     key: "item_name",
-// },
-// ]);
 const emits = defineEmits(['close-dialog', 'open-form', 'selected-row', 'search']);
 
 const handleSearch = () => {
@@ -172,10 +149,14 @@ const handleSelectedRow = (event, selectedRow) => {
 
 const closeDialog = () => {
     emits("close-dialog");
+    selectedRows.value = [];
+    search_results.value = [];
 };
 
 const handleClickForOpeningForm = (type) => {
     emits("open-form", type);
+    selectedRows.value = [];
+    search_results.value = [];
 };
 </script>
 

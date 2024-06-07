@@ -32,7 +32,7 @@
                                     item-title="region_name"
                                     item-value="region_code"
                                     :items="region_data"
-                                    @update:model-value="getProvince"
+                                    @update:model-value="updateRegion"
                                     hide-details
                                     clearable
                                     density="compact" 
@@ -46,7 +46,7 @@
                                     item-title="province_name"
                                     item-value="province_code"
                                     :items="province_data"
-                                    @update:model-value="getMunicipality"
+                                    @update:model-value="updateProvince"
                                     hide-details
                                     clearable
                                     density="compact"
@@ -60,7 +60,7 @@
                                     item-title="municipality_name"
                                     item-value="municipality_code"
                                     :items="municipality_data"
-                                    @update:model-value="getBarangay"
+                                    @update:model-value="updateMunicipality"
                                     hide-details
                                     clearable
                                     density="compact"
@@ -74,22 +74,13 @@
                                     item-title="barangay_name"
                                     item-value="id"
                                     :items="barangay_data"
+                                    @update:model-value="updateBarangay"
                                     hide-details
                                     clearable
                                     density="compact"
                                     variant="solo"
                                 ></v-autocomplete>
                             </v-col>
-                            <!-- <v-col cols="6" class="pa-1">
-                                <v-list-subheader class="form-header">Zip Code</v-list-subheader>
-                                <v-text-field
-                                    v-model="zipcode_data"
-                                    hide-details
-                                    readonly
-                                    density="compact"
-                                    variant="solo"
-                                ></v-text-field>
-                            </v-col> -->
                             <v-col cols="6" class="pa-1">
                                 <v-list-subheader class="form-header">Country </v-list-subheader>
                                 <v-autocomplete
@@ -97,6 +88,7 @@
                                     item-title="country_name"
                                     item-value="id"
                                     :items="country_data"
+                                    @update:model-value="updateCountry"
                                     hide-details
                                     clearable
                                     density="compact"
@@ -132,7 +124,18 @@ const props = defineProps({
     },
 })
 
-const address_data = ref({});
+const address_data = ref({
+    region_id: null,
+    region_name: '',
+    province_id: null,
+    province_name: '',
+    municipality_id: null,
+    municipality_name: '',
+    barangay_id: null,
+    barangay_name: '',
+    country_id: null,
+    country_name: '',
+});
 
 const handleSubmit = () => {
     emits("handle-submit", address_data.value);
@@ -150,6 +153,12 @@ const getRegion = async () => {
         region_data.value = response;
     }
 };
+const updateRegion = (value) => {
+    const selected = region_data.value.find(item => item.region_code === value);
+    address_data.value.region_id = value;
+    address_data.value.region_name = selected ? selected.region_name : '';
+    getProvince();
+}
 
 const province_data = ref([]);
 const getProvince = async () => {
@@ -157,6 +166,12 @@ const getProvince = async () => {
     if (response) {
         province_data.value = response.data;
     }
+}
+const updateProvince = (value) => {
+    const selected = province_data.value.find(item => item.province_code === value);
+    address_data.value.province_id = value;
+    address_data.value.province_name = selected ? selected.province_name : '';
+    getMunicipality();
 }
 
 const municipality_data = ref([]);
@@ -167,6 +182,12 @@ const getMunicipality = async () => {
         municipality_data.value = response.data;
     }
 }
+const updateMunicipality = (value) => {
+    const selected = municipality_data.value.find(item => item.municipality_code === value);
+    address_data.value.municipality_id = value;
+    address_data.value.municipality_name = selected ? selected.municipality_name : '';
+    getBarangay();
+}
 
 const barangay_data = ref([]);
 const getBarangay = async () => {
@@ -176,15 +197,11 @@ const getBarangay = async () => {
         barangay_data.value = response.data;
     }
 }
-
-// const zipcode_data = ref("");
-// const getZipCode = async () => {
-//     const params = "?region_code=" + address_data.value.region_id + "&province_code=" + address_data.value.province_id + "&municipality_code=" + address_data.value.municipality_id + "&barangay_code=" + address_data.value.barangay_id;
-//     const response = await useMethod("get", "zip-code-list" + params, "", "");
-//     if (response) {
-//         zipcode_data.value = response.data[0].zip_code;
-//     }
-// }
+const updateBarangay = (value) => {
+    const selected = barangay_data.value.find(item => item.id === value);
+    address_data.value.barangay_id = value;
+    address_data.value.barangay_name = selected ? selected.barangay_name : '';
+}
 
 const country_data = ref([]);
 const getCountry = async () => {
@@ -192,6 +209,11 @@ const getCountry = async () => {
     if (response) {
         country_data.value = response;
     }
+}
+const updateCountry = (value) => {
+    const selected = country_data.value.find(item => item.id === value);
+    address_data.value.country_id = value;
+    address_data.value.country_name = selected ? selected.country_name : '';
 }
 
 onMounted(() => {

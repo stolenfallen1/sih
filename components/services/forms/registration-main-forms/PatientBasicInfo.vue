@@ -2,9 +2,10 @@
     <v-row>
         <v-col cols="3">
             <v-col cols="12" class="form-col">
-                <v-list-subheader class="form-header">Patient No.</v-list-subheader>
+                <v-list-subheader class="form-header">Patient ID</v-list-subheader>
                 <v-text-field
                     variant="solo"
+                    v-model="payload.patient_id"
                     placeholder="Auto Generated"
                     readonly
                     hide-details
@@ -12,10 +13,10 @@
                 ></v-text-field>
             </v-col>
             <v-col cols="12" class="form-col">
-                <v-list-subheader class="form-header">Patient ID</v-list-subheader>
+                <v-list-subheader class="form-header">Patient Case No.</v-list-subheader>
                 <v-text-field
                     variant="solo"
-                    v-model="payload.patient_id"
+                    v-model="payload.register_id_no"
                     placeholder="Auto Generated"
                     readonly
                     hide-details
@@ -28,6 +29,7 @@
                     v-model="payload.lastname"
                     :readonly="clicked_option === 'view'"
                     type="text"
+                    autofocus
                     hide-details
                     density="compact"
                     variant="solo"
