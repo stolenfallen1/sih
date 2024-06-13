@@ -31,7 +31,7 @@
                     @update:options="initialize"
                     @update:model-value="handleSelectedRow"
                     show-select
-                    select-strategy="multiple"
+                    select-strategy="single"
                     fixed-header
                     density="compact" 
                     height="50vh"
@@ -112,11 +112,6 @@ const search = ()=>{
 const handleSelectedRow = (selectedRows) => {
     const selectedItems = selectedRows.map(rowId => serverItems.value.find(item => item.id === rowId));
     const validSelectedItems = selectedItems.filter(item => item !== undefined);
-    validSelectedItems.forEach(item => {
-        if (!selected_item.value.includes(item)) {
-            selected_item.value.push(item);
-        }
-    });
     emits('handle-select', validSelectedItems);
 };
 

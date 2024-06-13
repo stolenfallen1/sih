@@ -33,6 +33,7 @@
                                     item-value="region_code"
                                     :items="region_data"
                                     @update:model-value="updateRegion"
+                                    :loading="region_data_loading"
                                     hide-details
                                     clearable
                                     density="compact" 
@@ -47,6 +48,7 @@
                                     item-value="province_code"
                                     :items="province_data"
                                     @update:model-value="updateProvince"
+                                    :loading="province_data_loading"
                                     hide-details
                                     clearable
                                     density="compact"
@@ -61,6 +63,7 @@
                                     item-value="municipality_code"
                                     :items="municipality_data"
                                     @update:model-value="updateMunicipality"
+                                    :loading="municipality_data_loading"
                                     hide-details
                                     clearable
                                     density="compact"
@@ -75,6 +78,7 @@
                                     item-value="id"
                                     :items="barangay_data"
                                     @update:model-value="updateBarangay"
+                                    :loading="barangay_data_loading"
                                     hide-details
                                     clearable
                                     density="compact"
@@ -89,6 +93,7 @@
                                     item-value="id"
                                     :items="country_data"
                                     @update:model-value="updateCountry"
+                                    :loading="country_data_loading"
                                     hide-details
                                     clearable
                                     density="compact"
@@ -122,6 +127,10 @@ const props = defineProps({
         default: () => false,
         required: true,
     },
+    payload:{
+        type: Object,
+        default: () => ({})
+    }
 })
 
 const address_data = ref({
@@ -147,10 +156,13 @@ const closeDialog = () => {
 };
 
 const region_data = ref([]);
+const region_data_loading = ref(false);
 const getRegion = async () => {
+    region_data_loading.value = true;
     const response = await useMethod("get", "get-regions", "", "");
     if (response) {
         region_data.value = response;
+        region_data_loading.value = false;
     }
 };
 const updateRegion = (value) => {
@@ -161,10 +173,13 @@ const updateRegion = (value) => {
 }
 
 const province_data = ref([]);
+const province_data_loading = ref(false);
 const getProvince = async () => {
+    province_data_loading.value = true;
     const response = await useMethod("get" , "get-province?region_code=" + address_data.value.region_id, "" , "" );
     if (response) {
         province_data.value = response.data;
+        province_data_loading.value = false;
     }
 }
 const updateProvince = (value) => {
@@ -175,11 +190,14 @@ const updateProvince = (value) => {
 }
 
 const municipality_data = ref([]);
+const municipality_data_loading = ref(false);
 const getMunicipality = async () => {
+    municipality_data_loading.value = true;
     const params = "?region_code=" + address_data.value.region_id + "&province_code=" + address_data.value.province_id;
     const response = await useMethod("get", "get-municipality" + params, "", "");
     if (response) {
         municipality_data.value = response.data;
+        municipality_data_loading.value = false;
     }
 }
 const updateMunicipality = (value) => {
@@ -190,11 +208,14 @@ const updateMunicipality = (value) => {
 }
 
 const barangay_data = ref([]);
+const barangay_data_loading = ref(false);
 const getBarangay = async () => {
+    barangay_data_loading.value = true;
     const params = "?region_code=" + address_data.value.region_id + "&province_code=" + address_data.value.province_id + "&municipality_code=" + address_data.value.municipality_id;
     const response = await useMethod("get", "get-barangays" + params, "", "");
     if (response) {
         barangay_data.value = response.data;
+        barangay_data_loading.value = false;
     }
 }
 const updateBarangay = (value) => {
@@ -204,10 +225,13 @@ const updateBarangay = (value) => {
 }
 
 const country_data = ref([]);
+const country_data_loading = ref(false);
 const getCountry = async () => {
+    country_data_loading.value = true;
     const response = await useMethod("get", "get-country-list", "", "");
     if (response) {
         country_data.value = response;
+        country_data_loading.value = false;
     }
 }
 const updateCountry = (value) => {
@@ -219,6 +243,21 @@ const updateCountry = (value) => {
 onMounted(() => {
     getRegion();
     getCountry();
+})
+onUpdated(() => {
+    if (props.payload) {
+        address_data.value.bldgstreet = props.payload ? props.payload.bldgstreet : '';
+        updateRegion(props.payload.region_id);       
+        address_data.value.region_id = props.payload ? props.payload.region_id : '';
+        address_data.value.province_id = props.payload ? parseInt(props.payload.province_id) : '';
+        updateProvince(props.payload.province_id);        
+        address_data.value.municipality_id = props.payload ? parseInt(props.payload.municipality_id) : '';
+        updateMunicipality(props.payload.municipality_id);
+        updateBarangay(props.payload.barangay_id);
+        address_data.value.barangay_id = props.payload ? parseInt(props.payload.barangay_id) : '';
+        updateCountry(props.payload.country_id);
+        address_data.value.country_id = props.payload ? parseInt(props.payload.country_id) : '';
+    }
 })
 </script>
 

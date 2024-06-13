@@ -122,7 +122,7 @@
             class="bg-primary text-white"
             type="submit"
             :disabled="search_results.length == 0 ? true : false"
-            @click="handleClickForOpeningForm('active')"
+            @click="handleClickForOpeningForm('old')"
             >Select Active Record</v-btn
           >
           <v-btn

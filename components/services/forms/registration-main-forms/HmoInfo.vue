@@ -15,12 +15,12 @@
                     </thead>
                     <tbody>
                         <tr v-for="(item, index) in payload.selectedGuarantor" :key="index">
-                            <td width="100%"> <input v-model="item.guarantor_name" class="hmo-input" readonly/> </td>
-                            <td width="100%"> <input v-model="item.guarantor_approval_code" class="hmo-input fillable"/> </td>
-                            <td width="100%"> <input v-model="item.guarantor_approval_no" class="hmo-input fillable"/> </td>
-                            <td width="100%"> <input v-model="item.guarantor_approval_date" type="date" class="hmo-input fillable"/> </td>
-                            <td width="100%"> <input v-model="item.guarantor_validity_date" type="date" class="hmo-input fillable"/> </td>
-                            <td width="100%"> <input v-model="item.guarantor_credit_Limit" class="hmo-input fillable"/> </td>
+                            <td style="margin: 0; padding: 1px;" width="100%"> <input v-model="item.guarantor_name" class="hmo-input" readonly/> </td>
+                            <td style="margin: 0; padding: 1px;" width="100%"> <input v-model="item.guarantor_approval_code" class="hmo-input fillable"/> </td>
+                            <td style="margin: 0; padding: 1px;" width="100%"> <input v-model="item.guarantor_approval_no" class="hmo-input fillable"/> </td>
+                            <td style="margin: 0; padding: 1px;" width="100%"> <input v-model="item.guarantor_approval_date" type="date" class="hmo-input fillable"/> </td>
+                            <td style="margin: 0; padding: 1px;" width="100%"> <input v-model="item.guarantor_validity_date" type="date" class="hmo-input fillable"/> </td>
+                            <td style="margin: 0; padding: 1px;" width="100%"> <input v-model="item.guarantor_credit_Limit" class="hmo-input fillable"/> </td>
                             <td><v-icon color="red" @click="removeGuarantor(index)">mdi-delete</v-icon></td>
                         </tr>
                     </tbody>
@@ -33,7 +33,7 @@
             <v-btn 
                 color="blue-darken-1 border border-info" 
                 @click="openHmoList" 
-                :disabled="payload.hosp_plan !== 'Insurance' && payload.hosp_plan !== 'Company'"
+                :disabled="payload.mscAccount_type !== 2"
             >
                 <v-icon class="mr-2">mdi-account-multiple-plus-outline</v-icon>
                 Add HMO Guarantor

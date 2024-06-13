@@ -81,7 +81,7 @@
 const props = defineProps({
     form_dialog:{
         type:Boolean,
-        default:()=>false
+        default:() => false
     },
     clicked_option: {
         type: String,
@@ -92,6 +92,7 @@ let tab = ref("0");
 const formType = ref('outpatient');
 const { selectedRowDetails } = storeToRefs(useSubcomponentSelectedRowDetailsStore());
 const payload = ref({
+    address: {},
     selectedGuarantor: [],
     selectedConsultant: [],
 });
@@ -196,21 +197,25 @@ onUpdated(() => {
         payload.value.religion_id = parseInt(selectedRowDetails.value.religion_id) ? parseInt(selectedRowDetails.value.religion_id) : '';
         payload.value.nationality_id = parseInt(selectedRowDetails.value.nationality_id) ? parseInt(selectedRowDetails.value.nationality_id) : '';
 
-        payload.value.address = payload.value.bldgstreet + payload.value.region_id + payload.value.province_id + payload.value.barangay_id + payload.value.country_id;
-        payload.value.bldgstreet = selectedRowDetails.value.bldgstreet ? selectedRowDetails.value.bldgstreet : '';
-        payload.value.region_id = parseInt(selectedRowDetails.value.region_id) ? parseInt(selectedRowDetails.value.region_id) : '';
-        payload.value.province_id = parseInt(selectedRowDetails.value.province_id) ? parseInt(selectedRowDetails.value.province_id) : '';
-        payload.value.barangay_id = parseInt(selectedRowDetails.value.barangay_id) ? parseInt(selectedRowDetails.value.barangay_id) : '';
-        payload.value.country_id = parseInt(selectedRowDetails.value.country_id) ? parseInt(selectedRowDetails.value.country_id) : '';
+        // For HMO GUARANTORS
+        const Guarantor = ref([]);
+        if (selectedRowDetails.value.patient_registry) {
+            selectedRowDetails.value.patient_registry.guarantor_approval_date = useDateMMDDYYY(selectedRowDetails.value.patient_registry.guarantor_approval_date);
+            selectedRowDetails.value.patient_registry.guarantor_validity_date = useDateMMDDYYY(selectedRowDetails.value.patient_registry.guarantor_validity_date);
+            Guarantor.value.push(selectedRowDetails.value.patient_registry)
+        }
+        payload.value.selectedGuarantor = Guarantor.value;
 
-        payload.value.guarantor_name = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry.guarantor_name ? selectedRowDetails.value.patient_registry.guarantor_name : '';
-        payload.value.guarantor_approval_code = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry.guarantor_approval_code ? selectedRowDetails.value.patient_registry.guarantor_approval_code : '';
-        payload.value.guarantor_approval_no = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry.guarantor_approval_no ? selectedRowDetails.value.patient_registry.guarantor_approval_no : '';
-        payload.value.guarantor_approval_date = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry.guarantor_approval_date ? selectedRowDetails.value.patient_registry.guarantor_approval_date : '';
-        payload.value.guarantor_validity_date = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry.guarantor_validity_date ? selectedRowDetails.value.patient_registry.guarantor_validity_date : ''; 
-        payload.value.guarantor_credit_Limit = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry.guarantor_credit_Limit ? selectedRowDetails.value.patient_registry.guarantor_credit_Limit : '';
+        // For CONSULTANTS
+        const Consultant = ref([]);
+        if (selectedRowDetails.value.patient_registry) {
+            Consultant.value.push(selectedRowDetails.value.patient_registry)
+        }
+        payload.value.selectedConsultant = Consultant.value;
 
-        console.log('Selected Row Details:', selectedRowDetails.value);
+        payload.value.registry_remarks = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry.registry_remarks ? selectedRowDetails.value.patient_registry.registry_remarks : '';
+
+        console.log('Selected Row Details:', payload.value);
     } 
 });
 </script>

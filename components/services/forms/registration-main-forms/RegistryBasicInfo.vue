@@ -3,20 +3,6 @@
         <v-col cols="4">
             <v-col cols="12" class="form-col">
                 <v-list-subheader class="form-header">
-                    {{ form_type === 'outpatient' ? 'OPD Case No.' : (form_type === 'emergency' ? 'ER Case No.' : 'IPD Case No.') }}
-                </v-list-subheader>
-                <v-text-field
-                    variant="solo"
-                    type="number"
-                    v-model="payload.case_no"
-                    placeholder="Auto Generated"
-                    readonly
-                    hide-details
-                    density="compact"
-                ></v-text-field>
-            </v-col>
-            <v-col cols="12" class="form-col">
-                <v-list-subheader class="form-header">
                     {{ form_type === 'outpatient' ? 'OPD Case Date' : (form_type === 'emergency' ? 'ER Case Date' : 'IPD Case Date') }} <span style="color: red;" class="mdi mdi-check"></span>
                 </v-list-subheader>
                 <v-text-field
@@ -93,10 +79,10 @@
             <v-col cols="12" class="form-col">
                 <v-list-subheader class="form-header">Hospitalization Plan <span style="color: red;" class="mdi mdi-check"></span></v-list-subheader>
                 <v-autocomplete
-                    :items="hospitalizationPlans"
+                    :items="hospitalization_plan_data"
                     item-title="description"
                     item-value="id"
-                    v-model="payload.hosp_plan"
+                    v-model="payload.mscAccount_type"
                     :readonly="clicked_option === 'view'"
                     :clearable="clicked_option === 'new' || clicked_option === 'edit'"
                     hide-details
@@ -242,20 +228,6 @@
                 ></v-text-field>
             </v-col>
             <v-col v-if="form_type === 'inpatient'" cols="12" class="form-col">
-                <v-list-subheader class="form-header">Newborn Status </v-list-subheader>
-                <v-autocomplete
-                    item-title="department"
-                    item-value="id"
-                    v-model="payload.newborn_status"
-                    :readonly="clicked_option === 'view'"
-                    :clearable="clicked_option === 'new' || clicked_option === 'edit'"
-                    hide-details
-                    :items="[]"
-                    density="compact"
-                    variant="solo"
-                ></v-autocomplete>
-            </v-col>
-            <v-col v-if="form_type === 'inpatient'" cols="12" class="form-col">
                 <v-list-subheader class="form-header">Source of Admission </v-list-subheader>
                 <v-autocomplete
                     item-title="department"
@@ -326,7 +298,6 @@ const open_discount_scheme_table = ref(false);
 const open_referring_hci_code_table = ref(false);
 const open_referring_hci_address_form = ref(false);
 const open_diet_desc = ref(false);
-const hospitalizationPlans = ["Self Pay", "Insurance", 'Company'];
 
 const handleHospitalizationPlan = () => { 
     props.payload.hosp_plan = props.payload.hosp_plan;
@@ -426,6 +397,18 @@ const getTransactionType = async () => {
         props.payload.mscAccount_trans_types = [];
     }
 };
+
+const hospitalization_plan_data = ref([]);
+const hospitalization_plan_loading = ref(false);
+const getHospitalizationPlan = async () => {
+    hospitalization_plan_loading.value = true;
+    const response = await useMethod("get", "get-hospital-plan", "", "");
+    if (response) {
+        hospitalization_plan_data.value = response;
+        hospitalization_plan_loading.value = false;
+    } 
+};
+
 const price_group_data = ref([]);
 const price_group_loading = ref(false);
 const getPriceGroup = async () => {
@@ -460,6 +443,7 @@ const getIdTypes = async () => {
 
 onMounted(() => {
     getTransactionType();
+    getHospitalizationPlan();
     getPriceGroup();
     getPriceScheme();
     getIdTypes();

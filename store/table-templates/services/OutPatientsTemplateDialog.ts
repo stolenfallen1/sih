@@ -15,7 +15,7 @@ export const OutPatientsTemplateDialog = defineStore('OutPatientsTemplateDialog'
     PriceSchemes: false,
     TransactionType: false,
     HospitalizationTypes: false,
-    HospitalizationPlans: false,
+    HospitalPlan: false,
     HospitalizationCaseTypes: false,
     InternalControlTable: false,
     ListOfAttendant: false,

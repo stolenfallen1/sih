@@ -230,6 +230,7 @@ const form_dialog = ref(false);
 const clicked_option = ref("");
 const form_type = ref("outpatient")
 const payload = ref({});
+const selectedPatient = ref({});
 
 const totalItems = ref(0);
 const itemsPerPage = ref(50);
@@ -248,7 +249,6 @@ const outpatients_test_data = ref([
   { label: "Died", value: "6", color: "black" },
 ]); 
 
-const selectedPatient = ref({});
 const headers = [
   {
     title: "Patient ID",
@@ -334,7 +334,6 @@ const handleView = (clickedOption) => {
 };
 const handleEdit = (clickedOption) => {
   form_dialog.value = true;
-  console.log(selectedRowDetails.value);
   clicked_option.value = clickedOption;
 };
 const handleNew = (clickedOption) => {
@@ -343,27 +342,24 @@ const handleNew = (clickedOption) => {
 };
 const closeCentralFormDialog = () => {
   central_form_dialog.value = false;
-  search_payload.value =  Object.assign({});
+  search_payload.value = {};
   search_results.value = [];
+  selectedPatient.value = {};
 };
 
-// const emits = defineEmits(["test"]);
 const openAddFormDialog = (type) => {
     if (type === 'new') {
         form_dialog.value = true;
-        central_form_dialog.value = false;
-        search_results.value = [];
-        search_payload.value = {};
+        closeCentralFormDialog();
+    } else {  
+        if (selectedPatient.value.id) {  
+            form_dialog.value = true;
+            closeCentralFormDialog();
+        } else {
+            return useSnackbar(true, "error", "No item selected.");
+        }
     } 
-    if (selectedPatient.value.id !== undefined) {
-        form_dialog.value = true;
-        central_form_dialog.value = false;
-        search_results.value = [];
-        search_payload.value = {};
-    } else {
-      return useSnackbar(true, "error", "No patient selected");
-    }
-  };
+};
 const closeAddFormDialog = () => {
   form_dialog.value = false;
   search_payload.value = {};
@@ -392,10 +388,8 @@ const SearchOutPatient = async (payload) => {
     search_payload.value.isloading = false;
   }
 };
-
 const selectedOutPatient = (item) => {
   selectedPatient.value = item;
-  console.log(selectedPatient.value);
 };
 
 const DeactiveUser = () => {

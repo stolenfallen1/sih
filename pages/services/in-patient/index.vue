@@ -55,7 +55,7 @@
   </v-card>
   <v-card class="mb-2" elevation="4">
     <ReusableTable
-      :items-per-page="10"
+      :items-per-page="50"
       :serverItems="serverItems"
       :totalItems="totalItems"
       :loading="loading"
@@ -72,6 +72,9 @@
       @open-filter="openFilterOptions"
     >
       <template v-for="column in headers" v-slot:[`column-${column.key}`]="{ item }">
+        <span v-if="column.key === 'register_id_no'" :key="column.key">
+          {{ item.patient_registry ? item.patient_registry.register_id_no : "..." }}
+        </span>
         <span v-if="column.key === 'sex'" :key="column.key" style="display: flex;">
           <v-icon v-if="item.sex && item.sex.sex_description === 'Male'" color="primary">mdi-gender-male</v-icon>
           <v-icon v-else color="pink">mdi-gender-female</v-icon>
@@ -90,8 +93,8 @@
   <CentralLookUpForm 
     :central_form_dialog="central_form_dialog"
     @close-dialog="closeCentralFormDialog"
-    @search="SearchEmergencyPatient"
-    @selected-row="selectedEmergencyPatient"
+    @search="SearchInpatient"
+    @selected-row="selectedInpatient"
     :search_results="search_results"
     :search_payload="search_payload"
     @open-form="openAddFormDialog"
@@ -139,7 +142,7 @@
   <InPatientRegistration :clicked_option="clicked_option" :form_dialog="form_dialog" @close-dialog="closeAddFormDialog" />
   
   <!-- In-patients Sub components -->
-  <PatientProfileDialog :show="PatientProfile" :form_payload="form_payload" @close-dialog="useSubComponents('PatientProfile', false)" />
+  <PatientProfileDialog :show="PatientProfile" :form_payload="payload" @close-dialog="useSubComponents('PatientProfile', false)" />
   <RoomInquiryDialog :show="RoomInquiry" @close-dialog="useSubComponents('RoomInquiry', false)" />
   <SuspendDialog :show="Suspend" :form_type="form_type" @close-dialog="useSubComponents('Suspend', false)" />
   <RelocatePatientDialog :show="RelocatePatient" @close-dialog="useSubComponents('RelocatePatient', false)" />
@@ -230,7 +233,8 @@ const search_payload = ref({});
 const form_dialog = ref(false);
 const clicked_option = ref("");
 const form_type = ref("inpatient")
-const form_payload = ref({});
+const payload = ref({});
+const selectedPatient = ref({});
 
 const open_summary_modal = ref(false);
 const outpatients_test_data = ref([
@@ -251,16 +255,16 @@ const params = ref("");
 const loading = ref(true);
 const headers = [
   {
-    title: "ID",
-    align: "start",
-    sortable: false,
-    key: "id",
-  },
-  {
-    title: "Patient Code",
+    title: "Patient ID",
     align: "start",
     sortable: false,
     key: "patient_id",
+  },
+  {
+    title: "Case No.",
+    align: "start",
+    sortable: false,
+    key: "register_id_no",
   },
   {
     title: "Last Name",
@@ -341,16 +345,52 @@ const handleNew = (clickedOption) => {
 };
 const closeCentralFormDialog = () => {
   central_form_dialog.value = false;
+  search_payload.value = {};
+  search_results.value = [];
+  selectedPatient.value = {};
 };
-const openAddFormDialog = () => {
-  form_dialog.value = true;
+const openAddFormDialog = (type) => {
+    if (type === 'new') {
+        form_dialog.value = true;
+        closeCentralFormDialog();
+    } else {  
+        if (selectedPatient.value.id) {  
+            form_dialog.value = true;
+            closeCentralFormDialog();
+        } else {
+            return useSnackbar(true, "error", "No item selected.");
+        }
+    } 
 };
 const closeAddFormDialog = () => {
   form_dialog.value = false;
+  search_payload.value = {};
+  search_results.value = [];
 };
-const selectedEmergencyPatient = () => {
+const selectedInpatient = (item) => {
+  selectedPatient.value = item;
 };
-const SearchEmergencyPatient = () => {
+const SearchInpatient = async (payload) => {
+  search_payload.value.isloading = true;
+  let lastname = payload.lastname || "";
+  let firstname = payload.firstname || "";
+  let middlename = payload.middlename || "";
+  let birthdate = payload.birthdate || "";
+  let params = "page=1&per_page=10&lastname=" + lastname + "&firstname=" + firstname + "&middlename=" + middlename + "&birthdate=" + birthdate;
+
+  const response = await fetch(
+    useApiUrl() + "/search-patient-master" + "?" + params || "",
+    {
+      headers: {
+        Authorization: `Bearer ` + useToken(),
+      },
+    }
+  );
+  if (response) {
+    const data = await response.json();
+    search_results.value = data;
+    search_payload.value.isloading = false;
+  }
 };
 
 const DeactiveUser = () => {

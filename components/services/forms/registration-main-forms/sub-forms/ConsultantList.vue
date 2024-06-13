@@ -31,8 +31,7 @@
                     @update:options="initialize"
                     @update:model-value="handleSelectedRow"
                     show-select
-                    select-strategy="multiple"
-                    fixed-header
+                    select-strategy="single"
                     density="compact" 
                     height="50vh"
                     >
@@ -99,7 +98,6 @@ const loadItems = async(page = null,itemsPerPage = null,sortBy = null)=>{
     let params = "page=" +pageno + "&per_page=" + itemPerpageno + "&keyword=" + data.value.keyword;
     const response = await useMethod("get","get-his-doctors?","",params);
     if(response){
-        // console.log(response.data);
         serverItems.value = response.data;
         totalItems.value = response.total;
         data.value.loading = false;
@@ -110,14 +108,17 @@ const search = ()=>{
 }
 
 const handleSelectedRow = (selectedRows) => {
-    const selectedItems = selectedRows.map(rowId => serverItems.value.find(item => item.id === rowId));
-    const validSelectedItems = selectedItems.filter(item => item !== undefined);
-    validSelectedItems.forEach(item => {
-        if (!selected_item.value.includes(item)) {
-            selected_item.value.push(item);
+    const selectedItems = selectedRows.map(rowId => {
+        const item = serverItems.value.find(item => item.id === rowId);
+        if (item) {
+            return {
+                attending_doctor: item.doctor_code,
+                attending_doctor_fullname: item.doctor_name,
+            }
         }
-    });
-    emits('handle-select', validSelectedItems);
+        return null;
+    }).filter(item => item !== null);
+    emits('handle-select', selectedItems);
 }
 
 const onSelect = () => {

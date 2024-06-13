@@ -1145,7 +1145,7 @@ export default [
                     {
                         label: "Hospitalization Plans",
                         icon: "mdi-file-document-edit",
-                        form: "HospitalizationPlans",
+                        form: "HospitalPlan",
                         rule: "",
                     },
                     {
@@ -1492,7 +1492,7 @@ export default [
                     {
                         label: "Hospitalization Plans",
                         icon: "mdi-file-document-edit",
-                        form: "HospitalizationPlans",
+                        form: "HospitalPlan",
                         rule: "",
                     },
                     {
@@ -1879,7 +1879,7 @@ export default [
                     {
                         label: "Hospitalization Plans",
                         icon: "mdi-file-document-edit",
-                        form: "HospitalizationPlans",
+                        form: "HospitalPlan",
                         rule: "",
                     },
                     {

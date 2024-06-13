@@ -90,8 +90,12 @@ const props = defineProps({
 
 let tab = ref("0");
 const formType = ref('inpatient');
-
-const payload = ref({});
+const { selectedRowDetails } = storeToRefs(useSubcomponentSelectedRowDetailsStore());
+const payload = ref({
+    address: {},
+    selectedGuarantor: [],
+    selectedConsultant: [],
+});
 const isLoading = ref(false);
 
 const emits = defineEmits(['close-dialog']);
@@ -107,8 +111,26 @@ const onSubmit = async () => {
     isLoading.value = true;
 
     if (payload.value.id) {
-        response = await useMethod("put", "register-inpatient", payload.value, "", payload.value.id);
+        response = await useMethod("put", "update-inpatient", payload.value, "", payload.value.id);
+        if (response) {
+            useSnackbar(true, "green", response.message);
+            isLoading.value = false;
+            payload.value = Object.assign({});
+            closeDialog();
+            tab.value = "0";
+        }
     } else {
+        const errors = validation();
+
+        if (errors.length > 0) {
+            for (let i = 0; i < errors.length; i++) {
+                useSnackbar(true, "red", errors[i].msg);
+                await new Promise(resolve => setTimeout(resolve, 1000));  
+            }
+            isLoading.value = false;
+            return;
+        } 
+
         response = await useMethod("post", "register-inpatient", payload.value);
         if (response) {
             useSnackbar(true, "green", response.message);
@@ -118,9 +140,100 @@ const onSubmit = async () => {
             tab.value = "0";
         }
     }
-
 }
+const validation = ()=>{
+    let error_msg = [];
+    if(!payload.value.lastname) {
+        error_msg.push({msg:"Lastname is required"});
+    }
+    if(!payload.value.firstname) {
+        error_msg.push({msg:"Firstname is required"});
+    }
+    if(!payload.value.sex_id) {
+        error_msg.push({msg:"Sex is required"});
+    }
+    if(!payload.value.civilstatus_id) {
+        error_msg.push({msg:"Civil Status is required"});
+    }
+    if(!payload.value.birthdate) {
+        error_msg.push({msg:"Birthdate is required"});
+    }
+    if(!payload.value.registry_date) {
+        error_msg.push({msg:"Registry Date is required"});
+    }
+    // if(!payload.value.registry_type) {
+    //     error_msg.push({msg:"Registry Type is required"});
+    // }
+    if(!payload.value.mscAccount_trans_types) {
+        error_msg.push({msg:"Transaction Type is required"});
+    }
+    // if(!payload.value.hosp_plan) { 
+    //     error_msg.push({msg:"Hospitalization Plan is required"});
+    // }
+    if(!payload.value.mscPrice_Groups) {
+        error_msg.push({msg:"Price Group is required"});
+    }
+    if(!payload.value.mscPrice_Schemes) {
+        error_msg.push({msg:"Price Scheme is required"});
+    }
+    // Inpatient only
+    // if(!payload.value.how_admitted) {
+    //     error_msg.push({msg:"How Admitted is required"});
+    // }
+    return error_msg;
+}
+
+onUpdated(() => {
+    if (selectedRowDetails.value) {
+        payload.value = Object.assign({}, selectedRowDetails.value);
+        payload.value.sex_id = parseInt(selectedRowDetails.value.sex_id) ? parseInt(selectedRowDetails.value.sex_id) : '';
+        payload.value.suffix_id = parseInt(selectedRowDetails.value.suffix_id) ? parseInt(selectedRowDetails.value.suffix_id) : '';
+        payload.value.civilstatus_id = parseInt(selectedRowDetails.value.civilstatus_id) ? parseInt(selectedRowDetails.value.civilstatus_id) : '';
+        payload.value.birthdate = useDateMMDDYYY(selectedRowDetails.value.birthdate) ? useDateMMDDYYY(selectedRowDetails.value.birthdate) : '';
+        payload.value.register_id_no = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry.register_id_no ? selectedRowDetails.value.patient_registry.register_id_no : '';
+        payload.value.registry_date = useDateMMDDYYY(selectedRowDetails.value.registry_date) ? useDateMMDDYYY(selectedRowDetails.value.registry_date) : '';
+        payload.value.mscPrice_Groups = selectedRowDetails.value.patient_registry && parseInt(selectedRowDetails.value.patient_registry.mscPrice_Groups) ? parseInt(selectedRowDetails.value.patient_registry.mscPrice_Groups) : '';
+        payload.value.mscPrice_Schemes = selectedRowDetails.value.patient_registry && parseInt(selectedRowDetails.value.patient_registry.mscPrice_Schemes) ? parseInt(selectedRowDetails.value.patient_registry.mscPrice_Schemes) : '';
+        payload.value.religion_id = parseInt(selectedRowDetails.value.religion_id) ? parseInt(selectedRowDetails.value.religion_id) : '';
+        payload.value.nationality_id = parseInt(selectedRowDetails.value.nationality_id) ? parseInt(selectedRowDetails.value.nationality_id) : '';
+
+        // ADDRESS
+        const Address = ref({});
+        Address.value.bldgstreet = selectedRowDetails.value.bldgstreet ? selectedRowDetails.value.bldgstreet : '';
+        Address.value.region_id = parseInt(selectedRowDetails.value.region_id) ? parseInt(selectedRowDetails.value.region_id) : '';
+        Address.value.province_id = parseInt(selectedRowDetails.value.province_id) ? parseInt(selectedRowDetails.value.province_id) : '';
+        Address.value.municipality_id = parseInt(selectedRowDetails.value.municipality_id) ? parseInt(selectedRowDetails.value.municipality_id) : '';
+        Address.value.barangay_id = parseInt(selectedRowDetails.value.barangay_id) ? parseInt(selectedRowDetails.value.barangay_id) : '';
+        Address.value.country_id = parseInt(selectedRowDetails.value.country_id) ? parseInt(selectedRowDetails.value.country_id) : '';
+        payload.value.address = Address.value;
+        console.log('Address:', payload.value.address); 
+
+        // For HMO GUARANTORS
+        const Guarantor = ref([]);
+        if (selectedRowDetails.value.patient_registry) {
+            selectedRowDetails.value.patient_registry.guarantor_approval_date = useDateMMDDYYY(selectedRowDetails.value.patient_registry.guarantor_approval_date);
+            selectedRowDetails.value.patient_registry.guarantor_validity_date = useDateMMDDYYY(selectedRowDetails.value.patient_registry.guarantor_validity_date);
+            Guarantor.value.push(selectedRowDetails.value.patient_registry)
+        }
+        payload.value.selectedGuarantor = Guarantor.value;
+
+        // For CONSULTANTS
+        const Consultant = ref([]);
+        if (selectedRowDetails.value.patient_registry) {
+            Consultant.value.push(selectedRowDetails.value.patient_registry)
+        }
+        payload.value.selectedConsultant = Consultant.value;
+
+        payload.value.registry_remarks = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry.registry_remarks ? selectedRowDetails.value.patient_registry.registry_remarks : '';
+
+        console.log('Selected Row Details:', payload.value);
+    } 
+});
 </script>
 
 <style scoped>
+.scrollable-content {
+    overflow-y: auto;
+    max-height: calc(100vh - 200px); 
+}
 </style>
