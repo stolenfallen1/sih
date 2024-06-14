@@ -78,7 +78,7 @@
                     <v-list-subheader class="form-header">Death Date Time</v-list-subheader>
                     <v-text-field
                         variant="solo"
-                        v-model="payload.timeofdeath"
+                        v-model="payload.death_date"
                         :disabled="!payload.dead_on_arrival"
                         :readonly="clicked_option === 'view'"
                         type="date"
@@ -89,15 +89,15 @@
                 <v-col cols="7">
                     <v-list-subheader class="form-header">Type of Death</v-list-subheader>
                     <v-autocomplete
-                        item-title="type_of_death"
+                        item-title="description"
                         item-value="id"
                         placeholder="Choose Type of Death"
-                        v-model="payload.typeofdeath_id"
+                        v-model="payload.mscDeath_types_id"
                         :disabled="!payload.dead_on_arrival"
                         :readonly="clicked_option === 'view'"
                         hide-details
                         :clearable="clicked_option === 'new' || clicked_option === 'edit'"
-                        :items="[]"
+                        :items="death_types_data"
                         density="compact"
                         variant="solo"
                     ></v-autocomplete>
@@ -116,10 +116,12 @@
         </v-col>
     </v-row>
     <medical-package-list :medical_package_dialog="medical_package_dialog" @close-dialog="closeMedicalPackage" @handle-select="handleSelectPackage" />
-    <address-details-form :address_form_dialog="address_form_dialog" @close-dialog="closeAddressForm" @handle-submit="handleSubmitAddress" />
+    <address-details-form :address_form_dialog="address_form_dialog" :payload="payload" @close-dialog="closeAddressForm" @handle-submit="handleSubmitAddress" />
 </template>
 
 <script setup>
+
+const { selectedRowDetails } = storeToRefs(useSubcomponentSelectedRowDetailsStore());
 const props = defineProps({
     payload: {
         type: Object,
@@ -141,11 +143,13 @@ const medical_package_dialog = ref(false);
 const address_form_dialog = ref(false);
 
 const handleOpenAddressForm = () => {
+    if (props.clicked_option === 'view') return;
     address_form_dialog.value = true;
 };
 
 const fullAddress = ref("");
 const handleSubmitAddress = (address) => {
+    console.log(address);
     const { bldgstreet, region_name, province_name, municipality_name, barangay_name, country_name } = address;
     const { region_id, province_id, municipality_id, barangay_id, country_id } = address;
 
@@ -198,9 +202,21 @@ const getNationality = async () => {
     }
 }
 
+const death_types_data = ref([]);
+const death_types_loading = ref(false);
+const getDeathTypes = async () => {
+    death_types_loading.value = true;
+    const response = await useMethod("get", "get-death-type", "", "");
+    if (response) {
+        death_types_data.value = response;
+        death_types_loading.value = false;
+    } 
+};
+
 onMounted(() => {
     getReligion();
     getNationality();
+    getDeathTypes();
 });
 </script>
 

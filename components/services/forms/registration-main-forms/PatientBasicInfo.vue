@@ -156,21 +156,25 @@
                 ></v-text-field>
             </v-col>
             <v-col cols="12" class="form-col">
-                <v-list-subheader class="form-header">Weight</v-list-subheader>
+                <v-list-subheader class="form-header">Weight (kg)</v-list-subheader>
                 <v-text-field
                     variant="solo"
+                    type="number"
                     v-model="payload.weight"
                     :readonly="clicked_option === 'view'"
+                    @update:model-value="calculateBmi"
                     hide-details
                     density="compact"
                 ></v-text-field>
             </v-col>
             <v-col cols="12" class="form-col">
-                <v-list-subheader class="form-header">Height</v-list-subheader>
+                <v-list-subheader class="form-header">Height (cm)</v-list-subheader>
                 <v-text-field
                     variant="solo"
+                    type="number"
                     v-model="payload.height"
                     :readonly="clicked_option === 'view'"
+                    @update:model-value="calculateBmi"
                     hide-details
                     density="compact"
                 ></v-text-field>
@@ -293,6 +297,17 @@ const updatebirthdate = ()=>{
     props.payload.age = 0;
     if(props.payload.birthdate){
         props.payload.age = useCalculateAge(useDateMMDDYYY(props.payload.birthdate));
+    }
+}
+
+const calculateBmi = () => {
+    if (props.payload.weight && props.payload.height) {
+        const weight = parseFloat(props.payload.weight);
+        const height = parseFloat(props.payload.height);
+        const bmi = weight / (height * height);
+        props.payload.bmi = bmi.toFixed(2);
+    } else {
+        props.payload.bmi = "";
     }
 }
 

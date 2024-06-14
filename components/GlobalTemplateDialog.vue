@@ -296,10 +296,6 @@
     :show="HospitalizationTypes"
     @close-dialog="useTableAndTemplate('HospitalizationTypes', false)"
   />
-  <HospitalizationPlansDialog
-    :show="HospitalizationPlans"
-    @close-dialog="useTableAndTemplate('HospitalizationPlans', false)"
-  />
   <HospitalizationCaseTypesDialog
     :show="HospitalizationCaseTypes"
     @close-dialog="useTableAndTemplate('HospitalizationCaseTypes', false)"
@@ -666,7 +662,7 @@ const {
   // PriceSchemes, 
   // TransactionType, 
   HospitalizationTypes,
-  HospitalizationPlans,
+  // HospitalPlan,
   HospitalizationCaseTypes,
   InternalControlTable,
   ListOfAttendant,

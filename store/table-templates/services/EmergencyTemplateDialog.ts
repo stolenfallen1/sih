@@ -15,7 +15,7 @@ export const EmergencyTemplateDialog = defineStore('EmergencyTemplateDialog', {
         MedicalSubServiceTypes: false,
         PriceSchemes: false,
         HospitalizationTypes: false,
-        HospitalizationPlans: false,
+        HospitalPlan: false,
         HospitalizationCaseTypes: false,
         TransactionType: false,
         InternalControlTable: false,
