@@ -214,8 +214,6 @@ onUpdated(() => {
         payload.value.selectedConsultant = Consultant.value;
 
         payload.value.registry_remarks = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry.registry_remarks ? selectedRowDetails.value.patient_registry.registry_remarks : '';
-
-        console.log('Selected Row Details:', payload.value);
     } 
 });
 </script>

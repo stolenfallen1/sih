@@ -11,375 +11,154 @@
             <v-card-text>
                 <v-card elevation="4" class="mb-4">
                     <v-card-text>
-                        <v-tabs 
-                            v-model="tab"
-                            color="primary"
-                            class="mb-4"
-                        >
-                            <v-tab value="0"><v-icon start>mdi-form-select</v-icon> Patient Info</v-tab>
-                            <v-tab value="1"><v-icon start>mdi-form-select</v-icon> Transaction Info </v-tab>
-                        </v-tabs>
-                        <v-window v-model="tab">
-                            <v-window-item class="pa-1">
+                        <p style="font-style: italic; font-weight: bold; font-size: 16px;">Patient Info</p>
+                        <v-row class="mt-1">
+                            <v-col cols="6">
                                 <v-row>
-                                    <v-col cols="6">
-                                        <v-row>
-                                            <v-col cols="12">
-                                                <v-text-field 
-                                                    label="Patient Name"
-                                                    v-model="payload.patient_name"
-                                                    variant="outlined"
-                                                    density="compact"
-                                                    hide-details
-                                                    readonly
-                                                ></v-text-field>
-                                            </v-col>
-                                            <v-col cols="12" class="form-col">
-                                                <v-text-field 
-                                                    label="ID No."
-                                                    v-model="payload.id_no"
-                                                    variant="outlined"
-                                                    density="compact"
-                                                    hide-details
-                                                    readonly
-                                                ></v-text-field>
-                                            </v-col>
-                                        </v-row>
-                                        <v-row class="form-col">
-                                            <v-col cols="6">
-                                                <v-text-field 
-                                                    label="Civil Status"
-                                                    v-model="payload.civil_status"
-                                                    variant="outlined"
-                                                    density="compact"
-                                                    hide-details
-                                                    readonly
-                                                ></v-text-field>
-                                            </v-col>
-                                            <v-col cols="6">
-                                                <v-text-field 
-                                                    label="Gender"
-                                                    v-model="payload.gender"
-                                                    variant="outlined"
-                                                    density="compact"
-                                                    hide-details
-                                                    readonly
-                                                ></v-text-field>
-                                            </v-col>
-                                        </v-row>
-                                        <v-row class="form-col">
-                                            <v-col cols="6">
-                                                <v-text-field 
-                                                    label="Birthdate"
-                                                    v-model="payload.birthdate"
-                                                    type="date"
-                                                    variant="outlined"
-                                                    density="compact"
-                                                    hide-details
-                                                    readonly
-                                                ></v-text-field>
-                                            </v-col>
-                                            <v-col cols="6">
-                                                <v-text-field 
-                                                    label="Age"
-                                                    v-model="payload.age"
-                                                    type="number"
-                                                    variant="outlined"
-                                                    density="compact"
-                                                    hide-details
-                                                    readonly
-                                                ></v-text-field>
-                                            </v-col>
-                                        </v-row>
-                                        <v-row class="form-col">
-                                            <v-col cols="12">
-                                                <v-autocomplete
-                                                    label="Department"
-                                                    v-model="payload.department"
-                                                    variant="outlined"
-                                                    density="compact"
-                                                    hide-details
-                                                ></v-autocomplete>
-                                            </v-col>
-                                            <v-col cols="12" class="form-col">
-                                                <v-autocomplete
-                                                    label="Guarantor Name"
-                                                    v-model="payload.guarantor_name"
-                                                    variant="outlined"
-                                                    density="compact"
-                                                    hide-details
-                                                ></v-autocomplete>
-                                            </v-col>
-                                        </v-row>
+                                    <v-col cols="12">
+                                        <v-text-field 
+                                            label="Patient Name"
+                                            v-model="payload.patient_name"
+                                            variant="solo"
+                                            density="compact"
+                                            hide-details
+                                            readonly
+                                        ></v-text-field>
                                     </v-col>
-                                    <v-col cols="6">
-                                        <v-row>
-                                            <v-col cols="12">
-                                                <v-text-field 
-                                                    label="Registry Case No."
-                                                    v-model="payload.registry_case_no"
-                                                    variant="outlined"
-                                                    density="compact"
-                                                    hide-details
-                                                    readonly
-                                                ></v-text-field>
-                                            </v-col>
-                                            <v-col cols="12" class="form-col">
-                                                <v-text-field 
-                                                    label="Registry Case Date"
-                                                    v-model="payload.registry_case_date"
-                                                    type="date"
-                                                    variant="outlined"
-                                                    density="compact"
-                                                    hide-details
-                                                    readonly
-                                                ></v-text-field>
-                                            </v-col>
-                                            <v-col cols="12" class="form-col">
-                                                <v-text-field 
-                                                    label="Referral Fee Setup"
-                                                    v-model="payload.referral_fee_setup"
-                                                    variant="outlined"
-                                                    density="compact"
-                                                    hide-details
-                                                    readonly
-                                                ></v-text-field>
-                                            </v-col>
-                                            <v-col cols="12" class="form-col">
-                                                <v-autocomplete
-                                                    label="Physician Name"
-                                                    v-model="payload.physician_name"
-                                                    variant="outlined"
-                                                    density="compact"
-                                                    hide-details
-                                                ></v-autocomplete>
-                                            </v-col>
-                                            <v-col cols="12" class="form-col">
-                                                <v-text-field 
-                                                    label="Referring Physician"
-                                                    v-model="payload.referring_physician"
-                                                    variant="outlined"
-                                                    density="compact"
-                                                    hide-details
-                                                    readonly
-                                                ></v-text-field>
-                                            </v-col>
-                                        </v-row>
+                                    <v-col cols="12" class="form-col">
+                                        <v-text-field 
+                                            label="ID No."
+                                            v-model="payload.patient_id"
+                                            variant="solo"
+                                            density="compact"
+                                            hide-details
+                                            readonly
+                                        ></v-text-field>
                                     </v-col>
                                 </v-row>
-                            </v-window-item>
-                            <v-window-item class="pa-1">
-                                <v-row>
-                                    <v-col cols="3">
-                                        <v-row>
-                                            <v-col cols="12">
-                                                <v-text-field 
-                                                    label="Transaction No."
-                                                    v-model="payload.transaction_no"
-                                                    variant="outlined"
-                                                    density="compact"
-                                                    hide-details
-                                                    readonly
-                                                ></v-text-field>
-                                            </v-col>
-                                            <v-col cols="12" class="form-col">
-                                                <v-text-field 
-                                                    label="Price Group"
-                                                    v-model="payload.price_group"
-                                                    variant="outlined"
-                                                    density="compact"
-                                                    hide-details
-                                                    readonly
-                                                ></v-text-field>
-                                            </v-col>
-                                            <v-col cols="12" class="form-col">
-                                                <v-text-field 
-                                                    label="Price Scheme"
-                                                    v-model="payload.price_scheme"
-                                                    variant="outlined"
-                                                    density="compact"
-                                                    hide-details
-                                                    readonly
-                                                ></v-text-field>
-                                            </v-col>
-                                            <v-col cols="12" class="form-col">
-                                                <v-text-field 
-                                                    label="Hospitalization Plan"
-                                                    v-model="payload.hospitalization_plan"
-                                                    variant="outlined"
-                                                    density="compact"
-                                                    hide-details
-                                                    readonly
-                                                ></v-text-field>
-                                            </v-col>
-                                            <v-col cols="12" class="form-col">
-                                                <v-autocomplete
-                                                    label="Discount Scheme"
-                                                    v-model="payload.discount_scheme"
-                                                    variant="outlined"
-                                                    density="compact"
-                                                    hide-details
-                                                    readonly
-                                                ></v-autocomplete>
-                                            </v-col>
-                                        </v-row>
+                                <v-row class="form-col">
+                                    <v-col cols="6">
+                                        <v-text-field 
+                                            label="Civil Status"
+                                            v-model="payload.civil_status"
+                                            variant="solo"
+                                            density="compact"
+                                            hide-details
+                                            readonly
+                                        ></v-text-field>
                                     </v-col>
-                                    <v-col cols="3">
-                                        <v-row>
-                                            <v-col cols="12">
-                                                <v-autocomplete 
-                                                    label="Document Type"
-                                                    v-model="payload.document_type"
-                                                    variant="outlined"
-                                                    density="compact"
-                                                    hide-details
-                                                ></v-autocomplete>
-                                            </v-col>
-                                            <v-col cols="12" class="form-col">
-                                                <v-text-field 
-                                                    label="Document Date"
-                                                    v-model="payload.document_date"
-                                                    type="date"
-                                                    variant="outlined"
-                                                    density="compact"
-                                                    hide-details
-                                                    readonly
-                                                ></v-text-field>
-                                            </v-col>
-                                            <v-col cols="12" class="form-col">
-                                                <v-text-field 
-                                                    label="Document No."
-                                                    v-model="payload.document_no"
-                                                    variant="outlined"
-                                                    density="compact"
-                                                    hide-details
-                                                    readonly
-                                                ></v-text-field>
-                                            </v-col>
-                                            <v-col cols="12" class="form-col">
-                                                <v-text-field 
-                                                    label="Regulated Doc No."
-                                                    v-model="payload.regulated_doc_no"
-                                                    variant="outlined"
-                                                    density="compact"
-                                                    hide-details
-                                                    readonly
-                                                ></v-text-field>
-                                            </v-col>
-                                            <v-col cols="12" class="form-col">
-                                                <v-text-field 
-                                                    label="Payer Name"
-                                                    v-model="payload.payer_name"
-                                                    variant="outlined"
-                                                    density="compact"
-                                                    hide-details
-                                                    readonly
-                                                ></v-text-field>
-                                            </v-col>
-                                        </v-row>
-                                    </v-col>
-                                    <v-col cols="3">
-                                        <v-row>
-                                            <v-col cols="12">
-                                                <v-text-field 
-                                                    label="Requisition Date"
-                                                    v-model="payload.requisition_date"
-                                                    type="date"
-                                                    variant="outlined"
-                                                    density="compact"
-                                                    hide-details
-                                                    readonly
-                                                ></v-text-field>
-                                            </v-col>
-                                            <v-col cols="12" class="form-col">
-                                                <v-text-field 
-                                                    label="Requisition No."
-                                                    v-model="payload.requisition_no"
-                                                    variant="outlined"
-                                                    density="compact"
-                                                    hide-details
-                                                    readonly
-                                                ></v-text-field>
-                                            </v-col>
-                                            <v-col cols="12" class="form-col">
-                                                <v-text-field 
-                                                    label="Total Items"
-                                                    v-model="payload.total_items"
-                                                    variant="outlined"
-                                                    density="compact"
-                                                    hide-details
-                                                    readonly
-                                                ></v-text-field>
-                                            </v-col>
-                                            <v-col cols="12" class="form-col">
-                                                <v-text-field 
-                                                    label="Total Qty"
-                                                    v-model="payload.total_qty"
-                                                    variant="outlined"
-                                                    density="compact"
-                                                    hide-details
-                                                    readonly
-                                                ></v-text-field>
-                                            </v-col>
-                                            <v-col cols="12" class="form-col">
-                                                <v-text-field 
-                                                    label="OSCA ID"
-                                                    v-model="payload.osca_id"
-                                                    variant="outlined"
-                                                    density="compact"
-                                                    hide-details
-                                                    readonly
-                                                ></v-text-field>
-                                            </v-col>
-                                        </v-row>
-                                    </v-col>
-                                    <v-col cols="3">
-                                        <v-row>
-                                            <v-col cols="12">
-                                                <v-text-field 
-                                                    label="Gross Amount"
-                                                    v-model="payload.gross_amount"
-                                                    variant="outlined"
-                                                    density="compact"
-                                                    hide-details
-                                                    readonly
-                                                ></v-text-field>
-                                            </v-col>
-                                            <v-col cols="12" class="form-col">
-                                                <v-text-field 
-                                                    label="Discount"
-                                                    v-model="payload.discount"
-                                                    variant="outlined"
-                                                    density="compact"
-                                                    hide-details
-                                                    readonly
-                                                ></v-text-field>
-                                            </v-col>
-                                            <v-col cols="12" class="form-col">
-                                                <v-text-field 
-                                                    label="Output Tax"
-                                                    v-model="payload.output_tax"
-                                                    variant="outlined"
-                                                    density="compact"
-                                                    hide-details
-                                                    readonly
-                                                ></v-text-field>
-                                            </v-col>
-                                            <v-col cols="12" class="form-col">
-                                                <v-text-field 
-                                                    label="Net Amount"
-                                                    v-model="payload.net_amount"
-                                                    variant="outlined"
-                                                    density="compact"
-                                                    hide-details
-                                                    readonly
-                                                ></v-text-field>
-                                            </v-col>
-                                        </v-row>
+                                    <v-col cols="6">
+                                        <v-text-field 
+                                            label="Gender"
+                                            v-model="payload.sex"
+                                            variant="solo"
+                                            density="compact"
+                                            hide-details
+                                            readonly
+                                        ></v-text-field>
                                     </v-col>
                                 </v-row>
-                            </v-window-item>
-                        </v-window>
+                                <v-row class="form-col">
+                                    <v-col cols="6">
+                                        <v-text-field 
+                                            label="Birthdate"
+                                            v-model="payload.birthdate"
+                                            type="date"
+                                            variant="solo"
+                                            density="compact"
+                                            hide-details
+                                            readonly
+                                        ></v-text-field>
+                                    </v-col>
+                                    <v-col cols="6">
+                                        <v-text-field 
+                                            label="Age"
+                                            v-model="payload.age"
+                                            type="number"
+                                            variant="solo"
+                                            density="compact"
+                                            hide-details
+                                            readonly
+                                        ></v-text-field>
+                                    </v-col>
+                                </v-row>
+                            </v-col>
+                            <v-col cols="6">
+                                <v-row>
+                                    <v-col cols="6">
+                                        <v-text-field 
+                                            label="Case No."
+                                            v-model="payload.case_no"
+                                            variant="solo"
+                                            density="compact"
+                                            hide-details
+                                            readonly
+                                        ></v-text-field>
+                                    </v-col>
+                                    <v-col cols="6">
+                                        <v-text-field 
+                                            label="Account"
+                                            v-model="payload.account"
+                                            variant="solo"
+                                            density="compact"
+                                            hide-details
+                                            readonly
+                                        ></v-text-field>
+                                    </v-col>
+                                    <v-col cols="12" class="form-col">
+                                        <v-text-field 
+                                            label="Registry Case Date"
+                                            v-model="payload.registry_date"
+                                            type="date"
+                                            variant="solo"
+                                            density="compact"
+                                            hide-details
+                                            readonly
+                                        ></v-text-field>
+                                    </v-col>
+                                    <v-col cols="3" class="form-col">
+                                        <v-text-field
+                                            label="ID"
+                                            v-model="payload.attending_doctor"
+                                            variant="solo"
+                                            density="compact"
+                                            hide-details
+                                            readonly
+                                        ></v-text-field>
+                                    </v-col>
+                                    <v-col cols="9" class="form-col">
+                                        <v-text-field
+                                            label="Physician Name"
+                                            v-model="payload.attending_doctor_fullname"
+                                            variant="solo"
+                                            density="compact"
+                                            hide-details
+                                            readonly
+                                        ></v-text-field>
+                                    </v-col>
+                                    <v-col cols="3" class="form-col">
+                                        <v-text-field
+                                            label="ID"
+                                            v-model="payload.guarantor_id"
+                                            variant="solo"
+                                            density="compact"
+                                            hide-details
+                                            readonly
+                                        ></v-text-field>
+                                    </v-col>
+                                    <v-col cols="9" class="form-col">
+                                        <v-text-field
+                                            label="Guarantor Name"
+                                            v-model="payload.guarantor_name"
+                                            variant="solo"
+                                            density="compact"
+                                            hide-details
+                                            readonly
+                                        ></v-text-field>
+                                    </v-col>
+                                </v-row>
+                            </v-col>
+                        </v-row>
                     </v-card-text>
                 </v-card>
                 <v-expansion-panels
@@ -388,48 +167,75 @@
                     multiple
                     >
                     <v-expansion-panel>
-                        <v-expansion-panel-title>Transaction Line Items</v-expansion-panel-title>
+                        <v-expansion-panel-title>
+                            Post Charge Transactions
+                            <v-spacer></v-spacer>
+                            <v-btn class="mr-4" density="compact">
+                                <v-icon>mdi-help-circle-outline</v-icon>
+                                &nbsp; View Help Code
+                                <v-menu activator="parent">
+                                    <v-list>
+                                    <v-list-item
+                                        v-for="(item, index) in revenue_code"
+                                        :key="index"
+                                        :value="index"
+                                    >
+                                        <v-list-item-title>{{ item.code }} - {{ item.description }}</v-list-item-title>
+                                    </v-list-item>
+                                    </v-list>
+                                </v-menu>
+                            </v-btn>
+                        </v-expansion-panel-title>
                         <v-expansion-panel-text>
                             <v-table density="compact" height="40vh">
                                 <thead>
                                     <tr>
-                                        <th width="4"></th>
-                                        <th width="4"></th>
-                                        <th>Frequency</th>
-                                        <th>Route</th>
+                                        <th>Dept Code</th>
+                                        <th>Item Code</th>
                                         <th>Description</th>
-                                        <th>Balance</th>
+                                        <th>Type</th> 
+                                        <th>Specimen</th> <!-- Autofill -->
                                         <th>Qty</th>
-                                        <th>Stat %</th>
                                         <th>Price</th>
-                                        <th>Amount</th>
-                                        <th>Amount</th>
-                                        <th>Output Tax</th>
-                                        <th>Discount Rate</th>
-                                        <th>Discount Amount</th>
-                                        <th>RF Discount</th>
-                                        <th>Net of RF Discount</th>
-                                        <th>Reader's Fee</th>
-                                        <th>CPT Code</th>
-                                        <th>CPT Symbol</th>
-                                        <th>CPT Modifier Code</th>
-                                        <th>CPT Modifier Price</th>
-                                        <th>Barcode ID</th>
+                                        <th>Reader</th>
+                                        <th>Reader Name</th>
+                                        <th>Reader Fee</th>
+                                        <th width="4"></th> 
+                                        <th>Date</th> <!-- Autofill -->
+                                        <th>Time</th> <!-- Autofill -->
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <!-- Contents -->
+                                        <td class="td" width="100%"> <input class="input" v-model="keyword" @keyup.enter="handleRevenueCode" /> </td>
+                                        <td class="td" width="100%"> <input class="input" @keyup.enter="handleChargingCode" </td>
+                                        <td class="td" width="100%"> <input class="input" /> </td>
+                                        <td class="td" width="100%"> <input class="input" /> </td>
+                                        <td class="td" width="100%"> <input class="input" /> </td>
+                                        <td class="td" width="100%"> <input class="input" /> </td>
+                                        <td class="td" width="100%"> <input class="input" /> </td>
+                                        <td class="td" width="100%"> <input class="input" /> </td>
+                                        <td class="td" width="100%"> <input class="input" /> </td>
+                                        <td class="td" width="100%"> <input class="input" /> </td>
+                                        <td class="td" width="100%"> <input class="input" /> </td>
+                                        <td class="td" width="100%"> <input class="input" /> </td>
+                                        <td class="td" width="100%"> <input class="input" /> </td>
+                                        <td class="cursor-pointer"><v-icon color="blue">mdi-plus-box</v-icon></td>
+                                        <td class="cursor-pointer"><v-icon color="red">mdi-delete</v-icon></td>
                                     </tr>
                                 </tbody>
                             </v-table>
-                            <div class="button-container mt-4">
-                                <button class="text-blue-darken-1 border border-primary px-3 py-1 rounded" @click="openItemMasterFile">Select from Item Master File</button> 
-                                <button class="text-blue-darken-1 border border-primary px-3 py-1 rounded" @click="openItemTemplate">Select from Item Template</button>
-                                <button class="text-blue-darken-1 border border-primary px-3 py-1 rounded">CPT Modifier</button> 
-                                <button class="text-blue-darken-1 border border-primary px-3 py-1 rounded">Select Service Fee</button>
-                                <button class="text-blue-darken-1 border border-primary px-3 py-1 rounded">Item Notes. Remarks</button> 
-                            </div>
+                        </v-expansion-panel-text>
+                    </v-expansion-panel>
+
+                    <v-expansion-panel>
+                        <v-expansion-panel-title>Professional Fee</v-expansion-panel-title>
+                        <v-expansion-panel-text>
+                            <v-row>
+                                <v-col cols="12">
+                                    <h1>TO ADD</h1>
+                                </v-col>
+                            </v-row>
                         </v-expansion-panel-text>
                     </v-expansion-panel>
 
@@ -442,7 +248,7 @@
                                         label="Requisition Remarks"
                                         v-model="payload.requisition_remarks"
                                         placeholder="Enter requisition remarks here"
-                                        variant="outlined"
+                                        variant="solo"
                                         density="compact"
                                         hide-details
                                     ></v-textarea>
@@ -460,10 +266,21 @@
                                         label="Rendering Remarks"
                                         v-model="payload.rendering_remarks"
                                         placeholder="Enter rendering remarks here"
-                                        variant="outlined"
+                                        variant="solo"
                                         density="compact"
                                         hide-details
                                     ></v-textarea>
+                                </v-col>
+                            </v-row>
+                        </v-expansion-panel-text>
+                    </v-expansion-panel>
+
+                    <v-expansion-panel>
+                        <v-expansion-panel-title>Post Charge History</v-expansion-panel-title>
+                        <v-expansion-panel-text>
+                            <v-row>
+                                <v-col cols="12">
+                                    <h1>TO ADD</h1>
                                 </v-col>
                             </v-row>
                         </v-expansion-panel-text>
@@ -478,14 +295,19 @@
             </v-card-actions>
         </v-card>
     </v-dialog>
-    <ItemMasterFile :open_item_master_file="open_item_master_file" @close-dialog="closeItemMasterFile" />
-    <DxMedicalTemplateSelection :open_medical_template_selection="open_medical_template_selection" @close-dialog="closeItemTemplate" />
+    <doctors-list :open_doctors_list="open_doctors_list" @close-dialog="closeDoctorsList" />
+    <charges-list 
+        :open_charges_list="open_charges_list" 
+        :patienttype="patienttype" 
+        :user_input_revenue_code="user_input_revenue_code" 
+        @handle-select="handleSelectedChargeItem" 
+        @close-dialog="closeChargesList" 
+    />
 </template>
 
 <script setup>
-import ItemMasterFile from "./sub-forms/ItemMasterFile.vue";
-import DxMedicalTemplateSelection from '~/components/reusables/build-file/dx-medical-packages/sub-forms/DxMedicalTemplateSelection.vue';
-
+import DoctorsList from './sub-forms/DoctorsList.vue';
+import ChargesList from './sub-forms/ChargesList.vue';
 const props = defineProps({
     show: {
         type: Boolean,
@@ -494,35 +316,104 @@ const props = defineProps({
     },
 });
 
-let tab = ref("0");
+
 let panel = ref([0]);
-const open_item_master_file = ref(false);
-const open_medical_template_selection = ref(false);
-
 const { selectedRowDetails } = storeToRefs(useSubcomponentSelectedRowDetailsStore()); 
-
-const payload = ref({});
-
 const emits = defineEmits(['close-dialog']) 
-
-const openItemMasterFile = () => {
-    open_item_master_file.value = true;
-}
-const closeItemMasterFile = () => {
-    open_item_master_file.value = false;
-}
-
-const openItemTemplate = () => {
-    open_medical_template_selection.value = true;
-}
-const closeItemTemplate = () => {
-    open_medical_template_selection.value = false;
-}
 
 const closeDialog = () => {
     emits('close-dialog');
     panel.value = [0];
+    keyword.value = '';
 }
+
+const keyword = ref('');
+const patienttype = ref(null);
+const test_value = ref({});
+const revenue_code = ref([
+    { code: 'LX', description: 'Linen Department' },
+    { code: 'MD', description: 'Prof Fee' },
+    { code: 'LB', description: 'Laboratory' },
+    { code: 'HD', description: 'Hemodialysis' },
+]);
+const user_input_revenue_code = ref('');
+const open_doctors_list = ref(false);
+const open_charges_list = ref(false);
+
+const handleRevenueCode = (e) => {
+    if (e.target.value === '') {
+        return useSnackbar(true, "error", "Dept Code Should not be empty.");
+    }
+    const user_inputs = e.target.value.toUpperCase();
+    e.target.value = user_inputs;
+    if (user_inputs !== 'LX' && user_inputs !== 'MD' && user_inputs !== 'LB' && user_inputs !== 'HD') {
+        return useSnackbar(true, "error", "Invalid Dept Code, refer to help code.");
+    }
+    e.preventDefault();
+    const inputs = document.querySelectorAll('.input');
+    const index = Array.from(inputs).indexOf(e.target);
+    if (index === inputs.length - 1) {
+        inputs[0].focus();
+    } else {
+        inputs[index + 1].focus();
+    }
+};
+const handleChargingCode = async () => {
+    const revenue_res = await useMethod("get", "revenue-code?keyword=", "", keyword.value);
+    if (revenue_res) {
+        user_input_revenue_code.value = revenue_res.data[0].transaction_code; 
+    } 
+
+    if (user_input_revenue_code.value === 'MD') {
+        open_doctors_list.value = true;
+    } else {
+        open_charges_list.value = true;
+    }
+};
+const handleSelectedChargeItem = (selected_item) => {
+    test_value.value = selected_item;
+    console.log(test_value.value);
+}
+const closeDoctorsList = () => {
+    open_doctors_list.value = false;
+};
+const closeChargesList = () => {
+    open_charges_list.value = false;
+};
+
+const payload = ref({
+    patient_name: "",
+    patient_id: null,
+    civil_status: "",
+    sex: "",
+    birthdate: null,
+    age: null,
+    case_no: null,
+    account: null,
+    registry_date: null,
+    attending_doctor: null,
+    attending_doctor_fullname: "",
+    guarantor_id: null,
+    guarantor_name: "",
+});
+onUpdated(() => {
+    // Forda display
+    payload.value.patient_name = selectedRowDetails.value.lastname + ', ' + selectedRowDetails.value.firstname + ' ' + selectedRowDetails.value.middlename || '';
+    payload.value.patient_id = selectedRowDetails.value.patient_id || '';
+    payload.value.civil_status = selectedRowDetails.value.civil_status && selectedRowDetails.value.civil_status.civil_status_description || '';
+    payload.value.sex = selectedRowDetails.value.sex && selectedRowDetails.value.sex.sex_description || '';
+    payload.value.birthdate = useDateMMDDYYY(selectedRowDetails.value.birthdate) || '';
+    payload.value.age = selectedRowDetails.value.age || '';
+    payload.value.case_no = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry.register_id_no || '';
+    payload.value.account = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry.guarantor_id ? "Company / Insurance" : "Self-Pay";
+    payload.value.registry_date = selectedRowDetails.value.patient_registry && useDateMMDDYYY(selectedRowDetails.value.patient_registry.registry_date) || '';
+    payload.value.attending_doctor = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry.attending_doctor || 'N/A';
+    payload.value.attending_doctor_fullname = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry.attending_doctor_fullname || 'N/A';
+    payload.value.guarantor_id = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry.guarantor_id || 'N/A';
+    payload.value.guarantor_name = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry.guarantor_name || 'N/A';
+    // Forda payload for charging code
+    patienttype.value = selectedRowDetails.value.patient_registry && parseInt(selectedRowDetails.value.patient_registry.mscPrice_Schemes) || null;
+})
 </script>
 
 <style scoped>
@@ -534,13 +425,13 @@ const closeDialog = () => {
 .form-col {
     margin-top: -16px !important;
 }
-.button-container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 5px;
+.td {
+    margin: 0;
+    padding: 1px;
 }
-.button-container v-btn {
-    flex: 1 1 auto;
-    margin-bottom: 5px;
+.input {
+    border-bottom: 1px solid #A9A9A9;
+    padding: 0;
+    margin: 0;
 }
 </style>
