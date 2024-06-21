@@ -23,14 +23,15 @@
                 <v-data-table-server
                     class="animated animatedFadeInUp fadeInUp"
                     v-model:items-per-page="itemsPerPage"
+                    v-model="selected_item"
                     :headers="headers"
                     :items="serverItems"
                     :items-length="totalItems"
                     :loading="data.loading"
                     :hover="true"
-                    item-value="id"
-                    @update:options="initialize"
                     show-select
+                    @update:options="initialize"
+                    @update:modelValue="handleSelectedRow"
                     select-strategy="single"
                     fixed-header
                     density="compact"
@@ -52,6 +53,7 @@
             <v-card-actions>
                 <v-btn color="blue-darken-1 border border-info" @click="closeDialog"> Close </v-btn>
                 <v-spacer></v-spacer>
+                <v-btn class="bg-primary text-white" @click="onSelect">Select</v-btn>
             </v-card-actions>
         </v-card>
     </v-dialog>
@@ -65,7 +67,7 @@ const props = defineProps({
         required: true,
     },
 });
-const emits = defineEmits(["close-dialog"]);
+const emits = defineEmits(["close-dialog", "handle-select"]);
 const headers = [
     {
         title: "Code",
@@ -84,6 +86,7 @@ const data = ref({
 const itemsPerPage = ref(15);
 const totalItems = ref(0);
 const serverItems = ref([]);
+const selected_item = ref({});
 const initialize = ({ page, itemsPerPage }) => {
     loadItems(page, itemsPerPage);
 };
@@ -106,8 +109,18 @@ const loadItems = async (page = null, itemsPerPage = null) => {
 const search = () => {
     loadItems();
 };
+const handleSelectedRow = (selectedRows) => {
+    const selectedItems = selectedRows.map(rowId => serverItems.value.find(item => item.id === rowId));
+    const validSelectedItems = selectedItems.filter(item => item !== undefined);
+    emits('handle-select', validSelectedItems);
+};
+const onSelect = () => {
+    handleSelectedRow(selected_item.value);
+    closeDialog();
+}
 const closeDialog = () => {
     emits("close-dialog");
+    selected_item.value = [];
 };
 </script>
 
