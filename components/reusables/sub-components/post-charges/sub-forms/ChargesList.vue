@@ -23,15 +23,15 @@
                 <v-data-table-server
                     class="animated animatedFadeInUp fadeInUp"
                     v-model:items-per-page="itemsPerPage"
+                    v-model="selected_item"
                     :headers="headers"
                     :items="serverItems"
                     :items-length="totalItems"
                     :loading="data.loading"
                     :hover="true"
-                    item-value="id"
-                    @update:options="initialize"
-                    @update:model-value="handleSelectedRow"
                     show-select
+                    @update:options="initialize"
+                    @update:modelValue="handleSelectedRow"
                     select-strategy="single"
                     fixed-header
                     density="compact"
@@ -84,6 +84,12 @@ const props = defineProps({
         default: () => "",
         required: true,
     },
+    chargecode: {
+        type: Array,
+        default: () => [],
+        required: true,
+    },
+    
 });
 const emits = defineEmits(["close-dialog", "handle-select"]);
 const headers = [
@@ -110,7 +116,7 @@ const data = ref({
 const itemsPerPage = ref(15);
 const totalItems = ref(0);
 const serverItems = ref([]);
-const selected_item = ref([]);
+const selected_item = ref({});
 const initialize = ({ page, itemsPerPage }) => {
     loadItems(page, itemsPerPage);
 };
@@ -118,13 +124,15 @@ const loadItems = async (page = null, itemsPerPage = null) => {
     data.value.loading = true;
     let pageno = page || 1;
     let itemPerpageno = itemsPerPage || 15;
+
+   
     const response = await $fetch( useApiUrl() + `/get-charges-code?page=${pageno}&per_page=${itemPerpageno}&keyword=${data.value.keyword}`, {
         method: 'post',
         headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + useToken()},
         body: { 
             revenuecode: props.user_input_revenue_code,
             patienttype: props.patienttype,
-            chargecode: [], 
+            chargecode: props.chargecode, 
         }
     });
     if (response) {
@@ -135,20 +143,23 @@ const loadItems = async (page = null, itemsPerPage = null) => {
         useSnackbar(true, "error", "No data found.");
     }
 };
-const search = () => {
-    loadItems();
-};
 const handleSelectedRow = (selectedRows) => {
     const selectedItems = selectedRows.map(rowId => serverItems.value.find(item => item.id === rowId));
     const validSelectedItems = selectedItems.filter(item => item !== undefined);
-    emits('handle-select', validSelectedItems);
+    // emits('handle-select', validSelectedItems[0]);
+    selected_item.value = validSelectedItems[0];
 };
 const onSelect = () => {
-    handleSelectedRow(selected_item.value);
+    // handleSelectedRow(selected_item.value);
+    emits('handle-select', selected_item.value);
     closeDialog();
 }
+const search = () => {
+    loadItems();
+};
 const closeDialog = () => {
     emits("close-dialog");
+    selected_item.value = {};
 };
 </script>
 

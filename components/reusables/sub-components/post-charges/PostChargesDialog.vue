@@ -176,53 +176,58 @@
                                 <v-menu activator="parent">
                                     <v-list>
                                     <v-list-item
-                                        v-for="(item, index) in revenue_code"
+                                        v-for="(item, index) in revenue_code_data"
                                         :key="index"
                                         :value="index"
                                     >
-                                        <v-list-item-title>{{ item.code }} - {{ item.description }}</v-list-item-title>
+                                        <v-list-item-title>{{ item.transaction_code }} - {{ item.transaction_description }}</v-list-item-title>
                                     </v-list-item>
                                     </v-list>
                                 </v-menu>
                             </v-btn>
                         </v-expansion-panel-title>
                         <v-expansion-panel-text>
-                            <v-table density="compact" height="40vh">
+                            <v-table density="compact" height="40vh" class="styled-table">
                                 <thead>
                                     <tr>
                                         <th>Dept Code</th>
                                         <th>Item Code</th>
                                         <th>Description</th>
                                         <th>Type</th> 
-                                        <th>Specimen</th> <!-- Autofill -->
+                                        <th>Specimen</th> 
                                         <th>Qty</th>
                                         <th>Price</th>
                                         <th>Reader</th>
                                         <th>Reader Name</th>
                                         <th>Reader Fee</th>
-                                        <th width="4"></th> 
-                                        <th>Date</th> <!-- Autofill -->
-                                        <th>Time</th> <!-- Autofill -->
+                                        <th>Schedule Date</th> 
+                                        <th>Time</th> 
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td class="td" width="100%"> <input class="input" v-model="keyword" @keyup.enter="handleRevenueCode" /> </td>
-                                        <td class="td" width="100%"> <input class="input" @keyup.enter="handleChargingCode" </td>
-                                        <td class="td" width="100%"> <input class="input" /> </td>
-                                        <td class="td" width="100%"> <input class="input" /> </td>
-                                        <td class="td" width="100%"> <input class="input" /> </td>
-                                        <td class="td" width="100%"> <input class="input" /> </td>
-                                        <td class="td" width="100%"> <input class="input" /> </td>
-                                        <td class="td" width="100%"> <input class="input" /> </td>
-                                        <td class="td" width="100%"> <input class="input" /> </td>
-                                        <td class="td" width="100%"> <input class="input" /> </td>
-                                        <td class="td" width="100%"> <input class="input" /> </td>
-                                        <td class="td" width="100%"> <input class="input" /> </td>
-                                        <td class="td" width="100%"> <input class="input" /> </td>
-                                        <td class="cursor-pointer"><v-icon color="blue">mdi-plus-box</v-icon></td>
-                                        <td class="cursor-pointer"><v-icon color="red">mdi-delete</v-icon></td>
-                                    </tr>
+                                    <template v-for="(item,index) in Charges">
+                                        <tr v-focus>
+                                            <td> <input class="input test" v-model="item.transaction_code" @keyup.enter="handleAddNewRow(item,index)" :readonly="item.isReadonly" /> </td>
+                                            <td> <input class="input test" v-model="item.map_item_id" @keyup.enter="handleAddNewRow(item,index)" readonly /> </td> 
+                                            <td> <input class="input test" v-model="item.exam_description" @keyup.enter="handleAddNewRow(item,index)" readonly /> </td>
+                                            <td>
+                                                <select class="input test" v-model="item.charge_type">
+                                                    <option value="1">Routine</option>
+                                                    <option value="2">Stat</option>
+                                                </select>
+                                            </td>
+                                            <td> <input class="input test" v-model="item.specimen" /> </td>
+                                            <td> <input class="input test" v-model="item.quantity" readonly /> </td>
+                                            <td> <input class="input test" v-model="item.price" readonly /> </td>
+                                            <td> <input class="input test" v-model="item.reader" /> </td>
+                                            <td> <input class="input test" v-model="item.reader_name" /> </td>
+                                            <td> <input class="input test" v-model="item.reader_fee" type="number" /> </td>
+                                            <td> <input class="input test" v-model="item.charge_date" type="date" /> </td>
+                                            <td> <input class="input test" v-model="item.charge_time" type="time" /> </td>
+                                            <td class="cursor-pointer" ><v-icon @click="handleAddNewRow(item,index)" color="primary">mdi-plus-box</v-icon></td>
+                                            <td v-if="index !== 0" class="cursor-pointer"><v-icon @click="removeRow(item)" color="red">mdi-delete</v-icon></td> 
+                                        </tr>
+                                    </template>
                                 </tbody>
                             </v-table>
                         </v-expansion-panel-text>
@@ -231,11 +236,26 @@
                     <v-expansion-panel>
                         <v-expansion-panel-title>Professional Fee</v-expansion-panel-title>
                         <v-expansion-panel-text>
-                            <v-row>
-                                <v-col cols="12">
-                                    <h1>TO ADD</h1>
-                                </v-col>
-                            </v-row>
+                            <v-table density="compact" height="40vh" class="styled-table">
+                                <thead>
+                                    <tr>
+                                        <th>Dept Code</th>
+                                        <th>PF Code</th>
+                                        <th>PF Name</th>
+                                        <th>Amount</th> 
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td> <input class="input" v-model="payload.pf_transaction_code" @keyup.enter="handleRevenueCode" /> </td>
+                                        <td> <input class="input" v-model="payload.pf_code" @keyup.enter="handleDoctorCode" readonly /> </td>
+                                        <td> <input class="input" v-model="payload.pf_name" readonly/> </td>
+                                        <td> <input class="input" v-model="payload.pf_amount" type="number" /> </td>
+                                        <td class="cursor-pointer"><v-icon color="blue">mdi-plus-box</v-icon></td>
+                                        <td class="cursor-pointer"><v-icon color="red">mdi-delete</v-icon></td>
+                                    </tr>
+                                </tbody>
+                            </v-table>
                         </v-expansion-panel-text>
                     </v-expansion-panel>
 
@@ -291,16 +311,21 @@
             <v-card-actions>
                 <v-btn color="blue-darken-1 border border-info" @click="closeDialog"> Close </v-btn>
                 <v-spacer></v-spacer>
-                <v-btn class="bg-primary text-white">Save</v-btn>
+                <v-btn class="bg-primary text-white" @click="onSubmit">Charge</v-btn>
             </v-card-actions>
         </v-card>
     </v-dialog>
-    <doctors-list :open_doctors_list="open_doctors_list" @close-dialog="closeDoctorsList" />
+    <doctors-list 
+        :open_doctors_list="open_doctors_list" 
+        @handle-select="handleSelectedDoctor"
+        @close-dialog="closeDoctorsList" 
+    />
     <charges-list 
         :open_charges_list="open_charges_list" 
         :patienttype="patienttype" 
+        @handle-select="handleSelectedChargeItem"
         :user_input_revenue_code="user_input_revenue_code" 
-        @handle-select="handleSelectedChargeItem" 
+        :chargecode="chargecode"
         @close-dialog="closeChargesList" 
     />
 </template>
@@ -316,72 +341,24 @@ const props = defineProps({
     },
 });
 
-
-let panel = ref([0]);
+let panel = ref([0, 1, 2, 3]);
 const { selectedRowDetails } = storeToRefs(useSubcomponentSelectedRowDetailsStore()); 
 const emits = defineEmits(['close-dialog']) 
 
 const closeDialog = () => {
     emits('close-dialog');
-    panel.value = [0];
-    keyword.value = '';
+    panel.value = [0, 1, 2, 3];
+    payload.value = [];
 }
 
-const keyword = ref('');
 const patienttype = ref(null);
-const test_value = ref({});
-const revenue_code = ref([
-    { code: 'LX', description: 'Linen Department' },
-    { code: 'MD', description: 'Prof Fee' },
-    { code: 'LB', description: 'Laboratory' },
-    { code: 'HD', description: 'Hemodialysis' },
-]);
 const user_input_revenue_code = ref('');
 const open_doctors_list = ref(false);
 const open_charges_list = ref(false);
 
-const handleRevenueCode = (e) => {
-    if (e.target.value === '') {
-        return useSnackbar(true, "error", "Dept Code Should not be empty.");
-    }
-    const user_inputs = e.target.value.toUpperCase();
-    e.target.value = user_inputs;
-    if (user_inputs !== 'LX' && user_inputs !== 'MD' && user_inputs !== 'LB' && user_inputs !== 'HD') {
-        return useSnackbar(true, "error", "Invalid Dept Code, refer to help code.");
-    }
-    e.preventDefault();
-    const inputs = document.querySelectorAll('.input');
-    const index = Array.from(inputs).indexOf(e.target);
-    if (index === inputs.length - 1) {
-        inputs[0].focus();
-    } else {
-        inputs[index + 1].focus();
-    }
-};
-const handleChargingCode = async () => {
-    const revenue_res = await useMethod("get", "revenue-code?keyword=", "", keyword.value);
-    if (revenue_res) {
-        user_input_revenue_code.value = revenue_res.data[0].transaction_code; 
-    } 
-
-    if (user_input_revenue_code.value === 'MD') {
-        open_doctors_list.value = true;
-    } else {
-        open_charges_list.value = true;
-    }
-};
-const handleSelectedChargeItem = (selected_item) => {
-    test_value.value = selected_item;
-    console.log(test_value.value);
-}
-const closeDoctorsList = () => {
-    open_doctors_list.value = false;
-};
-const closeChargesList = () => {
-    open_charges_list.value = false;
-};
-
+const chargecode = ref([]);
 const payload = ref({
+    // Patient info payload
     patient_name: "",
     patient_id: null,
     civil_status: "",
@@ -396,6 +373,176 @@ const payload = ref({
     guarantor_id: null,
     guarantor_name: "",
 });
+
+const Charges = ref([
+    {
+        // Charges: [],
+        // Charge info payload
+        transaction_code: "",
+        map_item_id: "",
+        exam_description: "",
+        charge_type: 1,
+        specimen: "",
+        quantity: 1,
+        price: 0,
+        reader: "",
+        reader_name: "",
+        reader_fee: "",
+        charge_date: null,
+        charge_time: null,
+
+        // Professional Fee payload
+        pf_transaction_code: "",
+        pf_code: "",
+        pf_name: "",
+        pf_amount: null,
+    }
+]);
+
+const revenue_code_data = ref([]);
+const getRevenueCode = async () => {
+    const revenue_res = await useMethod("get", "get-transaction-codes", "", "");
+    if (revenue_res) {
+        const desiredCodes = ['LX', 'LB', 'HD'];
+        revenue_code_data.value = revenue_res.filter(item => desiredCodes.includes(item.transaction_code));
+    }
+};
+
+const handleAddNewRow = (item,index) => {
+    item.transaction_code = item.transaction_code.toUpperCase();
+    const lastRow = Charges.value[Charges.value.length - 1];
+    if (!item.transaction_code) {
+        return useSnackbar(true, "error", "Dept Code Should not be empty.");
+    }
+    const desiredCodes = ['LX', 'LB', 'HD'];
+    if (desiredCodes.includes(item.transaction_code) === false) {
+        return useSnackbar(true, "error", "Invalid Dept Code, refer to help code.");
+    }
+
+    user_input_revenue_code.value = item.transaction_code;
+    if(item.transaction_code && !item.map_item_id && !item.exam_description){
+
+        open_charges_list.value = true;
+        let charges = Charges.value.filter(function (obj) {
+            return obj.transaction_code !== '' && obj.map_item_id !== '' && obj.exam_description !== '';
+        });
+        let resultArray = charges.filter(item => item.transaction_code.toUpperCase() === lastRow.transaction_code.toUpperCase()).map(item => item.map_item_id);
+        chargecode.value = resultArray;
+    }
+    if(item.transaction_code && item.map_item_id && item.exam_description){
+        const isItemCodeAndRevenueAlreadyExists = Charges.value.slice(0, index).some(row => row.map_item_id === lastRow.map_item_id && row.transaction_code === lastRow.transaction_code);
+            if(!isItemCodeAndRevenueAlreadyExists){
+                Charges.value.push({
+                    transaction_code: "",
+                    map_item_id: "",
+                    exam_description: "",
+                    charge_type: 1,
+                    specimen: "",
+                    quantity: 1,
+                    price: 0,
+                    reader: "",
+                    reader_name: "",
+                    reader_fee: "",
+                    charge_date: null,
+                    charge_time: null,
+                    pf_transaction_code: "",
+                    pf_code: "",
+                    pf_name: "",
+                    pf_amount: null,
+            });
+            if (lastRow) {
+                lastRow.isReadonly = true;
+            }
+        }
+        nextTick(() => {
+            focusTransactionCodeInput(index);
+        })
+    }
+};
+
+const clear = (index)=>{
+    Charges.value = [];
+    Charges.value.push({
+            transaction_code: "",
+            map_item_id: "",
+            exam_description: "",
+            charge_type: 1,
+            specimen: "",
+            quantity: 1,
+            price: 0,
+            reader: "",
+            reader_name: "",
+            reader_fee: "",
+            charge_date: null,
+            charge_time: null,
+            pf_transaction_code: "",
+            pf_code: "",
+            pf_name: "",
+            pf_amount: null,
+    });
+}
+
+const removeRow = (selectedItem) => {
+    Charges.value = Charges.value.filter(item => !(item.map_item_id === selectedItem.map_item_id && item.transaction_code === selectedItem.transaction_code));
+}
+
+const focusTransactionCodeInput = (index) => {
+    const inputs = document.querySelectorAll('.input.test');
+    const transactionCodeInput = inputs[(index + 1) * 12];
+    if (transactionCodeInput) {
+        transactionCodeInput.focus();
+    }
+};
+
+const handleRevenueCode = (item) => {
+    if (!item.transaction_code) {
+        return useSnackbar(true, "error", "Dept Code Should not be empty.");
+    }
+    const desiredCodes = ['LX', 'LB', 'HD'];
+    if (desiredCodes.includes(item.transaction_code) === false) {
+        return useSnackbar(true, "error", "Invalid Dept Code, refer to help code.");
+    }
+};
+
+const handleSelectedChargeItem = (selected_item) => {
+    const lastRow = Charges.value[Charges.value.length - 1];
+    lastRow.map_item_id = selected_item.map_item_id;
+    lastRow.exam_description = selected_item.exam_description;
+    lastRow.price = selected_item.prices ? usePeso(selected_item.prices[0].price) : '0';
+    lastRow.totalamount = selected_item.price;
+};
+
+const closeChargesList = () => {
+    open_charges_list.value = false;
+};
+
+const handleDoctorCode = async () => {
+    const revenue_res = await useMethod("get", "revenue-code?keyword=", "", payload.value.pf_transaction_code);
+    if (revenue_res) {
+        user_input_revenue_code.value = revenue_res.data[0].transaction_code; 
+    }
+    if (user_input_revenue_code.value === 'MD') {
+        open_doctors_list.value = true;
+    }
+}
+
+const handleSelectedDoctor = (selected_item) => {
+    payload.value.pf_code = selected_item[0]?.doctor_code;
+    payload.value.pf_name = selected_item[0]?.doctor_name;
+};
+
+const closeDoctorsList = () => {
+    open_doctors_list.value = false;
+};
+
+const onSubmit = () => {
+    var charges = Charges.value.filter(function (obj) {
+        return obj.transaction_code !== '';
+    });
+    payload.value.Charges = charges;
+    console.log("PAYLOAD", payload.value);
+};
+
 onUpdated(() => {
     // Forda display
     payload.value.patient_name = selectedRowDetails.value.lastname + ', ' + selectedRowDetails.value.firstname + ' ' + selectedRowDetails.value.middlename || '';
@@ -414,24 +561,39 @@ onUpdated(() => {
     // Forda payload for charging code
     patienttype.value = selectedRowDetails.value.patient_registry && parseInt(selectedRowDetails.value.patient_registry.mscPrice_Schemes) || null;
 })
+onMounted(() => {
+    getRevenueCode();
+});
 </script>
 
 <style scoped>
-.toolbar-title {
-    font-size: 16px; 
-    font-style: italic; 
-    text-align: center;
+:deep(.v-expansion-panel-text__wrapper) {
+    padding: 0 !important;
 }
-.form-col {
-    margin-top: -16px !important;
-}
-.td {
+.styled-table th, .styled-table td {
+    padding: 8px;
+    border: 1px solid #ddd;
     margin: 0;
-    padding: 1px;
 }
 .input {
     border-bottom: 1px solid #A9A9A9;
-    padding: 0;
-    margin: 0;
+    padding: 4px 8px;
+}
+.styled-table {
+    overflow-y: auto;
+    scrollbar-width: thin; 
+    scrollbar-color: #6984FF #f5f5f5; 
+}
+.styled-table::-webkit-scrollbar {
+    width: 16px;
+}
+.styled-table::-webkit-scrollbar-thumb {
+    background-color: #6984FF; 
+    border-radius: 10px; 
+    border: 3px solid #f5f5f5; 
+}
+.styled-table::-webkit-scrollbar-track {
+    background-color: #f5f5f5; 
+    border-radius: 10px; 
 }
 </style>
