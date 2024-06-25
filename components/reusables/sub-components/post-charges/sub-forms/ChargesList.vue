@@ -23,18 +23,17 @@
                 <v-data-table-server
                     class="animated animatedFadeInUp fadeInUp"
                     v-model:items-per-page="itemsPerPage"
-                    v-model="selected_item"
                     :headers="headers"
                     :items="serverItems"
                     :items-length="totalItems"
                     :loading="data.loading"
                     :hover="true"
-                    show-select
                     @update:options="initialize"
                     @update:modelValue="handleSelectedRow"
+                    show-select
                     select-strategy="single"
                     fixed-header
-                    density="compact"
+                    density="compact" 
                     height="50vh"
                 >
                     <template
@@ -146,11 +145,9 @@ const loadItems = async (page = null, itemsPerPage = null) => {
 const handleSelectedRow = (selectedRows) => {
     const selectedItems = selectedRows.map(rowId => serverItems.value.find(item => item.id === rowId));
     const validSelectedItems = selectedItems.filter(item => item !== undefined);
-    // emits('handle-select', validSelectedItems[0]);
     selected_item.value = validSelectedItems[0];
 };
 const onSelect = () => {
-    // handleSelectedRow(selected_item.value);
     emits('handle-select', selected_item.value);
     closeDialog();
 }

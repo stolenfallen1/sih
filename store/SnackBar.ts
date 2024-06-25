@@ -13,7 +13,7 @@ export const useSnackBarStore = defineStore('snackbarDialog',{
         setTimeout(() => {
             this.show = false;
             this.text = "";
-        }, 2000);
+        }, 2500);
     },
   }
 });

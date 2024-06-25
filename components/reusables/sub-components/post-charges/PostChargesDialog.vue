@@ -206,7 +206,7 @@
                                 </thead>
                                 <tbody>
                                     <template v-for="(item,index) in Charges">
-                                        <tr v-focus>
+                                        <tr>
                                             <td> <input class="input test" v-model="item.transaction_code" @keyup.enter="handleAddNewRow(item,index)" :readonly="item.isReadonly" /> </td>
                                             <td> <input class="input test" v-model="item.map_item_id" @keyup.enter="handleAddNewRow(item,index)" readonly /> </td> 
                                             <td> <input class="input test" v-model="item.exam_description" @keyup.enter="handleAddNewRow(item,index)" readonly /> </td>
@@ -311,7 +311,7 @@
             <v-card-actions>
                 <v-btn color="blue-darken-1 border border-info" @click="closeDialog"> Close </v-btn>
                 <v-spacer></v-spacer>
-                <v-btn class="bg-primary text-white" @click="onSubmit">Charge</v-btn>
+                <v-btn :loading="isLoadingBtn" :disabled="isLoadingBtn" class="bg-primary text-white" @click="onSubmit">Charge</v-btn>
             </v-card-actions>
         </v-card>
     </v-dialog>
@@ -345,16 +345,11 @@ let panel = ref([0, 1, 2, 3]);
 const { selectedRowDetails } = storeToRefs(useSubcomponentSelectedRowDetailsStore()); 
 const emits = defineEmits(['close-dialog']) 
 
-const closeDialog = () => {
-    emits('close-dialog');
-    panel.value = [0, 1, 2, 3];
-    payload.value = [];
-}
-
 const patienttype = ref(null);
 const user_input_revenue_code = ref('');
 const open_doctors_list = ref(false);
 const open_charges_list = ref(false);
+const isLoadingBtn = ref(false);
 
 const chargecode = ref([]);
 const payload = ref({
@@ -535,13 +530,44 @@ const closeDoctorsList = () => {
     open_doctors_list.value = false;
 };
 
-const onSubmit = () => {
-    var charges = Charges.value.filter(function (obj) {
+const onSubmit = async () => {
+    isLoadingBtn.value = true;
+    let charges = Charges.value.filter(function (obj) {
         return obj.transaction_code !== '';
     });
     payload.value.Charges = charges;
-    console.log("PAYLOAD", payload.value);
+    try {
+        if (payload.value.Charges.length > 0) {
+            let response = await useMethod("post", "post-his-charge", payload.value);
+            if (response) {
+                useSnackbar(true, "success", "Charges posted successfully.");
+                closeDialog();
+            } else {
+                return useSnackbar(true, "error", "Failed to post charges.");
+            }
+        } else {
+            return useSnackbar(true, "error", "Please add charges.");
+        }
+    } catch (error) {
+        return useSnackbar(true, "error", "Failed to post charges.");
+    } finally {
+        isLoadingBtn.value = false;
+    }
 };
+
+const charges_history_data = ref([]);
+const getChargesHistory = () => {
+    const charges_history_res = useMethod("get", "get-his-charges", "", "");
+    if (charges_history_res) {
+        charges_history_data.value = charges_history_res;
+    }
+}
+
+const closeDialog = () => {
+    emits('close-dialog');
+    panel.value = [0, 1, 2, 3];
+    payload.value = [];
+}
 
 onUpdated(() => {
     // Forda display
@@ -563,6 +589,7 @@ onUpdated(() => {
 })
 onMounted(() => {
     getRevenueCode();
+    getChargesHistory();
 });
 </script>
 
