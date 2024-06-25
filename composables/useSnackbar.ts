@@ -10,5 +10,5 @@ export const useSnackbar = (showdialog:any, colordialog:any, messagedialog:any) 
     setTimeout(() => {
         show.value = false;
         text.value = "";
-    }, 2000);
+    }, 2500);
 }

@@ -55,13 +55,11 @@
                     >
                         Login
                     </v-btn>
-    
-                    <Snackbar :show="showSuccessSnackbar" text="Login successful!" />
-                    <Snackbar :show="showErrorSnackbar" color="red" text="Login failed." />
                 </v-form>
             </v-card>
         </div>
     </div>
+    <Snackbar />
 </template>
 
 <script setup>
@@ -77,8 +75,6 @@ const user = ref({
 const router = useRouter();
 const showPassword = ref(false);
 const isLoading = ref(false);
-const showSuccessSnackbar = ref(false); 
-const showErrorSnackbar = ref(false); 
 const rememberMe = ref(false);
 
 const login = async () => {
@@ -87,19 +83,14 @@ const login = async () => {
         await authenticateUser(user.value); 
         if (authenticated.value) {
             isLoading.value = false;
+            useSnackbar(true, "success", "Login successful. Redirecting...");
             router.push({ path: "/dashboard" });
-            showSuccessSnackbar.value = true;
-            setTimeout(() => {
-                showSuccessSnackbar.value = false;
-            }, 1000);
         } else {
-            showErrorSnackbar.value = true;
-            setTimeout(() => {
-                showErrorSnackbar.value = false;
-            }, 1000);
+            return useSnackbar(true, "error", "Invalid credentials. Please try again");
         }
     } catch(error) {
         console.error(error);
+        return useSnackbar(true, "error", "An error occurred. Please try again");
     } finally {
         isLoading.value = false;
     }
