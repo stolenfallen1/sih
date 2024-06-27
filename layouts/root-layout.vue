@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <v-app-bar v-if="authenticated" flat elevation="1" color="#6984FF">
+    <v-app-bar v-if="authenticated" flat elevation="1" color="#107bac">
       <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
       <img src="/cdg_logo.png" width="50" height="50" @click="router.push('/dashboard')" class="cursor-pointer" />
       <img src="/cduh_logo.png" width="50" height="50" @click="router.push('/dashboard')" class="cursor-pointer" />
@@ -83,7 +83,7 @@
                   <v-btn
                     class="mr-2 pa-1"
                     size="medium"
-                    color="#6984FF"
+                    color="#107bac"
                     :icon="child.icon"
                   >
                   </v-btn>
@@ -125,7 +125,7 @@
             :slim="true"
           >
             <template v-slot:prepend>
-              <v-btn class="mr-2 pa-1" size="medium" color="#6984FF" :icon="item.icon">
+              <v-btn class="mr-2 pa-1" size="medium" color="#107bac" :icon="item.icon">
               </v-btn>
             </template>
           </v-list-item>
@@ -156,7 +156,7 @@
             :slim="true"
           >
             <template v-slot:prepend>
-              <v-btn class="mr-2 pa-1" size="medium" color="#6984FF" :icon="item.icon">
+              <v-btn class="mr-2 pa-1" size="medium" color="#107bac" :icon="item.icon">
               </v-btn>
             </template>
           </v-list-item>
@@ -187,7 +187,7 @@
             :slim="true"
           >
             <template v-slot:prepend>
-              <v-btn class="mr-2 pa-1" size="medium" color="#6984FF" :icon="item.icon">
+              <v-btn class="mr-2 pa-1" size="medium" color="#107bac" :icon="item.icon">
               </v-btn>
             </template>
           </v-list-item>

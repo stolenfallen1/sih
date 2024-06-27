@@ -1,7 +1,7 @@
 <template>
     <v-dialog :model-value="show" rounded="lg" scrollable @update:model-value="closeDialog" max-width="1120px">
         <v-card rounded="lg">
-            <v-toolbar density="compact" color="#6984ff" hide-details>
+            <v-toolbar density="compact" color="#107bac" hide-details>
                 <v-toolbar-title>Post Charges to Patient's Account {{ selectedRowDetails.id }}</v-toolbar-title>
                 <v-btn color="white" @click="closeDialog">
                     <v-icon>mdi-close</v-icon>
@@ -167,7 +167,7 @@
                     multiple
                     >
                     <v-expansion-panel>
-                        <v-expansion-panel-title>
+                        <v-expansion-panel-title color="#107bac">
                             Post Charge Transactions
                             <v-spacer></v-spacer>
                             <v-btn class="mr-4" density="compact">
@@ -197,19 +197,14 @@
                                         <th>Specimen</th> 
                                         <th>Qty</th>
                                         <th>Price</th>
-                                        <th>Reader</th>
-                                        <th>Reader Name</th>
-                                        <th>Reader Fee</th>
-                                        <th>Schedule Date</th> 
-                                        <th>Time</th> 
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <template v-for="(item,index) in Charges">
                                         <tr>
-                                            <td> <input class="input test" v-model="item.transaction_code" @keyup.enter="handleAddNewRow(item,index)" :readonly="item.isReadonly" /> </td>
-                                            <td> <input class="input test" v-model="item.map_item_id" @keyup.enter="handleAddNewRow(item,index)" readonly /> </td> 
-                                            <td> <input class="input test" v-model="item.exam_description" @keyup.enter="handleAddNewRow(item,index)" readonly /> </td>
+                                            <td> <input class="input test" v-model="item.transaction_code" @keyup.enter="handleAddCharge(item,index)" :readonly="item.isReadonly" /> </td>
+                                            <td> <input class="input test" v-model="item.map_item_id" @keyup.enter="handleAddCharge(item,index)" readonly /> </td> 
+                                            <td> <input class="input test" v-model="item.exam_description" @keyup.enter="handleAddCharge(item,index)" readonly /> </td>
                                             <td>
                                                 <select class="input test" v-model="item.charge_type">
                                                     <option value="1">Routine</option>
@@ -219,13 +214,8 @@
                                             <td> <input class="input test" v-model="item.specimen" /> </td>
                                             <td> <input class="input test" v-model="item.quantity" readonly /> </td>
                                             <td> <input class="input test" v-model="item.price" readonly /> </td>
-                                            <td> <input class="input test" v-model="item.reader" /> </td>
-                                            <td> <input class="input test" v-model="item.reader_name" /> </td>
-                                            <td> <input class="input test" v-model="item.reader_fee" type="number" /> </td>
-                                            <td> <input class="input test" v-model="item.charge_date" type="date" /> </td>
-                                            <td> <input class="input test" v-model="item.charge_time" type="time" /> </td>
-                                            <td class="cursor-pointer" ><v-icon @click="handleAddNewRow(item,index)" color="primary">mdi-plus-box</v-icon></td>
-                                            <td v-if="index !== 0" class="cursor-pointer"><v-icon @click="removeRow(item)" color="red">mdi-delete</v-icon></td> 
+                                            <td v-if="!item.isAdd" class="cursor-pointer" ><v-icon @click="handleAddCharge(item,index)" color="primary">mdi-plus-box</v-icon></td>
+                                            <td v-if="item.isDelete" class="cursor-pointer"><v-icon @click="removeRow(item)" color="red">mdi-delete</v-icon></td> 
                                         </tr>
                                     </template>
                                 </tbody>
@@ -234,9 +224,9 @@
                     </v-expansion-panel>
 
                     <v-expansion-panel>
-                        <v-expansion-panel-title>Professional Fee</v-expansion-panel-title>
+                        <v-expansion-panel-title color="#107bac">Professional Fee</v-expansion-panel-title>
                         <v-expansion-panel-text>
-                            <v-table density="compact" height="40vh" class="styled-table">
+                            <v-table density="compact" height="35vh" class="styled-table">
                                 <thead>
                                     <tr>
                                         <th>Dept Code</th>
@@ -246,80 +236,88 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td> <input class="input" v-model="payload.pf_transaction_code" @keyup.enter="handleRevenueCode" /> </td>
-                                        <td> <input class="input" v-model="payload.pf_code" @keyup.enter="handleDoctorCode" readonly /> </td>
-                                        <td> <input class="input" v-model="payload.pf_name" readonly/> </td>
-                                        <td> <input class="input" v-model="payload.pf_amount" type="number" /> </td>
-                                        <td class="cursor-pointer"><v-icon color="blue">mdi-plus-box</v-icon></td>
-                                        <td class="cursor-pointer"><v-icon color="red">mdi-delete</v-icon></td>
-                                    </tr>
+                                    <template v-for="(item, index) in DoctorCharges">
+                                        <tr>
+                                            <td> <input class="input" v-model="item.transaction_code" @keyup.enter="handleAddProfessionalFee(item, index)" readonly /> </td>
+                                            <td> <input class="input" v-model="item.doctor_code" @keyup.enter="handleAddProfessionalFee(item, index)" readonly /> </td>
+                                            <td> <input class="input" v-model="item.doctor_name" @keyup.enter="handleAddProfessionalFee(item, index)" readonly/> </td>
+                                            <td> <input class="input" v-model="item.amount" type="number" /> </td>
+                                        </tr>
+                                    </template>
                                 </tbody>
                             </v-table>
                         </v-expansion-panel-text>
                     </v-expansion-panel>
 
                     <v-expansion-panel>
-                        <v-expansion-panel-title>Requisition Notes .Remarks</v-expansion-panel-title>
+                        <v-expansion-panel-title color="#107bac">Post Charge History</v-expansion-panel-title>
                         <v-expansion-panel-text>
-                            <v-row>
-                                <v-col cols="12">
-                                    <v-textarea
-                                        label="Requisition Remarks"
-                                        v-model="payload.requisition_remarks"
-                                        placeholder="Enter requisition remarks here"
-                                        variant="solo"
-                                        density="compact"
-                                        hide-details
-                                    ></v-textarea>
-                                </v-col>
-                            </v-row>
+                            <v-table density="compact" height="30vh" class="styled-table">
+                                <thead>
+                                    <tr>
+                                        <th>Reference Number</th>
+                                        <th>Dept Code</th>
+                                        <th>Item Code</th>
+                                        <th>Description</th>
+                                        <th>Qty</th>
+                                        <th>Amount</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <template v-for="(item, index) in charges_history_data" :key="index">
+                                        <tr>
+                                            <td> <input class="input test" readonly :value="item.refnum" /> </td>
+                                            <td> <input class="input test" readonly :value="item.revenue_id" /> </td>
+                                            <td> <input class="input test" readonly :value="item.item_id" /> </td>
+                                            <td> <input class="input test" readonly :value="item?.items?.exam_description" /> </td>
+                                            <td> <input class="input test" readonly :value="parseInt(item.quantity)" /> </td>
+                                            <td> <input class="input test" readonly :value="usePeso(item.net_amount)" /> </td>
+                                        </tr>
+                                    </template>
+                                </tbody>
+                            </v-table>
                         </v-expansion-panel-text>
                     </v-expansion-panel>
 
                     <v-expansion-panel>
-                        <v-expansion-panel-title>Rendering Notes .Remarks</v-expansion-panel-title>
+                        <v-expansion-panel-title color="#107bac">Professional Fee History</v-expansion-panel-title>
                         <v-expansion-panel-text>
-                            <v-row>
-                                <v-col cols="12">
-                                    <v-textarea
-                                        label="Rendering Remarks"
-                                        v-model="payload.rendering_remarks"
-                                        placeholder="Enter rendering remarks here"
-                                        variant="solo"
-                                        density="compact"
-                                        hide-details
-                                    ></v-textarea>
-                                </v-col>
-                            </v-row>
-                        </v-expansion-panel-text>
-                    </v-expansion-panel>
-
-                    <v-expansion-panel>
-                        <v-expansion-panel-title>Post Charge History</v-expansion-panel-title>
-                        <v-expansion-panel-text>
-                            <v-row>
-                                <v-col cols="12">
-                                    <h1>TO ADD</h1>
-                                </v-col>
-                            </v-row>
+                            <v-table density="compact" height="30vh" class="styled-table">
+                                <thead>
+                                    <tr>
+                                        <th>Reference Number</th>
+                                        <th>Dept Code</th>
+                                        <th>PF Code</th>
+                                        <th>PF Name</th>
+                                        <th>Amount</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <template v-for="(item, index) in charges_history_data" :key="index">
+                                        <tr>
+                                            <td> <input class="input test" readonly :value="item.refnum" /> </td>
+                                            <td> <input class="input test" readonly :value="item.revenue_id" /> </td>
+                                            <td> <input class="input test" readonly :value="item.item_id" /> </td>
+                                            <td> <input class="input test" readonly :value="item?.items?.exam_description" /> </td>
+                                            <td> <input class="input test" readonly :value="parseInt(item.quantity)" /> </td>
+                                            <td> <input class="input test" readonly :value="usePeso(item.net_amount)" /> </td>
+                                        </tr>
+                                    </template>
+                                </tbody>
+                            </v-table>
                         </v-expansion-panel-text>
                     </v-expansion-panel>
                 </v-expansion-panels>
             </v-card-text>
             <v-divider></v-divider>
             <v-card-actions>
-                <v-btn color="blue-darken-1 border border-info" @click="closeDialog"> Close </v-btn>
+                <v-btn class="text-blue border border-primary" @click="closeDialog">Close</v-btn>
                 <v-spacer></v-spacer>
-                <v-btn :loading="isLoadingBtn" :disabled="isLoadingBtn" class="bg-primary text-white" @click="onSubmit">Charge</v-btn>
+                <v-btn :loading="isLoadingBtn" :disabled="isLoadingBtn" class="text-white bg-primary" @click="onSubmit">Charge</v-btn>
             </v-card-actions>
         </v-card>
     </v-dialog>
-    <doctors-list 
-        :open_doctors_list="open_doctors_list" 
-        @handle-select="handleSelectedDoctor"
-        @close-dialog="closeDoctorsList" 
-    />
+
     <charges-list 
         :open_charges_list="open_charges_list" 
         :patienttype="patienttype" 
@@ -328,11 +326,18 @@
         :chargecode="chargecode"
         @close-dialog="closeChargesList" 
     />
+
+    <p-f-list
+        :open_professionals_list="open_professionals_list"
+        @handle-select="handleSelectedProfessionalFee"
+        @close-dialog="closeProfessionalsList"
+    />
 </template>
 
 <script setup>
-import DoctorsList from './sub-forms/DoctorsList.vue';
 import ChargesList from './sub-forms/ChargesList.vue';
+import PFList from './sub-forms/PFList.vue';
+
 const props = defineProps({
     show: {
         type: Boolean,
@@ -341,19 +346,18 @@ const props = defineProps({
     },
 });
 
-let panel = ref([0, 1, 2, 3]);
+let panel = ref([0, 1]);
 const { selectedRowDetails } = storeToRefs(useSubcomponentSelectedRowDetailsStore()); 
 const emits = defineEmits(['close-dialog']) 
 
 const patienttype = ref(null);
 const user_input_revenue_code = ref('');
-const open_doctors_list = ref(false);
 const open_charges_list = ref(false);
+const open_professionals_list = ref(false);
 const isLoadingBtn = ref(false);
 
 const chargecode = ref([]);
 const payload = ref({
-    // Patient info payload
     patient_name: "",
     patient_id: null,
     civil_status: "",
@@ -371,26 +375,21 @@ const payload = ref({
 
 const Charges = ref([
     {
-        // Charges: [],
-        // Charge info payload
         transaction_code: "",
         map_item_id: "",
         exam_description: "",
         charge_type: 1,
         specimen: "",
         quantity: 1,
-        price: 0,
-        reader: "",
-        reader_name: "",
-        reader_fee: "",
-        charge_date: null,
-        charge_time: null,
-
-        // Professional Fee payload
-        pf_transaction_code: "",
-        pf_code: "",
-        pf_name: "",
-        pf_amount: null,
+        price: null,
+    }
+]);
+const DoctorCharges = ref([
+    {
+        transaction_code: "MD",
+        doctor_code: "",
+        doctor_name: "",
+        amount: null,
     }
 ]);
 
@@ -403,7 +402,7 @@ const getRevenueCode = async () => {
     }
 };
 
-const handleAddNewRow = (item,index) => {
+const handleAddCharge = (item,index) => {
     item.transaction_code = item.transaction_code.toUpperCase();
     const lastRow = Charges.value[Charges.value.length - 1];
     if (!item.transaction_code) {
@@ -435,18 +434,11 @@ const handleAddNewRow = (item,index) => {
                     specimen: "",
                     quantity: 1,
                     price: 0,
-                    reader: "",
-                    reader_name: "",
-                    reader_fee: "",
-                    charge_date: null,
-                    charge_time: null,
-                    pf_transaction_code: "",
-                    pf_code: "",
-                    pf_name: "",
-                    pf_amount: null,
             });
             if (lastRow) {
                 lastRow.isReadonly = true;
+                lastRow.isDelete = true;
+                lastRow.isAdd = true;
             }
         }
         nextTick(() => {
@@ -455,47 +447,15 @@ const handleAddNewRow = (item,index) => {
     }
 };
 
-const clear = (index)=>{
-    Charges.value = [];
-    Charges.value.push({
-            transaction_code: "",
-            map_item_id: "",
-            exam_description: "",
-            charge_type: 1,
-            specimen: "",
-            quantity: 1,
-            price: 0,
-            reader: "",
-            reader_name: "",
-            reader_fee: "",
-            charge_date: null,
-            charge_time: null,
-            pf_transaction_code: "",
-            pf_code: "",
-            pf_name: "",
-            pf_amount: null,
-    });
-}
-
 const removeRow = (selectedItem) => {
     Charges.value = Charges.value.filter(item => !(item.map_item_id === selectedItem.map_item_id && item.transaction_code === selectedItem.transaction_code));
 }
 
 const focusTransactionCodeInput = (index) => {
     const inputs = document.querySelectorAll('.input.test');
-    const transactionCodeInput = inputs[(index + 1) * 12];
+    const transactionCodeInput = inputs[(index + 1) * 7];
     if (transactionCodeInput) {
         transactionCodeInput.focus();
-    }
-};
-
-const handleRevenueCode = (item) => {
-    if (!item.transaction_code) {
-        return useSnackbar(true, "error", "Dept Code Should not be empty.");
-    }
-    const desiredCodes = ['LX', 'LB', 'HD'];
-    if (desiredCodes.includes(item.transaction_code) === false) {
-        return useSnackbar(true, "error", "Invalid Dept Code, refer to help code.");
     }
 };
 
@@ -507,27 +467,22 @@ const handleSelectedChargeItem = (selected_item) => {
     lastRow.totalamount = selected_item.price;
 };
 
-const closeChargesList = () => {
-    open_charges_list.value = false;
-};
-
-const handleDoctorCode = async () => {
-    const revenue_res = await useMethod("get", "revenue-code?keyword=", "", payload.value.pf_transaction_code);
-    if (revenue_res) {
-        user_input_revenue_code.value = revenue_res.data[0].transaction_code; 
-    }
-    if (user_input_revenue_code.value === 'MD') {
-        open_doctors_list.value = true;
-    }
+const handleAddProfessionalFee = () => {
+    open_professionals_list.value = true;
 }
 
-const handleSelectedDoctor = (selected_item) => {
-    payload.value.pf_code = selected_item[0]?.doctor_code;
-    payload.value.pf_name = selected_item[0]?.doctor_name;
+const handleSelectedProfessionalFee = (selected_item) => {
+    DoctorCharges.value[0].doctor_code = selected_item.doctor_code;
+    DoctorCharges.value[0].doctor_name = selected_item.doctor_name;
+    closeProfessionalsList();
+}
+
+const closeProfessionalsList = () => {
+    open_professionals_list.value = false;
 };
 
-const closeDoctorsList = () => {
-    open_doctors_list.value = false;
+const closeChargesList = () => {
+    open_charges_list.value = false;
 };
 
 const onSubmit = async () => {
@@ -535,7 +490,11 @@ const onSubmit = async () => {
     let charges = Charges.value.filter(function (obj) {
         return obj.transaction_code !== '';
     });
+    let doctorcharges = DoctorCharges.value.filter(function (obj) {
+        return obj.amount !== null;
+    });
     payload.value.Charges = charges;
+    payload.value.DoctorCharges = doctorcharges;
     try {
         if (payload.value.Charges.length > 0) {
             let response = await useMethod("post", "post-his-charge", payload.value);
@@ -556,17 +515,80 @@ const onSubmit = async () => {
 };
 
 const charges_history_data = ref([]);
-const getChargesHistory = () => {
-    const charges_history_res = useMethod("get", "get-his-charges", "", "");
-    if (charges_history_res) {
-        charges_history_data.value = charges_history_res;
+const getChargesHistory = async () => {
+    try {
+        const charges_res = await fetch(useApiUrl() + "/get-his-charges", {
+            method: "post",
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + useToken()
+            },
+            body: JSON.stringify({
+                patient_id: payload.value.patient_id,
+                case_no: payload.value.case_no,
+            })
+        });
+
+        const responseData = await charges_res.json();
+        if (charges_res.ok) {
+            charges_history_data.value = responseData.charges;
+        } else {
+            return useSnackbar(true, "error", "No data found.");
+        }
+    } catch (error) {
+        return useSnackbar(true, "error", "Failed to fetch charges history.");
+    }
+}
+
+const professional_fees_history = ref([]);
+const getProfFeeHistory = async () => {
+    try {
+        const prof_fees_res = await fetch(useApiUrl() + "/get-his-prof-fees", {
+            method: "post",
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + useToken()
+            },
+            body: JSON.stringify({
+                patient_id: payload.value.patient_id,
+                case_no: payload.value.case_no,
+            })
+        });
+
+        const responseData = await prof_fees_res.json();
+        if (prof_fees_res.ok) {
+            professional_fees_history.value = responseData.doctorcharges;
+        } else {
+            return useSnackbar(true, "error", "No data found.");
+        }
+    } catch (error) {
+        return useSnackbar(true, "error", "Failed to fetch professional history.");
     }
 }
 
 const closeDialog = () => {
     emits('close-dialog');
-    panel.value = [0, 1, 2, 3];
+    panel.value = [0, 1];
     payload.value = [];
+    Charges.value = [
+        {
+            transaction_code: "",
+            map_item_id: "",
+            exam_description: "",
+            charge_type: 1,
+            specimen: "",
+            quantity: 1,
+            price: 0,
+        }
+    ];
+    DoctorCharges.value = [
+        {
+            transaction_code: "MD",
+            doctor_code: "",
+            doctor_name: "",
+            amount: null,
+        }
+    ];
 }
 
 onUpdated(() => {
@@ -586,10 +608,14 @@ onUpdated(() => {
     payload.value.guarantor_name = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry.guarantor_name || 'N/A';
     // Forda payload for charging code
     patienttype.value = selectedRowDetails.value.patient_registry && parseInt(selectedRowDetails.value.patient_registry.mscPrice_Schemes) || null;
+    // Charges history
+    if (payload.value.patient_id && payload.value.case_no) {
+        getChargesHistory();
+        getProfFeeHistory();
+    }
 })
 onMounted(() => {
     getRevenueCode();
-    getChargesHistory();
 });
 </script>
 
@@ -599,7 +625,7 @@ onMounted(() => {
 }
 .styled-table th, .styled-table td {
     padding: 8px;
-    border: 1px solid #ddd;
+    border: 1px solid #eceaea;
     margin: 0;
 }
 .input {
@@ -609,13 +635,13 @@ onMounted(() => {
 .styled-table {
     overflow-y: auto;
     scrollbar-width: thin; 
-    scrollbar-color: #6984FF #f5f5f5; 
+    scrollbar-color: #727272 #f5f5f5; 
 }
 .styled-table::-webkit-scrollbar {
     width: 16px;
 }
 .styled-table::-webkit-scrollbar-thumb {
-    background-color: #6984FF; 
+    background-color: #727272; 
     border-radius: 10px; 
     border: 3px solid #f5f5f5; 
 }

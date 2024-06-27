@@ -2,7 +2,7 @@
     <v-dialog :model-value="open_referring_hci_code_table" rounded="lg" @update:model-value="closeDialog" scrollable max-width="700px">
         <form @submit.prevent="onSubmit">
             <v-card rounded="lg">
-                <v-toolbar density="compact" color="#6984ff" hide-details>
+                <v-toolbar density="compact" color="#107bac" hide-details>
                     <v-toolbar-title>Select HCI Referring Center</v-toolbar-title>
                     <v-btn color="white" @click="closeDialog">
                         <v-icon>mdi-close</v-icon>

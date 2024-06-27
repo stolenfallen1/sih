@@ -2,7 +2,7 @@
     <v-dialog :model-value="open_source_transaction_general" rounded="lg" scrollable @update:model-value="closeDialog" max-width="1120px">    
         <form @submit.prevent="onSubmit">        
             <v-card rounded="lg">
-                <v-toolbar density="compact" color="#6984ff" hide-details>
+                <v-toolbar density="compact" color="#107bac" hide-details>
                     <v-toolbar-title>Process Credit Note {{ selectedRowDetails.id }}</v-toolbar-title>
                     <v-btn color="white" @click="closeDialog">
                         <v-icon>mdi-close</v-icon>

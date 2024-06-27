@@ -1,7 +1,7 @@
 <template>
   <v-dialog :model-value="show" rounded="lg" @update:model-value="closeDialog"  scrollable max-width="825px">
       <v-card rounded="lg">
-          <v-toolbar density="compact" color="#6984ff" hide-details>
+          <v-toolbar density="compact" color="#107bac" hide-details>
               <v-toolbar-title>Medical Service Types</v-toolbar-title>
               <v-spacer></v-spacer>
               <v-btn color="white" @click="closeDialog">
@@ -37,7 +37,7 @@
                   height="50vh"
                   >
                   <template v-slot:item.redirectToList="{ item }">
-                      <v-icon color="#6984FF" @click="openDepartmentListForm">mdi-link-circle-outline</v-icon> 
+                      <v-icon color="#107bac" @click="openDepartmentListForm">mdi-link-circle-outline</v-icon> 
                   </template>
                   <template
                       v-for="(head, index) of headers"  v-slot:[`item.${head.value}`]="props" >

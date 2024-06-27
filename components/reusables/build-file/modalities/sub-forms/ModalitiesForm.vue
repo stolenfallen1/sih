@@ -8,7 +8,7 @@
   >
     <form @submit.prevent="handleSubmit">
       <v-card>
-        <v-toolbar color="#6984ff" hide-details density="compact">
+        <v-toolbar color="#107bac" hide-details density="compact">
           <v-toolbar-title>Modalities Details</v-toolbar-title>
           <v-spacer></v-spacer>
           <v-btn color="white" @click="closeDialog">

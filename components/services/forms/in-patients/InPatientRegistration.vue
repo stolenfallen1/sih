@@ -2,7 +2,7 @@
     <v-dialog :model-value="form_dialog" :persistent="true" hide-overlay width="1280" scrollable>
         <v-form ref="form" @submit.prevent="onSubmit">
             <v-card rounded="lg">
-                <v-toolbar density="compact" color="#6984ff" hide-details>
+                <v-toolbar density="compact" color="#107bac" hide-details>
                     <v-toolbar-title>Inpatient Registration Form</v-toolbar-title>
                     <v-btn color="white" @click="closeDialog">
                         <v-icon>mdi-close</v-icon>

@@ -195,6 +195,6 @@ onMounted(() => {
 
 <style scoped>
 .filter-color {
-    background-color: #6984ff;
+    background-color: #107bac;
 }
 </style>

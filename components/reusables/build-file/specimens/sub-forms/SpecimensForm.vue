@@ -1,6 +1,6 @@
 <template>
   <v-dialog :model-value="open_specimens_form" rounded="lg" @update:model-value="closeDialog"  scrollable max-width="700px">
-      <v-toolbar color="#6984ff" hide-details density="compact">
+      <v-toolbar color="#107bac" hide-details density="compact">
           <v-toolbar-title>Specimens Details</v-toolbar-title>
       </v-toolbar>
       <v-card>

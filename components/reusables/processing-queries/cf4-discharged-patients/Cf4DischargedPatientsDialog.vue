@@ -1,7 +1,7 @@
 <template>
     <v-dialog :model-value="show" rounded="lg" scrollable @update:model-value="closeDialog" max-width="1120px">
         <v-card rounded="lg">
-            <v-toolbar density="compact" color="#6984ff" hide-details>
+            <v-toolbar density="compact" color="#107bac" hide-details>
                 <v-toolbar-title>
                     {{ form_type === 'outpatient' ? 'Outpatient Discharge List' : (form_type === 'emergency' ? 'Emergency Discharge List' : 'Inpatient Discharge List') }} {{ selectedRowDetails.id }}
                 </v-toolbar-title> 

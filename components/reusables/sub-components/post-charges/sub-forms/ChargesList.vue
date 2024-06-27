@@ -1,7 +1,7 @@
 <template>
     <v-dialog :model-value="open_charges_list" rounded="lg" @update:model-value="closeDialog" scrollable max-width="725px">
         <v-card rounded="lg">
-            <v-toolbar density="compact" color="#6984ff" hide-details>
+            <v-toolbar density="compact" color="#107bac" hide-details>
                 <v-toolbar-title>Charges List</v-toolbar-title>
                 <v-spacer></v-spacer>
                 <v-btn color="white" @click="closeDialog">

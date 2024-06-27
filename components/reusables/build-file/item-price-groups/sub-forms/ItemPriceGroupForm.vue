@@ -1,7 +1,7 @@
 <template>
     <v-dialog :model-value="open_item_price_group_form" rounded="lg"  scrollable max-width="500px">
         <v-card rounded="lg">
-             <v-toolbar color="#6984ff" hide-details density="compact">
+             <v-toolbar color="#107bac" hide-details density="compact">
                 <v-toolbar-title>Price Group Details</v-toolbar-title>
             </v-toolbar>
             <v-divider></v-divider>

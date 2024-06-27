@@ -2,7 +2,7 @@
   <v-dialog :model-value="moduleDialog" @update:model-value="handleclose" hide-overlay width="350" scrollable>
     <form  @submit.prevent="handleSubmit(usergroup_payload)">
       <v-card rounded="lg">
-        <v-toolbar density="compact" color="#6984ff" hide-details>
+        <v-toolbar density="compact" color="#107bac" hide-details>
             <v-toolbar-title>User Groups</v-toolbar-title>
             <v-btn color="white" @click="handleclose">
                 <v-icon>mdi-close</v-icon>

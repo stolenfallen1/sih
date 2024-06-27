@@ -1,6 +1,6 @@
 <template>
   <v-dialog :model-value="open_item_templates_master" rounded="lg" @update:model-value="closeDialog"  scrollable max-width="700px">
-      <v-toolbar color="#6984ff" hide-details density="compact">
+      <v-toolbar color="#107bac" hide-details density="compact">
           <v-toolbar-title>Item Template Details</v-toolbar-title>
           <v-btn color="white" @click="closeDialog">
               <v-icon>mdi-close</v-icon>

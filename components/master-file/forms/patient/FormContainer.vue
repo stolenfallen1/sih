@@ -8,7 +8,7 @@
         :persistent="true"
         >
             <v-card>
-                <v-toolbar density="compact" color="#6984ff" class="py-2">
+                <v-toolbar density="compact" color="#107bac" class="py-2">
                     <v-toolbar-title>Patient Information Form</v-toolbar-title>
                     <v-spacer></v-spacer>
                     <v-btn color="white" @click="closeDialog">

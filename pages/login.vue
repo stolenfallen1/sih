@@ -47,7 +47,7 @@
                         :disabled="!user.idnumber || !user.password"
                         block
                         type="submit"
-                        color="#6984FF"
+                        color="#107bac"
                         size="large"
                         variant="elevated"
                         :loading="isLoading"

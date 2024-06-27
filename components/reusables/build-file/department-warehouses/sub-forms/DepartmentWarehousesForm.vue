@@ -8,7 +8,7 @@
   >
     <form @submit.prevent="handleSubmit">
       <v-card rounded="lg">
-        <v-toolbar density="compact" color="#6984ff" hide-details>
+        <v-toolbar density="compact" color="#107bac" hide-details>
           <v-toolbar-title>Department . Ancillary . Warehouse</v-toolbar-title>
           <v-btn color="white" @click="closeDialog">
             <v-icon>mdi-close</v-icon>
@@ -154,7 +154,7 @@
       </v-card>
     </form>
 
-    <!-- <v-toolbar color="#6984ff" hide-details density="compact">
+    <!-- <v-toolbar color="#107bac" hide-details density="compact">
           <v-toolbar-title>Department . Ancillary . Warehouse Details</v-toolbar-title>
       </v-toolbar>
       <v-card>

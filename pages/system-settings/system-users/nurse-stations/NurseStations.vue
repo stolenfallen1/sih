@@ -2,7 +2,7 @@
     <!-- <div>{{ route.params}}</div> -->
     <v-dialog :model-value="show" @update:model-value="closedialog"  hide-overlay width="800" scrollable>
         <v-card rounded="lg">
-            <v-toolbar density="compact" color="#6984ff">
+            <v-toolbar density="compact" color="#107bac">
                 <v-toolbar-title>System User Nurse Station</v-toolbar-title>
                 <v-spacer></v-spacer>
                 <v-toolbar-items>

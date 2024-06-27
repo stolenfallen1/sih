@@ -1,7 +1,7 @@
 <template>
     <v-dialog :model-value="open_collection_report_form" rounded="lg" @update:model-value="closeDialog" scrollable max-width="600px">
         <v-card>
-            <v-toolbar color="#6984ff" hide-details density="compact">
+            <v-toolbar color="#107bac" hide-details density="compact">
                 <v-toolbar-title>Collection Report Main Header Details</v-toolbar-title>
                 <v-btn color="white" @click="closeDialog">
                     <v-icon>mdi-close</v-icon>

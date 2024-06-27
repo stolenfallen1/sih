@@ -2,7 +2,7 @@
   <v-dialog :model-value="open_department_list_form" rounded="lg" @update:model-value="closeDialog"  scrollable max-width="725px">
     <form @submit.prevent="handleSubmit">
       <v-card rounded="lg">
-          <v-toolbar density="compact" color="#6984ff" hide-details>
+          <v-toolbar density="compact" color="#107bac" hide-details>
               <v-toolbar-title>List of departments subject for notification</v-toolbar-title>
               <v-btn color="white" @click="closeDialog">
                   <v-icon>mdi-close</v-icon>

@@ -73,7 +73,7 @@
                                   <v-btn @click="openSubModule(permission)"
                                     size="small"
                                     density="compact"
-                                    color="#6984FF"
+                                    color="#107bac"
                                     icon="mdi-link-circle-outline"
                                   >
                                   </v-btn>

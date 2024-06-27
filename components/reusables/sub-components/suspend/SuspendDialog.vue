@@ -2,7 +2,7 @@
     <v-dialog :model-value="show" rounded="lg" scrollable @update:model-value="closeDialog" max-width="750px">
         <form @submit.prevent="onSubmit">
             <v-card rounded="lg">
-                <v-toolbar density="compact" color="#6984ff" hide-details>
+                <v-toolbar density="compact" color="#107bac" hide-details>
                     <v-toolbar-title>
                         {{ form_type === 'outpatient' ? 'Suspend Outpatient Registry Account Window' : (form_type === 'emergency' ? 'Suspend Emergency Registry Account Window' : 'Suspend Inpatient Registry Account Window') }} 
                         {{ selectedRowDetails.id }}
