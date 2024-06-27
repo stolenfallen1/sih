@@ -1,7 +1,7 @@
 <template>
   <v-dialog :model-value="open_item_template_selection_form" rounded="lg" @update:model-value="closeDialog"  scrollable max-width="700px">
     <v-card rounded="lg">
-        <v-toolbar color="#6984ff" hide-details density="compact">
+        <v-toolbar color="#107bac" hide-details density="compact">
             <v-toolbar-title>Item Selection</v-toolbar-title>
             <v-btn color="white" @click="closeDialog">
                 <v-icon>mdi-close</v-icon>

@@ -1,7 +1,7 @@
 <template>
     <v-dialog :model-value="open_applied_discount_history" rounded="lg" scrollable @update:model-value="closeDialog" max-width="900px">     
         <v-card rounded="lg">
-            <v-toolbar density="compact" color="#6984ff" hide-details>
+            <v-toolbar density="compact" color="#107bac" hide-details>
                 <v-toolbar-title>Applied Discount Transaction History {{ selectedRowDetails.id }}</v-toolbar-title>
                 <v-btn color="white" @click="closeDialog">
                     <v-icon>mdi-close</v-icon>

@@ -9,7 +9,7 @@
     <form @submit.prevent="handleSubmit">
        <template v-if="!isrefresh">
         <v-card rounded="lg">
-            <v-toolbar density="compact" color="#6984ff">
+            <v-toolbar density="compact" color="#107bac">
                 <v-toolbar-title>Room and Bed Maintenance</v-toolbar-title>
                 <v-spacer></v-spacer>
                 <v-btn color="white" @click="closeDialog">

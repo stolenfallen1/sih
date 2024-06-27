@@ -3,7 +3,7 @@
         <form @submit.prevent="onSubmit">
             <v-card rounded="lg">
                 <v-card-title class="pa-0">
-                    <v-toolbar density="compact" color="#6984ff" hide-details>
+                    <v-toolbar density="compact" color="#107bac" hide-details>
                         <v-toolbar-title>PhilHealth Claim Form 3 {{ selectedRowDetails.id }}</v-toolbar-title>
                         <v-btn color="white" @click="closeDialog">
                             <v-icon>mdi-close</v-icon>

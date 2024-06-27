@@ -1,7 +1,7 @@
 <template>
     <v-dialog :model-value="show" rounded="lg" scrollable @update:model-value="closeDialog" max-width="750px">
         <v-card rounded="lg">
-            <v-toolbar density="compact" color="#6984ff" hide-details>
+            <v-toolbar density="compact" color="#107bac" hide-details>
                 <v-toolbar-title>Account Adjustments {{ selectedRowDetails.id }}</v-toolbar-title>
                 <v-btn color="white" @click="closeDialog">
                     <v-icon>mdi-close</v-icon>
@@ -49,7 +49,7 @@
     <v-dialog v-model="open_account_adjustment" scrollable @update:model-value="closeAccountAdjustment" max-width="600px">
         <form @submit.prevent="onSubmit">
             <v-card>
-                <v-toolbar density="compact" color="#6984ff" hide-details>
+                <v-toolbar density="compact" color="#107bac" hide-details>
                     <v-toolbar-title>Post Adjustment Details</v-toolbar-title>
                     <v-btn color="white" @click="closeAccountAdjustment">
                         <v-icon>mdi-close</v-icon>

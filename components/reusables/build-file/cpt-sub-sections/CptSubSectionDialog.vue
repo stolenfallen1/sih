@@ -1,7 +1,7 @@
 <template>
     <v-dialog :model-value="show" rounded="lg" @update:model-value="closeDialog" scrollable max-width="750px">
         <v-card rounded="lg">
-            <v-toolbar density="compact" color="#6984ff" hide-details>
+            <v-toolbar density="compact" color="#107bac" hide-details>
             <v-toolbar-title>CPT Sub Sections</v-toolbar-title>
             <v-btn color="white" @click="closeDialog">
                 <v-icon>mdi-close</v-icon>
@@ -89,7 +89,7 @@
         >
             <form @submit.prevent="onSubmit">
                 <v-card rounded="lg">
-                <v-toolbar density="compact" color="#6984ff" hide-details>
+                <v-toolbar density="compact" color="#107bac" hide-details>
                     <v-toolbar-title>CPT Sections Details</v-toolbar-title>
                     <v-btn color="white" @click="closeForm">
                     <v-icon>mdi-close</v-icon>

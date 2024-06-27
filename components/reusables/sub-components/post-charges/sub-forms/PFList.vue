@@ -1,7 +1,7 @@
 <template>
-    <v-dialog :model-value="open_doctors_list" rounded="lg" @update:model-value="closeDialog" scrollable max-width="725px">
+    <v-dialog :model-value="open_professionals_list " rounded="lg" @update:model-value="closeDialog" scrollable max-width="725px">
         <v-card rounded="lg">
-            <v-toolbar density="compact" color="#6984ff" hide-details>
+            <v-toolbar density="compact" color="#107bac" hide-details>
                 <v-toolbar-title>Doctors List</v-toolbar-title>
                 <v-spacer></v-spacer>
                 <v-btn color="white" @click="closeDialog">
@@ -11,7 +11,7 @@
             <v-divider></v-divider>
             <v-card-text>
                 <v-text-field
-                label="Search by Description"
+                label="Search by Name"
                 density="compact"
                 variant="outlined"
                 prepend-inner-icon="mdi-magnify"
@@ -61,7 +61,7 @@
 
 <script setup>
 const props = defineProps({
-    open_doctors_list: {
+    open_professionals_list : {
         type: Boolean,
         default: () => false,
         required: true,
@@ -94,7 +94,7 @@ const loadItems = async (page = null, itemsPerPage = null) => {
     data.value.loading = true;
     let pageno = page || 1;
     let itemPerpageno = itemsPerPage || 15;
-    const response = await $fetch( useApiUrl() + `/his/doctors-list?page=${pageno}&per_page=${itemPerpageno}&keyword=${data.value.keyword}`, { 
+    const response = await $fetch( useApiUrl() + `/get-his-professional-details?page=${pageno}&per_page=${itemPerpageno}&keyword=${data.value.keyword}`, { 
         method: 'get',
         headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + useToken()},
     });
@@ -112,10 +112,10 @@ const search = () => {
 const handleSelectedRow = (selectedRows) => {
     const selectedItems = selectedRows.map(rowId => serverItems.value.find(item => item.id === rowId));
     const validSelectedItems = selectedItems.filter(item => item !== undefined);
-    emits('handle-select', validSelectedItems);
+    selected_item.value = validSelectedItems[0];
 };
 const onSelect = () => {
-    handleSelectedRow(selected_item.value);
+    emits('handle-select', selected_item.value);
     closeDialog();
 }
 const closeDialog = () => {

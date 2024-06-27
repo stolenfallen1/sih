@@ -161,14 +161,14 @@ const closeDialog = () => {
     padding: 10px;
     font-size: 18px;
     font-weight: 500;
-    color: #6984ff;
+    color: #107bac;
 }
 .tab-button.active-tab {
     color: #ffffff;
-    background-color: #6984ff;
+    background-color: #107bac;
 }
 .tab-button:not(.active-tab) {
-    color: #6984ff; 
+    color: #107bac; 
     background-color: transparent;
 }
 .form-col {

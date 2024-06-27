@@ -20,7 +20,7 @@
                     <template v-slot:append>
                         <v-icon
                             icon="mdi-arrow-top-right-bold-box-outline"
-                            color="#6984FF"
+                            color="#107bac"
                         ></v-icon>
                     </template>
                     <v-card-text>250</v-card-text>
@@ -35,7 +35,7 @@
                     <template v-slot:append>
                         <v-icon
                             icon="mdi-arrow-top-right-bold-box-outline"
-                            color="#6984FF"
+                            color="#107bac"
                         ></v-icon>
                     </template>
                     <v-card-text>100</v-card-text>
@@ -50,7 +50,7 @@
                     <template v-slot:append>
                         <v-icon
                             icon="mdi-arrow-top-right-bold-box-outline"
-                            color="#6984FF"
+                            color="#107bac"
                         ></v-icon>
                     </template>
                     <v-card-text>25</v-card-text>

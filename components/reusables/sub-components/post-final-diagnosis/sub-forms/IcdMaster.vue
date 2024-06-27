@@ -2,7 +2,7 @@
     <v-dialog :model-value="open_icd_master" rounded="lg" @update:model-value="closeDialog"  scrollable max-width="800px">
         <form @submit.prevent="onSubmit">        
             <v-card rounded="lg">
-                <v-toolbar density="compact" color="#6984ff" hide-details>
+                <v-toolbar density="compact" color="#107bac" hide-details>
                     <v-toolbar-title>ICD-10 Code Selection List</v-toolbar-title>
                     <v-spacer></v-spacer>
                     <v-btn color="white" @click="closeDialog">

@@ -1,7 +1,7 @@
 <template>
   <v-form ref="form" @submit.prevent="handleSubmit(payload)">
     <v-card>
-      <v-toolbar density="compact" color="#6984ff" hide-details>
+      <v-toolbar density="compact" color="#107bac" hide-details>
           <v-toolbar-title>User Registration Form</v-toolbar-title>
           <v-btn color="white" @click="closeDialog">
               <v-icon>mdi-close</v-icon>

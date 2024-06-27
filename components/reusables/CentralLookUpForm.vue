@@ -9,7 +9,7 @@
   >
     <form @submit.prevent="handleSearch">
       <v-card rounded="lg">
-        <v-toolbar density="compact" color="#6984ff" hide-details>
+        <v-toolbar density="compact" color="#107bac" hide-details>
           <v-toolbar-title>Central Database Lookup Window</v-toolbar-title>
           <v-btn color="white" @click="closeDialog">
             <v-icon>mdi-close</v-icon>

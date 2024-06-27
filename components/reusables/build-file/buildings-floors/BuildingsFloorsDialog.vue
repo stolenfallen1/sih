@@ -1,7 +1,7 @@
 <template>
     <v-dialog :model-value="show" rounded="lg" @update:model-value="closeDialog" hide-overlay width="800" scrollable>
         <v-card rounded="lg">
-            <v-toolbar density="compact" color="#6984ff" hide-details>
+            <v-toolbar density="compact" color="#107bac" hide-details>
                 <v-toolbar-title>Buildings and Floor Management</v-toolbar-title>
                 <v-spacer></v-spacer>
                 <v-btn color="white" @click="closeDialog">

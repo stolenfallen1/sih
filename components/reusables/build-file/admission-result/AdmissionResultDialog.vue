@@ -1,7 +1,7 @@
 <template>
     <v-dialog :model-value="show" rounded="lg" @update:model-value="closeDialog" scrollable max-width="900px">
         <v-card rounded="lg">
-            <v-toolbar density="compact" color="#6984ff" hide-details>
+            <v-toolbar density="compact" color="#107bac" hide-details>
                 <v-toolbar-title>Admission Results Template</v-toolbar-title>
                 <v-spacer></v-spacer>
                 <v-btn color="white" @click="closeDialog">
@@ -82,7 +82,7 @@
     >
       <form @submit.prevent="onSubmit">
         <v-card rounded="lg">
-          <v-toolbar density="compact" color="#6984ff" hide-details>
+          <v-toolbar density="compact" color="#107bac" hide-details>
             <v-toolbar-title>Admission Results Details</v-toolbar-title>
             <v-btn color="white" @click="closeFormDialog">
               <v-icon>mdi-close</v-icon>

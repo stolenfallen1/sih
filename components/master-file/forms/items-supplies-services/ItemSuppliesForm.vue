@@ -2,7 +2,7 @@
     <v-dialog :model-value="item_supplies_form" :persistent="true" hide-overlay width="1120" scrollable>
          <form @submit.prevent="handleSubmit">
             <v-card rounded="lg">
-                <v-toolbar density="compact" color="#6984ff" hide-details>
+                <v-toolbar density="compact" color="#107bac" hide-details>
                     <v-toolbar-title>Manage Items and Supplies Details</v-toolbar-title>
                     <v-spacer></v-spacer>
                     <v-btn color="white" @click="closeDialog">

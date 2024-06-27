@@ -2,7 +2,7 @@
     <v-dialog :model-value="open_allergy_list" rounded="lg" @update:model-value="closeDialog" scrollable max-width="700px">
         <form>
             <v-card rounded="lg">
-                <v-toolbar density="compact" color="#6984ff" hide-details>
+                <v-toolbar density="compact" color="#107bac" hide-details>
                     <v-toolbar-title>Allergies List</v-toolbar-title>
                     <v-btn color="white" @click="closeDialog">
                         <v-icon>mdi-close</v-icon>
@@ -67,7 +67,7 @@
         width="450"
     >
         <v-card rounded="lg">
-            <v-toolbar density="compact" color="#6984ff" hide-details>
+            <v-toolbar density="compact" color="#107bac" hide-details>
                 <v-toolbar-title>Remarks Entry</v-toolbar-title>
                 <v-btn color="white" @click="closeRemarksEntry">
                     <v-icon>mdi-close</v-icon>
@@ -113,7 +113,7 @@
         width="450"
     >
         <v-card rounded="lg">
-            <v-toolbar density="compact" color="#6984ff" hide-details>
+            <v-toolbar density="compact" color="#107bac" hide-details>
                 <v-toolbar-title>Add Allergy</v-toolbar-title>
                 <v-btn color="white" @click="closeAddAllergy">
                     <v-icon>mdi-close</v-icon>
