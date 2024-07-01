@@ -252,59 +252,68 @@
                     <v-expansion-panel>
                         <v-expansion-panel-title color="#107bac">Post Charge History</v-expansion-panel-title>
                         <v-expansion-panel-text>
-                            <v-table density="compact" height="30vh" class="styled-table">
-                                <thead>
-                                    <tr>
-                                        <th>Reference Number</th>
-                                        <th>Dept Code</th>
-                                        <th>Item Code</th>
-                                        <th>Description</th>
-                                        <th>Qty</th>
-                                        <th>Amount</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <template v-for="(item, index) in charges_history_data" :key="index">
+                            <template v-if="charges_history_data && charges_history_data.length">
+                                <v-table density="compact" height="30vh" class="styled-table">
+                                    <thead>
                                         <tr>
-                                            <td> <input class="input test" readonly :value="item.refnum" /> </td>
-                                            <td> <input class="input test" readonly :value="item.revenue_id" /> </td>
-                                            <td> <input class="input test" readonly :value="item.item_id" /> </td>
-                                            <td> <input class="input test" readonly :value="item?.items?.exam_description" /> </td>
-                                            <td> <input class="input test" readonly :value="parseInt(item.quantity)" /> </td>
-                                            <td> <input class="input test" readonly :value="usePeso(item.net_amount)" /> </td>
+                                            <th>Reference Number</th>
+                                            <th>Dept Code</th>
+                                            <th>Item Code</th>
+                                            <th>Description</th>
+                                            <th>Qty</th>
+                                            <th>Amount</th>
                                         </tr>
-                                    </template>
-                                </tbody>
-                            </v-table>
+                                    </thead>
+                                    <tbody>
+                                        <template v-for="(item, index) in charges_history_data" :key="index">
+                                            <tr>
+                                                <td> <input class="input test" readonly :value="item.refnum" /> </td>
+                                                <td> <input class="input test" readonly :value="item.revenue_id" /> </td>
+                                                <td> <input class="input test" readonly :value="item.item_id" /> </td>
+                                                <td> <input class="input test" readonly :value="item?.items?.exam_description" /> </td>
+                                                <td> <input class="input test" readonly :value="parseInt(item.quantity)" /> </td>
+                                                <td> <input class="input test" readonly :value="usePeso(item.net_amount)" /> </td>
+                                            </tr>
+                                        </template>
+                                    </tbody>
+                                </v-table>
+                            </template>
+                            <template v-else>
+                                <p class="empty-history-info">Patient has no charges history...</p>
+                            </template>
                         </v-expansion-panel-text>
                     </v-expansion-panel>
 
                     <v-expansion-panel>
                         <v-expansion-panel-title color="#107bac">Professional Fee History</v-expansion-panel-title>
                         <v-expansion-panel-text>
-                            <v-table density="compact" height="30vh" class="styled-table">
-                                <thead>
-                                    <tr>
-                                        <th>Reference Number</th>
-                                        <th>Dept Code</th>
-                                        <th>PF Code</th>
-                                        <th>PF Name</th>
-                                        <th>Amount</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <template v-for="(item, index) in charges_history_data" :key="index">
+                            <template v-if="charges_history_data && charges_history_data.length">
+                                <v-table density="compact" height="30vh" class="styled-table">
+                                    <thead>
                                         <tr>
-                                            <td> <input class="input test" readonly :value="item.refnum" /> </td>
-                                            <td> <input class="input test" readonly :value="item.revenue_id" /> </td>
-                                            <td> <input class="input test" readonly :value="item.item_id" /> </td>
-                                            <td> <input class="input test" readonly :value="item?.items?.exam_description" /> </td>
-                                            <td> <input class="input test" readonly :value="parseInt(item.quantity)" /> </td>
-                                            <td> <input class="input test" readonly :value="usePeso(item.net_amount)" /> </td>
+                                            <th>Reference Number</th>
+                                            <th>Dept Code</th>
+                                            <th>PF Code</th>
+                                            <th>PF Name</th>
+                                            <th>Amount</th>
                                         </tr>
-                                    </template>
-                                </tbody>
-                            </v-table>
+                                    </thead>
+                                    <tbody>
+                                        <template v-for="(item, index) in professional_fees_history" :key="index">
+                                            <tr>
+                                                <td> <input class="input test" readonly :value="item.refnum" /> </td>
+                                                <td> <input class="input test" readonly :value="item.revenue_id" /> </td>
+                                                <td> <input class="input test" readonly :value="item.item_id" /> </td>
+                                                <td> <input class="input test" readonly :value="item?.doctor_details?.doctor_name" /> </td>
+                                                <td> <input class="input test" readonly :value="usePeso(item.net_amount)" /> </td>
+                                            </tr>
+                                        </template>
+                                    </tbody>
+                                </v-table>
+                            </template>
+                            <template v-else>
+                                <p class="empty-history-info">Patient has no professional fee history...</p>
+                            </template>
                         </v-expansion-panel-text>
                     </v-expansion-panel>
                 </v-expansion-panels>
@@ -332,6 +341,13 @@
         @handle-select="handleSelectedProfessionalFee"
         @close-dialog="closeProfessionalsList"
     />
+
+    <!-- <confirmation 
+        :show="confirm_post_charge"
+        :payload="payload"
+        @submit="onSubmit"
+        @close="closeConfirmation"
+    /> -->
 </template>
 
 <script setup>
@@ -355,6 +371,17 @@ const user_input_revenue_code = ref('');
 const open_charges_list = ref(false);
 const open_professionals_list = ref(false);
 const isLoadingBtn = ref(false);
+const confirm_post_charge = ref(false);
+const charges_history_data = ref([]);
+const professional_fees_history = ref([]);
+
+const handleConfirmation = () => {
+    confirm_post_charge.value = true;
+}
+
+const closeConfirmation = () => {
+    confirm_post_charge.value = false;
+}
 
 const chargecode = ref([]);
 const payload = ref({
@@ -371,6 +398,8 @@ const payload = ref({
     attending_doctor_fullname: "",
     guarantor_id: null,
     guarantor_name: "",
+    Charges: [],
+    DoctorCharges: [],
 });
 
 const Charges = ref([
@@ -514,7 +543,6 @@ const onSubmit = async () => {
     }
 };
 
-const charges_history_data = ref([]);
 const getChargesHistory = async () => {
     try {
         const charges_res = await fetch(useApiUrl() + "/get-his-charges", {
@@ -540,7 +568,6 @@ const getChargesHistory = async () => {
     }
 }
 
-const professional_fees_history = ref([]);
 const getProfFeeHistory = async () => {
     try {
         const prof_fees_res = await fetch(useApiUrl() + "/get-his-prof-fees", {
@@ -569,7 +596,6 @@ const getProfFeeHistory = async () => {
 const closeDialog = () => {
     emits('close-dialog');
     panel.value = [0, 1];
-    payload.value = [];
     Charges.value = [
         {
             transaction_code: "",
@@ -593,6 +619,7 @@ const closeDialog = () => {
 
 onUpdated(() => {
     // Forda display
+    console.log(selectedRowDetails.value);
     payload.value.patient_name = selectedRowDetails.value.lastname + ', ' + selectedRowDetails.value.firstname + ' ' + selectedRowDetails.value.middlename || '';
     payload.value.patient_id = selectedRowDetails.value.patient_id || '';
     payload.value.civil_status = selectedRowDetails.value.civil_status && selectedRowDetails.value.civil_status.civil_status_description || '';
@@ -648,5 +675,12 @@ onMounted(() => {
 .styled-table::-webkit-scrollbar-track {
     background-color: #f5f5f5; 
     border-radius: 10px; 
+}
+.empty-history-info {
+    text-align: center;
+    font-style: italic;
+    padding: 20px 0 20px 0;
+    font-size: 17.5px;
+    font-weight: 500;
 }
 </style>

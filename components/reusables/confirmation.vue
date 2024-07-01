@@ -67,7 +67,6 @@ const props = defineProps({
   }
 });
 const emits = defineEmits(["close", "submit"]);
-const showDialog = ref(false);
 const showPassword = ref(false);
 
 const handleclose = () => {
