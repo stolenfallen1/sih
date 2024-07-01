@@ -244,14 +244,14 @@ definePageMeta({
 
 const { selectedRowDetails, isrefresh } = storeToRefs(useSubcomponentSelectedRowDetailsStore());
 const isSelectedUser = ref(true);
-const pageTitle = ref("Out Patient");
+const pageTitle = ref("");
 const currentTab = ref(1);
 const showTabs = ref(true);
 const serverItems = ref([]);
 const columns = ref([]);
 const tableTabs = ref([
   {
-    label: "Registered Outpatients",
+    label: "Registered",
     title: "List of registered outpatients today.",
     value: 1,
     endpoint: useApiUrl() + "/get-outpatient",
@@ -313,7 +313,7 @@ const tableTabs = ref([
     ],
   },
   {
-    label: "Revoked Outpatients",
+    label: "Revoked",
     title: "List of revoked outpatients today.",
     value: 2,
     endpoint: useApiUrl() + "/get-revoked-outpatient",
@@ -551,6 +551,8 @@ const handleTabChange = (tabValue) => {
   payload.value = Object.assign({}, {});
   currentTab.value = tabValue;
   columns.value = tableTabs.value.find((tab) => tab.value === tabValue).columns;
+  const currentTabInfo = tableTabs.value.find((tab) => tab.value === tabValue);
+  pageTitle.value = currentTabInfo.title || "";
   loadItems();
 }
 

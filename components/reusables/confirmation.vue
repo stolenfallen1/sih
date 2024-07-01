@@ -2,13 +2,13 @@
   <div>
     <v-dialog :model-value="show" rounded="lg" @update:model-value="handleclose"  scrollable max-width="350px">
       <form @submit.prevent="handleSubmit(payload)">
-        <v-card>
-          <v-toolbar color="white" flat density="compact">
-            <v-toolbar-title>Enter your Passcode</v-toolbar-title>
-            <v-btn icon @click="handleclose" small>
-              <v-icon>mdi-close</v-icon>
-            </v-btn>
-          </v-toolbar>
+        <v-card rounded="lg">
+          <v-toolbar density="compact" color="#107bac" hide-details>
+              <v-toolbar-title>Enter your passcode</v-toolbar-title>
+              <v-btn color="white" @click="handleclose">
+                  <v-icon>mdi-close</v-icon>
+              </v-btn>
+            </v-toolbar>
           <v-divider></v-divider>
           <v-card-text>
             <v-row>
@@ -17,12 +17,11 @@
                   class="mt-3"
                   :type="!showPassword ? 'password' : 'text'"
                   v-model="payload.user_passcode"
-                  placeholder="Enter passcode"
                   label="Enter Passcode"
                   variant="outlined"
                   density="compact"
                   required
-                  autofocus
+                  focused
                   hide-details
                   @click:append="showPassword = !showPassword"
                   :append-icon="showPassword ? 'mdi-eye-outline ' : 'mdi-eye-off-outline'"
@@ -36,11 +35,9 @@
           </v-card-text>
           <v-divider></v-divider>
           <v-card-actions>
-            <v-btn variant="outlined" @click="handleclose" color="green"> Close </v-btn>
+            <v-btn variant="outlined" color="info" @click="handleclose"> Close </v-btn>
             <v-spacer></v-spacer>
-            <v-btn variant="outlined" :loading="loading" bg-color="primary" color="primary" type="submit">
-              Submit
-            </v-btn>
+            <v-btn :loading="loading" class="bg-primary text-white" type="submit">Submit</v-btn>
           </v-card-actions>
         </v-card>
       </form>
@@ -52,18 +49,22 @@ const props = defineProps({
   show: {
     type: Boolean,
     default: () => false,
+    required: false,
   },
   loading: {
     type: Boolean,
     default: () => false,
+    required: false,
   },
   payload: {
     type: Object,
     default: () => {},
+    required: false,
   },
   error_msg:{
     type: String,
     default: () => '',
+    required: false,
   }
 });
 const emits = defineEmits(["close", "submit"]);

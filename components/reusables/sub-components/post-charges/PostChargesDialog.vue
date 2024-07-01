@@ -320,7 +320,7 @@
             </v-card-text>
             <v-divider></v-divider>
             <v-card-actions>
-                <v-btn class="text-blue border border-primary" @click="closeDialog">Close</v-btn>
+                <v-btn variant="outlined" color="info" @click="closeDialog">Close</v-btn>
                 <v-spacer></v-spacer>
                 <v-btn :loading="isLoadingBtn" :disabled="isLoadingBtn" class="text-white bg-primary" @click="onSubmit">Charge</v-btn>
             </v-card-actions>
