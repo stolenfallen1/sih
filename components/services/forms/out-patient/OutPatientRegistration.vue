@@ -107,11 +107,9 @@ const closeDialog = () => {
 }
 
 const onSubmit = async () => {
-    let response;
     isLoading.value = true;
-
     if (payload.value.id) {
-        response = await useMethod("put", "update-outpatient", payload.value, "", payload.value.id);
+        const response = await useMethod("put", "update-outpatient", payload.value, "", payload.value.id);
         if (response) {
             useSnackbar(true, "green", response.message);
             isLoading.value = false;

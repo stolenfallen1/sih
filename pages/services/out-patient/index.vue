@@ -33,14 +33,26 @@
         Edit
       </v-btn>
       <v-btn
-        @click="DeactiveUser"
+        v-if="currentTab === 1"
+        @click="RevokeUser"
         prepend-icon="mdi-toggle-switch"
         :disabled="isSelectedUser"
         width="150"
         color="primary"
         class="bg-error text-white"
       >
-        Deactive</v-btn
+        Revoke</v-btn
+      >
+      <v-btn
+        v-if="currentTab === 2"
+        @click="UnrevokeUser"
+        prepend-icon="mdi-toggle-switch"
+        :disabled="isSelectedUser"
+        width="150"
+        color="primary"
+        class="bg-error text-white"
+      >
+        Unrevoke</v-btn
       >
       <v-btn
         @click="ViewSummary"
@@ -60,18 +72,23 @@
       :totalItems="totalItems"
       :loading="loading"
       :tabs="tableTabs"
-      :columns="headers"
+      :columns="columns"
       :showTabs="showTabs"
       :itemsPerPage="itemsPerPage"
       :tableTitle="pageTitle"
       :current-tab="currentTab"
       @fetchPage="loadItems"
       @selected-row="selectedUser"
+      @tab-change="handleTabChange"
       @action-search="handleSearch"
       @action-refresh="handleRefresh"
       @open-filter="openFilterOptions"
     >
-      <template v-for="column in headers" v-slot:[`column-${column.key}`]="{ item }">
+      <template v-for="column in columns" v-slot:[`column-${column.key}`]="{ item }">
+        <div v-if="column.key === 'registry_status'" :key="column.key">
+          <span 
+          :style="{ display: 'block', height: '25px', width: '8px', backgroundColor: item.patient_registry && item.patient_registry.registry_status == 2 ? 'blue' : 'green' }" />
+        </div>
         <span v-if="column.key === 'register_id_no'" :key="column.key">
           {{ item.patient_registry ? item.patient_registry.register_id_no : "..." }}
         </span>
@@ -83,8 +100,14 @@
         <span v-if="column.key === 'birthdate'" :key="column.key">
           {{ item.birthdate ? useDateMMDDYYY(item.birthdate) : "..." }}
         </span>
-        <span v-if="column.key === 'patient_registry'" :key="column.key">
-          {{ item.patient_registry ? useDateMMDDYYY(item.patient_registry.registry_date) : "..." }}
+        <span v-if="column.key === 'registry_date'" :key="column.key">
+          {{ item.patient_registry && item.patient_registry.registry_date ? useDateMMDDYYY(item.patient_registry.registry_date) : "..." }}
+        </span>
+        <span v-if="column.key === 'discharged_date'" :key="column.key">
+          {{ item.patient_registry && item.patient_registry.discharged_date ? useDateMMDDYYY(item.patient_registry.discharged_date) : "..." }}
+        </span>
+        <span v-if="column.key === 'revoked_date'" :key="column.key">
+          {{ item.patient_registry && item.patient_registry.revoked_date ? useDateMMDDYYY(item.patient_registry.revoked_date) : "..." }}
         </span>
       </template>
     </ReusableTable>
@@ -140,6 +163,8 @@
   </v-menu>
 
   <OutPatientRegistration :clicked_option="clicked_option" :form_dialog="form_dialog" @close-dialog="closeAddFormDialog" />
+  <RevokeRegistrationForm :open_revoke_form="open_revoke_form" @close-dialog="closeRevokeUser" @refresh-data="loadItems" />
+  <UnrevokeRegistrationForm :open_unrevoke_form="open_unrevoke_form" @close-dialog="closeUnrevokeUser" @refresh-data="loadItems" />
   
   <!-- Out-patients Sub components -->
   <PatientProfileDialog :show="PatientProfile" :form_payload="payload" @close-dialog="useSubComponents('PatientProfile', false)" />
@@ -220,9 +245,136 @@ definePageMeta({
 const { selectedRowDetails, isrefresh } = storeToRefs(useSubcomponentSelectedRowDetailsStore());
 const isSelectedUser = ref(true);
 const pageTitle = ref("Out Patient");
-const currentTab = ref(false);
-const showTabs = ref(false);
-const tableTabs = ref([]);
+const currentTab = ref(1);
+const showTabs = ref(true);
+const serverItems = ref([]);
+const columns = ref([]);
+const tableTabs = ref([
+  {
+    label: "Registered Outpatients",
+    title: "List of registered outpatients today.",
+    value: 1,
+    endpoint: useApiUrl() + "/get-outpatient",
+    columns: [
+              {
+                title: "",
+                align: "start",
+                sortable: false,
+                key: "registry_status",
+              },
+              {
+                title: "Patient ID",
+                align: "start",
+                sortable: false,
+                key: "patient_id",
+              },
+              {
+                title: "Case No.",
+                align: "start",
+                sortable: false,
+                key: "register_id_no",
+              },
+              {
+                title: "Last Name",
+                key: "lastname",
+                align: "start",
+                sortable: false,
+              },
+              {
+                title: "First Name",
+                key: "firstname",
+                align: "start",
+                sortable: false,
+              },
+              {
+                title: "Sex",
+                key: "sex",
+                align: "start",
+                sortable: false,
+              },
+              {
+                title: "Birth Date",
+                key: "birthdate",
+                align: "start",
+                sortable: false,
+              },
+              {
+                title: "Registry Date",
+                key: "registry_date",
+                align: "start",
+                sortable: false,
+              },
+              {
+                title: "Discharged Date",
+                key: "discharged_date",
+                align: "start",
+                sortable: false,
+              },
+    ],
+  },
+  {
+    label: "Revoked Outpatients",
+    title: "List of revoked outpatients today.",
+    value: 2,
+    endpoint: useApiUrl() + "/get-revoked-outpatient",
+    columns: [
+              {
+                title: "",
+                align: "start",
+                sortable: false,
+                key: "registry_status",
+              },
+              {
+                title: "Patient ID",
+                align: "start",
+                sortable: false,
+                key: "patient_id",
+              },
+              {
+                title: "Case No.",
+                align: "start",
+                sortable: false,
+                key: "register_id_no",
+              },
+              {
+                title: "Last Name",
+                key: "lastname",
+                align: "start",
+                sortable: false,
+              },
+              {
+                title: "First Name",
+                key: "firstname",
+                align: "start",
+                sortable: false,
+              },
+              {
+                title: "Sex",
+                key: "sex",
+                align: "start",
+                sortable: false,
+              },
+              {
+                title: "Birth Date",
+                key: "birthdate",
+                align: "start",
+                sortable: false,
+              },
+              {
+                title: "Registry Date",
+                key: "registry_date",
+                align: "start",
+                sortable: false,
+              },
+              {
+                title: "Revoked Date",
+                key: "revoked_date",
+                align: "start",
+                sortable: false,
+              },
+    ],
+  },
+]);
 const central_form_dialog = ref(false);
 const search_results = ref([]);
 const search_payload = ref({});
@@ -231,10 +383,11 @@ const clicked_option = ref("");
 const form_type = ref("outpatient")
 const payload = ref({});
 const selectedPatient = ref({});
+const open_revoke_form = ref(false);
+const open_unrevoke_form = ref(false);
 
 const totalItems = ref(0);
 const itemsPerPage = ref(50);
-const search = ref("");
 const filter = ref({});
 const open_filter_options = ref(false);
 const params = ref("");
@@ -249,56 +402,10 @@ const outpatients_test_data = ref([
   { label: "Died", value: "6", color: "black" },
 ]); 
 
-const headers = [
-  {
-    title: "Patient ID",
-    align: "start",
-    sortable: false,
-    key: "patient_id",
-  },
-  {
-    title: "Case No.",
-    align: "start",
-    sortable: false,
-    key: "register_id_no",
-  },
-  {
-    title: "Last Name",
-    key: "lastname",
-    align: "start",
-    sortable: false,
-  },
-  {
-    title: "First Name",
-    key: "firstname",
-    align: "start",
-    sortable: false,
-  },
-  {
-    title: "Sex",
-    key: "sex",
-    align: "start",
-    sortable: false,
-  },
-  {
-    title: "Birth Date",
-    key: "birthdate",
-    align: "start",
-    sortable: false,
-  },
-  {
-    title: "Registry Date",
-    key: "patient_registry",
-    align: "start",
-    sortable: false,
-  },
-];
-const serverItems = ref([]);
 const handleRefresh = () => {
   loadItems();
 };
 const handleSearch = (keyword) => {
-  // Handle search action
   loadItems(null, keyword);
 };
 const openFilterOptions = () => {
@@ -392,9 +499,19 @@ const selectedOutPatient = (item) => {
   selectedPatient.value = item;
 };
 
-const DeactiveUser = () => {
-  
+const RevokeUser = () => {
+  open_revoke_form.value = true;
 };
+const closeRevokeUser = () => {
+  open_revoke_form.value = false;
+};
+
+const UnrevokeUser = () => {
+  open_unrevoke_form.value = true;
+}
+const closeUnrevokeUser = () => {
+  open_unrevoke_form.value = false;
+}
 
 const ViewSummary = () => {
   open_summary_modal.value = true;
@@ -410,7 +527,9 @@ const loadItems = async (options = null, searchkeyword = null) => {
     let keyword = searchkeyword || "";
       params.value = options  ? "page=" + options.page + "&per_page=" + options.itemsPerPage + "&keyword=" + options.keyword
     : "page=1&per_page=50&keyword=" + keyword;
-    const response = await fetch(useApiUrl()+'/get-outpatient'+ "?" + params.value || "", {
+
+    const currentTabInfo = tableTabs.value.find((tab) => tab.value === currentTab.value);
+    const response = await fetch(currentTabInfo?.endpoint + "?" + params.value || "", {
       headers: {
         Authorization: `Bearer `+ useToken(),
       },
@@ -426,13 +545,23 @@ const loadItems = async (options = null, searchkeyword = null) => {
     loading.value = false;
   }
 };
+
+const handleTabChange = (tabValue) => {
+  selectedRowDetails.value.id = "";
+  payload.value = Object.assign({}, {});
+  currentTab.value = tabValue;
+  columns.value = tableTabs.value.find((tab) => tab.value === tabValue).columns;
+  loadItems();
+}
+
 const updateTotalItems = (newTotalItems) => {
   totalItems.value = newTotalItems;
 };
-
 const updateServerItems = (newServerItems) => {
   serverItems.value = newServerItems;
 };
+
+handleTabChange(currentTab.value);
 
 </script>
 

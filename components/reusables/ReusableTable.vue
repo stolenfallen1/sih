@@ -32,7 +32,7 @@
                     prepend-inner-icon="mdi-magnify"
                 >
             </v-text-field>
-            <v-btn id="filter-button" class="filter-color text-white m;-3" @click="openFilterOptions">Filter&nbsp;<v-icon>mdi-filter-outline</v-icon></v-btn>
+            <v-btn id="filter-button" class="text-white bg-primary" @click="openFilterOptions">Filter&nbsp;<v-icon>mdi-filter-outline</v-icon></v-btn>
         </v-toolbar>
         <v-divider></v-divider>
         <v-data-table-server
@@ -194,7 +194,4 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.filter-color {
-    background-color: #107bac;
-}
 </style>
