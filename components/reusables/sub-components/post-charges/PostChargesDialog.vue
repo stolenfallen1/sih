@@ -202,20 +202,20 @@
                                 <tbody>
                                     <template v-for="(item,index) in Charges">
                                         <tr>
-                                            <td> <input class="input test" v-model="item.transaction_code" @keyup.enter="handleAddCharge(item,index)" :readonly="item.isReadonly" /> </td>
-                                            <td> <input class="input test" v-model="item.map_item_id" @keyup.enter="handleAddCharge(item,index)" readonly /> </td> 
-                                            <td> <input class="input test" v-model="item.exam_description" @keyup.enter="handleAddCharge(item,index)" readonly /> </td>
+                                            <td> <input class="input charge-focus" v-model="item.transaction_code" @keyup.enter="handleAddCharge(item,index)" :readonly="item.isReadonly" /> </td>
+                                            <td> <input class="input charge-focus" v-model="item.map_item_id" @keyup.enter="handleAddCharge(item,index)" readonly /> </td> 
+                                            <td> <input class="input charge-focus" v-model="item.exam_description" @keyup.enter="handleAddCharge(item,index)" readonly /> </td>
                                             <td>
-                                                <select class="input test" v-model="item.charge_type">
+                                                <select class="input charge-focus" v-model="item.charge_type">
                                                     <option value="1">Routine</option>
                                                     <option value="2">Stat</option>
                                                 </select>
                                             </td>
-                                            <td> <input class="input test" v-model="item.specimen" /> </td>
-                                            <td> <input class="input test" v-model="item.quantity" readonly /> </td>
-                                            <td> <input class="input test" v-model="item.price" readonly /> </td>
+                                            <td> <input class="input charge-focus" v-model="item.specimen" /> </td>
+                                            <td> <input class="input charge-focus" v-model="item.quantity" readonly /> </td>
+                                            <td> <input class="input charge-focus" v-model="item.price" readonly /> </td>
                                             <td v-if="!item.isAdd" class="cursor-pointer" ><v-icon @click="handleAddCharge(item,index)" color="primary">mdi-plus-box</v-icon></td>
-                                            <td v-if="item.isDelete" class="cursor-pointer"><v-icon @click="removeRow(item)" color="red">mdi-delete</v-icon></td> 
+                                            <td v-if="item.isDelete" class="cursor-pointer"><v-icon @click="removeChargeItem(item)" color="red">mdi-delete</v-icon></td> 
                                         </tr>
                                     </template>
                                 </tbody>
@@ -238,10 +238,12 @@
                                 <tbody>
                                     <template v-for="(item, index) in DoctorCharges">
                                         <tr>
-                                            <td> <input class="input" v-model="item.transaction_code" @keyup.enter="handleAddProfessionalFee(item, index)" readonly /> </td>
-                                            <td> <input class="input" v-model="item.doctor_code" @keyup.enter="handleAddProfessionalFee(item, index)" readonly /> </td>
-                                            <td> <input class="input" v-model="item.doctor_name" @keyup.enter="handleAddProfessionalFee(item, index)" readonly/> </td>
-                                            <td> <input class="input" v-model="item.amount" type="number" /> </td>
+                                            <td> <input class="input pf-focus" v-model="item.transaction_code" @keyup.enter="handleAddProfessionalFee(item, index)" readonly /> </td>
+                                            <td> <input class="input pf-focus" v-model="item.doctor_code" @keyup.enter="handleAddProfessionalFee(item, index)" readonly /> </td>
+                                            <td> <input class="input pf-focus" v-model="item.doctor_name" @keyup.enter="handleAddProfessionalFee(item, index)" readonly/> </td>
+                                            <td> <input class="input pf-focus" v-model="item.amount" type="number" /> </td>
+                                            <td v-if="!item.isAdd" class="cursor-pointer" ><v-icon color="primary" @click="handleAddProfessionalFee(item, index)">mdi-plus-box</v-icon></td>
+                                            <td v-if="item.isDelete" class="cursor-pointer"><v-icon @click="removePFItem(item)" color="red">mdi-delete</v-icon></td> 
                                         </tr>
                                     </template>
                                 </tbody>
@@ -265,14 +267,14 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <template v-for="(item, index) in charges_history_data" :key="index">
+                                        <template v-for="item in charges_history_data">
                                             <tr>
-                                                <td> <input class="input test" readonly :value="item.refnum" /> </td>
-                                                <td> <input class="input test" readonly :value="item.revenue_id" /> </td>
-                                                <td> <input class="input test" readonly :value="item.item_id" /> </td>
-                                                <td> <input class="input test" readonly :value="item?.items?.exam_description" /> </td>
-                                                <td> <input class="input test" readonly :value="parseInt(item.quantity)" /> </td>
-                                                <td> <input class="input test" readonly :value="usePeso(item.net_amount)" /> </td>
+                                                <td> <input readonly :value="item.refnum" /> </td>
+                                                <td> <input readonly :value="item.revenue_id" /> </td>
+                                                <td> <input readonly :value="item.item_id" /> </td>
+                                                <td> <input readonly :value="item?.items?.exam_description" /> </td>
+                                                <td> <input readonly :value="parseInt(item.quantity)" /> </td>
+                                                <td> <input readonly :value="usePeso(item.net_amount)" /> </td>
                                             </tr>
                                         </template>
                                     </tbody>
@@ -299,13 +301,13 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <template v-for="(item, index) in professional_fees_history" :key="index">
+                                        <template v-for="item in professional_fees_history">
                                             <tr>
-                                                <td> <input class="input test" readonly :value="item.refnum" /> </td>
-                                                <td> <input class="input test" readonly :value="item.revenue_id" /> </td>
-                                                <td> <input class="input test" readonly :value="item.item_id" /> </td>
-                                                <td> <input class="input test" readonly :value="item?.doctor_details?.doctor_name" /> </td>
-                                                <td> <input class="input test" readonly :value="usePeso(item.net_amount)" /> </td>
+                                                <td> <input readonly :value="item.refnum" /> </td>
+                                                <td> <input readonly :value="item.revenue_id" /> </td>
+                                                <td> <input readonly :value="item.item_id" /> </td>
+                                                <td> <input readonly :value="item?.doctor_details?.doctor_name" /> </td>
+                                                <td> <input readonly :value="usePeso(item.net_amount)" /> </td>
                                             </tr>
                                         </template>
                                     </tbody>
@@ -341,13 +343,6 @@
         @handle-select="handleSelectedProfessionalFee"
         @close-dialog="closeProfessionalsList"
     />
-
-    <!-- <confirmation 
-        :show="confirm_post_charge"
-        :payload="payload"
-        @submit="onSubmit"
-        @close="closeConfirmation"
-    /> -->
 </template>
 
 <script setup>
@@ -371,17 +366,8 @@ const user_input_revenue_code = ref('');
 const open_charges_list = ref(false);
 const open_professionals_list = ref(false);
 const isLoadingBtn = ref(false);
-const confirm_post_charge = ref(false);
 const charges_history_data = ref([]);
 const professional_fees_history = ref([]);
-
-const handleConfirmation = () => {
-    confirm_post_charge.value = true;
-}
-
-const closeConfirmation = () => {
-    confirm_post_charge.value = false;
-}
 
 const chargecode = ref([]);
 const payload = ref({
@@ -431,7 +417,7 @@ const getRevenueCode = async () => {
     }
 };
 
-const handleAddCharge = (item,index) => {
+const handleAddCharge = (item, index) => {
     item.transaction_code = item.transaction_code.toUpperCase();
     const lastRow = Charges.value[Charges.value.length - 1];
     if (!item.transaction_code) {
@@ -471,18 +457,34 @@ const handleAddCharge = (item,index) => {
             }
         }
         nextTick(() => {
-            focusTransactionCodeInput(index);
+            focusChargeTransaction(index);
         })
     }
 };
 
-const removeRow = (selectedItem) => {
+const removeChargeItem = (selectedItem) => {
     Charges.value = Charges.value.filter(item => !(item.map_item_id === selectedItem.map_item_id && item.transaction_code === selectedItem.transaction_code));
 }
 
-const focusTransactionCodeInput = (index) => {
-    const inputs = document.querySelectorAll('.input.test');
+const removePFItem = (selectedItem) => {
+    const indexToRemove = DoctorCharges.value.findIndex(item => item.doctor_code === selectedItem.doctor_code && item.transaction_code === selectedItem.transaction_code);
+    if (indexToRemove !== -1) {
+        DoctorCharges.value.splice(indexToRemove, 1);
+    }
+};
+
+
+const focusChargeTransaction = (index) => {
+    const inputs = document.querySelectorAll('.charge-focus');
     const transactionCodeInput = inputs[(index + 1) * 7];
+    if (transactionCodeInput) {
+        transactionCodeInput.focus();
+    }
+};
+
+const focusPFTransaction = (index) => {
+    const inputs = document.querySelectorAll('.pf-focus');
+    const transactionCodeInput = inputs[(index + 1) * 4];
     if (transactionCodeInput) {
         transactionCodeInput.focus();
     }
@@ -496,13 +498,34 @@ const handleSelectedChargeItem = (selected_item) => {
     lastRow.totalamount = selected_item.price;
 };
 
-const handleAddProfessionalFee = () => {
-    open_professionals_list.value = true;
+const handleAddProfessionalFee = (item, index) => {
+    item.transaction_code  = "MD";
+    const lastRow = DoctorCharges.value[DoctorCharges.value.length - 1];
+    if (item.transaction_code && !item.doctor_code && !item.doctor_name) {
+        open_professionals_list.value = true;
+    }
+    if (item.transaction_code && item.doctor_code && item.doctor_name) {
+        DoctorCharges.value.push({
+            transaction_code: "MD",
+            doctor_code: "",
+            doctor_name: "",
+            amount: null,
+        });
+        if (lastRow) {
+            lastRow.isReadonly = true;
+            lastRow.isDelete = true;
+            lastRow.isAdd = true;
+        }
+    }
+    nextTick(() => {
+        focusPFTransaction(index);
+    })
 }
 
 const handleSelectedProfessionalFee = (selected_item) => {
-    DoctorCharges.value[0].doctor_code = selected_item.doctor_code;
-    DoctorCharges.value[0].doctor_name = selected_item.doctor_name;
+    const lastRow = DoctorCharges.value[DoctorCharges.value.length - 1];
+    lastRow.doctor_code = selected_item.doctor_code;
+    lastRow.doctor_name = selected_item.doctor_name;
     closeProfessionalsList();
 }
 

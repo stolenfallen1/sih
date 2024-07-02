@@ -85,9 +85,17 @@
       @open-filter="openFilterOptions"
     >
       <template v-for="column in columns" v-slot:[`column-${column.key}`]="{ item }">
-        <div v-if="column.key === 'registry_status'" :key="column.key">
+        <div v-if="column.key === 'registry_status'" :key="column.key" class="isActive">
           <span 
-          :style="{ display: 'block', height: '25px', width: '8px', backgroundColor: item.patient_registry && item.patient_registry.registry_status == 2 ? 'blue' : 'green' }" />
+            :style="{ cursor: 'default', display: 'block', height: '26px', width: '9px', backgroundColor: item.patient_registry && item.patient_registry.registry_status == 2 ? 'blue' : 'green' }" 
+            :title="item.patient_registry && item.patient_registry.registry_status == 2 ? 'New Patient' : 'Old Patient'"
+            />
+        </div>
+        <div v-if="column.key === 'isHMO'" :key="column.key" class="isHMO">
+          <span 
+            :style="{ cursor: 'default', display: 'block', height: '26px', width: '9px', backgroundColor: item.patient_registry && item.patient_registry.guarantor_id !== null ? 'yellow' : 'orange' }" 
+            :title="item.patient_registry && item.patient_registry.guarantor_id !== null ? 'HMO ' : 'Self Pay'"
+            />
         </div>
         <span v-if="column.key === 'register_id_no'" :key="column.key">
           {{ item.patient_registry ? item.patient_registry.register_id_no : "..." }}
@@ -263,6 +271,12 @@ const tableTabs = ref([
                 key: "registry_status",
               },
               {
+                title: "",
+                align: "start",
+                sortable: false,
+                key: "isHMO",
+              },
+              {
                 title: "Patient ID",
                 align: "start",
                 sortable: false,
@@ -323,6 +337,12 @@ const tableTabs = ref([
                 align: "start",
                 sortable: false,
                 key: "registry_status",
+              },
+              {
+                title: "",
+                align: "start",
+                sortable: false,
+                key: "isHMO",
               },
               {
                 title: "Patient ID",
@@ -570,5 +590,11 @@ handleTabChange(currentTab.value);
 <style>
 .v-data-table {
   overflow-x: auto;
+}
+.isActive {
+  margin-right: -15px !important;
+}
+.isHMO {
+  margin-left: -15px !important;
 }
 </style>
