@@ -584,7 +584,6 @@ const updateServerItems = (newServerItems) => {
 };
 
 handleTabChange(currentTab.value);
-
 </script>
 
 <style>
