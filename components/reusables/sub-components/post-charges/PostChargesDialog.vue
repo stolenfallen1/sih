@@ -412,8 +412,10 @@ const revenue_code_data = ref([]);
 const getRevenueCode = async () => {
     const revenue_res = await useMethod("get", "get-transaction-codes", "", "");
     if (revenue_res) {
-        const desiredCodes = ['LX', 'LB', 'HD'];
-        revenue_code_data.value = revenue_res.filter(item => desiredCodes.includes(item.transaction_code));
+        const desiredCodes = useRevenueCode();
+        revenue_code_data.value = revenue_res.filter(item => {
+            return desiredCodes.includes(item.id.toString()) && item.transaction_code !== "MD";
+        });
     }
 };
 
@@ -423,7 +425,8 @@ const handleAddCharge = (item, index) => {
     if (!item.transaction_code) {
         return useSnackbar(true, "error", "Dept Code Should not be empty.");
     }
-    const desiredCodes = ['LX', 'LB', 'HD'];
+    const desiredCodes = revenue_code_data.value.map(item => item.transaction_code);
+    console.log(desiredCodes);
     if (desiredCodes.includes(item.transaction_code) === false) {
         return useSnackbar(true, "error", "Invalid Dept Code, refer to help code.");
     }
@@ -642,7 +645,6 @@ const closeDialog = () => {
 
 onUpdated(() => {
     // Forda display
-    console.log(selectedRowDetails.value);
     payload.value.patient_name = selectedRowDetails.value.lastname + ', ' + selectedRowDetails.value.firstname + ' ' + selectedRowDetails.value.middlename || '';
     payload.value.patient_id = selectedRowDetails.value.patient_id || '';
     payload.value.civil_status = selectedRowDetails.value.civil_status && selectedRowDetails.value.civil_status.civil_status_description || '';
