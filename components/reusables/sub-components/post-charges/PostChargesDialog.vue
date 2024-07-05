@@ -254,7 +254,7 @@
                     <v-expansion-panel>
                         <v-expansion-panel-title color="#107bac">Post Charge History</v-expansion-panel-title>
                         <v-expansion-panel-text>
-                            <template v-if="charges_history_data && charges_history_data.length">
+                            <template v-if="charges_history_data">
                                 <v-table density="compact" height="30vh" class="styled-table">
                                     <thead>
                                         <tr>
@@ -280,16 +280,13 @@
                                     </tbody>
                                 </v-table>
                             </template>
-                            <template v-else>
-                                <p class="empty-history-info">Patient has no charges history...</p>
-                            </template>
                         </v-expansion-panel-text>
                     </v-expansion-panel>
 
                     <v-expansion-panel>
                         <v-expansion-panel-title color="#107bac">Professional Fee History</v-expansion-panel-title>
                         <v-expansion-panel-text>
-                            <template v-if="charges_history_data && charges_history_data.length">
+                            <template v-if="professional_fees_history">
                                 <v-table density="compact" height="30vh" class="styled-table">
                                     <thead>
                                         <tr>
@@ -307,14 +304,11 @@
                                                 <td> <input readonly :value="item.revenue_id" /> </td>
                                                 <td> <input readonly :value="item.item_id" /> </td>
                                                 <td> <input readonly :value="item?.doctor_details?.doctor_name" /> </td>
-                                                <td> <input readonly :value="usePeso(item.net_amount)" /> </td>
+                                                <td> <input readonly :value="usePeso(item.net_amount)" required /> </td>
                                             </tr>
                                         </template>
                                     </tbody>
                                 </v-table>
-                            </template>
-                            <template v-else>
-                                <p class="empty-history-info">Patient has no professional fee history...</p>
                             </template>
                         </v-expansion-panel-text>
                     </v-expansion-panel>
@@ -324,7 +318,9 @@
             <v-card-actions>
                 <v-btn variant="outlined" color="info" @click="closeDialog">Close</v-btn>
                 <v-spacer></v-spacer>
-                <v-btn :loading="isLoadingBtn" :disabled="isLoadingBtn" class="text-white bg-primary" @click="onSubmit">Charge</v-btn>
+                <v-btn :loading="isLoadingBtn" :disabled="isLoadingBtn" class="text-white bg-primary" @click="onSubmit">Charge and Print</v-btn>
+                <v-btn :loading="isLoadingBtn" :disabled="isLoadingBtn" class="text-white bg-primary" @click="onPrint">Print</v-btn>
+
             </v-card-actions>
         </v-card>
     </v-dialog>
@@ -346,8 +342,10 @@
 </template>
 
 <script setup>
+import { createApp } from 'vue';
 import ChargesList from './sub-forms/ChargesList.vue';
 import PFList from './sub-forms/PFList.vue';
+import ChargeReports from "../../../../public/reports/charges/ChargeReports.vue";
 
 const props = defineProps({
     show: {
@@ -384,8 +382,6 @@ const payload = ref({
     attending_doctor_fullname: "",
     guarantor_id: null,
     guarantor_name: "",
-    Charges: [],
-    DoctorCharges: [],
 });
 
 const Charges = ref([
@@ -426,7 +422,6 @@ const handleAddCharge = (item, index) => {
         return useSnackbar(true, "error", "Dept Code Should not be empty.");
     }
     const desiredCodes = revenue_code_data.value.map(item => item.transaction_code);
-    console.log(desiredCodes);
     if (desiredCodes.includes(item.transaction_code) === false) {
         return useSnackbar(true, "error", "Invalid Dept Code, refer to help code.");
     }
@@ -539,28 +534,81 @@ const closeProfessionalsList = () => {
 const closeChargesList = () => {
     open_charges_list.value = false;
 };
+const onPrint = async () => {
+    const charges_res = await fetch(useApiUrl() + "/get-his-charges", {
+            method: "post",
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + useToken()
+            },
+            body: JSON.stringify({
+                patient_id: payload.value.patient_id,
+                case_no: payload.value.case_no,
+                transaction_code: 'all',
+            })
+        });
 
-const onSubmit = async () => {
-    isLoadingBtn.value = true;
-    let charges = Charges.value.filter(function (obj) {
-        return obj.transaction_code !== '';
-    });
-    let doctorcharges = DoctorCharges.value.filter(function (obj) {
-        return obj.amount !== null;
-    });
-    payload.value.Charges = charges;
-    payload.value.DoctorCharges = doctorcharges;
-    try {
-        if (payload.value.Charges.length > 0) {
-            let response = await useMethod("post", "post-his-charge", payload.value);
-            if (response) {
-                useSnackbar(true, "success", "Charges posted successfully.");
-                closeDialog();
-            } else {
-                return useSnackbar(true, "error", "Failed to post charges.");
+        const responseData = await charges_res.json();
+        if (charges_res.ok) {
+
+            const newWindow = window.open('', '_blank', 'width=900,height=750');
+            if (newWindow) {
+                newWindow.document.title = "Charges Report";
+                newWindow.document.body.style.fontFamily = "Montserrat, sans-serif";
+                const app = createApp(ChargeReports, {
+                    payload: payload.value,
+                    charges: responseData.data,
+                });
+                app.mount(newWindow.document.body);
+                nextTick(() => {
+                    newWindow.print();
+                    newWindow.onafterprint = () => {
+                        newWindow.close();
+                    }
+                });
             }
         } else {
-            return useSnackbar(true, "error", "Please add charges.");
+            return useSnackbar(true, "error", "No data found.");
+        }
+}
+const onSubmit = async () => {
+    isLoadingBtn.value = true;
+    let charges = Charges.value.filter(obj => obj.transaction_code !== '');
+    let doctorcharges = DoctorCharges.value.filter(obj => obj.doctor_code !== '');
+    if (doctorcharges.map(item => item.amount).includes(null)) {
+        isLoadingBtn.value = false;
+        return useSnackbar(true, "error", "Please input amount for professional fees.");
+    }
+
+    if (charges.length === 0 && doctorcharges.length === 0) {
+        isLoadingBtn.value = false;
+        return useSnackbar(true, "error", "Please add charges or professional fees.");
+    }
+
+    payload.value.Charges = charges;
+    payload.value.DoctorCharges = doctorcharges;
+
+    try {
+        let response = await useMethod("post", "post-his-charge", payload.value);
+        if (response) {
+            const newWindow = window.open('', '_blank', 'width=900,height=750');
+            if (newWindow) {
+                const app = createApp(ChargeReports, {
+                    payload: payload.value,
+                    charges: response.data.charges,
+                });
+                app.mount(newWindow.document.body);
+                nextTick(() => {
+                    newWindow.print();
+                    newWindow.onafterprint = () => {
+                        newWindow.close();
+                    }
+                });
+            }
+            useSnackbar(true, "success", "Charges posted successfully.");
+            closeDialog();
+        } else {
+            return useSnackbar(true, "error", "Failed to post charges.");
         }
     } catch (error) {
         return useSnackbar(true, "error", "Failed to post charges.");
@@ -568,6 +616,7 @@ const onSubmit = async () => {
         isLoadingBtn.value = false;
     }
 };
+
 
 const getChargesHistory = async () => {
     try {
@@ -580,12 +629,13 @@ const getChargesHistory = async () => {
             body: JSON.stringify({
                 patient_id: payload.value.patient_id,
                 case_no: payload.value.case_no,
+                transaction_code: '',
             })
         });
 
         const responseData = await charges_res.json();
         if (charges_res.ok) {
-            charges_history_data.value = responseData.charges;
+            charges_history_data.value = responseData.data;
         } else {
             return useSnackbar(true, "error", "No data found.");
         }
@@ -596,7 +646,7 @@ const getChargesHistory = async () => {
 
 const getProfFeeHistory = async () => {
     try {
-        const prof_fees_res = await fetch(useApiUrl() + "/get-his-prof-fees", {
+        const prof_fees_res = await fetch(useApiUrl() + "/get-his-charges", {
             method: "post",
             headers: {
                 'Content-Type': 'application/json',
@@ -605,12 +655,13 @@ const getProfFeeHistory = async () => {
             body: JSON.stringify({
                 patient_id: payload.value.patient_id,
                 case_no: payload.value.case_no,
+                transaction_code: 'MD',
             })
         });
 
         const responseData = await prof_fees_res.json();
         if (prof_fees_res.ok) {
-            professional_fees_history.value = responseData.doctorcharges;
+            professional_fees_history.value = responseData.data;
         } else {
             return useSnackbar(true, "error", "No data found.");
         }
