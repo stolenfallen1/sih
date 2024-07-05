@@ -23,7 +23,6 @@
                 <v-data-table-server
                     class="animated animatedFadeInUp fadeInUp"
                     v-model:items-per-page="itemsPerPage"
-                    v-model="selected_item"
                     :headers="headers"
                     :items="serverItems"
                     :items-length="totalItems"
