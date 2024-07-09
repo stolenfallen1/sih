@@ -258,6 +258,8 @@
                                 <v-table density="compact" height="30vh" class="styled-table">
                                     <thead>
                                         <tr>
+                                            <th></th>
+                                            <th>Status</th>
                                             <th>Reference Number</th>
                                             <th>Dept Code</th>
                                             <th>Item Code</th>
@@ -269,6 +271,13 @@
                                     <tbody>
                                         <template v-for="item in charges_history_data">
                                             <tr>
+                                                <td> <input type="checkbox" :checked="isChecked(item)" @change="toggleSelection(item)" /></td>
+                                                <td> 
+                                                    <span>
+                                                        <v-chip color="green" v-if="item?.items?.exam_description === null">Paid</v-chip> 
+                                                        <v-chip color="red" v-else>Unpaid</v-chip>
+                                                    </span>
+                                                </td>
                                                 <td> <input readonly :value="item.refnum" /> </td>
                                                 <td> <input readonly :value="item.revenue_id" /> </td>
                                                 <td> <input readonly :value="item.item_id" /> </td>
@@ -290,6 +299,8 @@
                                 <v-table density="compact" height="30vh" class="styled-table">
                                     <thead>
                                         <tr>
+                                            <th></th>
+                                            <th>Status</th>
                                             <th>Reference Number</th>
                                             <th>Dept Code</th>
                                             <th>PF Code</th>
@@ -300,6 +311,13 @@
                                     <tbody>
                                         <template v-for="item in professional_fees_history">
                                             <tr>
+                                                <td> <input type="checkbox" :checked="isChecked(item)" @change="toggleSelection(item)" /></td>
+                                                <td> 
+                                                    <span>
+                                                        <v-chip color="green" v-if="item?.doctor_details?.doctor_details === null">Paid</v-chip> 
+                                                        <v-chip color="red" v-else>Unpaid</v-chip>
+                                                    </span>
+                                                </td>
                                                 <td> <input readonly :value="item.refnum" /> </td>
                                                 <td> <input readonly :value="item.revenue_id" /> </td>
                                                 <td> <input readonly :value="item.item_id" /> </td>
@@ -317,9 +335,10 @@
             <v-divider></v-divider>
             <v-card-actions>
                 <v-btn variant="outlined" color="info" @click="closeDialog">Close</v-btn>
+                <v-btn class="text-white bg-error" @click="confirmRevoke">Revoke Charge</v-btn>
+                <v-btn class="text-white bg-info" @click="onPrint">Print</v-btn>
                 <v-spacer></v-spacer>
                 <v-btn :loading="isLoadingBtn" :disabled="isLoadingBtn" class="text-white bg-primary" @click="onSubmit">Charge and Print</v-btn>
-                <v-btn :loading="isLoadingBtn" :disabled="isLoadingBtn" class="text-white bg-primary" @click="onPrint">Print</v-btn>
 
             </v-card-actions>
         </v-card>
@@ -338,6 +357,13 @@
         :open_professionals_list="open_professionals_list"
         @handle-select="handleSelectedProfessionalFee"
         @close-dialog="closeProfessionalsList"
+    />
+
+    <Confirmation 
+        :show="revokeconfirmation"
+        :payload="payload"
+        @submit="onRevoke"
+        @close="closeConfirmRevoke"
     />
 </template>
 
@@ -366,6 +392,25 @@ const open_professionals_list = ref(false);
 const isLoadingBtn = ref(false);
 const charges_history_data = ref([]);
 const professional_fees_history = ref([]);
+const selected_charges = ref([]);
+
+const revokeconfirmation = ref(false);
+
+const isChecked = (item) => {
+    return selected_charges.value.includes(item);
+}
+
+const toggleSelection = (item) => {
+    if (selected_charges.value.includes(item)) {
+        selected_charges.value = selected_charges.value.filter(i => i !== item);
+    } else {
+        selected_charges.value.push(item);
+    }
+}
+
+watch(selected_charges, (newValue) => {
+    console.log(newValue);
+}, { deep: true });
 
 const chargecode = ref([]);
 const payload = ref({
@@ -535,42 +580,26 @@ const closeChargesList = () => {
     open_charges_list.value = false;
 };
 const onPrint = async () => {
-    const charges_res = await fetch(useApiUrl() + "/get-his-charges", {
-            method: "post",
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + useToken()
-            },
-            body: JSON.stringify({
-                patient_id: payload.value.patient_id,
-                case_no: payload.value.case_no,
-                transaction_code: 'all',
-            })
-        });
-
-        const responseData = await charges_res.json();
-        if (charges_res.ok) {
-
-            const newWindow = window.open('', '_blank', 'width=900,height=750');
-            if (newWindow) {
-                newWindow.document.title = "Charges Report";
-                newWindow.document.body.style.fontFamily = "Montserrat, sans-serif";
-                const app = createApp(ChargeReports, {
-                    payload: payload.value,
-                    charges: responseData.data,
-                });
-                app.mount(newWindow.document.body);
-                nextTick(() => {
-                    newWindow.print();
-                    newWindow.onafterprint = () => {
-                        newWindow.close();
-                    }
-                });
-            }
-        } else {
-            return useSnackbar(true, "error", "No data found.");
+    if (selected_charges.value.length === 0) {
+        return useSnackbar(true, "error", "Please select charges to print.");
+    } else {
+        const newWindow = window.open('', '_blank', 'width=900,height=750');
+        if (newWindow) {
+            const app = createApp(ChargeReports, {
+                payload: payload.value,
+                charges: selected_charges.value,
+            });
+            app.mount(newWindow.document.body);
+            nextTick(() => {
+                newWindow.print();
+                newWindow.onafterprint = () => {
+                    newWindow.close();
+                }
+            });
         }
+    }
 }
+
 const onSubmit = async () => {
     isLoadingBtn.value = true;
     let charges = Charges.value.filter(obj => obj.transaction_code !== '');
@@ -616,6 +645,44 @@ const onSubmit = async () => {
         isLoadingBtn.value = false;
     }
 };
+
+const confirmRevoke = () => {
+    if (selected_charges.value.length === 0) {
+        return useSnackbar(true, "error", "Please select charges to revoke.");
+    } else {
+        revokeconfirmation.value = true;
+    }
+}
+const onRevoke = async (user_details) => {
+    if (user_details.user_passcode !== usePasscode()) {
+        return useSnackbar(true, "error", "Password incorrect.");
+    } else {
+        try {
+            const response = await fetch(useApiUrl() + "/revoke-his-charge", {
+                method: "put",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + useToken()
+                },
+                body: JSON.stringify({ items: selected_charges.value })
+            });
+            if (response) {
+                useSnackbar(true, "success", "Charges revoked successfully.");
+                closeConfirmRevoke();
+                getChargesHistory();
+                getProfFeeHistory();
+            } else {
+                return useSnackbar(true, "error", "Failed to revoke charges.");
+            }
+        } catch (error) {
+            return useSnackbar(true, "error", "Failed to revoke charges.");
+        }
+    }
+}
+const closeConfirmRevoke = () => {
+    revokeconfirmation.value = false;
+    selected_charges.value = [];
+}
 
 
 const getChargesHistory = async () => {
@@ -692,6 +759,7 @@ const closeDialog = () => {
             amount: null,
         }
     ];
+    selected_charges.value = [];
 }
 
 onUpdated(() => {
