@@ -105,17 +105,6 @@
                                             readonly
                                         ></v-text-field>
                                     </v-col>
-                                    <v-col cols="12" class="form-col">
-                                        <v-text-field 
-                                            label="Registry Case Date"
-                                            v-model="payload.registry_date"
-                                            type="date"
-                                            variant="solo"
-                                            density="compact"
-                                            hide-details
-                                            readonly
-                                        ></v-text-field>
-                                    </v-col>
                                     <v-col cols="3" class="form-col">
                                         <v-text-field
                                             label="ID"
@@ -155,6 +144,31 @@
                                             hide-details
                                             readonly
                                         ></v-text-field>
+                                    </v-col>
+                                    <v-col cols="6" class="form-col">
+                                        <v-text-field 
+                                            label="Registry Case Date"
+                                            v-model="payload.registry_date"
+                                            type="date"
+                                            variant="solo"
+                                            density="compact"
+                                            hide-details
+                                            readonly
+                                        ></v-text-field>
+                                    </v-col>
+                                    <v-col cols="6" class="form-col">
+                                        <v-autocomplete
+                                            bg-color="#C0C0C0"
+                                            label="Charge To"
+                                            item-title="text"
+                                            item-value="id"
+                                            v-model="payload.charge_to"
+                                            :items="charge_to"
+                                            :readonly="payload.account == 'Self-Pay'"
+                                            variant="solo"
+                                            density="compact"
+                                            hide-details
+                                        ></v-autocomplete>
                                     </v-col>
                                 </v-row>
                             </v-col>
@@ -254,80 +268,160 @@
                     <v-expansion-panel>
                         <v-expansion-panel-title color="#107bac">Post Charge History</v-expansion-panel-title>
                         <v-expansion-panel-text>
-                            <template v-if="charges_history_data">
-                                <v-table density="compact" height="30vh" class="styled-table">
-                                    <thead>
-                                        <tr>
-                                            <th></th>
-                                            <th>Status</th>
-                                            <th>Reference Number</th>
-                                            <th>Dept Code</th>
-                                            <th>Item Code</th>
-                                            <th>Description</th>
-                                            <th>Qty</th>
-                                            <th>Amount</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <template v-for="item in charges_history_data">
-                                            <tr>
-                                                <td> <input type="checkbox" :checked="isChecked(item)" @change="toggleSelection(item)" /></td>
-                                                <td> 
-                                                    <span>
-                                                        <v-chip color="green" v-if="item?.items?.exam_description === null">Paid</v-chip> 
-                                                        <v-chip color="red" v-else>Unpaid</v-chip>
-                                                    </span>
-                                                </td>
-                                                <td> <input readonly :value="item.refnum" /> </td>
-                                                <td> <input readonly :value="item.revenue_id" /> </td>
-                                                <td> <input readonly :value="item.item_id" /> </td>
-                                                <td> <input readonly :value="item?.items?.exam_description" /> </td>
-                                                <td> <input readonly :value="parseInt(item.quantity)" /> </td>
-                                                <td> <input readonly :value="usePeso(item.net_amount)" /> </td>
-                                            </tr>
-                                        </template>
-                                    </tbody>
-                                </v-table>
-                            </template>
+                            <v-tabs
+                            v-model="charge_history_tab"
+                            color="primary"
+                            >
+                                <v-tab value="0" v-if="payload.account == 'Company / Insurance'"><v-icon start>mdi-form-select</v-icon>Company / Insurance</v-tab>
+                                <v-tab value="1"><v-icon start>mdi-form-select</v-icon>Cash Assessment</v-tab>
+                            </v-tabs>
+                            <v-window v-model="charge_history_tab">
+                                <v-window-item value="0">
+                                    <template v-if="charges_history_data">
+                                        <v-table density="compact" height="30vh" class="styled-table">
+                                            <thead>
+                                                <tr>
+                                                    <th></th>
+                                                    <th>Reference Number</th>
+                                                    <th>Dept Code</th>
+                                                    <th>Item Code</th>
+                                                    <th>Description</th>
+                                                    <th>Qty</th>
+                                                    <th>Amount</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <template v-for="item in charges_history_data">
+                                                    <tr>
+                                                        <td> <input type="checkbox" :checked="isCheckedCharges(item)" @change="toggleChargeSelection(item)" /></td>
+                                                        <td> <input readonly :value="item.refnum" /> </td>
+                                                        <td> <input readonly :value="item.revenue_id" /> </td>
+                                                        <td> <input readonly :value="item.item_id" /> </td>
+                                                        <td> <input readonly :value="item?.items?.exam_description" /> </td>
+                                                        <td> <input readonly :value="parseInt(item.quantity)" /> </td>
+                                                        <td> <input readonly :value="usePeso(item.net_amount)" /> </td>
+                                                    </tr>
+                                                </template>
+                                            </tbody>
+                                        </v-table>
+                                    </template>
+                                </v-window-item>
+                                <v-window-item value="1">
+                                    <template v-if="cash_assessment_history">
+                                        <v-table density="compact" height="30vh" class="styled-table">
+                                            <thead>
+                                                <tr>
+                                                    <th></th>
+                                                    <th>Status</th>
+                                                    <th>Reference Number</th>
+                                                    <th>Dept Code</th>
+                                                    <th>Item Code</th>
+                                                    <th>Description</th>
+                                                    <th>Qty</th>
+                                                    <th>Amount</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <template v-for="item in cash_assessment_history">
+                                                    <tr>
+                                                        <td> <input type="checkbox" :checked="isCheckedCashAssessment(item)" @change="toggleCashAssessmentSelection(item)" /></td>
+                                                        <td> 
+                                                            <span>
+                                                                <v-chip color="green" v-if="payload.account !== 'Company / Insurance'">Paid</v-chip> 
+                                                                <v-chip color="red" v-else>Unpaid</v-chip>
+                                                            </span>
+                                                        </td>
+                                                        <td> <input readonly :value="item.refNum" /> </td>
+                                                        <td> <input readonly :value="item.revenueID" /> </td>
+                                                        <td> <input readonly :value="item.itemID" /> </td>
+                                                        <td> <input readonly :value="item?.items?.exam_description" /> </td>
+                                                        <td> <input readonly :value="parseInt(item.quantity)" /> </td>
+                                                        <td> <input readonly :value="usePeso(item.amount)" /> </td>
+                                                    </tr>
+                                                </template>
+                                            </tbody>
+                                        </v-table>
+                                    </template>
+                                </v-window-item>
+                            </v-window>
                         </v-expansion-panel-text>
                     </v-expansion-panel>
 
                     <v-expansion-panel>
                         <v-expansion-panel-title color="#107bac">Professional Fee History</v-expansion-panel-title>
                         <v-expansion-panel-text>
-                            <template v-if="professional_fees_history">
-                                <v-table density="compact" height="30vh" class="styled-table">
-                                    <thead>
-                                        <tr>
-                                            <th></th>
-                                            <th>Status</th>
-                                            <th>Reference Number</th>
-                                            <th>Dept Code</th>
-                                            <th>PF Code</th>
-                                            <th>PF Name</th>
-                                            <th>Amount</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <template v-for="item in professional_fees_history">
-                                            <tr>
-                                                <td> <input type="checkbox" :checked="isChecked(item)" @change="toggleSelection(item)" /></td>
-                                                <td> 
-                                                    <span>
-                                                        <v-chip color="green" v-if="item?.doctor_details?.doctor_details === null">Paid</v-chip> 
-                                                        <v-chip color="red" v-else>Unpaid</v-chip>
-                                                    </span>
-                                                </td>
-                                                <td> <input readonly :value="item.refnum" /> </td>
-                                                <td> <input readonly :value="item.revenue_id" /> </td>
-                                                <td> <input readonly :value="item.item_id" /> </td>
-                                                <td> <input readonly :value="item?.doctor_details?.doctor_name" /> </td>
-                                                <td> <input readonly :value="usePeso(item.net_amount)" required /> </td>
-                                            </tr>
-                                        </template>
-                                    </tbody>
-                                </v-table>
-                            </template>
+                            <v-tabs
+                            v-model="pf_history_tab"
+                            color="primary"
+                            >
+                                <v-tab value="0" v-if="payload.account == 'Company / Insurance'"><v-icon start>mdi-form-select</v-icon>Company / Insurance</v-tab>
+                                <v-tab value="1"><v-icon start>mdi-form-select</v-icon>Cash Assessment</v-tab>
+                            </v-tabs>
+                            <v-window v-model="pf_history_tab">
+                                <v-window-item value="0">
+                                    <template v-if="professional_fees_history">
+                                        <v-table density="compact" height="30vh" class="styled-table">
+                                            <thead>
+                                                <tr>
+                                                    <th></th>
+                                                    <th>Reference Number</th>
+                                                    <th>Dept Code</th>
+                                                    <th>PF Code</th>
+                                                    <th>PF Name</th>
+                                                    <th>Amount</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <template v-for="item in professional_fees_history">
+                                                    <tr>
+                                                        <td> <input type="checkbox" :checked="isCheckedCharges(item)" @change="toggleChargeSelection(item)" /></td>
+                                                        <td> <input readonly :value="item.refnum" /> </td>
+                                                        <td> <input readonly :value="item.revenue_id" /> </td>
+                                                        <td> <input readonly :value="item.item_id" /> </td>
+                                                        <td> <input readonly :value="item?.doctor_details?.doctor_name" /> </td>
+                                                        <td> <input readonly :value="usePeso(item.net_amount)" /> </td>
+                                                    </tr>
+                                                </template>
+                                            </tbody>
+                                        </v-table>
+                                    </template>
+                                </v-window-item>
+                                <v-window-item value="1">
+                                    <template v-if="cash_prof_fee_history">
+                                        <v-table density="compact" height="30vh" class="styled-table">
+                                            <thead>
+                                                <tr>
+                                                    <th></th>
+                                                    <th>Status</th>
+                                                    <th>Reference Number</th>
+                                                    <th>Dept Code</th>
+                                                    <th>PF Code</th>
+                                                    <th>PF Name</th>
+                                                    <th>Amount</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <template v-for="item in cash_prof_fee_history">
+                                                    <tr>
+                                                        <td> <input type="checkbox" :checked="isCheckedCashAssessment(item)" @change="toggleCashAssessmentSelection(item)" /></td>
+                                                        <td> 
+                                                            <span>
+                                                                <v-chip color="green" v-if="payload.account !== 'Company / Insurance'">Paid</v-chip> 
+                                                                <v-chip color="red" v-else>Unpaid</v-chip>
+                                                            </span>
+                                                        </td>
+                                                        <td> <input readonly :value="item.refNum" /> </td>
+                                                        <td> <input readonly :value="item.revenueID" /> </td>
+                                                        <td> <input readonly :value="item.itemID" /> </td>
+                                                        <td> <input readonly :value="item?.doctor_details?.doctor_name" /> </td>
+                                                        <td> <input readonly :value="usePeso(item.amount)" /> </td>
+                                                    </tr>
+                                                </template>
+                                            </tbody>
+                                        </v-table>
+                                    </template>
+                                </v-window-item>
+                            </v-window>
                         </v-expansion-panel-text>
                     </v-expansion-panel>
                 </v-expansion-panels>
@@ -346,7 +440,7 @@
 
     <charges-list 
         :open_charges_list="open_charges_list" 
-        :patienttype="patienttype" 
+        :patienttype="payload.charge_to === 'Self-Pay' ? 1 : 2" 
         @handle-select="handleSelectedChargeItem"
         :user_input_revenue_code="user_input_revenue_code" 
         :chargecode="chargecode"
@@ -372,6 +466,7 @@ import { createApp } from 'vue';
 import ChargesList from './sub-forms/ChargesList.vue';
 import PFList from './sub-forms/PFList.vue';
 import ChargeReports from "../../../../public/reports/charges/ChargeReports.vue";
+import CashAssessmentReports from "../../../../public/reports/charges/CashAssessmentReports.vue";
 
 const props = defineProps({
     show: {
@@ -382,25 +477,37 @@ const props = defineProps({
 });
 
 let panel = ref([0, 1]);
+let charge_history_tab = ref("0");
+let pf_history_tab = ref("0");
+
 const { selectedRowDetails } = storeToRefs(useSubcomponentSelectedRowDetailsStore()); 
 const emits = defineEmits(['close-dialog']) 
 
-const patienttype = ref(null);
 const user_input_revenue_code = ref('');
 const open_charges_list = ref(false);
 const open_professionals_list = ref(false);
 const isLoadingBtn = ref(false);
 const charges_history_data = ref([]);
+const cash_assessment_history = ref([]);
 const professional_fees_history = ref([]);
+const cash_prof_fee_history = ref([]);
 const selected_charges = ref([]);
+const selected_cash_assessment = ref([]);
+const charge_to = ref([
+    { value: 1, text: "Self-Pay" },
+    { value: 2, text: "Company / Insurance" },
+]);
 
 const revokeconfirmation = ref(false);
 
-const isChecked = (item) => {
+const isCheckedCharges = (item) => {
     return selected_charges.value.includes(item);
 }
+const isCheckedCashAssessment = (item) => {
+    return selected_cash_assessment.value.includes(item);
+}
 
-const toggleSelection = (item) => {
+const toggleChargeSelection = (item) => {
     if (selected_charges.value.includes(item)) {
         selected_charges.value = selected_charges.value.filter(i => i !== item);
     } else {
@@ -408,9 +515,31 @@ const toggleSelection = (item) => {
     }
 }
 
-watch(selected_charges, (newValue) => {
-    console.log(newValue);
-}, { deep: true });
+const toggleCashAssessmentSelection = (item) => {
+    if (selected_cash_assessment.value.includes(item)) {
+        selected_cash_assessment.value = selected_cash_assessment.value.filter(i => i !== item);
+    } else {
+        selected_cash_assessment.value.push(item);
+    }
+}
+
+watch(charge_history_tab, (newTab) => {
+    if (newTab == 0) {
+        selected_cash_assessment.value = [];
+    } else if (newTab == 1) {
+        selected_charges.value = [];
+    }
+});
+
+watch(pf_history_tab, (newTab) => {
+    if (newTab == 0) {
+        selected_cash_assessment.value = [];
+        console.log(newTab)
+    } else if (newTab == 1) {
+        selected_charges.value = [];
+        console.log(newTab)
+    }
+});
 
 const chargecode = ref([]);
 const payload = ref({
@@ -422,6 +551,7 @@ const payload = ref({
     age: null,
     case_no: null,
     account: null,
+    charge_to: null,
     registry_date: null,
     attending_doctor: null,
     attending_doctor_fullname: "",
@@ -580,23 +710,44 @@ const closeChargesList = () => {
     open_charges_list.value = false;
 };
 const onPrint = async () => {
-    if (selected_charges.value.length === 0) {
-        return useSnackbar(true, "error", "Please select charges to print.");
-    } else {
-        const newWindow = window.open('', '_blank', 'width=900,height=750');
-        if (newWindow) {
-            const app = createApp(ChargeReports, {
-                payload: payload.value,
-                charges: selected_charges.value,
-            });
-            app.mount(newWindow.document.body);
-            nextTick(() => {
-                newWindow.print();
-                newWindow.onafterprint = () => {
-                    newWindow.close();
-                }
-            });
-        }
+    if (selected_charges.value.length > 0) { 
+        printCharges(payload.value, selected_charges.value);
+    } else if (selected_cash_assessment.value.length > 0) {
+        printCashAssessment(payload.value, selected_cash_assessment.value);
+    } 
+}
+
+const printCharges = (payload, charges) => {
+    const newWindow = window.open('', '_blank', 'width=900,height=750');
+    if (newWindow) {
+        const app = createApp(ChargeReports, {
+            payload: payload,
+            charges: charges,
+        });
+        app.mount(newWindow.document.body);
+        nextTick(() => {
+            newWindow.print();
+            newWindow.onafterprint = () => {
+                newWindow.close();
+            }
+        });
+    }
+}
+
+const printCashAssessment = (payload, charges) => {
+    const newWindow = window.open('', '_blank', 'width=900,height=750');
+    if (newWindow) {
+        const app = createApp(CashAssessmentReports, {
+            payload: payload,
+            charges: charges,
+        });
+        app.mount(newWindow.document.body);
+        nextTick(() => {
+            newWindow.print();
+            newWindow.onafterprint = () => {
+                newWindow.close();
+            }
+        });
     }
 }
 
@@ -608,86 +759,125 @@ const onSubmit = async () => {
         isLoadingBtn.value = false;
         return useSnackbar(true, "error", "Please input amount for professional fees.");
     }
-
     if (charges.length === 0 && doctorcharges.length === 0) {
         isLoadingBtn.value = false;
         return useSnackbar(true, "error", "Please add charges or professional fees.");
     }
-
     payload.value.Charges = charges;
     payload.value.DoctorCharges = doctorcharges;
 
-    try {
-        let response = await useMethod("post", "post-his-charge", payload.value);
-        if (response) {
-            const newWindow = window.open('', '_blank', 'width=900,height=750');
-            if (newWindow) {
-                const app = createApp(ChargeReports, {
-                    payload: payload.value,
-                    charges: response.data.charges,
-                });
-                app.mount(newWindow.document.body);
-                nextTick(() => {
-                    newWindow.print();
-                    newWindow.onafterprint = () => {
-                        newWindow.close();
-                    }
-                });
+    if (payload.value.charge_to === "Company / Insurance") {
+        try {
+            let response = await useMethod("post", "post-his-charge", payload.value);
+            if (response) {
+                useSnackbar(true, "success", "Charges posted successfully.");
+                closeDialog();
+                printCharges(payload.value, response.data.charges);
+            } else {
+                return useSnackbar(true, "error", "Failed to post charges.");
             }
-            useSnackbar(true, "success", "Charges posted successfully.");
-            closeDialog();
-        } else {
-            return useSnackbar(true, "error", "Failed to post charges.");
+        } catch (error) {
+            return useSnackbar(true, "error", "CATCH ERROR: Call IT Department");
+        } finally {
+            isLoadingBtn.value = false;
         }
-    } catch (error) {
-        return useSnackbar(true, "error", "Failed to post charges.");
-    } finally {
-        isLoadingBtn.value = false;
+    } else {
+        try {
+            let response = await useMethod("post", "post-cash-assessment", payload.value);
+            if (response) {
+                useSnackbar(true, "success", "Charges posted successfully.");
+                closeDialog();
+                printCashAssessment(payload.value, response.data.charges);
+            } else {
+                return useSnackbar(true, "error", "Failed to post charges.");
+            }
+        } catch (error) {
+            return useSnackbar(true, "error", "CATCH ERROR: Call IT Department");
+        } finally {
+            isLoadingBtn.value = false;
+        }
     }
+
 };
 
 const confirmRevoke = () => {
-    if (selected_charges.value.length === 0) {
-        return useSnackbar(true, "error", "Please select charges to revoke.");
-    } else {
+    if (selected_charges.value.length > 0 || selected_cash_assessment.value.length > 0) {
         revokeconfirmation.value = true;
+    } else {
+        return useSnackbar(true, "error", "Please select charges to revoke.");
     }
 }
 const onRevoke = async (user_details) => {
     if (user_details.user_passcode !== usePasscode()) {
         return useSnackbar(true, "error", "Password incorrect.");
     } else {
-        try {
-            const response = await fetch(useApiUrl() + "/revoke-his-charge", {
-                method: "put",
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + useToken()
-                },
-                body: JSON.stringify({ items: selected_charges.value })
-            });
-            if (response) {
-                useSnackbar(true, "success", "Charges revoked successfully.");
-                closeConfirmRevoke();
-                getChargesHistory();
-                getProfFeeHistory();
-            } else {
-                return useSnackbar(true, "error", "Failed to revoke charges.");
-            }
-        } catch (error) {
-            return useSnackbar(true, "error", "Failed to revoke charges.");
+        switch(charge_history_tab.value || pf_history_tab.value) {
+            case "0":
+                revokeSelectedCharges(selected_charges.value);
+                break;
+            case "1":
+                revokeSelectedCashAssessment(selected_cash_assessment.value);
+                break;
         }
     }
 }
+
+const revokeSelectedCharges = async (charges) => {
+    try {
+        const response = await fetch(useApiUrl() + "/revoke-his-charge", {
+            method: "put",
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + useToken()
+            },
+            body: JSON.stringify({ items: charges })
+        });
+        if (response) {
+            useSnackbar(true, "success", "Charges revoked successfully.");
+            closeConfirmRevoke();
+            getChargesHistory();
+            getProfFeeHistory();
+        } else {
+            return useSnackbar(true, "error", "Failed to revoke charges.");
+        }
+    } catch (error) {
+        return useSnackbar(true, "error", "Failed to revoke charges.");
+    }
+}
+
+const revokeSelectedCashAssessment = async (charges) => {
+    try {
+        const response = await fetch(useApiUrl() + "/revoke-cash-assessment", {
+            method: "put",
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + useToken()
+            },
+            body: JSON.stringify({ items: charges })
+        });
+        if (response) {
+            useSnackbar(true, "success", "Charges revoked successfully.");
+            closeConfirmRevoke();
+            getCashAssessmentHistory();
+            getCashProfHistory();
+        } else {
+            return useSnackbar(true, "error", "Failed to revoke charges.");
+        }
+    } catch (error) {
+        return useSnackbar(true, "error", "Failed to revoke charges.");
+    }
+}
+
 const closeConfirmRevoke = () => {
     revokeconfirmation.value = false;
     selected_charges.value = [];
+    selected_cash_assessment.value = [];
 }
 
 
 const getChargesHistory = async () => {
     try {
-        const charges_res = await fetch(useApiUrl() + "/get-his-charges", {
+        const charges_res = await fetch(useApiUrl() + "/post-charge-history", {
             method: "post",
             headers: {
                 'Content-Type': 'application/json',
@@ -711,9 +901,35 @@ const getChargesHistory = async () => {
     }
 }
 
+const getCashAssessmentHistory = async () => {
+    try {
+        const cash_assessment_res = await fetch(useApiUrl() + "/cash-assessment-history", {
+            method: "post",
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + useToken()
+            },
+            body: JSON.stringify({
+                patient_id: payload.value.patient_id,
+                case_no: payload.value.case_no,
+                transaction_code: '',
+            })
+        });
+
+        const responseData = await cash_assessment_res.json();
+        if (cash_assessment_res.ok) {
+            cash_assessment_history.value = responseData.data;
+        } else {
+            return useSnackbar(true, "error", "No data found.");
+        }
+    } catch (error) {
+        return useSnackbar(true, "error", "Failed to fetch cash assessment history.");
+    }
+}
+
 const getProfFeeHistory = async () => {
     try {
-        const prof_fees_res = await fetch(useApiUrl() + "/get-his-charges", {
+        const prof_fees_res = await fetch(useApiUrl() + "/post-charge-history", {
             method: "post",
             headers: {
                 'Content-Type': 'application/json',
@@ -734,6 +950,32 @@ const getProfFeeHistory = async () => {
         }
     } catch (error) {
         return useSnackbar(true, "error", "Failed to fetch professional history.");
+    }
+}
+
+const getCashProfHistory = async () => {
+    try {
+        const cash_assessment_res = await fetch(useApiUrl() + "/cash-assessment-history", {
+            method: "post",
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + useToken()
+            },
+            body: JSON.stringify({
+                patient_id: payload.value.patient_id,
+                case_no: payload.value.case_no,
+                transaction_code: 'MD',
+            })
+        });
+
+        const responseData = await cash_assessment_res.json();
+        if (cash_assessment_res.ok) {
+            cash_prof_fee_history.value = responseData.data;
+        } else {
+            return useSnackbar(true, "error", "No data found.");
+        }
+    } catch (error) {
+        return useSnackbar(true, "error", "Failed to fetch cash assessment history.");
     }
 }
 
@@ -760,7 +1002,19 @@ const closeDialog = () => {
         }
     ];
     selected_charges.value = [];
+    selected_cash_assessment.value = [];
+    payload.value.charge_to = payload.value.account;
 }
+
+watchEffect(() => {
+    charge_history_tab.value = payload.value.account == 'Company / Insurance' ? "0" : "1";
+    pf_history_tab.value = payload.value.account == 'Company / Insurance' ? "0" : "1";
+    if (payload.value.account == 'Self-Pay') {
+        payload.value.charge_to = 'Self-Pay';
+    } else {
+        payload.value.charge_to = 'Company / Insurance';
+    }
+})
 
 onUpdated(() => {
     // Forda display
@@ -771,18 +1025,19 @@ onUpdated(() => {
     payload.value.birthdate = useDateMMDDYYY(selectedRowDetails.value.birthdate) || '';
     payload.value.age = selectedRowDetails.value.age || '';
     payload.value.case_no = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry.register_id_no || '';
-    payload.value.account = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry.guarantor_id ? "Company / Insurance" : "Self-Pay";
+    payload.value.account = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry.mscPrice_Schemes == 1 ? "Self-Pay" : "Company / Insurance";
     payload.value.registry_date = selectedRowDetails.value.patient_registry && useDateMMDDYYY(selectedRowDetails.value.patient_registry.registry_date) || '';
     payload.value.attending_doctor = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry.attending_doctor || 'N/A';
     payload.value.attending_doctor_fullname = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry.attending_doctor_fullname || 'N/A';
     payload.value.guarantor_id = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry.guarantor_id || 'N/A';
     payload.value.guarantor_name = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry.guarantor_name || 'N/A';
-    // Forda payload for charging code
-    patienttype.value = selectedRowDetails.value.patient_registry && parseInt(selectedRowDetails.value.patient_registry.mscPrice_Schemes) || null;
+
     // Charges history
     if (payload.value.patient_id && payload.value.case_no) {
         getChargesHistory();
         getProfFeeHistory();
+        getCashAssessmentHistory();
+        getCashProfHistory();
     }
 })
 onMounted(() => {
