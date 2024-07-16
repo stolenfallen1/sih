@@ -3,7 +3,7 @@
     <v-card-actions>
       <v-spacer></v-spacer>
       <v-btn
-        @click="handleView"
+        @click="handleViewPayment"
         :disabled="isSelectedUser"
         prepend-icon="mdi-eye-outline"
         width="100"
@@ -13,34 +13,24 @@
         View
       </v-btn>
       <v-btn
-        @click="handleNew"
-        :disabled="serverItems.length > 0 ? true : false"
+        @click="handleNewPayment"
+        :disabled="!isSelectedUser"
         prepend-icon="mdi-plus-outline"
-        width="100"
+        width="200"
         color="primary"
         class="bg-primary text-white"
       >
-        New
+        New Payment
       </v-btn>
       <v-btn
-        @click="handleEdit"
-        prepend-icon="mdi-pencil"
+        @click="handleCancelPayment"
         :disabled="isSelectedUser"
-        width="100"
-        color="primary"
-        class="bg-success text-white"
-      >
-        Edit
-      </v-btn>
-      <v-btn
-        @click="DeactiveUser"
         prepend-icon="mdi-toggle-switch"
-        :disabled="isSelectedUser"
         width="150"
         color="primary"
         class="bg-error text-white"
       >
-        Deactive</v-btn
+        Cancel</v-btn
       >
     </v-card-actions>
   </v-card>
@@ -60,6 +50,7 @@
       @selected-row="selectedUser"
       @action-search="handleSearch"
       @action-refresh="handleRefresh"
+      @open-filter="openFilterOptions"
     >
       <!-- Custom templates for each column -->
       <template v-for="column in headers" v-slot:[`column-${column.key}`]="{ item }">
@@ -88,60 +79,158 @@
       </template>
     </ReusableTable>
   </v-card>
+  <SummaryModal 
+    :show="open_summary_modal"
+    :summary_header="'Cashier Services'"
+    :data="ancillary_services_test_data"
+    @close-dialog="closeViewSummary"
+  />
+  <v-menu
+    v-model="open_filter_options"
+    :close-on-content-click="false"
+    offset-y
+    activator="#filter-button"
+  >
+    <template v-slot:activator="{ on, attrs }">
+      <div></div>
+    </template>
+    <v-card width="450px" rounded="lg">
+      <v-toolbar density="compact">
+        <v-toolbar-title>Filter Options</v-toolbar-title>
+        <v-spacer></v-spacer>
+        <v-btn icon @click="closeFilterOptions">
+          <v-icon>mdi-close</v-icon>
+        </v-btn>
+      </v-toolbar>
+      <v-divider></v-divider>
+      <v-card-text>
+        <v-row>
+          <!-- <v-col cols="12" md="6">
+            <v-select label="Status" variant="outlined" density="compact" v-model="filter.status"></v-select>
+          </v-col> -->
+          <!-- Add filter options as needed -->
+        </v-row>
+      </v-card-text>
+      <v-card-actions>
+        <v-spacer></v-spacer>
+        <v-btn class="bg-primary text-white" @click="applyFilters">Apply Filters</v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-menu>
+
+  <!-- Forms -->
+  <ORSequenceNumber :open_sequence_setting="open_sequence_setting" @close-dialog="closeSequenceSetting" @save-settings="handleCashierSettings" />
+  <NewPayment :open_payment_form="open_payment_form" :payload="payload" @close-dialog="closeHandlePayment" />
+  <CancelPayment :open_cancel_form="open_cancel_form" @close-dialog="closeCancelPayment" />
+
 </template>
 
 <script setup>
 import ReusableTable from "~/components/reusables/ReusableTable.vue";
+import ORSequenceNumber from "./forms/ORSequenceNumber.vue";
+import NewPayment from "./forms/NewPayment.vue";
+import CancelPayment from "./forms/CancelPayment.vue";
+
 definePageMeta({
   layout: "root-layout",
 });
 
 const { selectedRowDetails, isrefresh } = storeToRefs(useSubcomponentSelectedRowDetailsStore());
 const isSelectedUser = ref(true);
-const pageTitle = ref("Ancillary Services");
+const pageTitle = ref("Cashier Services");
 const currentTab = ref(false);
 const showTabs = ref(false);
 const tableTabs = ref([]);
+const payload = ref({});
 
 const totalItems = ref(0);
 const itemsPerPage = ref(15);
 const search = ref("");
+const filter = ref({});
+const open_filter_options = ref(false);
+const open_sequence_setting = ref(false);
+const open_cancel_form = ref(false);
+const open_payment_form = ref(false);
 const params = ref("");
 const loading = ref(true);
+const open_summary_modal = ref(false);
+const ancillary_services_test_data = ref([
+  { label: "For Rendering", value: "1" },
+  { label: "Fully Rendered", value: "2" },
+  { label: "Partially Rendered", value: "3" },
+  { label: "Cancelled", value: "4" },
+  { label: "Credit Notes", value: "5" },
+  { label: "Package Deals", value: "6" },
+]); 
+
 const headers = [
   {
-    title: "Building",
+    title: "OR Num",
     align: "start",
     sortable: true,
-    key: "building",
     width: "10%",
   },
-  { title: "Floor Name", key: "floor", align: "center", width: "10%", sortable: false },
-  { title: "Room No.", key: "room_code", align: "center", width: "10%", sortable: false },
   {
-    title: "No.Of Beds",
-    key: "total_beds",
-    align: "center",
+    title: "RefNum",
+    align: "start",
+    sortable: true,
     width: "10%",
-    sortable: false,
   },
-  { title: "Room Status", key: "roomstatus", align: "center", width: "15%", sortable: false },
-  { title: "Room Type", key: "roomClass", align: "center", width: "15%", sortable: false },
   {
-    title: "Nursing Station",
-    key: "station",
-    align: "center",
+    title: "Revenue",
+    align: "start",
+    sortable: true,
+    width: "10%",
+  },
+  {
+    title: "Patient ID",
+    align: "start",
+    sortable: true,
+    width: "10%",
+  },
+  {
+    title: "Case No",
+    align: "start",
+    sortable: true,
+    width: "10%",
+  },
+  {
+    title: "Patient Name",
+    align: "start",
+    sortable: true,
     width: "30%",
-    sortable: false,
+  },
+  {
+    title: "Amount",
+    align: "start",
+    sortable: true,
+    width: "15%",
+  },
+  {
+    title: "TransDate",
+    align: "start",
+    sortable: true,
+    width: "5%",
   },
 ];
 const serverItems = ref([]);
 const handleRefresh = () => {
-   loadItems();
+    loadItems();
 };
 const handleSearch = (keyword) => {
   // Handle search action
-   loadItems(null, keyword);
+    loadItems(null, keyword);
+};
+const openFilterOptions = () => {
+  setTimeout(() => {
+    open_filter_options.value = true;
+  }, 100);
+};
+const closeFilterOptions = () => {
+  open_filter_options.value = false;
+};
+const applyFilters = () => {
+  console.log('Filters applied:', filter.value);
 };
 const selectedUser = (item) => {
   isSelectedUser.value = true;
@@ -158,18 +247,42 @@ const selectedUser = (item) => {
     isSelectedUser.value = true;
   }
 };
-const handleView = () => {
-  
+const handleViewPayment = () => {
+  alert("VIEW");
 };
-const handleEdit = () => {
-  
+const handleCashierSettings = (settings) => {
+  payload.value = settings;
+  open_sequence_setting.value = false;
 };
-const handleNew = () => {
-  
+const handleNewPayment = () => {
+  open_payment_form.value = true;
+  setTimeout(() => {
+    open_payment_form.value = true;
+    open_sequence_setting.value = true;
+  }, 100);
 };
-const DeactiveUser = () => {
-  
+const closeSequenceSetting = () => {
+  open_payment_form.value = false;
+  open_sequence_setting.value = false;
+  payload.value = {};
 };
+const closeHandlePayment = () => {
+  open_payment_form.value = false;
+  payload.value = {};
+}
+const handleCancelPayment = () => {
+  open_cancel_form.value = true;
+};
+const closeCancelPayment = () => {
+  open_cancel_form.value = false;
+}
+
+const ViewSummary = () => {
+  open_summary_modal.value = true;
+}
+const closeViewSummary = () => {
+  open_summary_modal.value = false;
+}
 
 const loadItems = async (options = null, searchkeyword = null) => {
   try {
@@ -178,7 +291,7 @@ const loadItems = async (options = null, searchkeyword = null) => {
     let keyword = searchkeyword || "";
       params.value = options  ? "page=" + options.page + "&per_page=" + options.itemsPerPage + "&keyword=" + options.keyword
     : "page=1&per_page=10&keyword=" + keyword;
-    const response = await fetch(useApiUrl()+'/rooms-and-beds'+ "?" + params.value || "", {
+    const response = await fetch(useApiUrl()+'/doctors'+ "?" + params.value || "", {
       headers: {
         Authorization: `Bearer `+ useToken(),
       },
