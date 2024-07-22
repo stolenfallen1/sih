@@ -1,6 +1,6 @@
 <template>
-    <div>
-        <v-dialog :model-value="open_sequence_setting" rounded="lg" @update:model-value="closeDialog"  scrollable max-width="600px">
+    <v-dialog :model-value="open_cashier_settings" rounded="lg" @update:model-value="closeDialog"  scrollable max-width="600px">
+        <form @submit.prevent="onSubmit">
             <v-card rounded="lg">
                 <v-toolbar density="compact" color="#107bac" hide-details>
                     <v-toolbar-title>Cashier Environment Setting</v-toolbar-title>
@@ -26,6 +26,8 @@
                                 variant="solo"
                                 density="compact"
                                 label="OR Number"
+                                v-model="ORNum"
+                                required
                                 hide-details
                             ></v-text-field>
                         </v-col>
@@ -33,6 +35,9 @@
                             <v-text-field
                                 variant="solo"
                                 density="compact"
+                                label="OR Suffix"
+                                v-model="ORSuffix"
+                                required
                                 hide-details
                             ></v-text-field>
                         </v-col>
@@ -48,6 +53,7 @@
                             <v-text-field
                                 variant="solo"
                                 density="compact"
+                                label="OR V Suffix"
                                 hide-details
                             ></v-text-field>
                         </v-col>
@@ -63,6 +69,7 @@
                             <v-text-field
                                 variant="solo"
                                 density="compact"
+                                label="Manul OR Suffix"
                                 hide-details
                             ></v-text-field>
                         </v-col>
@@ -95,31 +102,43 @@
                 <v-card-actions>
                     <v-btn variant="outlined" color="info" @click="closeDialog"> Close </v-btn>
                     <v-spacer></v-spacer>
-                    <v-btn class="bg-primary text-white" @click="onSubmit">Proceed</v-btn>
+                    <v-btn class="bg-primary text-white" type="submit">Proceed</v-btn>
                 </v-card-actions>
             </v-card>
-        </v-dialog>
-    </div>
+        </form>
+    </v-dialog>
 </template>
 <script setup>
 const props = defineProps({
-    open_sequence_setting: {
+    open_cashier_settings: {
         type: Boolean,
-        default: () => false,
+        required: true,
     },
 });
 
 const payload = ref({
     collection_date: new Date().toISOString().substr(0, 10),
 });
+const ORNum = ref("");
+const ORSuffix = ref("");
 const emits = defineEmits(["close-dialog", "save-settings"]);
 
 const closeDialog = () => {
     emits("close-dialog");
+    payload.value = {
+        collection_date: new Date().toISOString().substr(0, 10),
+    };
+    ORNum.value = "";
+    ORSuffix.value = "";
 };
 
 const onSubmit = () => {
+    handleORSuffix();
     emits("save-settings", payload.value);
+    setTimeout(() => {
+        ORNum.value = "";
+        ORSuffix.value = "";
+    });
 };
 
 const shift_data = ref({});
@@ -133,6 +152,10 @@ const getShiftSchedule = async () => {
         determineCurrentShift();
     } 
 };
+
+const handleORSuffix = () => {
+    payload.value.ORNumber = `OR${ORNum.value}${ORSuffix.value.toUpperCase()}`;
+}
 
 const determineCurrentShift = () => {
     const currentHour = new Date().getHours();
@@ -172,7 +195,7 @@ const determineCurrentShift = () => {
     }
 };
 
-onMounted(() => {
+onUpdated(() => {
     getShiftSchedule();
     const userDetails = localStorage.getItem("user_details");
     if (userDetails) {
