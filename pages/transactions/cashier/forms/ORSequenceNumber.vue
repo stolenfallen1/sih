@@ -1,103 +1,112 @@
 <template>
     <div>
         <v-dialog :model-value="open_sequence_setting" rounded="lg" @update:model-value="closeDialog"  scrollable max-width="600px">
-            <v-card rounded="lg">
-                <v-toolbar density="compact" color="#107bac" hide-details>
-                    <v-toolbar-title>Cashier Environment Setting</v-toolbar-title>
-                    <v-btn color="white" @click="closeDialog">
-                        <v-icon>mdi-close</v-icon>
-                    </v-btn>
-                </v-toolbar>
-                <v-divider></v-divider>
-                <v-card-text>
-                    <v-row>
-                        <v-col cols="12">
-                            <v-text-field
-                                readonly
-                                variant="solo"
-                                density="compact"
-                                label="Cashier"
-                                v-model="payload.cashier_name"
-                                hide-details
-                            ></v-text-field>
-                        </v-col>
-                        <v-col cols="6">
-                            <v-text-field
-                                variant="solo"
-                                density="compact"
-                                label="OR Number"
-                                hide-details
-                            ></v-text-field>
-                        </v-col>
-                        <v-col cols="6">
-                            <v-text-field
-                                variant="solo"
-                                density="compact"
-                                hide-details
-                            ></v-text-field>
-                        </v-col>
-                        <v-col cols="6">
-                            <v-text-field
-                                variant="solo"
-                                density="compact"
-                                label="OR Number (V)"
-                                hide-details
-                            ></v-text-field>
-                        </v-col>
-                        <v-col cols="6">
-                            <v-text-field
-                                variant="solo"
-                                density="compact"
-                                hide-details
-                            ></v-text-field>
-                        </v-col>
-                        <v-col cols="6">
-                            <v-text-field
-                                variant="solo"
-                                density="compact"
-                                label="Manual OR #"
-                                hide-details
-                            ></v-text-field>
-                        </v-col>
-                        <v-col cols="6">
-                            <v-text-field
-                                variant="solo"
-                                density="compact"
-                                hide-details
-                            ></v-text-field>
-                        </v-col>
-                        <v-col cols="12">
-                            <v-text-field
-                                type="date"
-                                variant="solo"
-                                v-model="payload.collection_date"
-                                readonly
-                                density="compact"
-                                label="Collection Date"
-                                hide-details
-                            ></v-text-field>
-                        </v-col>
-                        <v-col cols="12">
-                            <v-autocomplete
-                                item-title="shift_description"
-                                item-value="id"
-                                variant="solo"
-                                density="compact"
-                                label="Shift"
-                                hide-details
-                                v-model="payload.shift"
-                                :items="shift_data"
-                            ></v-autocomplete>
-                        </v-col>
-                    </v-row>
-                </v-card-text>
-                <v-divider></v-divider>
-                <v-card-actions>
-                    <v-btn variant="outlined" color="info" @click="closeDialog"> Close </v-btn>
-                    <v-spacer></v-spacer>
-                    <v-btn class="bg-primary text-white" @click="onSubmit">Proceed</v-btn>
-                </v-card-actions>
-            </v-card>
+            <form @submit.prevent="onSubmit">
+                <v-card rounded="lg">
+                    <v-toolbar density="compact" color="#107bac" hide-details>
+                        <v-toolbar-title>Cashier Environment Setting</v-toolbar-title>
+                        <v-btn color="white" @click="closeDialog">
+                            <v-icon>mdi-close</v-icon>
+                        </v-btn>
+                    </v-toolbar>
+                    <v-divider></v-divider>
+                    <v-card-text>
+                        <v-row>
+                            <v-col cols="12">
+                                <v-text-field
+                                    readonly
+                                    variant="solo"
+                                    density="compact"
+                                    label="Cashier"
+                                    v-model="payload.cashier_name"
+                                    hide-details
+                                ></v-text-field>
+                            </v-col>
+                            <v-col cols="6">
+                                <v-text-field
+                                    variant="solo"
+                                    density="compact"
+                                    label="OR Number"
+                                    v-model="ORNum"
+                                    required
+                                    hide-details
+                                ></v-text-field>
+                            </v-col>
+                            <v-col cols="6">
+                                <v-text-field
+                                    variant="solo"
+                                    density="compact"
+                                    label="OR Suffix"
+                                    v-model="ORSuffix"
+                                    required
+                                    hide-details
+                                ></v-text-field>
+                            </v-col>
+                            <v-col cols="6">
+                                <v-text-field
+                                    variant="solo"
+                                    density="compact"
+                                    label="OR Number (V)"
+                                    hide-details
+                                ></v-text-field>
+                            </v-col>
+                            <v-col cols="6">
+                                <v-text-field
+                                    variant="solo"
+                                    density="compact"
+                                    label="OR V Suffix"
+                                    hide-details
+                                ></v-text-field>
+                            </v-col>
+                            <v-col cols="6">
+                                <v-text-field
+                                    variant="solo"
+                                    density="compact"
+                                    label="Manual OR #"
+                                    hide-details
+                                ></v-text-field>
+                            </v-col>
+                            <v-col cols="6">
+                                <v-text-field
+                                    variant="solo"
+                                    density="compact"
+                                    label="Manul OR Suffix"
+                                    hide-details
+                                ></v-text-field>
+                            </v-col>
+                            <v-col cols="12">
+                                <v-text-field
+                                    type="date"
+                                    variant="solo"
+                                    v-model="payload.collection_date"
+                                    readonly
+                                    density="compact"
+                                    label="Collection Date"
+                                    hide-details
+                                ></v-text-field>
+                            </v-col>
+                            <v-col cols="12">
+                                <v-autocomplete
+                                    item-title="shift_description"
+                                    item-value="id"
+                                    variant="solo"
+                                    density="compact"
+                                    label="Shift"
+                                    hide-details
+                                    v-model="payload.shift"
+                                    :items="shift_data"
+                                ></v-autocomplete>
+                            </v-col>
+                        </v-row>
+                    </v-card-text>
+                    <v-divider></v-divider>
+                    <v-card-actions>
+                        <v-btn variant="outlined" color="info" @click="closeDialog"> Close </v-btn>
+                        <v-spacer></v-spacer>
+                        <v-btn class="bg-primary text-white" type="submit">Proceed</v-btn>
+                    </v-card-actions>
+                </v-card>
+            </form>
         </v-dialog>
     </div>
 </template>
@@ -112,14 +121,26 @@ const props = defineProps({
 const payload = ref({
     collection_date: new Date().toISOString().substr(0, 10),
 });
+const ORNum = ref("");
+const ORSuffix = ref("");
 const emits = defineEmits(["close-dialog", "save-settings"]);
 
 const closeDialog = () => {
     emits("close-dialog");
+    payload.value = {
+        collection_date: new Date().toISOString().substr(0, 10),
+    };
+    ORNum.value = "";
+    ORSuffix.value = "";
 };
 
 const onSubmit = () => {
+    handleORSuffix();
     emits("save-settings", payload.value);
+    setTimeout(() => {
+        ORNum.value = "";
+        ORSuffix.value = "";
+    });
 };
 
 const shift_data = ref({});
@@ -133,6 +154,10 @@ const getShiftSchedule = async () => {
         determineCurrentShift();
     } 
 };
+
+const handleORSuffix = () => {
+    payload.value.ORNumber = `OR${ORNum.value}${ORSuffix.value.toUpperCase()}`;
+}
 
 const determineCurrentShift = () => {
     const currentHour = new Date().getHours();
@@ -172,7 +197,7 @@ const determineCurrentShift = () => {
     }
 };
 
-onMounted(() => {
+onUpdated(() => {
     getShiftSchedule();
     const userDetails = localStorage.getItem("user_details");
     if (userDetails) {

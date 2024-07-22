@@ -1,6 +1,16 @@
 <template>
   <v-card class="mb-2" elevation="4">
     <v-card-actions>
+      <v-btn
+        @click="openCashierSettings"
+        :disabled="!isSelectedUser"
+        prepend-icon="mdi-plus-outline"
+        width="200"
+        color="primary"
+        class="bg-primary text-white" 
+      >
+        Cashier Settings
+      </v-btn>
       <v-spacer></v-spacer>
       <v-btn
         @click="handleViewPayment"
@@ -30,7 +40,15 @@
         color="primary"
         class="bg-error text-white"
       >
-        Cancel</v-btn
+        Cancel OR</v-btn
+      >
+      <v-btn
+        prepend-icon="mdi-information-box-outline"
+        width="150"
+        color="primary"
+        class="bg-warning text-white"
+      >
+        Reports</v-btn
       >
     </v-card-actions>
   </v-card>
@@ -52,9 +70,7 @@
       @action-refresh="handleRefresh"
       @open-filter="openFilterOptions"
     >
-      <!-- Custom templates for each column -->
-      <template v-for="column in headers" v-slot:[`column-${column.key}`]="{ item }">
-        <!-- customize rendering for each column here -->
+      <!-- <template v-for="column in headers" v-slot:[`column-${column.key}`]="{ item }">
         <span v-if="column.key ==='building'" :key="column.key">{{
           item.stations.floors ? item.stations.floors.building.description : ""
         }}</span>
@@ -75,16 +91,9 @@
           {{ item.isactive == 1 ? "Active" : "In Active" }}</span
         >
 
-        <!-- Add more custom logic for other columns -->
-      </template>
+      </template> -->
     </ReusableTable>
   </v-card>
-  <SummaryModal 
-    :show="open_summary_modal"
-    :summary_header="'Cashier Services'"
-    :data="ancillary_services_test_data"
-    @close-dialog="closeViewSummary"
-  />
   <v-menu
     v-model="open_filter_options"
     :close-on-content-click="false"
@@ -118,9 +127,11 @@
     </v-card>
   </v-menu>
 
+  <Snackbar />
+
   <!-- Forms -->
   <ORSequenceNumber :open_sequence_setting="open_sequence_setting" @close-dialog="closeSequenceSetting" @save-settings="handleCashierSettings" />
-  <NewPayment :open_payment_form="open_payment_form" :payload="payload" @close-dialog="closeHandlePayment" />
+  <NewPayment :open_payment_form="open_payment_form" :payload="payload" @close-dialog="closeHandlePayment" @save-payment="onPaymentSubmission" />
   <CancelPayment :open_cancel_form="open_cancel_form" @close-dialog="closeCancelPayment" />
 
 </template>
@@ -153,15 +164,6 @@ const open_cancel_form = ref(false);
 const open_payment_form = ref(false);
 const params = ref("");
 const loading = ref(true);
-const open_summary_modal = ref(false);
-const ancillary_services_test_data = ref([
-  { label: "For Rendering", value: "1" },
-  { label: "Fully Rendered", value: "2" },
-  { label: "Partially Rendered", value: "3" },
-  { label: "Cancelled", value: "4" },
-  { label: "Credit Notes", value: "5" },
-  { label: "Package Deals", value: "6" },
-]); 
 
 const headers = [
   {
@@ -250,38 +252,39 @@ const selectedUser = (item) => {
 const handleViewPayment = () => {
   alert("VIEW");
 };
+const openCashierSettings = () => {
+  open_sequence_setting.value = true;
+  console.log("Open Cashier Settings");
+}
 const handleCashierSettings = (settings) => {
   payload.value = settings;
   open_sequence_setting.value = false;
 };
 const handleNewPayment = () => {
   open_payment_form.value = true;
-  setTimeout(() => {
-    open_payment_form.value = true;
-    open_sequence_setting.value = true;
-  }, 100);
+};
+const onPaymentSubmission = async (payload) => {
+  // console.log(payload);
+  if (payload) {
+    const response = await useMethod("post", "save-payment", payload);
+    if (response) {
+      useSnackbar(true, "green", response.message);
+    } else {
+      useSnackbar(true, "red", "Failed to save payment");
+    }
+  }
 };
 const closeSequenceSetting = () => {
-  open_payment_form.value = false;
   open_sequence_setting.value = false;
-  payload.value = {};
 };
 const closeHandlePayment = () => {
   open_payment_form.value = false;
-  payload.value = {};
 }
 const handleCancelPayment = () => {
   open_cancel_form.value = true;
 };
 const closeCancelPayment = () => {
   open_cancel_form.value = false;
-}
-
-const ViewSummary = () => {
-  open_summary_modal.value = true;
-}
-const closeViewSummary = () => {
-  open_summary_modal.value = false;
 }
 
 const loadItems = async (options = null, searchkeyword = null) => {
@@ -315,6 +318,10 @@ const updateTotalItems = (newTotalItems) => {
 const updateServerItems = (newServerItems) => {
   serverItems.value = newServerItems;
 };
+
+onMounted(() => {
+  console.log("TEST");
+})
 
 </script>
 
