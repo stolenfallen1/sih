@@ -371,20 +371,16 @@ const logout = () => {
   color: #000;
   font-weight: bold;
 }
-
 ::-webkit-scrollbar {
-  width: 5px;   
-  height: 5px;            /* width of the entire scrollbar */
+    width: 12px;
 }
-
-::-webkit-scrollbar-track {
-  background: #DDDD;        /* color of the tracking area */
-}
-
 ::-webkit-scrollbar-thumb {
-  background-color: #DDDD;    /* color of the scroll thumb */
-  border-radius: 10px;       /* roundness of the scroll thumb */
-  border: 1px solid #DDDD;  /* creates padding around scroll thumb */
+    background-color: #107bac; 
+    border-radius: 10px; 
+    border: 3px solid #f5f5f5; 
+}
+::-webkit-scrollbar-track {
+    background-color: #f5f5f5; 
 }
 .v-overlay__scrim {
     pointer-events: auto;

@@ -1,6 +1,6 @@
 <template>
     <v-row>
-        <v-col cols="5">
+        <v-col cols="4">
             <v-row>
                 <v-col cols="12">
                     <v-card elevation="4">
@@ -14,10 +14,11 @@
                 </v-col>
                 <v-col cols="6">
                     <v-text-field
-                        readonly
                         variant="solo"
                         density="compact"
                         label="OR Number"
+                        @keyup.enter="searchORNumber"
+                        v-model="payload.RefNum"
                         required
                         hide-details
                     ></v-text-field>
@@ -43,15 +44,14 @@
                 </v-col>
             </v-row>
         </v-col>
-        <v-col cols="7">
+        <v-col cols="8">
             <!-- <template> -->
                 <v-table density="compact" height="325" class="styled-table">
                     <thead>
                         <tr>
-                            <th>RefNum</th>
-                            <th>Revenue</th>
-                            <th>Item ID</th>
                             <th>Patient ID</th>
+                            <th>Revenue ID</th>
+                            <th>RefNum</th>
                             <th>Particulars</th>
                             <th>Amount</th>
                             <th>Quantity</th>
@@ -60,12 +60,11 @@
                     <tbody>
                         <!-- <template> -->
                             <tr>
-                                <td style="margin: 0; padding: 1px;" width="100%"> </td>
-                                <td style="margin: 0; padding: 1px;" width="100%"> </td>
-                                <td style="margin: 0; padding: 1px;" width="100%"> </td>
-                                <td style="margin: 0; padding: 1px;" width="100%"> </td>
-                                <td style="margin: 0; padding: 1px;" width="100%"> </td>
-                                <td style="margin: 0; padding: 1px;" width="100%"> </td>
+                                <td> </td>
+                                <td> </td>
+                                <td> </td>
+                                <td> </td>
+                                <td> </td>
                             </tr>
                         <!-- </template> -->
                     </tbody>
@@ -83,15 +82,9 @@
     />
 </template>
 <script setup>
-const props = defineProps({
-    payload: {
-        type: Object,
-        default: () => {},
-        required: false,
-    }
-});
 
 const { selectedRowDetails } = storeToRefs(useSubcomponentSelectedRowDetailsStore());
+const payload = ref({});
 const emits = defineEmits(["close-dialog"]);
 const password_payload = ref({});
 const confirmDialog = ref(false);
@@ -108,6 +101,19 @@ const openConfirmDialog = () => {
 const closeConfirmDialog = () => {
     confirmDialog.value = false;
 };
+
+const searchORNumber = async () => {
+    if (payload.value.RefNum) {
+        const response = await useMethod("get", "get-ornumber?RefNum=", "", payload.value.RefNum);
+        if (response) {
+            console.log(response);
+        } else if (response && response.data && response.data.length === 0) {
+            return useSnackbar(true, "error", "OR Number not found.");
+        }
+    } else {
+        return useSnackbar(true, "error", "Please enter OR Number.");
+    }
+}
 
 const onSubmit = async (user_details) => {
     if (user_details.user_passcode === usePasscode()) {
@@ -132,10 +138,10 @@ const onSubmit = async (user_details) => {
     scrollbar-color: #727272 #f5f5f5; 
 }
 .styled-table::-webkit-scrollbar {
-    width: 16px;
+    width: 12px;
 }
 .styled-table::-webkit-scrollbar-thumb {
-    background-color: #727272; 
+    background-color: #107bac; 
     border-radius: 10px; 
     border: 3px solid #f5f5f5; 
 }
