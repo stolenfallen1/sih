@@ -17,10 +17,10 @@
                 <tbody>
                     <template v-for="(item, index) in table_data" :key="index">
                         <tr>
-                            <td> {{ item.items.transaction_code}} </td>
-                            <td> {{ item.itemID }} </td>
-                            <td> {{ item.items.exam_description }} </td>
-                            <td> {{ item.amount }}</td>
+                            <td> {{ item?.revenueID }} </td>
+                            <td> {{ item?.itemID }} </td>
+                            <td> {{ item?.items?.exam_description ? item?.items?.exam_description : item?.doctor_details?.doctor_name  }} </td>
+                            <td> {{ item?.amount }}</td>
                         </tr>
                     </template>
                 </tbody>
@@ -342,46 +342,54 @@
     </v-row>
     <v-spacer></v-spacer>
     <v-btn class="bg-info text-white mr-2" @click="resetTransactionForm">Reset</v-btn>
-    <v-btn class="bg-primary text-white" @click="openConfirmDialog">Save</v-btn>
+    <v-btn class="bg-primary text-white" @click="openRecieptsInfo">Save</v-btn>
     <ORSequenceNumber 
         :open_cashier_settings="open_cashier_settings"
         @close-dialog="closeCashierSettings"
         @save-settings="handleCashierSettings"
     />
     <RecieptsInfo 
+        :payload="payload"
         :open_reciepts_form="open_reciepts_form"
         @close-dialog="closeRecieptsForm"
+        @submit="onParseReciept"
     />
     <Confirmation 
-        :show="confirmDialog"
+        :show="confirm_password"
         :payload="password_payload"
-        @submit="onSubmit"
         @close="closeConfirmDialog"
+        @submit="onSubmit"
     />    
 </template>
 <script setup>
 import ORSequenceNumber from "./ORSequenceNumber.vue";
 import RecieptsInfo from "./ReceiptsInfo.vue";
 
-const payload = ref({})
-const emits = defineEmits(["close-dialog", "save-payment"]);
+const emits = defineEmits(["close-dialog"]);
 let table_tab = ref("0");
 const table_data = ref([]);
 const open_reciepts_form = ref(false);
 const open_cashier_settings = ref(false);
 const password_payload = ref({});
-const confirmDialog = ref(false);
+const confirm_password = ref(false);
+const payload = ref({
+    Items: [],
+})
 
-const openConfirmDialog = () => {
-    confirmDialog.value = true;
-};
-
-const closeConfirmDialog = () => {
-    confirmDialog.value = false;
+const openRecieptsInfo = () => {
+    open_reciepts_form.value = true;
 };
 
 const closeRecieptsForm = () => {
     open_reciepts_form.value = false;
+};
+
+const openConfirmDialog = () => {
+    confirm_password.value = true;
+};
+
+const closeConfirmDialog = () => {
+    confirm_password.value = false;
 };
 
 const openCashierSettings = () => {
@@ -401,13 +409,20 @@ const searchChargeItem = async () => {
     if (payload.value.refNum) {
         const response = await useMethod("get", "get-charge-item?refNum=", "", payload.value.refNum);
         if (response && response.data && response.data.length > 0) {
-            table_data.value = response.data; // For table data
+            table_data.value = response.data; 
             payload.value.patient_id = response.data[0].patient_id;
             payload.value.register_id_no = response.data[0].register_id_no;
-            payload.value.transaction_code = response.data[0].items && response.data[0].items.transaction_code;
-            payload.value.itemID = response.data.map(item => item.itemID).join(" , ");
-            payload.value.particulars = response.data.map(item => item.items.exam_description).join(" , ");
-            payload.value.amount = response.data.map(item => parseFloat(item.amount)).reduce((a, b) => a + b, 0);
+            payload.value.transaction_code = response.data[0].revenueID;
+            payload.value.itemID = response.data.map(item => item.itemID) ? response.data.map(item => item.itemID).join(" , ") : null;
+
+            const exam_description = response.data.map(item => item.items?.exam_description).filter(Boolean).join(" , ");
+            const doctor_names = response.data.map(item => item.doctor_details?.doctor_name).filter(Boolean).join(" , ");
+            payload.value.particulars = exam_description || doctor_names;
+            payload.value.amount = response.data.map(item => parseFloat(item.amount)).filter(amount => !isNaN(amount)).reduce((a, b) => a + b, 0);
+
+            payload.value.Items = table_data.value;
+            console.log(payload.value);
+
         } else if (response && response.data && response.data.length === 0) {
             return useSnackbar(true, "error", "Charge slip not found.");
         }
@@ -448,10 +463,19 @@ const resetTransactionForm = () => {
     payload.value.check_amount = null;
 };
 
+const onParseReciept = (payload) => {
+    open_reciepts_form.value = false;
+    confirm_password.value = true;
+}
+
 const onSubmit = async (user_details) => {
     if (user_details.user_passcode === usePasscode()) {
-        console.log(payload.value);
-        closeConfirmDialog();
+        const response = await useMethod("post", "save-payment", payload.value);
+        if (response) {
+            useSnackbar(true, "success", "Payment successfully saved.");
+            resetTransactionForm();
+            closeConfirmDialog();
+        }
     } else {
         return useSnackbar(true, "error", "Password incorrect.");
     }
@@ -505,16 +529,10 @@ const card_data = ref([
     }
 ]);
 
-// const getCardData = async () => {
-//     const credit_res = await useMethod("get", "get-credit-cards", "", "");
-//     const debit_res = await useMethod("get", "get-debit-cards", "", "");
-//     if (credit_res && debit_res) {
-//         card_data.value = [...debit_res, ...credit_res];
-//     }
-// }
-
 onMounted(() => {
-    // getCardData();
+    setTimeout(() => {
+        openCashierSettings();
+    }, 500);
 });
 </script>
 
@@ -528,16 +546,6 @@ onMounted(() => {
     padding-left: 10px;
     padding-right: 10px;
     margin: 0;
-}
-::-webkit-scrollbar {
-    width: 16px;
-}
-::-webkit-scrollbar-thumb {
-    background-color: #727272; 
-    border: 3px solid #f5f5f5; 
-}
-::-webkit-scrollbar-track {
-    background-color: #f5f5f5; 
 }
 .form-header {
     color: #000;
@@ -560,10 +568,11 @@ onMounted(() => {
     scrollbar-color: #727272 #f5f5f5; 
 }
 .styled-table::-webkit-scrollbar {
-    width: 16px;
+    width: 12px;
 }
 .styled-table::-webkit-scrollbar-thumb {
-    background-color: #727272; 
+    background-color: #107bac; 
+    border-radius: 10px; 
     border: 3px solid #f5f5f5; 
 }
 .styled-table::-webkit-scrollbar-track {

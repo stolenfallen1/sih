@@ -768,6 +768,7 @@ const onSubmit = async () => {
 
     if (payload.value.charge_to === "Company / Insurance") {
         try {
+            payload.value.msc_price_scheme_id = 2;
             let response = await useMethod("post", "post-his-charge", payload.value);
             if (response) {
                 useSnackbar(true, "success", "Charges posted successfully.");
@@ -783,6 +784,7 @@ const onSubmit = async () => {
         }
     } else {
         try {
+            payload.value.msc_price_scheme_id = 1;
             let response = await useMethod("post", "post-cash-assessment", payload.value);
             if (response) {
                 useSnackbar(true, "success", "Charges posted successfully.");
@@ -1064,10 +1066,10 @@ onMounted(() => {
     scrollbar-color: #727272 #f5f5f5; 
 }
 .styled-table::-webkit-scrollbar {
-    width: 16px;
+    width: 12px;
 }
 .styled-table::-webkit-scrollbar-thumb {
-    background-color: #727272; 
+    background-color: #107bac; 
     border-radius: 10px; 
     border: 3px solid #f5f5f5; 
 }

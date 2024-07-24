@@ -1,5 +1,5 @@
 <template>
-    <v-dialog :model-value="open_cashier_settings" rounded="lg" @update:model-value="closeDialog"  scrollable max-width="600px">
+    <v-dialog :model-value="open_cashier_settings" rounded="lg" @update:model-value="closeDialog" max-width="600px">
         <form @submit.prevent="onSubmit">
             <v-card rounded="lg">
                 <v-toolbar density="compact" color="#107bac" hide-details>

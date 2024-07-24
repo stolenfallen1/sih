@@ -68,7 +68,6 @@
     :show="ConsultantSpecializations" 
     @close-dialog="useTableAndTemplate('ConsultantSpecializations', false)" 
   />
-  <ConsultantSpecializationsDialog />
   <MedicalServiceTypesDialog 
     :show="MedicalServiceTypes"
     @close-dialog="useTableAndTemplate('MedicalServiceTypes', false)"
