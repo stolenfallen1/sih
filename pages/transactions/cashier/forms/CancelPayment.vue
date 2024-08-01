@@ -1,5 +1,5 @@
 <template>
-    <v-row>
+    <v-row class="mb-2">
         <v-col cols="4">
             <v-row>
                 <v-col cols="12">
@@ -18,7 +18,7 @@
                         density="compact"
                         label="OR Number"
                         @keyup.enter="searchORNumber"
-                        v-model="payload.RefNum"
+                        v-model="payload.ORNumber"
                         required
                         hide-details
                     ></v-text-field>
@@ -29,6 +29,7 @@
                         variant="solo"
                         density="compact"
                         label="TransDate"
+                        v-model="payload.CancelDate"
                         required
                         hide-details
                     ></v-text-field>
@@ -38,6 +39,7 @@
                         variant="solo"
                         density="compact"
                         label="Reason for Cancellation"
+                        v-model="payload.CancelledReason"
                         required
                         hide-details
                     ></v-textarea>
@@ -45,35 +47,36 @@
             </v-row>
         </v-col>
         <v-col cols="8">
-            <!-- <template> -->
-                <v-table density="compact" height="325" class="styled-table">
-                    <thead>
+            <v-table density="compact" height="25vh"  class="styled-table" :hover="true">
+                <thead>
+                    <tr>
+                        <th>Patient ID</th>
+                        <th>RefNum</th>
+                        <th>Charge Slip</th>
+                        <th>Revenue ID</th>
+                        <th>Particulars</th>
+                        <th>Quantity</th>
+                        <th>Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <template v-for="(item, index) in table_data" :key="index">
                         <tr>
-                            <th>Patient ID</th>
-                            <th>Revenue ID</th>
-                            <th>RefNum</th>
-                            <th>Particulars</th>
-                            <th>Amount</th>
-                            <th>Quantity</th>
+                            <td> {{ item.patient_id }} </td>
+                            <td> {{ item.ORNumber }} </td>
+                            <td> {{ item.refNum }} </td>
+                            <td> {{ item.revenueID }} </td>
+                            <td> {{ item?.items?.exam_description ? item?.items?.exam_description : item?.doctor_details?.doctor_name }} </td>
+                            <td> {{ item.quantity }} </td>
+                            <td> {{ parseFloat(item?.amount).toFixed(2) }} </td>
                         </tr>
-                    </thead>
-                    <tbody>
-                        <!-- <template> -->
-                            <tr>
-                                <td> </td>
-                                <td> </td>
-                                <td> </td>
-                                <td> </td>
-                                <td> </td>
-                            </tr>
-                        <!-- </template> -->
-                    </tbody>
-                    <v-divider></v-divider>
-                </v-table>
-            <!-- </template> -->
+                    </template>
+                </tbody>
+            </v-table>
         </v-col>
     </v-row>
-    <v-btn class="bg-error text-white" type="submit">Cancel OR</v-btn>
+    <v-btn class="bg-info text-white mr-2" @click="resetTransactionForm">Reset</v-btn>
+    <v-btn class="bg-error text-white" @click="openConfirmDialog">Cancel OR</v-btn>
     <Confirmation 
         :show="confirmDialog"
         :payload="password_payload"
@@ -85,16 +88,18 @@
 
 const { selectedRowDetails } = storeToRefs(useSubcomponentSelectedRowDetailsStore());
 const payload = ref({});
+const table_data = ref([]);
 const emits = defineEmits(["close-dialog"]);
 const password_payload = ref({});
 const confirmDialog = ref(false);
 
-const closeDialog = () => {
-    emits("close-dialog");
-    password_payload.value = {};
-};
-
 const openConfirmDialog = () => {
+    if (payload.value.CancelledReason == null || payload.value.CancelDate == null) {
+        return useSnackbar(true, "error", "Cancel Date and Reason for Cancellation is required.");
+    } 
+    if (payload.value.CancelledReason.toLowerCase().includes("system")) {
+        return useSnackbar(true, "error", "System Error as Reason is invalid.");
+    }
     confirmDialog.value = true;
 };
 
@@ -103,34 +108,63 @@ const closeConfirmDialog = () => {
 };
 
 const searchORNumber = async () => {
-    if (payload.value.RefNum) {
-        const response = await useMethod("get", "get-ornumber?RefNum=", "", payload.value.RefNum);
-        if (response) {
-            console.log(response);
-        } else if (response && response.data && response.data.length === 0) {
-            return useSnackbar(true, "error", "OR Number not found.");
+    if (payload.value.ORNumber) {
+        const response = await useMethod("get", "get-ornumber?ORNumber=", "", payload.value.ORNumber);
+        if (response && response.data) {
+            if (response.data.length > 0) {
+                table_data.value = response.data;
+            } else {
+                return useSnackbar(true, "error", "OR Number not found.");
+            }
         }
     } else {
         return useSnackbar(true, "error", "Please enter OR Number.");
     }
 }
 
+const resetTransactionForm = () => {
+    payload.value = {};
+    table_data.value = [];
+};
+
 const onSubmit = async (user_details) => {
     if (user_details.user_passcode === usePasscode()) {
-        alert("TEST CANCELLATION");
-        closeConfirmDialog();
-        closeDialog();
+        const response = await fetch(useApiUrl() + "/cancel-ornumber", {
+            method: "put",
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + useToken()
+            },
+            body: JSON.stringify({ items: payload.value })
+        });
+        if (response) {
+            useSnackbar(true, "success", "OR Number cancelled successfully.");
+            resetTransactionForm();
+            closeConfirmDialog();
+        }
     } else {
         return useSnackbar(true, "error", "Password incorrect.");
     }
 };
+
+const cancelledStatus = await useStatus("Cancelled");
+onUpdated(() => {
+    if (cancelledStatus && cancelledStatus.length > 0) {
+        payload.value.status = cancelledStatus[0].id;
+    }
+});
 </script>
 
 <style scoped>
 .styled-table th {
+    max-width: 100%;
     padding: 8px;
-    border: 1px solid #eceaea;
     margin: 0;
+}
+.styled-table {
+    background-color: #f8f8f8;
+    border: 1px solid #D3D3D3;
+    margin-top: 1px;
 }
 .styled-table {
     overflow-y: auto;
@@ -147,6 +181,8 @@ const onSubmit = async (user_details) => {
 }
 .styled-table::-webkit-scrollbar-track {
     background-color: #f5f5f5; 
-    border-radius: 10px; 
+}
+.styled-table::-webkit-scrollbar {
+    width: 12px;
 }
 </style>

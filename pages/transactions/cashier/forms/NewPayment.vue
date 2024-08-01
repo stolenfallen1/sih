@@ -5,7 +5,7 @@
                 <p style="font-size: 17px; font-weight: bolder; text-decoration: underline;">Item Details</p>
                 <v-btn color="primary" style="border-radius: 0; margin-bottom: 2px;" @click="openCashierSettings"><v-icon class="mr-2">mdi-cog-outline</v-icon>Change Cashier Settings</v-btn>
             </div>
-            <v-table density="compact" height="25vh"  class="styled-table">
+            <v-table density="compact" height="25vh"  class="styled-table" :hover="true">
                 <thead>
                     <tr>
                         <th>Dept Code</th>
@@ -20,7 +20,7 @@
                             <td> {{ item?.revenueID }} </td>
                             <td> {{ item?.itemID }} </td>
                             <td> {{ item?.items?.exam_description ? item?.items?.exam_description : item?.doctor_details?.doctor_name  }} </td>
-                            <td> {{ item?.amount }}</td>
+                            <td> {{ parseFloat(item?.amount).toFixed(2) }} </td>
                         </tr>
                     </template>
                 </tbody>
@@ -53,7 +53,7 @@
                 <v-col cols="6" >
                     <v-list-subheader class="form-header">Admission No</v-list-subheader>
                     <v-text-field
-                        v-model="payload.register_id_no"
+                        v-model="payload.case_no"
                         readonly
                         variant="solo"
                         density="compact"
@@ -223,77 +223,94 @@
     <v-row>
         <v-col cols="4" >
             <p style="font-size: 17px; font-weight: bolder; text-decoration: underline;">Cash</p>
-            <v-col cols="12" >
+            <v-col cols="12">
                 <v-list-subheader class="form-header">Cash Amount</v-list-subheader>
                 <v-text-field
-                    type="number"
                     variant="solo"
                     density="compact"
-                    v-model="payload.cash_amount"
+                    v-model="tempCashAmount"
+                    @blur="updateCashAmount"
                     hide-details
                 ></v-text-field>
             </v-col>
-            <v-col cols="12" >
-                <v-list-subheader class="form-header">Cash Tenedered</v-list-subheader>
+            <v-col cols="12">
+                <v-list-subheader class="form-header">Cash Tendered</v-list-subheader>
                 <v-text-field
-                    type="number"
                     variant="solo"
                     density="compact"
-                    v-model="payload.cash_tendered"
+                    v-model="tempCashTendered"
+                    @blur="updateCashTendered"
                     hide-details
                 ></v-text-field>
             </v-col>
-            <v-col cols="12" >
+            <v-col cols="12">
                 <v-list-subheader class="form-header">Change</v-list-subheader>
                 <v-text-field
-                    type="number"
                     variant="solo"
                     density="compact"
-                    v-model="payload.cash_change"
+                    v-model="formattedCashChange"
+                    readonly
                     hide-details
                 ></v-text-field>
             </v-col>
         </v-col>
-        <v-col cols="4" >
+        <v-col cols="4">
             <p style="font-size: 17px; font-weight: bolder; text-decoration: underline;">Card</p>
-            <v-col cols="12" >
-                <v-list-subheader class="form-header">Card</v-list-subheader>
+            <v-col cols="12">
+                <v-list-subheader class="form-header">Card Type</v-list-subheader>
                 <v-autocomplete
-                    item-title="Card"
-                    item-value="CardID"
-                    v-model="payload.card"
+                    item-title="payment_description"
+                    item-value="id"
+                    v-model="payload.card_type_id"
+                    variant="solo"
+                    :items="card_types"
+                    @update:model-value="handleCardItems"
+                    density="compact"
+                    hide-details
+                ></v-autocomplete>
+            </v-col>
+            <v-col cols="12">
+                <v-list-subheader class="form-header">Card Name</v-list-subheader>
+                <v-autocomplete
+                    item-title="description"
+                    item-value="id"
+                    v-model="payload.card_id"
                     variant="solo"
                     :items="card_data"
                     density="compact"
                     hide-details
                 ></v-autocomplete>
             </v-col>
-            <v-col cols="12" >
-                <v-list-subheader class="form-header">Approval #</v-list-subheader>
-                <v-text-field
-                    variant="solo"
-                    density="compact" 
-                    v-model="payload.card_approval_number"
-                    hide-details
-                ></v-text-field>
+            <v-col cols="12" class="mt-3">
+                <v-row>
+                    <v-col cols="5">
+                        <v-list-subheader class="form-header">Approval #</v-list-subheader>
+                        <v-text-field
+                            variant="solo"
+                            density="compact" 
+                            v-model="payload.card_approval_number"
+                            hide-details
+                        ></v-text-field>
+                    </v-col>
+                    <v-col cols="7">
+                        <v-list-subheader class="form-header">Expiry Date</v-list-subheader>
+                        <v-text-field
+                            type="date"
+                            variant="solo"
+                            v-model="payload.card_date"
+                            density="compact"
+                            hide-details
+                        ></v-text-field>
+                    </v-col>
+                </v-row>
             </v-col>
-            <v-col cols="12" >
-                <v-list-subheader class="form-header">Date</v-list-subheader>
+            <v-col cols="12" class="mt-2">
+                <v-list-subheader class="form-header">Amount to Pay</v-list-subheader>
                 <v-text-field
-                    type="date"
                     variant="solo"
-                    v-model="payload.card_date"
                     density="compact"
-                    hide-details
-                ></v-text-field>
-            </v-col>
-            <v-col cols="12" >
-                <v-list-subheader class="form-header">Card Amount</v-list-subheader>
-                <v-text-field
-                    type="number"
-                    variant="solo"
-                    v-model="payload.card_amount"
-                    density="compact"
+                    v-model="tempCardAmount"
+                    @blur="updateCardAmount"
                     hide-details
                 ></v-text-field>
             </v-col>
@@ -305,7 +322,7 @@
                 <v-text-field
                     variant="solo"
                     density="compact"
-                    v-model="payload.drawee_bank"
+                    v-model="payload.bank_check"
                     hide-details
                 ></v-text-field>
             </v-col>
@@ -329,12 +346,12 @@
                 ></v-text-field>
             </v-col>
             <v-col cols="12" >
-                <v-list-subheader class="form-header">Amount</v-list-subheader>
+                <v-list-subheader class="form-header">Amount to Pay</v-list-subheader>
                 <v-text-field
-                    type="number"
                     variant="solo"
                     density="compact"
-                    v-model="payload.check_amount"
+                    v-model="tempCheckAmount"
+                    @blur="updateCheckAmount"
                     hide-details
                 ></v-text-field>
             </v-col>
@@ -374,7 +391,19 @@ const password_payload = ref({});
 const confirm_password = ref(false);
 const payload = ref({
     Items: [],
-})
+    cash_amount: null,
+    cash_tendered: null,
+    cash_change: null,
+    card_amount: null,
+    check_amount: null,
+    status: null,
+});
+const card_types = ref([]);
+
+const tempCashAmount = ref(payload.value.cash_amount);
+const tempCashTendered = ref(payload.value.cash_tendered);
+const tempCardAmount = ref(payload.value.card_amount);
+const tempCheckAmount = ref(payload.value.check_amount);
 
 const openRecieptsInfo = () => {
     open_reciepts_form.value = true;
@@ -397,8 +426,10 @@ const openCashierSettings = () => {
 };
 
 const handleCashierSettings = (settings) => {
-    payload.value = settings;
-    open_cashier_settings.value = false;
+    payload.value.ORNumber = "OR" + settings[0].LastORnumber + settings[0].ORSuffix;
+    payload.value.collection_date = useDateMMDDYYY(settings[0].collection_date);
+    payload.value.Shift = settings[0].shift_id;
+    payload.value.UserID = settings[0].user_id;
 };
 
 const closeCashierSettings = () => {
@@ -411,7 +442,7 @@ const searchChargeItem = async () => {
         if (response && response.data && response.data.length > 0) {
             table_data.value = response.data; 
             payload.value.patient_id = response.data[0].patient_id;
-            payload.value.register_id_no = response.data[0].register_id_no;
+            payload.value.case_no = response.data[0].case_no;
             payload.value.transaction_code = response.data[0].revenueID;
             payload.value.itemID = response.data.map(item => item.itemID) ? response.data.map(item => item.itemID).join(" , ") : null;
 
@@ -434,7 +465,7 @@ const searchChargeItem = async () => {
 const resetTransactionForm = () => {
     table_data.value = [];
     payload.value.patient_id = null;
-    payload.value.register_id_no = null;
+    payload.value.case_no = null;
     payload.value.account_no = null;
     payload.value.payors_name = null;
     payload.value.refNum = null;
@@ -480,7 +511,6 @@ const onSubmit = async (user_details) => {
         return useSnackbar(true, "error", "Password incorrect.");
     }
 };
-
 
 const card_data = ref([
     {
@@ -529,9 +559,93 @@ const card_data = ref([
     }
 ]);
 
+const formatNumber = (value) => {
+    const number = parseFloat(value);
+    return isNaN(number) ? '' : usePeso(number);
+}
+
+const formattedCashChange = computed(() => formatNumber(payload.value.cash_change));
+
+const parseCurrencyInput = (value) => {
+    return parseFloat(value.replace(/[₱,]/g, '')) || null;
+}
+
+const updateCashAmount = () => {
+    const parsedValue = parseCurrencyInput(tempCashAmount.value);
+    payload.value.cash_amount = parsedValue;
+    tempCashAmount.value = formatNumber(parsedValue);
+}
+
+const updateCashTendered = () => {
+    const parsedValue = parseCurrencyInput(tempCashTendered.value);
+    payload.value.cash_tendered = parsedValue;
+    tempCashTendered.value = formatNumber(parsedValue);
+}
+
+const updateCardAmount = () => {
+    const parsedValue = parseCurrencyInput(tempCardAmount.value);
+    payload.value.card_amount = parsedValue;
+    tempCardAmount.value = formatNumber(parsedValue);
+}
+
+const updateCheckAmount = () => {
+    const parsedValue = parseCurrencyInput(tempCheckAmount.value);
+    payload.value.check_amount = parsedValue;
+    tempCheckAmount.value = formatNumber(parsedValue);
+}
+
+watch(() => {
+    if (payload.value.cash_amount && payload.value.cash_tendered) {
+        payload.value.cash_change = parseFloat(payload.value.cash_tendered) - parseFloat(payload.value.cash_amount);
+    } else {
+        payload.value.cash_change = null;
+    }
+    // if (payload.value.amount && payload.value.total_discount) {
+    //     payload.value.sub_total = parseFloat(payload.value.amount) - parseFloat(payload.value.total_discount);
+    // }
+    // if (payload.value.sub_total && payload.value.withholding_tax) {
+    //     payload.value.total_payment = parseFloat(payload.value.sub_total) - parseFloat(payload.value.withholding_tax);
+    // }
+    // if (payload.value.card_amount) {
+    //     payload.value.total_payment = parseFloat(payload.value.sub_total) - parseFloat(payload.value.card_amount);
+    // }
+    // if (payload.value.check_amount) {
+    //     payload.value.total_payment = parseFloat(payload.value.sub_total) - parseFloat(payload.value.check_amount);
+    // }
+}, { deep: true });
+
+const cardPaymentMethod = async () => {
+    const response = await useMethod("get", "get-payment-methods", "", "");
+    if (response) {
+        card_types.value = response.filter(method => method.payment_description === "Credit Card" || method.payment_description === "Debit Card");
+    }
+}
+
+const handleCardItems = async () => {
+    if (payload.value.card_type_id === 2) {
+        const response = await useMethod("get", "get-credit-cards", "", "");
+        if (response) {
+            card_data.value = response;
+        }
+    } else if (payload.value.card_type_id === 3) {
+        const response = await useMethod("get", "get-debit-cards", "", "");
+        if (response) {
+            card_data.value = response;
+        }
+    }
+}
+
+const paidStatus = await useStatus("Paid");
+onUpdated(() => {
+    if (paidStatus && paidStatus.length > 0) {
+        payload.value.status = paidStatus[0].id;
+    }
+})
+
 onMounted(() => {
     setTimeout(() => {
         openCashierSettings();
+        cardPaymentMethod();
     }, 500);
 });
 </script>

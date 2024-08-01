@@ -45,9 +45,9 @@
                         </td>
                     </template>
                     <template v-slot:item.prices="{ item }">
-                        <span v-if="item.prices && item.prices.length > 0">
-                            <template v-for="(price, index) in item.prices" :key="index">
-                                {{ `₱${parseFloat(price.price).toFixed(2)}` }}{{ index < item.prices.length - 1 ? ',' : '' }}
+                        <span v-if="filteredPrices(item).length > 0">
+                            <template v-for="(price, index) in filteredPrices(item)" :key="index">
+                                {{ `₱${parseFloat(price.price).toFixed(2)}` }}{{ index < filteredPrices(item).length - 1 ? ',' : '' }}
                             </template>
                         </span>
                         <span v-else>
@@ -125,7 +125,7 @@ const loadItems = async (page = null, itemsPerPage = null) => {
     let itemPerpageno = itemsPerPage || 15;
 
    
-    const response = await $fetch( useApiUrl() + `/get-charges-code?page=${pageno}&per_page=${itemPerpageno}&keyword=${data.value.keyword}`, {
+    const response = await $fetch( useApiUrl() + `/get-his-charges?page=${pageno}&per_page=${itemPerpageno}&keyword=${data.value.keyword}`, {
         method: 'post',
         headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + useToken()},
         body: { 
@@ -142,8 +142,12 @@ const loadItems = async (page = null, itemsPerPage = null) => {
         useSnackbar(true, "error", "No data found.");
     }
 };
+const filteredPrices = (item) => {
+    if (!item.prices) return "No prices found";
+    return item.prices.filter(price => price.transaction_code === props.user_input_revenue_code);
+}
 const handleSelectedRow = (selectedRows) => {
-    const selectedItems = selectedRows.map(rowId => serverItems.value.find(item => item.id === rowId));
+    const selectedItems = selectedRows.map(rowId => serverItems.value.find(item => item.id === rowId));  
     const validSelectedItems = selectedItems.filter(item => item !== undefined);
     selected_item.value = validSelectedItems[0];
 };
@@ -157,6 +161,7 @@ const search = () => {
 const closeDialog = () => {
     emits("close-dialog");
     selected_item.value = {};
+    data.value.keyword = "";
 };
 </script>
 

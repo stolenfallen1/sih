@@ -225,7 +225,13 @@
                                                     <option value="2">Stat</option>
                                                 </select>
                                             </td>
-                                            <td> <input class="input charge-focus" v-model="item.specimen" /> </td>
+                                            <td>
+                                                <select class="input charge-focus" v-model="item.specimen">
+                                                    <option v-for="(specimen, sIndex) in item.specimens" :key="sIndex" :value="specimen.id">
+                                                        {{ specimen.description }}
+                                                    </option>
+                                                </select>
+                                            </td>
                                             <td> <input class="input charge-focus" v-model="item.quantity" readonly /> </td>
                                             <td> <input class="input charge-focus" v-model="item.price" readonly /> </td>
                                             <td v-if="!item.isAdd" class="cursor-pointer" ><v-icon @click="handleAddCharge(item,index)" color="primary">mdi-plus-box</v-icon></td>
@@ -534,10 +540,8 @@ watch(charge_history_tab, (newTab) => {
 watch(pf_history_tab, (newTab) => {
     if (newTab == 0) {
         selected_cash_assessment.value = [];
-        console.log(newTab)
     } else if (newTab == 1) {
         selected_charges.value = [];
-        console.log(newTab)
     }
 });
 
@@ -568,6 +572,8 @@ const Charges = ref([
         specimen: "",
         quantity: 1,
         price: null,
+        barcode_prefix: "",
+        record_status: null,
     }
 ]);
 const DoctorCharges = ref([
@@ -576,6 +582,7 @@ const DoctorCharges = ref([
         doctor_code: "",
         doctor_name: "",
         amount: null,
+        record_status: null,
     }
 ]);
 
@@ -663,12 +670,21 @@ const focusPFTransaction = (index) => {
     }
 };
 
-const handleSelectedChargeItem = (selected_item) => {
+const handleSelectedChargeItem = async (selected_item) => {
     const lastRow = Charges.value[Charges.value.length - 1];
     lastRow.map_item_id = selected_item.map_item_id;
     lastRow.exam_description = selected_item.exam_description;
     lastRow.price = selected_item.prices ? usePeso(selected_item.prices[0].price) : '0';
     lastRow.totalamount = selected_item.price;
+    lastRow.barcode_prefix = selected_item?.sections?.barcodeid_prefix ? selected_item.sections.barcodeid_prefix : null;
+
+    if (lastRow.map_item_id && lastRow.transaction_code === 'LB') {
+        const response = await useMethod("get", "get-charges-specimen?map_item_id=", "", lastRow.map_item_id);
+        if (response && response.data && response.data.length > 0) {
+            lastRow.specimens = response.data.map(item => item.specimens) || [];
+            lastRow.specimen = lastRow.specimens.length > 0 ? lastRow.specimens[0].id : '';
+        }
+    } 
 };
 
 const handleAddProfessionalFee = (item, index) => {
@@ -799,7 +815,6 @@ const onSubmit = async () => {
             isLoadingBtn.value = false;
         }
     }
-
 };
 
 const confirmRevoke = () => {
@@ -1018,7 +1033,11 @@ watchEffect(() => {
     }
 })
 
+const pendingStatus = await useStatus("Pending");
 onUpdated(() => {
+    if (pendingStatus && pendingStatus.length > 0) {
+        payload.value.status = pendingStatus[0].id;
+    }
     // Forda display
     payload.value.patient_name = selectedRowDetails.value.lastname + ', ' + selectedRowDetails.value.firstname + ' ' + selectedRowDetails.value.middlename || '';
     payload.value.patient_id = selectedRowDetails.value.patient_id || '';
@@ -1026,14 +1045,14 @@ onUpdated(() => {
     payload.value.sex = selectedRowDetails.value.sex && selectedRowDetails.value.sex.sex_description || '';
     payload.value.birthdate = useDateMMDDYYY(selectedRowDetails.value.birthdate) || '';
     payload.value.age = selectedRowDetails.value.age || '';
-    payload.value.case_no = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry.register_id_no || '';
+    payload.value.case_no = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry.case_no || '';
     payload.value.account = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry.mscPrice_Schemes == 1 ? "Self-Pay" : "Company / Insurance";
     payload.value.registry_date = selectedRowDetails.value.patient_registry && useDateMMDDYYY(selectedRowDetails.value.patient_registry.registry_date) || '';
     payload.value.attending_doctor = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry.attending_doctor || 'N/A';
     payload.value.attending_doctor_fullname = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry.attending_doctor_fullname || 'N/A';
     payload.value.guarantor_id = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry.guarantor_id || 'N/A';
     payload.value.guarantor_name = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry.guarantor_name || 'N/A';
-
+    
     // Charges history
     if (payload.value.patient_id && payload.value.case_no) {
         getChargesHistory();
@@ -1042,6 +1061,7 @@ onUpdated(() => {
         getCashProfHistory();
     }
 })
+
 onMounted(() => {
     getRevenueCode();
 });
