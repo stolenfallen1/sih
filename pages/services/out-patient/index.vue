@@ -97,8 +97,8 @@
             :title="item.patient_registry && item.patient_registry.guarantor_id !== null ? 'HMO ' : 'Self Pay'"
             />
         </div>
-        <span v-if="column.key === 'register_id_no'" :key="column.key">
-          {{ item.patient_registry ? item.patient_registry.register_id_no : "..." }}
+        <span v-if="column.key === 'case_no'" :key="column.key">
+          {{ item.patient_registry ? item.patient_registry.case_no : "..." }}
         </span>
         <span v-if="column.key === 'sex'" :key="column.key" style="display: flex;">
           <v-icon v-if="item.sex && item.sex.sex_description === 'Male'" color="primary">mdi-gender-male</v-icon>
@@ -260,7 +260,7 @@ const columns = ref([]);
 const tableTabs = ref([
   {
     label: "Registered",
-    title: "List of registered outpatients today.",
+    title: "Registered patients today.",
     value: 1,
     endpoint: useApiUrl() + "/get-outpatient",
     columns: [
@@ -286,7 +286,7 @@ const tableTabs = ref([
                 title: "Case No.",
                 align: "start",
                 sortable: false,
-                key: "register_id_no",
+                key: "case_no",
               },
               {
                 title: "Last Name",
@@ -328,7 +328,7 @@ const tableTabs = ref([
   },
   {
     label: "Revoked",
-    title: "List of revoked outpatients today.",
+    title: "Revoked patients today.",
     value: 2,
     endpoint: useApiUrl() + "/get-revoked-outpatient",
     columns: [
@@ -354,7 +354,7 @@ const tableTabs = ref([
                 title: "Case No.",
                 align: "start",
                 sortable: false,
-                key: "register_id_no",
+                key: "case_no",
               },
               {
                 title: "Last Name",
@@ -389,6 +389,154 @@ const tableTabs = ref([
               {
                 title: "Revoked Date",
                 key: "revoked_date",
+                align: "start",
+                sortable: false,
+              },
+    ],
+  },
+  {
+    label: "Transferred",
+    title: "Transferred patients today.",
+    value: 3,
+    endpoint: useApiUrl() + "/get-revoked-outpatient",
+    columns: [
+              {
+                title: "",
+                align: "start",
+                sortable: false,
+                key: "registry_status",
+              },
+              {
+                title: "",
+                align: "start",
+                sortable: false,
+                key: "isHMO",
+              },
+              {
+                title: "Patient ID",
+                align: "start",
+                sortable: false,
+                key: "patient_id",
+              },
+              {
+                title: "ER Case No.",
+                align: "start",
+                sortable: false,
+                key: "er_case_no",
+              },
+              {
+                title: "ER Bed No.",
+                align: "start",
+                sortable: false,
+                key: "room_no",
+              },
+              {
+                title: "Last Name",
+                key: "lastname",
+                align: "start",
+                sortable: false,
+              },
+              {
+                title: "First Name",
+                key: "firstname",
+                align: "start",
+                sortable: false,
+              },
+              {
+                title: "Sex",
+                key: "sex",
+                align: "start",
+                sortable: false,
+              },
+              {
+                title: "Birth Date",
+                key: "birthdate",
+                align: "start",
+                sortable: false,
+              },
+              {
+                title: "Registry Date",
+                key: "registry_date",
+                align: "start",
+                sortable: false,
+              },
+              {
+                title: "Discharged Date",
+                key: "discharged_date",
+                align: "start",
+                sortable: false,
+              },
+    ],
+  },
+  {
+    label: "Admitted",
+    title: "Admitted patients today.",
+    value: 4,
+    endpoint: useApiUrl() + "/get-revoked-outpatient",
+    columns: [
+              {
+                title: "",
+                align: "start",
+                sortable: false,
+                key: "registry_status",
+              },
+              {
+                title: "",
+                align: "start",
+                sortable: false,
+                key: "isHMO",
+              },
+              {
+                title: "Patient ID",
+                align: "start",
+                sortable: false,
+                key: "patient_id",
+              },
+              {
+                title: "Admission No.",
+                align: "start",
+                sortable: false,
+                key: "admission_no",
+              },
+              {
+                title: "Room No.",
+                align: "start",
+                sortable: false,
+                key: "room_no",
+              },
+              {
+                title: "Last Name",
+                key: "lastname",
+                align: "start",
+                sortable: false,
+              },
+              {
+                title: "First Name",
+                key: "firstname",
+                align: "start",
+                sortable: false,
+              },
+              {
+                title: "Sex",
+                key: "sex",
+                align: "start",
+                sortable: false,
+              },
+              {
+                title: "Birth Date",
+                key: "birthdate",
+                align: "start",
+                sortable: false,
+              },
+              {
+                title: "Registry Date",
+                key: "registry_date",
+                align: "start",
+                sortable: false,
+              },
+              {
+                title: "Discharged Date",
+                key: "discharged_date",
                 align: "start",
                 sortable: false,
               },

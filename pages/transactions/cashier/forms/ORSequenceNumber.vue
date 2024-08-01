@@ -26,7 +26,7 @@
                                 variant="solo"
                                 density="compact"
                                 label="OR Number"
-                                v-model="ORNum"
+                                v-model="payload.LastORnumber"
                                 required
                                 hide-details
                             ></v-text-field>
@@ -36,7 +36,7 @@
                                 variant="solo"
                                 density="compact"
                                 label="OR Suffix"
-                                v-model="ORSuffix"
+                                v-model="payload.ORSuffix"
                                 required
                                 hide-details
                             ></v-text-field>
@@ -62,6 +62,7 @@
                                 variant="solo"
                                 density="compact"
                                 label="Manual OR #"
+                                v-model="payload.manualORNumber"
                                 hide-details
                             ></v-text-field>
                         </v-col>
@@ -70,6 +71,7 @@
                                 variant="solo"
                                 density="compact"
                                 label="Manul OR Suffix"
+                                v-model="payload.manualOrNumberSuffix"
                                 hide-details
                             ></v-text-field>
                         </v-col>
@@ -92,7 +94,7 @@
                                 density="compact"
                                 label="Shift"
                                 hide-details
-                                v-model="payload.shift"
+                                v-model="payload.shift_id"
                                 :items="shift_data"
                             ></v-autocomplete>
                         </v-col>
@@ -117,10 +119,9 @@ const props = defineProps({
 });
 
 const payload = ref({
+    user_id: '',
     collection_date: new Date().toISOString().substr(0, 10),
 });
-const ORNum = ref("");
-const ORSuffix = ref("");
 const emits = defineEmits(["close-dialog", "save-settings"]);
 
 const closeDialog = () => {
@@ -128,16 +129,19 @@ const closeDialog = () => {
     payload.value = {
         collection_date: new Date().toISOString().substr(0, 10),
     };
-    ORNum.value = "";
-    ORSuffix.value = "";
 };
 
-const onSubmit = () => {
-    handleORSuffix();
-    emits("save-settings", payload.value);
+const onSubmit = async () => {
+    const response = await useMethod("post", "cashier-settings", payload.value);
+    if (response) {
+        useSnackbar(true, "green", "Cashier settings updated successfully.");
+        closeDialog();
+        emits("save-settings", response.data);
+    }
     setTimeout(() => {
-        ORNum.value = "";
-        ORSuffix.value = "";
+        payload.value = {
+            collection_date: new Date().toISOString().substr(0, 10),
+        };
     });
 };
 
@@ -152,10 +156,6 @@ const getShiftSchedule = async () => {
         determineCurrentShift();
     } 
 };
-
-const handleORSuffix = () => {
-    payload.value.ORNumber = `OR${ORNum.value}${ORSuffix.value.toUpperCase()}`;
-}
 
 const determineCurrentShift = () => {
     const currentHour = new Date().getHours();
@@ -191,7 +191,7 @@ const determineCurrentShift = () => {
         }
     }
     if (nearestShift) {
-        payload.value.shift = nearestShift.id;
+        payload.value.shift_id = nearestShift.id;
     }
 };
 
@@ -203,6 +203,7 @@ onUpdated(() => {
             const parsedDetails = JSON.parse(userDetails);
             const userData = JSON.parse(parsedDetails.value);
             payload.value.cashier_name = userData.name || '';
+            payload.value.user_id = userData.id || '';
         } catch (error) {
             console.error('Error parsing user details from localStorage:', error);
         }
