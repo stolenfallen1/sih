@@ -1,7 +1,15 @@
-export const useSelectedPatient = defineStore('selectedPatient',{
+import { defineStore } from 'pinia'
+
+export const usePatientStore = defineStore('patient', {
     state: () => ({
-        selectedPatient: {
-            data: {},
+        selectedPatient: null
+    }),
+    actions: {
+        setSelectedPatient(patient: any) {
+            this.selectedPatient = patient;
         },
-    })
-})
+        clearSelectedPatient() {
+            this.selectedPatient = null;
+        }
+    }
+});

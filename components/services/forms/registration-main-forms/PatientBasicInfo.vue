@@ -136,16 +136,6 @@
         </v-col>
         <v-col cols="3">
             <v-col cols="12" class="form-col">
-                <v-list-subheader class="form-header">Blood Pressure</v-list-subheader>
-                <v-text-field
-                    variant="solo"
-                    v-model="payload.blood_pressure"
-                    :readonly="clicked_option === 'view'"
-                    hide-details
-                    density="compact"
-                ></v-text-field>
-            </v-col>
-            <v-col cols="12" class="form-col">
                 <v-list-subheader class="form-header">Temperature</v-list-subheader>
                 <v-text-field
                     variant="solo"
@@ -154,6 +144,30 @@
                     hide-details
                     density="compact"
                 ></v-text-field>
+            </v-col>
+            <v-col cols="12" class="form-col">
+                <v-row>
+                    <v-col cols="6">
+                        <v-list-subheader class="form-header">BP Sys</v-list-subheader>
+                        <v-text-field
+                            variant="solo"
+                            v-model="payload.bloodPressureSystolic"
+                            :readonly="clicked_option === 'view'"
+                            hide-details
+                            density="compact"
+                        ></v-text-field>
+                    </v-col>
+                    <v-col cols="6">
+                        <v-list-subheader class="form-header">BP Dias</v-list-subheader>
+                        <v-text-field
+                            variant="solo"
+                            v-model="payload.bloodPressureDiastolic"
+                            :readonly="clicked_option === 'view'"
+                            hide-details
+                            density="compact"
+                        ></v-text-field>
+                    </v-col>
+                </v-row>
             </v-col>
             <v-col cols="12" class="form-col">
                 <v-list-subheader class="form-header">Weight (kg)</v-list-subheader>

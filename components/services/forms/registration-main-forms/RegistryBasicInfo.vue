@@ -7,8 +7,8 @@
                 </v-list-subheader>
                 <v-text-field
                     variant="solo"
-                    v-model="payload.registry_date"
-                    :readonly="clicked_option === 'view'"
+                    :value="handleCaseDate"
+                    readonly
                     type="date"
                     hide-details
                     density="compact"
@@ -22,7 +22,7 @@
                     :items="[]"
                     item-title="description"
                     item-value="id"
-                    v-model="payload.register_type"
+                    v-model="payload.register_Casetype"
                     :readonly="clicked_option === 'view'"
                     :clearable="clicked_option === 'new' || clicked_option === 'edit'"
                     hide-details
@@ -88,7 +88,6 @@
                     hide-details
                     density="compact"
                     variant="solo"
-                    @update:model-value="handleHospitalizationPlan"
                 ></v-autocomplete>
             </v-col>
             <v-col cols="12" class="form-col">
@@ -299,9 +298,11 @@ const open_referring_hci_code_table = ref(false);
 const open_referring_hci_address_form = ref(false);
 const open_diet_desc = ref(false);
 
-const handleHospitalizationPlan = () => { 
-    props.payload.hosp_plan = props.payload.hosp_plan;
-}
+const handleCaseDate = computed(() => {
+    const today = new Date().toISOString().split('T')[0];
+    props.payload.registry_date = today;
+    return today;
+});
 
 const openHandleDiscountScheme = () => {
     open_discount_scheme_table.value = true;
@@ -385,14 +386,14 @@ const getTransactionType = async () => {
         transaction_type_loading.value = false;
     } 
     if (props.form_type === "outpatient") {
-        let register_type = response.find(item => item.description === "Outpatient Consultation");
-        props.payload.mscAccount_trans_types = parseInt(register_type.id);
+        let register_Casetype = response.find(item => item.description === "Outpatient Consultation");
+        props.payload.mscAccount_trans_types = parseInt(register_Casetype.id);
     } else if (props.form_type === "emergency") {
-        let register_type = response.find(item => item.description === "Emergency Case");
-        props.payload.mscAccount_trans_types = parseInt(register_type.id);
+        let register_Casetype = response.find(item => item.description === "Emergency Case");
+        props.payload.mscAccount_trans_types = parseInt(register_Casetype.id);
     } else if (props.form_type === "inpatient") {
-        let register_type = response.find(item => item.description === "Inpatient Case");
-        props.payload.mscAccount_trans_types = parseInt(register_type.id);
+        let register_Casetype = response.find(item => item.description === "Inpatient Case");
+        props.payload.mscAccount_trans_types = parseInt(register_Casetype.id);
     } else {
         props.payload.mscAccount_trans_types = [];
     }

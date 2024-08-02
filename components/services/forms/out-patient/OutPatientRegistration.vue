@@ -77,6 +77,9 @@
 </template>
 
 <script setup>
+import { usePatientStore } from '@/store/selectedPatient';
+
+const patientStore = usePatientStore();
 
 const props = defineProps({
     form_dialog:{
@@ -104,6 +107,7 @@ const closeDialog = () => {
     emits('close-dialog');
     tab.value = "0";
     payload.value = {};
+    patientStore.clearSelectedPatient();
 }
 
 const onSubmit = async () => {
@@ -182,7 +186,7 @@ const validation = ()=>{
 }
 
 onUpdated(() => {
-    if (selectedRowDetails.value) {
+    if (selectedRowDetails.value && selectedRowDetails.value.id) {
         payload.value = Object.assign({}, selectedRowDetails.value);
         payload.value.sex_id = parseInt(selectedRowDetails.value.sex_id) ? parseInt(selectedRowDetails.value.sex_id) : '';
         payload.value.suffix_id = parseInt(selectedRowDetails.value.suffix_id) ? parseInt(selectedRowDetails.value.suffix_id) : '';
@@ -190,8 +194,8 @@ onUpdated(() => {
         payload.value.birthdate = useDateMMDDYYY(selectedRowDetails.value.birthdate) ? useDateMMDDYYY(selectedRowDetails.value.birthdate) : '';
         payload.value.register_id_no = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry.register_id_no ? selectedRowDetails.value.patient_registry.register_id_no : '';
         payload.value.registry_date = useDateMMDDYYY(selectedRowDetails.value.registry_date) ? useDateMMDDYYY(selectedRowDetails.value.registry_date) : '';
-        payload.value.mscPrice_Groups = selectedRowDetails.value.patient_registry && parseInt(selectedRowDetails.value.patient_registry.mscPrice_Groups) ? parseInt(selectedRowDetails.value.patient_registry.mscPrice_Groups) : '';
-        payload.value.mscPrice_Schemes = selectedRowDetails.value.patient_registry && parseInt(selectedRowDetails.value.patient_registry.mscPrice_Schemes) ? parseInt(selectedRowDetails.value.patient_registry.mscPrice_Schemes) : '';
+        payload.value.mscPrice_Groups = selectedRowDetails.value.patient_registry && parseInt(selectedRowDetails.value.patient_registry.mscPrice_Groups) ? parseInt(selectedRowDetails.value.patient_registry.mscPrice_Groups) : 'TEST';
+        payload.value.mscPrice_Schemes = selectedRowDetails.value.patient_registry && parseInt(selectedRowDetails.value.patient_registry.mscPrice_Schemes) ? parseInt(selectedRowDetails.value.patient_registry.mscPrice_Schemes) : 'TEST';
         payload.value.religion_id = parseInt(selectedRowDetails.value.religion_id) ? parseInt(selectedRowDetails.value.religion_id) : '';
         payload.value.nationality_id = parseInt(selectedRowDetails.value.nationality_id) ? parseInt(selectedRowDetails.value.nationality_id) : '';
 
@@ -212,7 +216,40 @@ onUpdated(() => {
         payload.value.selectedConsultant = Consultant.value;
 
         payload.value.registry_remarks = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry.registry_remarks ? selectedRowDetails.value.patient_registry.registry_remarks : '';
-    } 
+    } else {
+        if (patientStore.selectedPatient && patientStore.selectedPatient.id) { 
+            console.log(patientStore.selectedPatient);
+            payload.value = Object.assign({}, patientStore.selectedPatient);
+            payload.value.sex_id = parseInt(patientStore.selectedPatient.sex_id) ? parseInt(patientStore.selectedPatient.sex_id) : '';
+            payload.value.suffix_id = parseInt(patientStore.selectedPatient.suffix_id) ? parseInt(patientStore.selectedPatient.suffix_id) : '';
+            payload.value.civilstatus_id = parseInt(patientStore.selectedPatient.civilstatus_id) ? parseInt(patientStore.selectedPatient.civilstatus_id) : '';
+            payload.value.birthdate = useDateMMDDYYY(patientStore.selectedPatient.birthdate) ? useDateMMDDYYY(patientStore.selectedPatient.birthdate) : '';
+            payload.value.register_id_no = patientStore.selectedPatient.patient_registry_details && patientStore.selectedPatient.patient_registry_details.register_id_no ? patientStore.selectedPatient.patient_registry_details.register_id_no : '';
+            payload.value.registry_date = useDateMMDDYYY(patientStore.selectedPatient.registry_date) ? useDateMMDDYYY(patientStore.selectedPatient.registry_date) : '';
+            payload.value.mscPrice_Groups = patientStore.selectedPatient.patient_registry_details && parseInt(patientStore.selectedPatient.patient_registry_details.mscPrice_Groups) ? parseInt(patientStore.selectedPatient.patient_registry_details.mscPrice_Groups) : 'TEST';
+            payload.value.mscPrice_Schemes = patientStore.selectedPatient.patient_registry_details && parseInt(patientStore.selectedPatient.patient_registry_details.mscPrice_Schemes) ? parseInt(patientStore.selectedPatient.patient_registry_details.mscPrice_Schemes) : 'TEST';
+            payload.value.religion_id = parseInt(patientStore.selectedPatient.religion_id) ? parseInt(patientStore.selectedPatient.religion_id) : '';
+            payload.value.nationality_id = parseInt(patientStore.selectedPatient.nationality_id) ? parseInt(patientStore.selectedPatient.nationality_id) : '';
+    
+            // For HMO GUARANTORS
+            const Guarantor = ref([]);
+            if (patientStore.selectedPatient.patient_registry_details) {
+                patientStore.selectedPatient.patient_registry_details.guarantor_approval_date = useDateMMDDYYY(patientStore.selectedPatient.patient_registry_details.guarantor_approval_date);
+                patientStore.selectedPatient.patient_registry_details.guarantor_validity_date = useDateMMDDYYY(patientStore.selectedPatient.patient_registry_details.guarantor_validity_date);
+                Guarantor.value.push(patientStore.selectedPatient.patient_registry_details)
+            }
+            payload.value.selectedGuarantor = Guarantor.value;
+    
+            // For CONSULTANTS
+            const Consultant = ref([]);
+            if (patientStore.selectedPatient.patient_registry_details) {
+                Consultant.value.push(patientStore.selectedPatient.patient_registry_details)
+            }
+            payload.value.selectedConsultant = Consultant.value;
+    
+            payload.value.registry_remarks = patientStore.selectedPatient.patient_registry_details && patientStore.selectedPatient.patient_registry_details.registry_remarks ? patientStore.selectedPatient.patient_registry_details.registry_remarks : '';
+        }
+    }
 });
 </script>
 
