@@ -228,8 +228,6 @@ const handleSelectedRow = (event, selectedRow) => {
     emits("selected-row", item);
 };
 
-// const handleClearSearch = () => {};
-
 const closeDialog = () => {
   emits("close-dialog");
   selectedRows.value = [];

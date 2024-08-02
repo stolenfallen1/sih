@@ -209,6 +209,9 @@
 
 <script setup>
 import PatientProfileDialog from "../../../components/master-file/forms/patient/FormContainer.vue";
+import { usePatientStore } from '@/store/selectedPatient';
+
+const patientStore = usePatientStore();
 
 import ReusableTable from "~/components/reusables/ReusableTable.vue";
 const {
@@ -626,8 +629,9 @@ const openAddFormDialog = (type) => {
     if (type === 'new') {
         form_dialog.value = true;
         closeCentralFormDialog();
-    } else {  
-        if (selectedPatient.value.id) {  
+    } else if (type === 'old') {  
+        patientStore.setSelectedPatient(selectedPatient.value);
+        if (patientStore.selectedPatient && patientStore.selectedPatient.id) {  
             form_dialog.value = true;
             closeCentralFormDialog();
         } else {
