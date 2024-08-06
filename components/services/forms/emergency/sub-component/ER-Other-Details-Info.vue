@@ -54,6 +54,14 @@
                 <v-checkbox v-model="payload.isWithMedicalPackage" :readonly="clicked_option === 'view'" label="With Hospital Package?" hide-details density="compact"></v-checkbox>
                 <v-btn :disabled="!payload.isWithMedicalPackage" :readonly="clicked_option === 'view'" @click="handleMedicalPackage">Apply Medical Package</v-btn>
             </v-col>
+            <v-col cols="12" class="form-col">
+                <v-checkbox
+                    label="Is Employee?"
+                    v-model="payload.isEmployee"
+                    color="primary"
+                >
+                </v-checkbox>
+            </v-col>
         </v-col>
         <v-col cols="8">
             <v-col cols="12" class="form-col">
@@ -142,6 +150,7 @@ const props = defineProps({
 
 const medical_package_dialog = ref(false);
 const address_form_dialog = ref(false);
+const isEmployee = ref(false);
 
 const handleOpenAddressForm = () => {
     if (props.clicked_option === 'view') return;

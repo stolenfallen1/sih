@@ -31,25 +31,25 @@
                         <v-col cols="9" class="scrollable-content">
                         <v-window v-model="tab">
                             <v-window-item class="pa-1">
-                                <patient-basic-info :clicked_option="clicked_option" :payload="payload" />
+                                <ER-Patient-Basic-Info :clicked_option="clicked_option" :payload="payload" />
                             </v-window-item>
                             <v-window-item class="pa-1">
-                                <registry-basic-info :clicked_option="clicked_option" :payload="payload" :form_type="formType" />
+                                <ER-Registry-Basic-Info :clicked_option="clicked_option" :payload="payload" :form_type="formType" />
                             </v-window-item>
                             <v-window-item class="pa-1">
-                                <other-details-info :clicked_option="clicked_option" :payload="payload" :form_type="formType" />
+                                <ER-Other-Details-Info :clicked_option="clicked_option" :payload="payload" :form_type="formType" />
                             </v-window-item>
                             <v-window-item class="pa-1">
-                                <hmo-info :clicked_option="clicked_option" :payload="payload" />
+                                <ER-HMO-Info :clicked_option="clicked_option" :payload="payload" />
                             </v-window-item>
                             <v-window-item class="pa-1">
-                                <consultant-info :clicked_option="clicked_option" :payload="payload" />
+                                <ER-Consultant-Info :clicked_option="clicked_option" :payload="payload" />
                             </v-window-item>
                             <v-window-item class="pa-1">
-                                <allergies-info :clicked_option="clicked_option" :payload="payload" />
+                                <ER-Allergies-Info :clicked_option="clicked_option" :payload="payload" />
                             </v-window-item>
                             <v-window-item class="pa-1">
-                                <remarks-info :clicked_option="clicked_option" :payload="payload" />
+                                <ER-Remarks-Info :clicked_option="clicked_option" :payload="payload" />
                             </v-window-item>
                         </v-window>
                         </v-col>
@@ -131,6 +131,8 @@ const onSubmit = async () => {
             return;
         } 
 
+        console.log('Payload : ', payload.value);
+        // return
         response = await useMethod("post", "register-emergency", payload.value);
         if (response) {
             useSnackbar(true, "green", response.message);
@@ -155,6 +157,7 @@ const validation = ()=>{
     if(!payload.value.civilstatus_id) {
         error_msg.push({msg:"Civil Status is required"});
     }
+    
     if(!payload.value.birthdate) {
         error_msg.push({msg:"Birthdate is required"});
     }

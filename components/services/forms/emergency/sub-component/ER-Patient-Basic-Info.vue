@@ -258,7 +258,7 @@
         </v-col>
     </v-row>
     <v-row>
-        <v-col cols="12" class="d-flex flex-row align-center">
+        <v-col cols="6" class="d-flex flex-row align-center">
             <v-checkbox-btn
                 label="Mother"
                 v-model="motherEnabled"
