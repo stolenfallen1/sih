@@ -7,14 +7,14 @@
                 </v-list-subheader>
                 <v-text-field
                     variant="solo"
-                    :value="handleCaseDate"
-                    readonly
+                    v-model="payload.registry_date"
+                    :readonly="clicked_option === 'view'"
                     type="date"
                     hide-details
                     density="compact"
                 ></v-text-field>
             </v-col>
-            <v-col cols="12" class="form-col">
+            <!-- <v-col cols="12" class="form-col">
                 <v-list-subheader class="form-header">
                     {{ form_type === 'outpatient' ? 'OPD Registry Type' : (form_type === 'emergency' ? 'ER Registry Type' : 'IPD Registry Type') }} <span style="color: red;" class="mdi mdi-check"></span>
                 </v-list-subheader>
@@ -22,15 +22,15 @@
                     :items="[]"
                     item-title="description"
                     item-value="id"
-                    v-model="payload.register_Casetype"
+                    v-model="payload.register_type"
                     :readonly="clicked_option === 'view'"
                     :clearable="clicked_option === 'new' || clicked_option === 'edit'"
                     hide-details
                     density="compact"
                     variant="solo"
                 ></v-autocomplete>
-            </v-col>
-            <v-col v-if="form_type === 'inpatient'" cols="12" class="form-col">
+            </v-col> -->
+            <!-- <v-col v-if="form_type === 'inpatient'" cols="12" class="form-col">
                 <v-list-subheader class="form-header">
                     How admitted <span style="color: red;" class="mdi mdi-check"></span>
                 </v-list-subheader>
@@ -45,8 +45,8 @@
                     density="compact"
                     variant="solo"
                 ></v-autocomplete>
-            </v-col>
-            <v-col v-if="form_type === 'emergency'" cols="12" class="form-col">
+            </v-col> -->
+            <v-col cols="12" class="form-col">
                 <v-list-subheader class="form-header">
                     Area / Bed No 
                 </v-list-subheader>
@@ -88,6 +88,7 @@
                     hide-details
                     density="compact"
                     variant="solo"
+                    @update:model-value="handleHospitalizationPlan"
                 ></v-autocomplete>
             </v-col>
             <v-col cols="12" class="form-col">
@@ -102,6 +103,20 @@
                     :items="[]"
                     density="compact"
                     variant="solo"
+                ></v-autocomplete>
+            </v-col>
+            <v-col cols="12" class="form-col">
+                <v-list-subheader class="form-header">Patient Brought By</v-list-subheader>
+                <v-autocomplete
+                    v-model="payload.mscBroughtBy_Relationship_Id"
+                    :items="patientBroughtBy"
+                    item-title="description"
+                    item-value="id"
+                    :readonly="clicked_option === 'view'"
+                    :clearable="clicked_option === 'new' || clicked_option === 'edit'"
+                    variant="solo"
+                    density="compact"
+                    hide-details
                 ></v-autocomplete>
             </v-col>
         </v-col>
@@ -175,7 +190,7 @@
                     variant="solo"
                 ></v-text-field>
             </v-col>
-            <v-col v-if="form_type === 'inpatient'" cols="12" class="form-col">
+            <!-- <v-col v-if="form_type === 'inpatient'" cols="12" class="form-col">
                 <v-list-subheader class="form-header">Diet Desc </v-list-subheader>
                 <v-text-field
                     v-model="payload.diet_desc"
@@ -187,8 +202,8 @@
                     density="compact"
                     variant="solo"
                 ></v-text-field>
-            </v-col>
-            <v-col v-if="form_type === 'emergency'" cols="12" class="form-col">
+            </v-col> -->
+            <v-col cols="12" class="form-col">
                 <v-list-subheader class="form-header">Dispostion</v-list-subheader>
                 <v-autocomplete
                     v-model="payload.disposition"
@@ -213,9 +228,9 @@
                     hide-details
                 ></v-text-field>
             </v-col>
-            <v-col v-if="form_type === 'emergency'" cols="12" class="form-col">
+            <v-col cols="12" class="form-col">
                 <v-checkbox-btn
-                    label="Refered"
+                    label="Check this if the patient was referred from another hospital"
                     v-model="enabled"
                     class="pe-2"
                 ></v-checkbox-btn>
@@ -269,7 +284,7 @@
                     density="compact"
                 ></v-text-field>
             </v-col>
-            <v-col v-if="form_type === 'inpatient'" cols="12" class="form-col">
+            <!-- <v-col v-if="form_type === 'inpatient'" cols="12" class="form-col">
                 <v-list-subheader class="form-header">Source of Admission </v-list-subheader>
                 <v-autocomplete
                     item-title="department"
@@ -282,7 +297,7 @@
                     density="compact"
                     variant="solo"
                 ></v-autocomplete>
-            </v-col>
+            </v-col> -->
             <v-col cols="12" class="form-col">
                 <v-list-subheader class="form-header">Medical Social Service </v-list-subheader>
                 <v-autocomplete
@@ -343,11 +358,9 @@ const open_diet_desc = ref(false);
 const enabled = ref(false)
 const disposition = ref([]);
 
-const handleCaseDate = computed(() => {
-    const today = new Date().toISOString().split('T')[0];
-    props.payload.registry_date = today;
-    return today;
-});
+const handleHospitalizationPlan = () => { 
+    props.payload.hosp_plan = props.payload.hosp_plan;
+}
 
 const openHandleDiscountScheme = () => {
     open_discount_scheme_table.value = true;
@@ -402,6 +415,17 @@ const loadDespostion = async () => {
     }
 }
 
+const patientBroughtBy = ref([]);
+const patientBroughtBy_loading = ref(false);
+const getPatientBroughtBy = async () => {
+    patientBroughtBy_loading.value = true;
+    const response = await useMethod("get", "patient-brought-by", "", "");
+    if(response) {
+        patientBroughtBy.value = response;
+        patientBroughtBy_loading.value = false;
+    }
+};
+
 const disposition_data = ref([]);
 const disposition_loading = ref(false);
 const getDisposition = async () => {
@@ -451,14 +475,14 @@ const getTransactionType = async () => {
         transaction_type_loading.value = false;
     } 
     if (props.form_type === "outpatient") {
-        let register_Casetype = response.find(item => item.description === "Outpatient Consultation");
-        props.payload.mscAccount_trans_types = parseInt(register_Casetype.id);
+        let register_type = response.find(item => item.description === "Outpatient Consultation");
+        props.payload.mscAccount_trans_types = parseInt(register_type.id);
     } else if (props.form_type === "emergency") {
-        let register_Casetype = response.find(item => item.description === "Emergency Case");
-        props.payload.mscAccount_trans_types = parseInt(register_Casetype.id);
+        let register_type = response.find(item => item.description === "Emergency Case");
+        props.payload.mscAccount_trans_types = parseInt(register_type.id);
     } else if (props.form_type === "inpatient") {
-        let register_Casetype = response.find(item => item.description === "Inpatient Case");
-        props.payload.mscAccount_trans_types = parseInt(register_Casetype.id);
+        let register_type = response.find(item => item.description === "Inpatient Case");
+        props.payload.mscAccount_trans_types = parseInt(register_type.id);
     } else {
         props.payload.mscAccount_trans_types = [];
     }
@@ -514,6 +538,7 @@ onMounted(() => {
     getPriceScheme();
     getIdTypes();
     getDisposition();
+    getPatientBroughtBy();
 });
 </script>
 

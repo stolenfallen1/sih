@@ -27,7 +27,7 @@
             <v-window-item value="one" class="pa-1">
               <v-row>
                 <v-col cols="12" sm="8" md="9">
-                  <v-list-subheader inset> Personal Information </v-list-subheader>
+                  <v-list-subheader inset> Personal Informationsss </v-list-subheader>
                   <v-row  class="pa-2">
                     <v-col lg="4"   class="pa-1"> 
                       <v-text-field
