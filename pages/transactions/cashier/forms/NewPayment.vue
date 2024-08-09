@@ -46,7 +46,11 @@
                     <v-autocomplete
                         variant="solo"
                         density="compact"
+                        item-title="description"
+                        item-value="id"
+                        :items="payment_codes"
                         v-model="payload.payment_code"
+                        clearable
                         hide-details
                     ></v-autocomplete>
                 </v-col>
@@ -264,6 +268,7 @@
                     v-model="payload.card_type_id"
                     variant="solo"
                     :items="card_types"
+                    clearable
                     @update:model-value="handleCardItems"
                     density="compact"
                     hide-details
@@ -276,6 +281,8 @@
                     item-value="id"
                     v-model="payload.card_id"
                     variant="solo"
+                    clearable
+                    :readonly="!payload.card_type_id"
                     :items="card_data"
                     density="compact"
                     hide-details
@@ -399,6 +406,8 @@ const payload = ref({
     status: null,
 });
 const card_types = ref([]);
+const card_data = ref([]);
+const payment_codes = ref([]);
 
 const tempCashAmount = ref(payload.value.cash_amount);
 const tempCashTendered = ref(payload.value.cash_tendered);
@@ -512,53 +521,6 @@ const onSubmit = async (user_details) => {
     }
 };
 
-const card_data = ref([
-    {
-        "CardID": 2,
-        "Card": "AMEXCO"
-    },
-    {
-        "CardID": 5,
-        "Card": "DINERS"
-    },
-    {
-        "CardID": 10,
-        "Card": "MASTERCARD"
-    },
-    {
-        "CardID": 11,
-        "Card": "VISA"
-    },
-    {
-        "CardID": 14,
-        "Card": "PAYMAYA"
-    },
-    {
-        "CardID": 15,
-        "Card": "BANCNET"
-    },
-    {
-        "CardID": 16,
-        "Card": "DEBIT CARD"
-    },
-    {
-        "CardID": 17,
-        "Card": "JCB"
-    },
-    {
-        "CardID": 18,
-        "Card": "UNION PAY"
-    },
-    {
-        "CardID": 19,
-        "Card": "GCASH"
-    },
-    {
-        "CardID": 20,
-        "Card": "ATM"
-    }
-]);
-
 const formatNumber = (value) => {
     const number = parseFloat(value);
     return isNaN(number) ? '' : usePeso(number);
@@ -621,6 +583,13 @@ const cardPaymentMethod = async () => {
     }
 }
 
+const cashierPaymentCode = async () => {
+    const response = await useMethod("get", "get-payment-codes", "", "");
+    if (response) {
+        payment_codes.value = response;
+    }
+}
+
 const handleCardItems = async () => {
     if (payload.value.card_type_id === 2) {
         const response = await useMethod("get", "get-credit-cards", "", "");
@@ -632,7 +601,7 @@ const handleCardItems = async () => {
         if (response) {
             card_data.value = response;
         }
-    }
+    } 
 }
 
 const paidStatus = await useStatus("Paid");
@@ -646,6 +615,7 @@ onMounted(() => {
     setTimeout(() => {
         openCashierSettings();
         cardPaymentMethod();
+        cashierPaymentCode();
     }, 500);
 });
 </script>

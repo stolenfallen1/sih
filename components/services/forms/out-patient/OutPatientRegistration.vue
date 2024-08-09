@@ -1,5 +1,5 @@
 <template>
-    <v-dialog :model-value="form_dialog" :persistent="true" hide-overlay width="1280" scrollable>
+    <v-dialog :model-value="form_dialog" :persistent="true" hide-overlay width="1280">
         <v-form ref="form" @submit.prevent="onSubmit">
             <v-card rounded="lg">
                 <v-toolbar density="compact" color="#107bac" hide-details>
@@ -31,25 +31,25 @@
                         <v-col cols="9" class="scrollable-content">
                         <v-window v-model="tab">
                             <v-window-item class="pa-1">
-                                <patient-basic-info :clicked_option="clicked_option" :payload="payload" />
+                                <o-p-d-patient-basic-info :clicked_option="clicked_option" :payload="payload" />
                             </v-window-item>
                             <v-window-item class="pa-1">
-                                <registry-basic-info :clicked_option="clicked_option" :payload="payload" :form_type="formType" />
+                                <o-p-d-registry-basic-info :clicked_option="clicked_option" :payload="payload" :form_type="formType" />
                             </v-window-item>
                             <v-window-item class="pa-1">
-                                <other-details-info :clicked_option="clicked_option" :payload="payload" :form_type="formType" />
+                                <o-p-d-other-details-info :clicked_option="clicked_option" :payload="payload" :form_type="formType" />
                             </v-window-item>
                             <v-window-item class="pa-1">
-                                <hmo-info :clicked_option="clicked_option" :payload="payload" />
+                                <o-p-d-hmo-info :clicked_option="clicked_option" :payload="payload" />
                             </v-window-item>
                             <v-window-item class="pa-1">
-                                <consultant-info :clicked_option="clicked_option" :payload="payload" />
+                                <o-p-d-consultant-info :clicked_option="clicked_option" :payload="payload" />
                             </v-window-item>
                             <v-window-item class="pa-1">
-                                <allergies-info :clicked_option="clicked_option" :payload="payload" />
+                                <o-p-d-allergies-info :clicked_option="clicked_option" :payload="payload" />
                             </v-window-item>
                             <v-window-item class="pa-1">
-                                <remarks-info :clicked_option="clicked_option" :payload="payload" />
+                                <o-p-d-remarks-info :clicked_option="clicked_option" :payload="payload" />
                             </v-window-item>
                         </v-window>
                         </v-col>

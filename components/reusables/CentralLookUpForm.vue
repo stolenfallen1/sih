@@ -121,14 +121,14 @@
           <v-btn
             class="bg-primary text-white"
             type="submit"
-            :disabled="search_results.length == 0 ? true : false"
+            :disabled="isButtonDisabled"
             @click="handleClickForOpeningForm('old')"
             >Select Active Record</v-btn
           >
           <v-btn
             class="bg-primary text-white"
             type="submit"
-            :disabled="(search_results.length == 0 && isAllowAddNew) ? false : true"
+            :disabled="!isButtonDisabled"
             @click="handleClickForOpeningForm('new')"
             >Add New</v-btn
           >
@@ -195,8 +195,9 @@ const selectedRows = ref([]);
 const isAllowAddNew = ref(false);
 const emits = defineEmits(['selected-row', 'search', 'close-dialog', 'open-form']);
 
+const isButtonDisabled = computed(() => props.search_results.length === 0);
+
 const handleSearch = () => {
-    isAllowAddNew.value = true;
     emits("search", props.search_payload);
 }
 
