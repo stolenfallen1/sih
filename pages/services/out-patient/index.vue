@@ -97,8 +97,8 @@
             :title="item.patient_registry && item.patient_registry.guarantor_id !== null ? 'HMO ' : 'Self Pay'"
             />
         </div>
-        <span v-if="column.key === 'case_no'" :key="column.key">
-          {{ item.patient_registry ? item.patient_registry.case_no : "..." }}
+        <span v-if="column.key === 'case_No'" :key="column.key">
+          {{ item.patient_registry ? item.patient_registry.case_No : "..." }}
         </span>
         <span v-if="column.key === 'sex'" :key="column.key" style="display: flex;">
           <v-icon v-if="item.sex && item.sex.sex_description === 'Male'" color="primary">mdi-gender-male</v-icon>
@@ -289,7 +289,7 @@ const tableTabs = ref([
                 title: "Case No.",
                 align: "start",
                 sortable: false,
-                key: "case_no",
+                key: "case_No",
               },
               {
                 title: "Last Name",
@@ -357,7 +357,7 @@ const tableTabs = ref([
                 title: "Case No.",
                 align: "start",
                 sortable: false,
-                key: "case_no",
+                key: "case_No",
               },
               {
                 title: "Last Name",
@@ -425,7 +425,7 @@ const tableTabs = ref([
                 title: "ER Case No.",
                 align: "start",
                 sortable: false,
-                key: "er_case_no",
+                key: "er_case_No",
               },
               {
                 title: "ER Bed No.",
@@ -630,12 +630,19 @@ const openAddFormDialog = (type) => {
         form_dialog.value = true;
         closeCentralFormDialog();
     } else if (type === 'old') {  
-        patientStore.setSelectedPatient(selectedPatient.value);
-        if (patientStore.selectedPatient && patientStore.selectedPatient.id) {  
-            form_dialog.value = true;
-            closeCentralFormDialog();
+        let currentDate = useDateMMDDYYY(new Date());
+        console.log('test', selectedPatient.value);
+        console.log('selectedPatient:', useDateMMDDYYY(selectedPatient.value.updated_at));
+        if (useDateMMDDYYY(selectedPatient.value.updated_at) == currentDate) {
+            return useSnackbar(true, "error", "Patient already registered today.");
         } else {
-            return useSnackbar(true, "error", "No item selected.");
+          patientStore.setSelectedPatient(selectedPatient.value);
+          if (patientStore.selectedPatient && patientStore.selectedPatient.id) {  
+              form_dialog.value = true;
+              closeCentralFormDialog();
+          } else {
+              return useSnackbar(true, "error", "No item selected.");
+          }
         }
     } 
 };
