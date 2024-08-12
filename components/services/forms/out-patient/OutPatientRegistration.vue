@@ -217,14 +217,14 @@ onUpdated(() => {
 
         payload.value.registry_remarks = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry.registry_remarks ? selectedRowDetails.value.patient_registry.registry_remarks : '';
     } else {
-        if (patientStore.selectedPatient && patientStore.selectedPatient.id) { 
+        if (patientStore.selectedPatient && patientStore.selectedPatient.id) {  
             console.log(patientStore.selectedPatient);
             payload.value = Object.assign({}, patientStore.selectedPatient);
             payload.value.sex_id = parseInt(patientStore.selectedPatient.sex_id) ? parseInt(patientStore.selectedPatient.sex_id) : '';
             payload.value.suffix_id = parseInt(patientStore.selectedPatient.suffix_id) ? parseInt(patientStore.selectedPatient.suffix_id) : '';
             payload.value.civilstatus_id = parseInt(patientStore.selectedPatient.civilstatus_id) ? parseInt(patientStore.selectedPatient.civilstatus_id) : '';
             payload.value.birthdate = useDateMMDDYYY(patientStore.selectedPatient.birthdate) ? useDateMMDDYYY(patientStore.selectedPatient.birthdate) : '';
-            payload.value.register_id_no = patientStore.selectedPatient.patient_registry_details && patientStore.selectedPatient.patient_registry_details.register_id_no ? patientStore.selectedPatient.patient_registry_details.register_id_no : '';
+            payload.value.register_id_no = patientStore.selectedPatient.patient_registry_details && patientStore.selectedPatient.patient_registry_details.case_No ? patientStore.selectedPatient.patient_registry_details.case_No : '';
             payload.value.registry_date = useDateMMDDYYY(patientStore.selectedPatient.registry_date) ? useDateMMDDYYY(patientStore.selectedPatient.registry_date) : '';
             payload.value.mscPrice_Groups = patientStore.selectedPatient.patient_registry_details && parseInt(patientStore.selectedPatient.patient_registry_details.mscPrice_Groups) ? parseInt(patientStore.selectedPatient.patient_registry_details.mscPrice_Groups) : 'TEST';
             payload.value.mscPrice_Schemes = patientStore.selectedPatient.patient_registry_details && parseInt(patientStore.selectedPatient.patient_registry_details.mscPrice_Schemes) ? parseInt(patientStore.selectedPatient.patient_registry_details.mscPrice_Schemes) : 'TEST';
