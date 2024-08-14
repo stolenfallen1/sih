@@ -2,6 +2,47 @@
     <v-row>
         <v-col cols="6">
             <v-col cols="12" class="form-col">
+                <v-list-subheader class="form-header">
+                    OPD Case Date<span style="color: red;" class="mdi mdi-check"></span>
+                </v-list-subheader>
+                <v-text-field
+                    variant="solo"
+                    :value="handleCaseDate"
+                    readonly
+                    type="date"
+                    hide-details
+                    density="compact"
+                ></v-text-field>
+            </v-col>
+            <v-col cols="12" class="form-col">
+                <v-list-subheader class="form-header">Register Source <span style="color: red;" class="mdi mdi-check"></span></v-list-subheader>
+                <v-autocomplete
+                    :items="register_source_data"
+                    item-title="description"
+                    item-value="id"
+                    v-model="payload.register_Source"
+                    :readonly="clicked_option === 'view'"
+                    :clearable="clicked_option === 'new' || clicked_option === 'edit'"
+                    hide-details
+                    density="compact"
+                    variant="solo"
+                ></v-autocomplete>
+            </v-col>
+            <v-col cols="12" class="form-col">
+                <v-list-subheader class="form-header">Register Casetype <span style="color: red;" class="mdi mdi-check"></span></v-list-subheader>
+                <v-autocomplete
+                    :items="register_casetype_data"
+                    item-title="description"
+                    item-value="id"
+                    v-model="payload.register_Casetype"
+                    :readonly="clicked_option === 'view'"
+                    :clearable="clicked_option === 'new' || clicked_option === 'edit'"
+                    hide-details
+                    density="compact"
+                    variant="solo"
+                ></v-autocomplete>
+            </v-col>
+            <v-col cols="12" class="form-col">
                 <v-list-subheader class="form-header">Transaction Type <span style="color: red;" class="mdi mdi-check"></span></v-list-subheader>
                 <v-autocomplete
                     :items="transaction_type_data"
@@ -29,6 +70,8 @@
                     variant="solo"
                 ></v-autocomplete>
             </v-col>
+        </v-col>
+        <v-col cols="6">
             <v-col cols="12" class="form-col">
                 <v-list-subheader class="form-header">Price Group <span style="color: red;" class="mdi mdi-check"></span></v-list-subheader>
                 <v-autocomplete
@@ -56,21 +99,6 @@
                     density="compact"
                     variant="solo"
                 ></v-autocomplete>
-            </v-col>
-        </v-col>
-        <v-col cols="6">
-            <v-col cols="12" class="form-col">
-                <v-list-subheader class="form-header">
-                    OPD Case Date<span style="color: red;" class="mdi mdi-check"></span>
-                </v-list-subheader>
-                <v-text-field
-                    variant="solo"
-                    :value="handleCaseDate"
-                    readonly
-                    type="date"
-                    hide-details
-                    density="compact"
-                ></v-text-field>
             </v-col>
             <v-col cols="12" class="form-col">
                 <v-list-subheader class="form-header">ID Presented </v-list-subheader>
@@ -218,7 +246,31 @@ const patientIdentifiers = ref([
     "Radio Patient",
 ])
 
-// Fetch autocomplete / select items data
+const register_source_data = ref([]);
+const register_source_loading = ref(false);
+const getRegisterSource = async () => {
+    register_source_loading.value = true;
+    const response = await useMethod("get", "get-admission-source", "", "");
+    if (response) {
+        register_source_data.value = response;
+        register_source_loading.value = false;
+    }
+    if (props.form_type === "outpatient") {
+        let opd_filter = ["Emergency Room", "Delivery Room", "Inpatient", "Direct Admission"];
+        register_source_data.value = response.filter(item => !opd_filter.includes(item.description));
+        let register_source = response.find(item => item.description === "Outpatient");
+        props.payload.register_Source = parseInt(register_source.id);
+    } else if (props.form_type === "emergency") {
+        let register_source = response.find(item => item.description === "Emergency Room");
+        props.payload.register_Source = parseInt(register_source.id);
+    } else if (props.form_type === "inpatient") {
+        let register_source = response.find(item => item.description === "Inpatient");
+        props.payload.register_Source = parseInt(register_source.id);
+    } else {
+        props.payload.register_Source = [];
+    }
+}
+
 const transaction_type_data = ref([]);
 const transaction_type_loading = ref(false);
 const getTransactionType = async () => {
@@ -229,16 +281,43 @@ const getTransactionType = async () => {
         transaction_type_loading.value = false;
     } 
     if (props.form_type === "outpatient") {
-        let register_Casetype = response.find(item => item.description === "Outpatient Consultation");
-        props.payload.mscAccount_trans_types = parseInt(register_Casetype.id);
+        let opd_filter = ["Emergency Case", "Inpatient Case"];
+        transaction_type_data.value = response.filter(item => !opd_filter.includes(item.description));
+        let transaction_type = response.find(item => item.description === "Outpatient Consultation");
+        props.payload.mscAccount_trans_types = parseInt(transaction_type.id);
     } else if (props.form_type === "emergency") {
-        let register_Casetype = response.find(item => item.description === "Emergency Case");
-        props.payload.mscAccount_trans_types = parseInt(register_Casetype.id);
+        let transaction_type = response.find(item => item.description === "Emergency Case");
+        props.payload.mscAccount_trans_types = parseInt(transaction_type.id);
     } else if (props.form_type === "inpatient") {
-        let register_Casetype = response.find(item => item.description === "Inpatient Case");
-        props.payload.mscAccount_trans_types = parseInt(register_Casetype.id);
+        let transaction_type = response.find(item => item.description === "Inpatient Case");
+        props.payload.mscAccount_trans_types = parseInt(transaction_type.id);
     } else {
         props.payload.mscAccount_trans_types = [];
+    }
+};
+
+const register_casetype_data = ref([]);
+const register_casetype_loading = ref(false);
+const getRegisteryCaseType = async () => {
+    register_casetype_loading.value = true;
+    const response = await useMethod("get", "get-case-type", "", "");
+    if (response) {
+        register_casetype_data.value = response;
+        register_casetype_loading.value = false;
+    } 
+    if (props.form_type === "outpatient") {
+        let opd_filter = ["Emergency Patient", "Inpatient", "Ambulatory Patient"];
+        register_casetype_data.value = response.filter(item => !opd_filter.includes(item.description));
+        let register_casetype = response.find(item => item.description === "Outpatient");
+        props.payload.register_Casetype = parseInt(register_casetype.id);
+    } else if (props.form_type === "emergency") {
+        let register_casetype = response.find(item => item.description === "Emergency Patient");
+        props.payload.register_Casetype = parseInt(register_casetype.id);
+    } else if (props.form_type === "inpatient") {
+        let register_casetype = response.find(item => item.description === "Inpatient");
+        props.payload.register_Casetype = parseInt(register_casetype.id);
+    } else {
+        props.payload.register_Casetype = [];
     }
 };
 
@@ -286,7 +365,9 @@ const getIdTypes = async () => {
 };
 
 onMounted(() => {
+    getRegisterSource();
     getTransactionType();
+    getRegisteryCaseType();
     getHospitalizationPlan();
     getPriceGroup();
     getPriceScheme();
