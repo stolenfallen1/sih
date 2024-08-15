@@ -6,14 +6,16 @@
                     <thead>
                         <tr>
                             <th>Allergy Type</th>
-                            <th>Remarks</th>
+                            <th>Cause</th>
+                            <th>Symptoms</th>
                             <th width="4"></th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr v-for="(item, index) in payload.selectedAllergy" :key="index">
                             <td> <input v-model="item.allergy_name" readonly /> </td>
-                            <td> <p> {{ item.remarks }} </p> </td>
+                            <td> <p> {{ item.cause }} </p> </td>
+                            <td> <p> {{ item.symptoms }} </p> </td>
                             <td> <v-icon color="red" class="cursor-pointer" @click="deleteRow(index)">mdi-delete</v-icon> </td>
                         </tr>
                     </tbody>
