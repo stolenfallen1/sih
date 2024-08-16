@@ -20,7 +20,7 @@
                                 <v-list-subheader class="form-header">Building No. / Street <span style="color: red;" class="mdi mdi-check"></span></v-list-subheader>
                                 <v-text-field
                                     v-model="address_data.bldgstreet"
-                                    variant="solo"
+                                    variant="underlined"
                                     density="compact"
                                     hide-details
                                 ></v-text-field>
@@ -37,7 +37,7 @@
                                     hide-details
                                     clearable
                                     density="compact" 
-                                    variant="solo"
+                                    variant="underlined"
                                 ></v-autocomplete>
                             </v-col>
                             <v-col cols="6" class="pa-1">
@@ -52,7 +52,7 @@
                                     hide-details
                                     clearable
                                     density="compact"
-                                    variant="solo"
+                                    variant="underlined"
                                 ></v-autocomplete>
                             </v-col>
                             <v-col cols="6" class="pa-1">
@@ -67,7 +67,7 @@
                                     hide-details
                                     clearable
                                     density="compact"
-                                    variant="solo"
+                                    variant="underlined"
                                 ></v-autocomplete>
                             </v-col>
                             <v-col cols="6" class="pa-1">
@@ -82,7 +82,7 @@
                                     hide-details
                                     clearable
                                     density="compact"
-                                    variant="solo"
+                                    variant="underlined"
                                 ></v-autocomplete>
                             </v-col>
                             <v-col cols="6" class="pa-1">
@@ -97,7 +97,7 @@
                                     hide-details
                                     clearable
                                     density="compact"
-                                    variant="solo"
+                                    variant="underlined"
                                 ></v-autocomplete>
                             </v-col>
                         </v-row>

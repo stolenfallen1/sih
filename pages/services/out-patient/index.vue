@@ -618,17 +618,17 @@ const handleNew = (clickedOption) => {
   central_form_dialog.value = true;
   clicked_option.value = clickedOption;
 };
-const closeCentralFormDialog = () => {
+const closeCentralFormDialog = () => { 
   central_form_dialog.value = false;
   search_payload.value = {};
   search_results.value = [];
-  selectedPatient.value = {};
+  selectedPatient.value = {}; 
 };
 
 const openAddFormDialog = (type) => {
     if (type === 'new') {
         form_dialog.value = true;
-        closeCentralFormDialog();
+        closeCentralFormDialog(); 
     } else if (type === 'old') {  
         let currentDate = useDateMMDDYYY(new Date());
         console.log('test', selectedPatient.value);

@@ -3,7 +3,7 @@
         <v-col cols="12">
             <v-list-subheader class="form-header">Remarks</v-list-subheader>
             <v-textarea
-                variant="solo"
+                variant="outlined"
                 v-model="payload.registry_remarks"
                 hide-details
                 density="compact"

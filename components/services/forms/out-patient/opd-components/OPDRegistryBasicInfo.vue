@@ -6,11 +6,10 @@
                     OPD Case Date<span style="color: red;" class="mdi mdi-check"></span>
                 </v-list-subheader>
                 <v-text-field
-                    variant="solo"
+                    variant="underlined"
                     :value="handleCaseDate"
                     readonly
                     type="date"
-                    hide-details
                     density="compact"
                 ></v-text-field>
             </v-col>
@@ -23,9 +22,8 @@
                     v-model="payload.register_Source"
                     :readonly="clicked_option === 'view'"
                     :clearable="clicked_option === 'new' || clicked_option === 'edit'"
-                    hide-details
                     density="compact"
-                    variant="solo"
+                    variant="underlined"
                 ></v-autocomplete>
             </v-col>
             <v-col cols="12" class="form-col">
@@ -37,9 +35,8 @@
                     v-model="payload.register_Casetype"
                     :readonly="clicked_option === 'view'"
                     :clearable="clicked_option === 'new' || clicked_option === 'edit'"
-                    hide-details
                     density="compact"
-                    variant="solo"
+                    variant="underlined"
                 ></v-autocomplete>
             </v-col>
             <v-col cols="12" class="form-col">
@@ -51,9 +48,8 @@
                     v-model="payload.mscAccount_trans_types"
                     :readonly="clicked_option === 'view'"
                     :clearable="clicked_option === 'new' || clicked_option === 'edit'"
-                    hide-details
                     density="compact"
-                    variant="solo"
+                    variant="underlined"
                 ></v-autocomplete>
             </v-col>
             <v-col cols="12" class="form-col">
@@ -65,9 +61,8 @@
                     v-model="payload.mscAccount_type"
                     :readonly="clicked_option === 'view'"
                     :clearable="clicked_option === 'new' || clicked_option === 'edit'"
-                    hide-details
                     density="compact"
-                    variant="solo"
+                    variant="underlined"
                 ></v-autocomplete>
             </v-col>
         </v-col>
@@ -81,9 +76,8 @@
                     v-model="payload.mscPrice_Groups"
                     :readonly="clicked_option === 'view'"
                     :clearable="clicked_option === 'new' || clicked_option === 'edit'"
-                    hide-details
                     density="compact"
-                    variant="solo"
+                    variant="underlined"
                 ></v-autocomplete>
             </v-col>
             <v-col cols="12" class="form-col">
@@ -95,9 +89,8 @@
                     v-model="payload.mscPrice_Schemes"
                     :readonly="clicked_option === 'view'"
                     :clearable="clicked_option === 'new' || clicked_option === 'edit'"
-                    hide-details
                     density="compact"
-                    variant="solo"
+                    variant="underlined"
                 ></v-autocomplete>
             </v-col>
             <v-col cols="12" class="form-col">
@@ -108,20 +101,18 @@
                     v-model="payload.id_presented"
                     :readonly="clicked_option === 'view'"
                     :clearable="clicked_option === 'new' || clicked_option === 'edit'"
-                    hide-details
                     :items="id_types_data"
                     density="compact"
-                    variant="solo"
+                    variant="underlined"
                 ></v-autocomplete>
             </v-col>
             <v-col cols="12" class="form-col">
                 <v-list-subheader class="form-header">ID Number </v-list-subheader>
                 <v-text-field
-                    variant="solo"
+                    variant="underlined"
                     type="number"
                     v-model="payload.id_number"
                     :readonly="clicked_option === 'view'"
-                    hide-details
                     density="compact"
                 ></v-text-field>
             </v-col>
@@ -134,9 +125,8 @@
                     item-value="id"
                     :readonly="clicked_option === 'view'"
                     :clearable="clicked_option === 'new' || clicked_option === 'edit'"
-                    variant="solo"
+                    variant="underlined"
                     density="compact"
-                    hide-details
                 ></v-autocomplete>
             </v-col>
         </v-col>
