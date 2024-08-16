@@ -123,23 +123,21 @@
                         <v-list-subheader class="form-header">Cause</v-list-subheader>
                         <v-textarea
                             class="cursor-pointer"
-                            placeholder="Enter Patient's Allergy Cause"
+                            hint="Enter Patient's Allergy Cause"
                             v-model="payload[0].cause"
                             density="compact"
-                            hide-details
-                            variant="solo"
+                            variant="outlined"
                         ></v-textarea>
                     </v-col>
                     <v-col cols="12">
                         <v-list-subheader class="form-header">Symptoms</v-list-subheader>
                         <v-textarea
                             class="cursor-pointer"
-                            placeholder="Enter Patient's Allergy Symptoms"
+                            hint="Please select symptoms by clicking the plus icon."
                             v-model="payload[0].symptoms"
                             readonly
                             density="compact"
-                            hide-details
-                            variant="solo"
+                            variant="outlined"
                             prepend-icon="mdi-plus-box"
                             @click:prepend="openSymptomsDialog"
                         ></v-textarea>
@@ -173,14 +171,13 @@
                 <v-row>
                     <v-col cols="12">
                         <v-list-subheader class="form-header">Allergy Name</v-list-subheader>
-                        <v-textarea
+                        <v-text-field
                             class="cursor-pointer"
-                            placeholder="Enter Allergy Name here..."
+                            hint="Enter Allergy Name here..."
                             v-model="payload.allergy_name"
                             density="compact"
-                            hide-details
-                            variant="solo"
-                        ></v-textarea>
+                            variant="underlined"
+                        ></v-text-field>
                     </v-col>
                 </v-row>
             </v-card-text>
