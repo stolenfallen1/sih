@@ -68,11 +68,46 @@
         </form>
     </v-dialog>
 
+    <v-dialog
+        v-model="symptoms_dialog"
+        @update:model-value="closeSymptomsDialog"
+        hide-overlay
+        width="750"
+    >
+        <v-card rounded="lg">
+            <v-toolbar density="compact" color="#107bac" hide-details>
+                <v-toolbar-title>Symptoms List</v-toolbar-title>
+                <v-btn color="white" @click="closeSymptomsDialog">
+                    <v-icon>mdi-close</v-icon>
+                </v-btn>
+            </v-toolbar>
+            <v-card-text>
+                <v-row>
+                    <v-col cols="4" v-for="(item, index) in symptoms_data" :key="index">
+                        <v-checkbox
+                            v-model="selectedSymptoms"
+                            :label="item.description"
+                            :value="item"
+                            density="compact"
+                            hide-details
+                        ></v-checkbox>
+                    </v-col>
+                </v-row>
+            </v-card-text>
+            <v-divider></v-divider>
+            <v-card-actions>
+                <v-btn color="blue-darken-1 border border-info" @click="closeSymptomsDialog"> Close </v-btn>
+                <v-spacer></v-spacer>
+                <v-btn class="bg-primary text-white" type="submit" @click="selectedSymptomsData"> Select </v-btn>
+            </v-card-actions>
+        </v-card>
+    </v-dialog>
+
     <v-dialog 
         v-model="remarks_form_dialog"
         @update:model-value="closeRemarksEntry"
         hide-overlay
-        width="450"
+        width="600"
     >
         <v-card rounded="lg">
             <v-toolbar density="compact" color="#107bac" hide-details>
@@ -101,13 +136,17 @@
                             class="cursor-pointer"
                             placeholder="Enter Patient's Allergy Symptoms"
                             v-model="payload[0].symptoms"
+                            readonly
                             density="compact"
                             hide-details
                             variant="solo"
+                            prepend-icon="mdi-plus-box"
+                            @click:prepend="openSymptomsDialog"
                         ></v-textarea>
                     </v-col>
                 </v-row>
             </v-card-text>
+            <v-divider></v-divider>
             <v-card-actions>
                 <v-btn color="blue-darken-1 border border-info" @click="closeRemarksEntry"> Close </v-btn>
                 <v-spacer></v-spacer>
@@ -145,6 +184,7 @@
                     </v-col>
                 </v-row>
             </v-card-text>
+            <v-divider></v-divider>
             <v-card-actions>
                 <v-btn color="blue-darken-1 border border-info" @click="closeAddAllergy"> Close </v-btn>
                 <v-spacer></v-spacer>
@@ -175,7 +215,11 @@ const emits = defineEmits(['close-dialog', 'handle-select']);
 const confirm_password = ref(false);
 const remarks_form_dialog = ref(false);
 const add_allergy_dialog = ref(false);
-const payload = ref({});
+const symptoms_dialog = ref(false);
+const selectedSymptoms = ref([]);
+const payload = ref({
+    symptoms: [],
+});
 const password_payload = ref({ user_passcode: "" });
 const selected_item = ref([]);
 const isloading = ref(false);
@@ -273,6 +317,40 @@ const onSubmitAllergy = async () => {
     } 
 }
 
+const openSymptomsDialog = () => {
+    symptoms_dialog.value = true;
+}
+
+const closeSymptomsDialog = () => {
+    symptoms_dialog.value = false;
+    selectedSymptoms.value = [];
+}
+
+const selectedSymptomsData = () => {
+    payload.value.symptoms = selectedSymptoms.value.map(symptom => ({
+        id: symptom.id,
+        description: symptom.description,
+    }));
+
+    const symptomDescriptions = payload.value.symptoms.map(symptom => symptom.description).join(", ");
+    payload.value[0].symptoms = symptomDescriptions;
+
+    closeSymptomsDialog();
+};
+
+
+const symptoms_data = ref([]);
+const symptoms_data_loading = ref(false);
+const getSymptoms = async () => {
+    const response = await useMethod("get", "get-allergy-symptoms", "", "");
+    if (response) {
+        symptoms_data.value = response;
+        symptoms_data_loading.value = false;
+    } else {
+        symptoms_data_loading.value = false;
+    }
+};
+
 const closeAddAllergy = () => {
     add_allergy_dialog.value = false;
     payload.value = Object.assign({});
@@ -332,6 +410,10 @@ const closeDialog = () => {
     itemsPerPage.value = 15;
     selected_item.value = [];
 }
+
+onMounted(() => {
+    getSymptoms();
+});
 
 </script>
 

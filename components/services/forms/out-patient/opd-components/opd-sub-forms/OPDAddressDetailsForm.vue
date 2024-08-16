@@ -73,7 +73,7 @@
                             <v-col cols="6" class="pa-1">
                                 <v-list-subheader class="form-header">Barangay <span style="color: red;" class="mdi mdi-check"></span></v-list-subheader>
                                 <v-autocomplete
-                                    v-model="address_data.barangay_id"
+                                    v-model="computedBarangayID"
                                     item-title="barangay_name"
                                     item-value="id"
                                     :items="barangay_data"
@@ -88,7 +88,7 @@
                             <v-col cols="6" class="pa-1">
                                 <v-list-subheader class="form-header">Country </v-list-subheader>
                                 <v-autocomplete
-                                    v-model="address_data.country_id"
+                                    v-model="computedCountryID"
                                     item-title="country_name"
                                     item-value="id"
                                     :items="country_data"
@@ -218,6 +218,9 @@ const getBarangay = async () => {
         barangay_data_loading.value = false;
     }
 }
+const computedBarangayID = computed(() => {
+    return isNaN(address_data.value.barangay_id) ? null : address_data.value.barangay_id;
+});
 const updateBarangay = (value) => {
     const selected = barangay_data.value.find(item => item.id === value);
     address_data.value.barangay_id = value;
@@ -232,8 +235,11 @@ const getCountry = async () => {
     if (response) {
         country_data.value = response;
         country_data_loading.value = false;
-    }
+    } 
 }
+const computedCountryID = computed(() => {
+    return isNaN(address_data.value.country_id) ? null : address_data.value.country_id;
+});
 const updateCountry = (value) => {
     const selected = country_data.value.find(item => item.id === value);
     address_data.value.country_id = value;
