@@ -31,25 +31,25 @@
                         <v-col cols="9" class="scrollable-content">
                         <v-window v-model="tab">
                             <v-window-item class="pa-1">
-                                <patient-basic-info :clicked_option="clicked_option" :payload="payload" />
+                                <i-p-d-patient-basic-info :clicked_option="clicked_option" :payload="payload" :formErrors="formErrors" />
                             </v-window-item>
                             <v-window-item class="pa-1">
-                                <registry-basic-info :clicked_option="clicked_option" :payload="payload" :form_type="formType" />
+                                <i-p-d-registry-basic-info :clicked_option="clicked_option" :payload="payload" :formErrors="formErrors" :form_type="formType" />
                             </v-window-item>
                             <v-window-item class="pa-1">
-                                <other-details-info :clicked_option="clicked_option" :payload="payload" :form_type="formType" />
+                                <i-p-d-other-details-info :clicked_option="clicked_option" :payload="payload" :form_type="formType" />
                             </v-window-item>
                             <v-window-item class="pa-1">
-                                <hmo-info :clicked_option="clicked_option" :payload="payload" />
+                                <i-p-d-hmo-info :clicked_option="clicked_option" :payload="payload" />
                             </v-window-item>
                             <v-window-item class="pa-1">
-                                <consultant-info :clicked_option="clicked_option" :payload="payload" />
+                                <i-p-d-consultant-info :clicked_option="clicked_option" :payload="payload" />
                             </v-window-item>
                             <v-window-item class="pa-1">
-                                <allergies-info :clicked_option="clicked_option" :payload="payload" />
+                                <i-p-d-allergies-info :clicked_option="clicked_option" :payload="payload" />
                             </v-window-item>
                             <v-window-item class="pa-1">
-                                <remarks-info :clicked_option="clicked_option" :payload="payload" />
+                                <i-p-d-remarks-info :clicked_option="clicked_option" :payload="payload" />
                             </v-window-item>
                         </v-window>
                         </v-col>
@@ -76,6 +76,9 @@
 </template>
 
 <script setup>
+import { usePatientStore } from '@/store/selectedPatient';
+
+const patientStore = usePatientStore();
 
 const props = defineProps({
     form_dialog:{
@@ -89,6 +92,7 @@ const props = defineProps({
 });
 
 let tab = ref("0");
+const formErrors = ref({});
 const formType = ref('inpatient');
 const { selectedRowDetails } = storeToRefs(useSubcomponentSelectedRowDetailsStore());
 const payload = ref({
@@ -104,83 +108,117 @@ const closeDialog = () => {
     emits('close-dialog');
     tab.value = "0";
     payload.value = {};
+    patientStore.clearSelectedPatient();
+    formErrors.value = {};
+}
+
+const findTabIndexByError = (field) => {
+    switch (field) {
+        case "lastname": return "0";
+        case "firstname": return "0";
+        case "sex_id": return "0";
+        case "civilstatus_id": return "0";
+        case "birthdate": return "0";
+        case "register_Source": return "1";
+        case "register_Casetype": return "1";
+        case "mscAccount_trans_types": return "1";
+        case "mscAccount_type": return "1";
+        case "mscPrice_Groups": return "1";
+        case "mscPrice_Schemes": return "1";
+        default: return "0";
+    }
+}
+
+const focusField = (fieldName) => {
+    const fieldRef = $refs[fieldName];
+    if (fieldRef && fieldRef.focus) {
+        fieldRef.focus();
+    }
 }
 
 const onSubmit = async () => {
-    let response;
+    formErrors.value = {};
+    let valid = ref(true);
+
+    if (!payload.value.lastname) {
+        formErrors.value.lastname = "Lastname is required";
+        valid.value = false;
+    }
+    if (!payload.value.firstname) {
+        formErrors.value.firstname = "Firstname is required";
+        valid.value = false;
+    }
+    if (!payload.value.sex_id) {
+        formErrors.value.sex_id = "Sex is required";
+        valid.value = false;
+    }
+    if (!payload.value.civilstatus_id) {
+        formErrors.value.civilstatus_id = "Civil Status is required";
+        valid.value = false;
+    }
+    if (!payload.value.birthdate) {
+        formErrors.value.birthdate = "Birthdate is required";
+        valid.value = false;
+    }
+    if (!payload.value.register_Source) {
+        formErrors.value.register_Source = "Register Source is required";
+        valid.value = false;
+    }
+    if (!payload.value.register_Casetype) {
+        formErrors.value.register_Casetype = "Register Casetype is required";
+        valid.value = false;
+    }
+    if (!payload.value.mscAccount_trans_types) {
+        formErrors.value.mscAccount_trans_types = "Transaction type is required";
+        valid.value = false;
+    }
+    if (!payload.value.mscAccount_type) {
+        formErrors.value.mscAccount_type = "Hospitalization  type is required";
+        valid.value = false;
+    }
+    if (!payload.value.mscPrice_Groups) {
+        formErrors.value.mscPrice_Groups = "Price Group is required";
+        valid.value = false;
+    }
+    if (!payload.value.mscPrice_Schemes) {
+        formErrors.value.mscPrice_Schemes = "Price Scheme is required";
+        valid.value = false;
+    }
+
+    if (!valid.value) {
+        const firstErrorField = Object.keys(formErrors.value)[0];
+        tab.value = findTabIndexByError(firstErrorField);
+
+        await nextTick();
+        focusField(firstErrorField);
+        return;
+    }
+
     isLoading.value = true;
-
-    if (payload.value.id) {
-        response = await useMethod("put", "update-inpatient", payload.value, "", payload.value.id);
-        if (response) {
-            useSnackbar(true, "green", response.message);
-            isLoading.value = false;
-            payload.value = Object.assign({});
-            closeDialog();
-            tab.value = "0";
-        }
-    } else {
-        const errors = validation();
-
-        if (errors.length > 0) {
-            for (let i = 0; i < errors.length; i++) {
-                useSnackbar(true, "red", errors[i].msg);
-                await new Promise(resolve => setTimeout(resolve, 1000));  
+    try {
+        if (payload.value.id) {
+            const response = await useMethod("put", "update-inpatient", payload.value, "", payload.value.patient_id);
+            if (response) {
+                useSnackbar(true, "green", response.message);
+                isLoading.value = false;
+                payload.value = Object.assign({});
+                closeDialog();
+                tab.value = "0";
+            } 
+        } else {
+            response = await useMethod("post", "register-inpatient", payload.value);
+            if (response) {
+                useSnackbar(true, "green", response.message);
+                isLoading.value = false;
+                payload.value = Object.assign({});
+                closeDialog();
+                tab.value = "0";
             }
-            isLoading.value = false;
-            return;
-        } 
-
-        response = await useMethod("post", "register-inpatient", payload.value);
-        if (response) {
-            useSnackbar(true, "green", response.message);
-            isLoading.value = false;
-            payload.value = Object.assign({});
-            closeDialog();
-            tab.value = "0";
         }
+    } catch (error) {
+        isLoading.value = false;
+        useSnackbar(true, "red", error.message);
     }
-}
-const validation = ()=>{
-    let error_msg = [];
-    if(!payload.value.lastname) {
-        error_msg.push({msg:"Lastname is required"});
-    }
-    if(!payload.value.firstname) {
-        error_msg.push({msg:"Firstname is required"});
-    }
-    if(!payload.value.sex_id) {
-        error_msg.push({msg:"Sex is required"});
-    }
-    if(!payload.value.civilstatus_id) {
-        error_msg.push({msg:"Civil Status is required"});
-    }
-    if(!payload.value.birthdate) {
-        error_msg.push({msg:"Birthdate is required"});
-    }
-    if(!payload.value.registry_date) {
-        error_msg.push({msg:"Registry Date is required"});
-    }
-    // if(!payload.value.registry_type) {
-    //     error_msg.push({msg:"Registry Type is required"});
-    // }
-    if(!payload.value.mscAccount_trans_types) {
-        error_msg.push({msg:"Transaction Type is required"});
-    }
-    // if(!payload.value.hosp_plan) { 
-    //     error_msg.push({msg:"Hospitalization Plan is required"});
-    // }
-    if(!payload.value.mscPrice_Groups) {
-        error_msg.push({msg:"Price Group is required"});
-    }
-    if(!payload.value.mscPrice_Schemes) {
-        error_msg.push({msg:"Price Scheme is required"});
-    }
-    // Inpatient only
-    // if(!payload.value.how_admitted) {
-    //     error_msg.push({msg:"How Admitted is required"});
-    // }
-    return error_msg;
 }
 
 onUpdated(() => {

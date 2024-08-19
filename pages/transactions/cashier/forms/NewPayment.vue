@@ -384,6 +384,23 @@ const password_payload = ref({});
 const confirm_password = ref(false);
 const payload = ref({
     Items: [],
+    collection_date: new Date().toISOString().substr(0, 10),
+    Shift: null,
+    cash_amount: null,
+    cash_tendered: null,
+    cash_change: null,
+    card_amount: null,
+    check_amount: null,
+    status: null,
+});
+const card_types = ref([]);
+const card_data = ref([]);
+const payment_codes = ref([]);
+
+const tempCashAmount = ref(payload.value.cash_amount);
+const tempCashTendered = ref(payload.value.cash_tendered);
+const tempCardAmount = ref(payload.value.card_amount);
+const tempCheckAmount = ref(payload.value.check_amount);
 })
 
 const openRecieptsInfo = () => {
@@ -410,7 +427,6 @@ const handleCashierSettings = (settings) => {
     payload.value.ORNumber = "OR" + settings[0].LastORnumber + settings[0].ORSuffix;
     payload.value.collection_date = useDateMMDDYYY(settings[0].collection_date);
     payload.value.Shift = settings[0].shift_id;
-    payload.value.UserID = settings[0].user_id;
 };
 
 const closeCashierSettings = () => {
@@ -486,6 +502,7 @@ const onSubmit = async (user_details) => {
         if (response) {
             useSnackbar(true, "success", "Payment successfully saved.");
             resetTransactionForm();
+            getLastORNumber();
             closeConfirmDialog();
         }
     } else {
@@ -493,57 +510,101 @@ const onSubmit = async (user_details) => {
     }
 };
 
+const formatNumber = (value) => {
+    const number = parseFloat(value);
+    return isNaN(number) ? '' : usePeso(number);
+}
 
-const card_data = ref([
-    {
-        "CardID": 2,
-        "Card": "AMEXCO"
-    },
-    {
-        "CardID": 5,
-        "Card": "DINERS"
-    },
-    {
-        "CardID": 10,
-        "Card": "MASTERCARD"
-    },
-    {
-        "CardID": 11,
-        "Card": "VISA"
-    },
-    {
-        "CardID": 14,
-        "Card": "PAYMAYA"
-    },
-    {
-        "CardID": 15,
-        "Card": "BANCNET"
-    },
-    {
-        "CardID": 16,
-        "Card": "DEBIT CARD"
-    },
-    {
-        "CardID": 17,
-        "Card": "JCB"
-    },
-    {
-        "CardID": 18,
-        "Card": "UNION PAY"
-    },
-    {
-        "CardID": 19,
-        "Card": "GCASH"
-    },
-    {
-        "CardID": 20,
-        "Card": "ATM"
+const formattedCashChange = computed(() => formatNumber(payload.value.cash_change));
+
+const parseCurrencyInput = (value) => {
+    return parseFloat(value.replace(/[₱,]/g, '')) || null;
+}
+
+const updateCashAmount = () => {
+    const parsedValue = parseCurrencyInput(tempCashAmount.value);
+    payload.value.cash_amount = parsedValue;
+    tempCashAmount.value = formatNumber(parsedValue);
+}
+
+const updateCashTendered = () => {
+    const parsedValue = parseCurrencyInput(tempCashTendered.value);
+    payload.value.cash_tendered = parsedValue;
+    tempCashTendered.value = formatNumber(parsedValue);
+}
+
+const updateCardAmount = () => {
+    const parsedValue = parseCurrencyInput(tempCardAmount.value);
+    payload.value.card_amount = parsedValue;
+    tempCardAmount.value = formatNumber(parsedValue);
+}
+
+const updateCheckAmount = () => {
+    const parsedValue = parseCurrencyInput(tempCheckAmount.value);
+    payload.value.check_amount = parsedValue;
+    tempCheckAmount.value = formatNumber(parsedValue);
+}
+
+watch(() => {
+    if (payload.value.cash_amount && payload.value.cash_tendered) {
+        payload.value.cash_change = parseFloat(payload.value.cash_tendered) - parseFloat(payload.value.cash_amount);
+    } else {
+        payload.value.cash_change = null;
     }
-]);
+    // if (payload.value.amount && payload.value.total_discount) {
+    //     payload.value.sub_total = parseFloat(payload.value.amount) - parseFloat(payload.value.total_discount);
+    // }
+    // if (payload.value.sub_total && payload.value.withholding_tax) {
+    //     payload.value.total_payment = parseFloat(payload.value.sub_total) - parseFloat(payload.value.withholding_tax);
+    // }
+    // if (payload.value.card_amount) {
+    //     payload.value.total_payment = parseFloat(payload.value.sub_total) - parseFloat(payload.value.card_amount);
+    // }
+    // if (payload.value.check_amount) {
+    //     payload.value.total_payment = parseFloat(payload.value.sub_total) - parseFloat(payload.value.check_amount);
+    // }
+}, { deep: true });
+
+const cardPaymentMethod = async () => {
+    const response = await useMethod("get", "get-payment-methods", "", "");
+    if (response) {
+        card_types.value = response.filter(method => method.payment_description === "Credit Card" || method.payment_description === "Debit Card");
+    }
+}
+
+const cashierPaymentCode = async () => {
+    const response = await useMethod("get", "get-payment-codes", "", "");
+    if (response) {
+        payment_codes.value = response;
+    }
+}
+
+const handleCardItems = async () => {
+    if (payload.value.card_type_id === 2) {
+        const response = await useMethod("get", "get-credit-cards", "", "");
+        if (response) {
+            card_data.value = response;
+        }
+    } else if (payload.value.card_type_id === 3) {
+        const response = await useMethod("get", "get-debit-cards", "", "");
+        if (response) {
+            card_data.value = response;
+        }
+    } 
+}
+
+const paidStatus = await useStatus("Paid");
+onUpdated(() => {
+    if (paidStatus && paidStatus.length > 0) {
+        payload.value.status = paidStatus[0].id;
+    }
+})
 
 onMounted(() => {
     setTimeout(() => {
         openCashierSettings();
+        cardPaymentMethod();
+        cashierPaymentCode();
     }, 500);
 });
 </script>

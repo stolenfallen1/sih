@@ -1,22 +1,20 @@
 <template>
-    <v-card rounded="lg" elevation="2">
+    <v-card rounded="lg">
         <v-row>
             <v-col cols="12">
                 <v-table density="compact" height="40vh" class="styled-table">
                     <thead>
                         <tr>
-                            <th>Allergy Type</th>
-                            <th>Cause</th>
-                            <th>Symptoms</th>
+                            <th>Consultant Code</th>
+                            <th>Consultant Name</th>
                             <th width="4"></th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="(item, index) in payload.selectedAllergy" :key="index">
-                            <td> <input v-model="item.allergy_name" readonly /> </td>
-                            <td> <p> {{ item.cause }} </p> </td>
-                            <td> <p> {{ item.symptoms }} </p> </td>
-                            <td> <v-icon color="red" class="cursor-pointer" @click="deleteRow(index)">mdi-delete</v-icon> </td>
+                        <tr v-for="(item, index) in payload.selectedConsultant" :key="index">
+                            <td> <input v-model="item.attending_doctor" readonly/> </td>
+                            <td> <p> {{ item.attending_doctor_fullname }} </p> </td>
+                            <td><v-icon color="red" @click="removeConsultant(index)">mdi-delete</v-icon></td>
                         </tr>
                     </tbody>
                     <v-divider></v-divider>
@@ -25,13 +23,13 @@
         </v-row>
         <v-divider></v-divider>
         <v-card-actions>
-            <v-btn color="blue-darken-1 border border-info" @click="openHmoList" :disabled="clicked_option === 'view'">
+            <v-btn color="blue-darken-1 border border-info" @click="openConsultantsList" :disabled="clicked_option === 'view'">
                 <v-icon class="mr-2">mdi-account-multiple-plus-outline</v-icon>
-                Add Allergies
+                Add Physician
             </v-btn>
         </v-card-actions>
     </v-card>
-    <o-p-d-allergies-list :open_allergy_list="open_allergy_list" @close-dialog="closeAllergyList" @handle-select="handleSelectedAllergy" />
+    <o-p-d-consultant-list :open_consultants_list="open_consultants_list" @close-dialog="closeConsultantsList" @handle-select="handleSelectConsultants" />
 </template>
 
 <script setup>
@@ -47,27 +45,22 @@ const props = defineProps({
     }
 })
 
-const open_allergy_list = ref(false);
+const open_consultants_list = ref(false);
 
-const handleSelectedAllergy = (allergy) => {
-    if (!props.payload.selectedAllergy) {
-        props.payload.selectedAllergy = [];
-    } 
-    if (Array.isArray(allergy)) {
-        props.payload.selectedAllergy.push(...allergy);
-    } 
+const openConsultantsList = () => {
+    open_consultants_list.value = true;
 }
 
-const deleteRow = (index) => {
-    props.payload.selectedAllergy.splice(index, 1);
+const handleSelectConsultants = (selected_item) => {
+    props.payload.selectedConsultant = selected_item;
 }
 
-const openHmoList = () => {
-    open_allergy_list.value = true;
+const removeConsultant = (index) => {
+    props.payload.selectedConsultant.splice(index, 1);
 }
 
-const closeAllergyList = () => {
-    open_allergy_list.value = false;
+const closeConsultantsList = () => {
+    open_consultants_list.value = false;
 }
 
 </script>
@@ -76,6 +69,14 @@ const closeAllergyList = () => {
 .form-col {
     padding: 3.25px 0px 3.25px 0px !important;
     margin: 0px !important;
+}
+.hmo-input {
+    width: 100%;
+    padding: 0px;
+    margin: 0px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #000;
 }
 .styled-table th, .styled-table td {
     padding: 8px;

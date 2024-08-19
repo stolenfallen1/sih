@@ -119,8 +119,8 @@ const props = defineProps({
 });
 
 const payload = ref({
-    user_id: '',
     collection_date: new Date().toISOString().substr(0, 10),
+    shift_id: null,
 });
 const emits = defineEmits(["close-dialog", "save-settings"]);
 
@@ -128,6 +128,7 @@ const closeDialog = () => {
     emits("close-dialog");
     payload.value = {
         collection_date: new Date().toISOString().substr(0, 10),
+        shift_id: null,
     };
 };
 
@@ -153,47 +154,10 @@ const getShiftSchedule = async () => {
     if (response) {
         shift_data.value = response;
         shift_loading.value = false;
-        determineCurrentShift();
+        useShift(shift_data.value, payload.value);  
     } 
 };
 
-const determineCurrentShift = () => {
-    const currentHour = new Date().getHours();
-    let nearestShift = null;
-    let smallestDiff = 24;
-
-    for (const shift of shift_data.value) {
-        const beginHour = parseInt(shift.beginning_military_hour);
-        const endHour = parseInt(shift.end_military_hour);
-
-        let diff = 0;
-        if (beginHour <= endHour) {
-            if (currentHour >= beginHour && currentHour < endHour) {
-                diff = 0;
-            } else if (currentHour < beginHour) {
-                diff = beginHour - currentHour;
-            } else {
-                diff = 24 - (currentHour - beginHour);
-            } 
-        } else {
-            if (currentHour >= beginHour || currentHour < endHour) {
-                diff = 0;
-            } else if (currentHour < beginHour) {
-                diff = beginHour - currentHour;
-            } else {
-                diff = 24 - (currentHour - beginHour);
-            }
-        }
-        
-        if (diff < smallestDiff) {
-            smallestDiff = diff;
-            nearestShift = shift;
-        }
-    }
-    if (nearestShift) {
-        payload.value.shift_id = nearestShift.id;
-    }
-};
 
 onUpdated(() => {
     getShiftSchedule();
@@ -203,7 +167,6 @@ onUpdated(() => {
             const parsedDetails = JSON.parse(userDetails);
             const userData = JSON.parse(parsedDetails.value);
             payload.value.cashier_name = userData.name || '';
-            payload.value.user_id = userData.id || '';
         } catch (error) {
             console.error('Error parsing user details from localStorage:', error);
         }
