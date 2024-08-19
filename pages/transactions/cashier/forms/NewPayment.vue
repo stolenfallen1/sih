@@ -398,6 +398,8 @@ const password_payload = ref({});
 const confirm_password = ref(false);
 const payload = ref({
     Items: [],
+    collection_date: new Date().toISOString().substr(0, 10),
+    Shift: null,
     cash_amount: null,
     cash_tendered: null,
     cash_change: null,
@@ -438,7 +440,6 @@ const handleCashierSettings = (settings) => {
     payload.value.ORNumber = "OR" + settings[0].LastORnumber + settings[0].ORSuffix;
     payload.value.collection_date = useDateMMDDYYY(settings[0].collection_date);
     payload.value.Shift = settings[0].shift_id;
-    payload.value.UserID = settings[0].user_id;
 };
 
 const closeCashierSettings = () => {
@@ -514,6 +515,7 @@ const onSubmit = async (user_details) => {
         if (response) {
             useSnackbar(true, "success", "Payment successfully saved.");
             resetTransactionForm();
+            getLastORNumber();
             closeConfirmDialog();
         }
     } else {
@@ -604,18 +606,26 @@ const handleCardItems = async () => {
     } 
 }
 
-const paidStatus = await useStatus("Paid");
-onUpdated(() => {
-    if (paidStatus && paidStatus.length > 0) {
-        payload.value.status = paidStatus[0].id;
+const getLastORNumber = async () => {
+    const response = await useMethod("get", "get-or-sequence", "", "");
+    if (response) {
+        payload.value.ORNumber = "OR" + response.data[0].LastORnumber + response.data[0].ORSuffix;
     }
-})
+};
+
+// const paidStatus = await useStatus("Paid");
+// onUpdated(() => {
+//     if (paidStatus && paidStatus.length > 0) {
+//         payload.value.status = paidStatus[0].id;
+//     }
+// })
 
 onMounted(() => {
     setTimeout(() => {
         openCashierSettings();
         cardPaymentMethod();
         cashierPaymentCode();
+        getLastORNumber();
     }, 500);
 });
 </script>
