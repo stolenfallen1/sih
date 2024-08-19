@@ -250,6 +250,7 @@ const updateDateTime = () => {
   // currentTime.value = new Date().toLocaleTimeString();
 };
 
+
 const computeSubcomponent = (dialog,type) => {
     if(!selectedRowDetails.value.id) return  useSnackbar(true,'red','Please select a record first');
     if(dialog){
@@ -319,7 +320,7 @@ onMounted(async () => {
   // Filter items based on the `active` property and map their indices
   const defaultOpenGroups = items
     .filter((item) => item.active)
-    .map((item, index) => index);
+    
   open.value = defaultOpenGroups;
   if(authenticated){
     useDropdownlist();

@@ -78,11 +78,9 @@
             </v-card-actions>
         </v-card>
     </v-dialog>
-    <DietDescList :open_diet_desc="open_diet_desc" @close-dialog="closeDietLists" />
 </template>
 
 <script setup>
-import DietDescList from '~/components/services/forms/registration-main-forms/sub-forms/DietDescList.vue';
 
 const props = defineProps({
     show: {

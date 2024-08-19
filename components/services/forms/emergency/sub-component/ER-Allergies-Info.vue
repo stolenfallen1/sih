@@ -29,7 +29,7 @@
             </v-btn>
         </v-card-actions>
     </v-card>
-    <allergies-list :open_allergy_list="open_allergy_list" @close-dialog="closeAllergyList" @handle-select="handleAddAllegy" />
+    <e-r-allergies-list :open_allergy_list="open_allergy_list" @close-dialog="closeAllergyList" @handle-select="handleAddAllegy" />
 </template>
 
 <script setup>

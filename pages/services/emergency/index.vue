@@ -33,14 +33,14 @@
         Edit
       </v-btn>
       <v-btn
-        @click="DeactiveUser"
+        @click="RevokeUser"
         prepend-icon="mdi-toggle-switch"
         :disabled="isSelectedUser"
         width="150"
         color="primary"
         class="bg-error text-white"
       >
-        Deactive</v-btn
+        Revoke</v-btn
       >
       <v-btn
         @click="ViewSummary"
@@ -72,8 +72,8 @@
       @open-filter="openFilterOptions"
     >
       <template v-for="column in headers" v-slot:[`column-${column.key}`]="{ item }">
-        <span v-if="column.key === 'register_id_no'" :key="column.key">
-          {{ item.patient_registry ? item.patient_registry.register_id_no : "..." }}
+        <span v-if="column.key === 'case_No'" :key="column.key">
+          {{ item.patient_registry ? item.patient_registry.case_No : "..." }}
         </span>
         <span v-if="column.key === 'sex'" :key="column.key" style="display: flex;">
           <v-icon v-if="item.sex && item.sex.sex_description === 'Male'" color="primary">mdi-gender-male</v-icon>
@@ -87,6 +87,40 @@
           {{ item.patient_registry ? useDateMMDDYYY(item.patient_registry.registry_date) : "..." }}
         </span>
       </template>
+      <!-- <template v-for="column in columns" v-slot:[`column-${column.key}`]="{ item }">
+        <div v-if="column.key === 'registry_status'" :key="column.key" class="isActive">
+          <span 
+            :style="{ cursor: 'default', display: 'block', height: '26px', width: '9px', backgroundColor: item.patient_registry && item.patient_registry.registry_status == 2 ? 'blue' : 'green' }" 
+            :title="item.patient_registry && item.patient_registry.registry_status == 2 ? 'New Patient' : 'Old Patient'"
+            />
+        </div>
+        <div v-if="column.key === 'isHMO'" :key="column.key" class="isHMO">
+          <span 
+            :style="{ cursor: 'default', display: 'block', height: '26px', width: '9px', backgroundColor: item.patient_registry && item.patient_registry.guarantor_id !== null ? 'yellow' : 'orange' }" 
+            :title="item.patient_registry && item.patient_registry.guarantor_id !== null ? 'HMO ' : 'Self Pay'"
+            />
+        </div>
+        <span v-if="column.key === 'case_no'" :key="column.key">
+          {{ item.patient_registry ? item.patient_registry.case_no : "..." }}
+        </span>
+        <span v-if="column.key === 'sex'" :key="column.key" style="display: flex;">
+          <v-icon v-if="item.sex && item.sex.sex_description === 'Male'" color="primary">mdi-gender-male</v-icon>
+          <v-icon v-else color="pink">mdi-gender-female</v-icon>
+          {{ item.sex ? item.sex.sex_description : "..." }}
+        </span>
+        <span v-if="column.key === 'birthdate'" :key="column.key">
+          {{ item.birthdate ? useDateMMDDYYY(item.birthdate) : "..." }}
+        </span>
+        <span v-if="column.key === 'registry_date'" :key="column.key">
+          {{ item.patient_registry && item.patient_registry.registry_date ? useDateMMDDYYY(item.patient_registry.registry_date) : "..." }}
+        </span>
+        <span v-if="column.key === 'discharged_date'" :key="column.key">
+          {{ item.patient_registry && item.patient_registry.discharged_date ? useDateMMDDYYY(item.patient_registry.discharged_date) : "..." }}
+        </span>
+        <span v-if="column.key === 'revoked_date'" :key="column.key">
+          {{ item.patient_registry && item.patient_registry.revoked_date ? useDateMMDDYYY(item.patient_registry.revoked_date) : "..." }}
+        </span>
+      </template> -->
     </ReusableTable>
   </v-card>
 
@@ -103,7 +137,7 @@
   <SummaryModal 
     :show="open_summary_modal"
     :summary_header="'Emergency'"
-    :data="outpatients_test_data"
+    :data="erPatient_test_data"
     @close-dialog="closeViewSummary"
   />
   <v-menu
@@ -168,13 +202,19 @@
 
   <!-- Emergency Processing Queries -->
   <MayGoHomePatientListDialog :show="MayGoHomePatientList" @close-dialog="useProcessingQueries('MayGoHomePatientList', false)" />
+  <RevokeRegistrationForm :open_revoke_form="open_revoke_form" @close-dialog="closeRevokeUser" @refresh-data="loadItems" />
   <Cf4DischargedPatientsDialog :show="Cf4ForDischargedPatients" :form_type="form_type" @close-dialog="useProcessingQueries('Cf4ForDischargedPatients', false)" />
 </template>
 
 <script setup>
 import PatientProfileDialog from "../../../components/master-file/forms/patient/FormContainer.vue";
 
+import { usePatientStore } from '@/store/selectedPatient';
+
+const patientStore = usePatientStore();
+
 import ReusableTable from "~/components/reusables/ReusableTable.vue";
+import Snackbar from "~/components/reusables/snackbar.vue";
 const {
   PatientProfile,
   Suspend, 
@@ -213,10 +253,11 @@ definePageMeta({
 
 const { selectedRowDetails, isrefresh } = storeToRefs(useSubcomponentSelectedRowDetailsStore());
 const isSelectedUser = ref(true);
-const pageTitle = ref("Emergency");
-const currentTab = ref(false);
-const showTabs = ref(false);
-const tableTabs = ref([]);
+const pageTitle = ref("");
+const currentTab = ref(1);
+const showTabs = ref(true);
+const columns = ref([]);
+const tableTab = ref(1);
 const central_form_dialog = ref(false);
 const search_results = ref([]);
 const search_payload = ref({});
@@ -225,6 +266,296 @@ const clicked_option = ref("");
 const form_type = ref("emergency")
 const payload = ref({});
 const selectedPatient = ref({});
+const open_revoke_form = ref(false);
+const open_unrevoke_form = ref(false);
+
+
+const tableTabs = ref([
+  {
+    label: "Registered",
+    title: "Registered patients today.",
+    value: 1,
+    endpoint: useApiUrl() + "/get-emergency",
+    columns: [
+              {
+                title: "",
+                align: "start",
+                sortable: false,
+                key: "registry_status",
+              },
+              {
+                title: "",
+                align: "start",
+                sortable: false,
+                key: "isHMO",
+              },
+              {
+                title: "Patient ID",
+                align: "start",
+                sortable: false,
+                key: "patient_id",
+              },
+              {
+                title: "Case No.",
+                align: "start",
+                sortable: false,
+                key: "case_no",
+              },
+              {
+                title: "Last Name",
+                key: "lastname",
+                align: "start",
+                sortable: false,
+              },
+              {
+                title: "First Name",
+                key: "firstname",
+                align: "start",
+                sortable: false,
+              },
+              {
+                title: "Sex",
+                key: "sex",
+                align: "start",
+                sortable: false,
+              },
+              {
+                title: "Birth Date",
+                key: "birthdate",
+                align: "start",
+                sortable: false,
+              },
+              {
+                title: "Registry Date",
+                key: "registry_date",
+                align: "start",
+                sortable: false,
+              },
+              {
+                title: "Discharged Date",
+                key: "discharged_date",
+                align: "start",
+                sortable: false,
+              },
+    ],
+  },
+  {
+    label: "Revoked",
+    title: "Revoked patients today.",
+    value: 2,
+    endpoint: useApiUrl() + "/get-revoked-emergency-patient",
+    columns: [
+              {
+                title: "",
+                align: "start",
+                sortable: false,
+                key: "registry_status",
+              },
+              {
+                title: "",
+                align: "start",
+                sortable: false,
+                key: "isHMO",
+              },
+              {
+                title: "Patient ID",
+                align: "start",
+                sortable: false,
+                key: "patient_id",
+              },
+              {
+                title: "Case No.",
+                align: "start",
+                sortable: false,
+                key: "case_no",
+              },
+              {
+                title: "Last Name",
+                key: "lastname",
+                align: "start",
+                sortable: false,
+              },
+              {
+                title: "First Name",
+                key: "firstname",
+                align: "start",
+                sortable: false,
+              },
+              {
+                title: "Sex",
+                key: "sex",
+                align: "start",
+                sortable: false,
+              },
+              {
+                title: "Birth Date",
+                key: "birthdate",
+                align: "start",
+                sortable: false,
+              },
+              {
+                title: "Registry Date",
+                key: "registry_date",
+                align: "start",
+                sortable: false,
+              },
+              {
+                title: "Revoked Date",
+                key: "revoked_date",
+                align: "start",
+                sortable: false,
+              },
+    ],
+  },
+  {
+    label: "Transferred",
+    title: "Transferred patients today.",
+    value: 3,
+    endpoint: useApiUrl() + "/get-revoked-emergency-patient",
+    columns: [
+              {
+                title: "",
+                align: "start",
+                sortable: false,
+                key: "registry_status",
+              },
+              {
+                title: "",
+                align: "start",
+                sortable: false,
+                key: "isHMO",
+              },
+              {
+                title: "Patient ID",
+                align: "start",
+                sortable: false,
+                key: "patient_id",
+              },
+              {
+                title: "ER Case No.",
+                align: "start",
+                sortable: false,
+                key: "er_case_no",
+              },
+              {
+                title: "ER Bed No.",
+                align: "start",
+                sortable: false,
+                key: "room_no",
+              },
+              {
+                title: "Last Name",
+                key: "lastname",
+                align: "start",
+                sortable: false,
+              },
+              {
+                title: "First Name",
+                key: "firstname",
+                align: "start",
+                sortable: false,
+              },
+              {
+                title: "Sex",
+                key: "sex",
+                align: "start",
+                sortable: false,
+              },
+              {
+                title: "Birth Date",
+                key: "birthdate",
+                align: "start",
+                sortable: false,
+              },
+              {
+                title: "Registry Date",
+                key: "registry_date",
+                align: "start",
+                sortable: false,
+              },
+              {
+                title: "Discharged Date",
+                key: "discharged_date",
+                align: "start",
+                sortable: false,
+              },
+    ],
+  },
+  {
+    label: "Admitted",
+    title: "Admitted patients today.",
+    value: 4,
+    endpoint: useApiUrl() + "/get-revoked-emergency-patient",
+    columns: [
+              {
+                title: "",
+                align: "start",
+                sortable: false,
+                key: "registry_status",
+              },
+              {
+                title: "",
+                align: "start",
+                sortable: false,
+                key: "isHMO",
+              },
+              {
+                title: "Patient ID",
+                align: "start",
+                sortable: false,
+                key: "patient_id",
+              },
+              {
+                title: "Admission No.",
+                align: "start",
+                sortable: false,
+                key: "admission_no",
+              },
+              {
+                title: "Room No.",
+                align: "start",
+                sortable: false,
+                key: "room_no",
+              },
+              {
+                title: "Last Name",
+                key: "lastname",
+                align: "start",
+                sortable: false,
+              },
+              {
+                title: "First Name",
+                key: "firstname",
+                align: "start",
+                sortable: false,
+              },
+              {
+                title: "Sex",
+                key: "sex",
+                align: "start",
+                sortable: false,
+              },
+              {
+                title: "Birth Date",
+                key: "birthdate",
+                align: "start",
+                sortable: false,
+              },
+              {
+                title: "Registry Date",
+                key: "registry_date",
+                align: "start",
+                sortable: false,
+              },
+              {
+                title: "Discharged Date",
+                key: "discharged_date",
+                align: "start",
+                sortable: false,
+              },
+    ],
+  },
+]);
 
 const totalItems = ref(0);
 const itemsPerPage = ref(15);
@@ -234,7 +565,8 @@ const open_filter_options = ref(false);
 const params = ref("");
 const loading = ref(true);
 const open_summary_modal = ref(false);
-const outpatients_test_data = ref([
+
+const erPatient_test_data = ref([
   { label: "Active", value: "1", color: "green" },
   { label: "Discharged", value: "2", color: "lightblue" },
   { label: "May Go Home", value: "3", color: "yellow" },
@@ -254,7 +586,7 @@ const headers = [
     title: "Case No.",
     align: "start",
     sortable: false,
-    key: "register_id_no",
+    key: "case_No",
   },
   {
     title: "Last Name",
@@ -287,10 +619,12 @@ const headers = [
     sortable: false,
   },
 ];
+
 const serverItems = ref([]);
 const handleRefresh = () => {
    loadItems();
 };
+
 const handleSearch = (keyword) => {
   // Handle search action
    loadItems(null, keyword);
@@ -311,6 +645,7 @@ const selectedUser = (item) => {
   isrefresh.value = false;
   selectedRowDetails.value.id = ""; //clear state id for subcomponents ?id=''
   selectedRowDetails.value.role_id = ""; //clear state id for subcomponents ?id=''
+  selectedRowDetails.value = Object.assign({}, item); 
 
   if(item){
     selectedRowDetails.value =  Object.assign({}, item);; //set state id for subcomponents ?id=item.id value
@@ -321,35 +656,48 @@ const selectedUser = (item) => {
     isSelectedUser.value = true;
   }
 };
+
 const handleView = (clickedOption) => {
   clicked_option.value = clickedOption;
   form_dialog.value = true;
 };
+
 const handleEdit = (clickedOption) => {
   clicked_option.value = clickedOption;
   form_dialog.value = true;
 };
+
 const handleNew = (clickedOption) => {
   clicked_option.value = clickedOption;
   central_form_dialog.value = true;
 };
+
 const closeCentralFormDialog = () => {
   central_form_dialog.value = false;
   search_payload.value = {};
   search_results.value = [];
   selectedPatient.value = {};
 };
+
 const openAddFormDialog = (type) => {
-    if (type === 'new') {
+  if (type === 'new') {
         form_dialog.value = true;
         closeCentralFormDialog();
-    } else {  
-        if (selectedPatient.value.id) {  
-            form_dialog.value = true;
-            closeCentralFormDialog();
-        } else {
-            return useSnackbar(true, "error", "No item selected.");
-        }
+    } else if (type === 'old') {  
+        // let curDate = useDateMMDDYYY(new Date());
+        // let curDate = '2024-08-14';
+        // if(curDate == useDateMMDDYYY(patientStore?.selectedPatient?.updated_at)) {
+        //     return useSnackbar(true, 'error', 'Patient is already registered.')
+        // } else {
+          // console.log(patientStore.selectedPatient.created_at)
+          patientStore.setSelectedPatient(selectedPatient.value);
+          if (patientStore.selectedPatient && patientStore.selectedPatient.id) {  
+              form_dialog.value = true;
+              closeCentralFormDialog();
+          } else {
+              return useSnackbar(true, "error", "No item selected.");
+          }
+        // }
     } 
 };
 const closeAddFormDialog = () => {
@@ -357,9 +705,11 @@ const closeAddFormDialog = () => {
   search_payload.value = {};
   search_results.value = [];
 };
+
 const selectedEmergencyPatient = (item) => {
   selectedPatient.value = item;
 };
+
 const SearchEmergencyPatient = async (payload) => {
   search_payload.value.isloading = true;
   let lastname = payload.lastname || "";
@@ -383,9 +733,30 @@ const SearchEmergencyPatient = async (payload) => {
   }
 };
 
-const DeactiveUser = () => {
-  
+// const RevokeUser = async () => {
+//   response = await useMethod("put", "update-emergency", payload.value, "", payload.value.patient_id);
+//     if (response) {
+//         useSnackbar(true, "green", response.message);
+//         isLoading.value = false;
+//         tab.value = "0";
+//     }
+// };
+
+const RevokeUser = () => {
+  open_revoke_form.value = true;
 };
+
+const closeRevokeUser = () => {
+  open_revoke_form.value = false;
+};
+
+const UnrevokeUser = () => {
+  open_unrevoke_form.value = true;
+}
+const closeUnrevokeUser = () => {
+  open_unrevoke_form.value = false;
+}
+
 
 const ViewSummary = () => {
   open_summary_modal.value = true;
@@ -401,7 +772,13 @@ const loadItems = async (options = null, searchkeyword = null) => {
     let keyword = searchkeyword || "";
       params.value = options  ? "page=" + options.page + "&per_page=" + options.itemsPerPage + "&keyword=" + options.keyword
     : "page=1&per_page=50&keyword=" + keyword;
-    const response = await fetch(useApiUrl()+'/get-emergency'+ "?" + params.value || "", {
+    // const response = await fetch(useApiUrl()+'/get-emergency'+ "?" + params.value || "", {
+    //   headers: {
+    //     Authorization: `Bearer `+ useToken(),
+    //   },
+    // });
+    const currentTabInfo = tableTabs.value.find((tab) => tab.value === currentTab.value);
+    const response = await fetch(currentTabInfo?.endpoint + "?" + params.value || "", {
       headers: {
         Authorization: `Bearer `+ useToken(),
       },
@@ -418,6 +795,19 @@ const loadItems = async (options = null, searchkeyword = null) => {
     loading.value = false;
   }
 };
+
+const handleTabChange = (tabValue) => {
+  console.log('Tab Values : ', tabValue);
+  selectedRowDetails.value.id = "";
+  payload.value = Object.assign({}, {});
+  currentTab.value = tabValue;
+  columns.value = tableTabs.value.find((tab) => tab.value === tabValue).columns;
+  const currentTabInfo = tableTabs.value.find((tab) => tab.value === tabValue);
+  pageTitle.value = currentTabInfo.title || "";
+
+  loadItems();
+}
+
 const updateTotalItems = (newTotalItems) => {
   totalItems.value = newTotalItems;
 };
@@ -426,6 +816,7 @@ const updateServerItems = (newServerItems) => {
   serverItems.value = newServerItems;
 };
 
+handleTabChange(currentTab.value);
 </script>
 
 <style>

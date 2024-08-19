@@ -76,6 +76,7 @@
 </template>
 
 <script setup>
+import { usePatientStore } from '@/store/selectedPatient';
 
 const props = defineProps({
     form_dialog: {
@@ -87,6 +88,8 @@ const props = defineProps({
         default: () => ''
     }
 });
+
+const patientStore = usePatientStore();
 
 let tab = ref("0");
 const formType = ref('emergency');
@@ -111,7 +114,7 @@ const onSubmit = async () => {
     isLoading.value = true;
 
     if (payload.value.id) {
-        response = await useMethod("put", "update-emergency", payload.value, "", payload.value.id);
+        response = await useMethod("put", "update-emergency", payload.value, "", payload.value.patient_id);
         if (response) {
             useSnackbar(true, "green", response.message);
             isLoading.value = false;
@@ -179,6 +182,10 @@ const validation = ()=>{
     if(!payload.value.mscPrice_Schemes) {
         error_msg.push({msg:"Price Scheme is required"});
     }
+
+    if(!payload.value.clinical_chief_complaint) {
+        error_msg.push({msg:"chief complaints is required"});
+    }
     // Inpatient only
     // if(!payload.value.how_admitted) {
     //     error_msg.push({msg:"How Admitted is required"});
@@ -187,30 +194,38 @@ const validation = ()=>{
 }
 
 onUpdated(() => {
-    if (selectedRowDetails.value) {
-        payload.value = Object.assign({}, selectedRowDetails.value);
-        payload.value.sex_id = parseInt(selectedRowDetails.value.sex_id) ? parseInt(selectedRowDetails.value.sex_id) : '';
-        payload.value.suffix_id = parseInt(selectedRowDetails.value.suffix_id) ? parseInt(selectedRowDetails.value.suffix_id) : '';
-        payload.value.civilstatus_id = parseInt(selectedRowDetails.value.civilstatus_id) ? parseInt(selectedRowDetails.value.civilstatus_id) : '';
-        payload.value.birthdate = useDateMMDDYYY(selectedRowDetails.value.birthdate) ? useDateMMDDYYY(selectedRowDetails.value.birthdate) : '';
-        payload.value.register_id_no = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry.register_id_no ? selectedRowDetails.value.patient_registry.register_id_no : '';
-        payload.value.registry_date = useDateMMDDYYY(selectedRowDetails.value.registry_date) ? useDateMMDDYYY(selectedRowDetails.value.registry_date) : '';
-        payload.value.mscPrice_Groups = selectedRowDetails.value.patient_registry && parseInt(selectedRowDetails.value.patient_registry.mscPrice_Groups) ? parseInt(selectedRowDetails.value.patient_registry.mscPrice_Groups) : '';
-        payload.value.mscPrice_Schemes = selectedRowDetails.value.patient_registry && parseInt(selectedRowDetails.value.patient_registry.mscPrice_Schemes) ? parseInt(selectedRowDetails.value.patient_registry.mscPrice_Schemes) : '';
-        payload.value.religion_id = parseInt(selectedRowDetails.value.religion_id) ? parseInt(selectedRowDetails.value.religion_id) : '';
-        payload.value.nationality_id = parseInt(selectedRowDetails.value.nationality_id) ? parseInt(selectedRowDetails.value.nationality_id) : '';
+    if (selectedRowDetails.value && selectedRowDetails.value.id) {
+        payload.value                   = Object.assign({}, selectedRowDetails.value);
+        payload.value.sex_id            = parseInt(selectedRowDetails.value.sex_id) ? parseInt(selectedRowDetails.value.sex_id) : '';
+        payload.value.suffix_id         = parseInt(selectedRowDetails.value.suffix_id) ? parseInt(selectedRowDetails.value.suffix_id) : '';
+        payload.value.civilstatus_id    = parseInt(selectedRowDetails.value.civilstatus_id) ? parseInt(selectedRowDetails.value.civilstatus_id) : '';
+        payload.value.birthdate         = useDateMMDDYYY(selectedRowDetails.value.birthdate) ? useDateMMDDYYY(selectedRowDetails.value.birthdate) : '';
+        payload.value.register_id_no    = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry.case_No ? selectedRowDetails.value.patient_registry.case_No : '';
+        payload.value.registry_date     = useDateMMDDYYY(selectedRowDetails.value.registry_date) ? useDateMMDDYYY(selectedRowDetails.value.registry_date) : '';
+        payload.value.mscPrice_Groups   = selectedRowDetails.value.patient_registry && parseInt(selectedRowDetails.value.patient_registry.mscPrice_Groups) ? parseInt(selectedRowDetails.value.patient_registry.mscPrice_Groups) : '';
+        payload.value.mscPrice_Schemes  = selectedRowDetails.value.patient_registry && parseInt(selectedRowDetails.value.patient_registry.mscPrice_Schemes) ? parseInt(selectedRowDetails.value.patient_registry.mscPrice_Schemes) : '';
+        payload.value.religion_id       = parseInt(selectedRowDetails.value.religion_id) ? parseInt(selectedRowDetails.value.religion_id) : '';
+        payload.value.nationality_id    = parseInt(selectedRowDetails.value.nationality_id) ? parseInt(selectedRowDetails.value.nationality_id) : '';
+        payload.value.telephone_number  = selectedRowDetails.value.telephone_number ? selectedRowDetails.value.telephone_number : ''; 
+        payload.value.mobile_number     = selectedRowDetails.value.mobile_number ? selectedRowDetails.value.mobile_number : '';
 
         // ADDRESS
         const Address = ref({});
-        Address.value.bldgstreet = selectedRowDetails.value.bldgstreet ? selectedRowDetails.value.bldgstreet : '';
-        Address.value.region_id = parseInt(selectedRowDetails.value.region_id) ? parseInt(selectedRowDetails.value.region_id) : '';
-        Address.value.province_id = parseInt(selectedRowDetails.value.province_id) ? parseInt(selectedRowDetails.value.province_id) : '';
-        Address.value.municipality_id = parseInt(selectedRowDetails.value.municipality_id) ? parseInt(selectedRowDetails.value.municipality_id) : '';
-        Address.value.barangay_id = parseInt(selectedRowDetails.value.barangay_id) ? parseInt(selectedRowDetails.value.barangay_id) : '';
-        Address.value.country_id = parseInt(selectedRowDetails.value.country_id) ? parseInt(selectedRowDetails.value.country_id) : '';
-        payload.value.address = Address.value;
-        console.log('Address:', payload.value.address); 
+        Address.value.bldgstreet        = selectedRowDetails.value.bldgstreet ? selectedRowDetails.value.bldgstreet : '';
+        Address.value.region_id         = parseInt(selectedRowDetails.value.region_id) ? parseInt(selectedRowDetails.value.region_id) : '';
+        Address.value.province_id       = parseInt(selectedRowDetails.value.province_id) ? parseInt(selectedRowDetails.value.province_id) : '';
+        Address.value.municipality_id   = parseInt(selectedRowDetails.value.municipality_id) ? parseInt(selectedRowDetails.value.municipality_id) : '';
+        Address.value.barangay_id       = parseInt(selectedRowDetails.value.barangay_id) ? parseInt(selectedRowDetails.value.barangay_id) : '';
+        Address.value.country_id        = parseInt(selectedRowDetails.value.country_id) ? parseInt(selectedRowDetails.value.country_id) : '';
+        payload.value.address           = Address.value;
 
+        // REGISTRY
+        payload.value.mscAccount_type   = selectedRowDetails.value.patient_registry && parseInt(selectedRowDetails.value.patient_registry.mscAccount_Type) ? parseInt(selectedRowDetails.value.patient_registry.mscAccount_Type) : '';
+        payload.value.mscBroughtBy_Relationship_Id = selectedRowDetails.value.patient_registry && parseInt(selectedRowDetails.value.patient_registry.mscBroughtBy_Relationship_Id) ? parseInt(selectedRowDetails.value.patient_registry.mscBroughtBy_Relationship_Id) : '';
+
+        // OTHER DETAILS
+        payload.value.clinical_chief_complaint = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry.chief_Complaint_Description ? selectedRowDetails.value.patient_registry.chief_Complaint_Description : '';
+        
         // For HMO GUARANTORS
         const Guarantor = ref([]);
         if (selectedRowDetails.value.patient_registry) {
@@ -228,7 +243,39 @@ onUpdated(() => {
         payload.value.selectedConsultant = Consultant.value;
 
         payload.value.registry_remarks = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry.registry_remarks ? selectedRowDetails.value.patient_registry.registry_remarks : '';
-    } 
+    } else {
+        if (patientStore.selectedPatient && patientStore.selectedPatient.id) { 
+            payload.value = Object.assign({}, patientStore.selectedPatient);
+            payload.value.sex_id = parseInt(patientStore.selectedPatient.sex_id) ? parseInt(patientStore.selectedPatient.sex_id) : '';
+            payload.value.suffix_id = parseInt(patientStore.selectedPatient.suffix_id) ? parseInt(patientStore.selectedPatient.suffix_id) : '';
+            payload.value.civilstatus_id = parseInt(patientStore.selectedPatient.civilstatus_id) ? parseInt(patientStore.selectedPatient.civilstatus_id) : '';
+            payload.value.birthdate = useDateMMDDYYY(patientStore.selectedPatient.birthdate) ? useDateMMDDYYY(patientStore.selectedPatient.birthdate) : '';
+            payload.value.register_id_no = patientStore.selectedPatient.patient_registry_details && patientStore.selectedPatient.patient_registry_details.register_id_no ? patientStore.selectedPatient.patient_registry_details.register_id_no : '';
+            payload.value.registry_date = useDateMMDDYYY(patientStore.selectedPatient.registry_date) ? useDateMMDDYYY(patientStore.selectedPatient.registry_date) : '';
+            payload.value.mscPrice_Groups = patientStore.selectedPatient.patient_registry_details && parseInt(patientStore.selectedPatient.patient_registry_details.mscPrice_Groups) ? parseInt(patientStore.selectedPatient.patient_registry_details.mscPrice_Groups) : '';
+            payload.value.mscPrice_Schemes = patientStore.selectedPatient.patient_registry_details && parseInt(patientStore.selectedPatient.patient_registry_details.mscPrice_Schemes) ? parseInt(patientStore.selectedPatient.patient_registry_details.mscPrice_Schemes) : '';
+            payload.value.religion_id = parseInt(patientStore.selectedPatient.religion_id) ? parseInt(patientStore.selectedPatient.religion_id) : '';
+            payload.value.nationality_id = parseInt(patientStore.selectedPatient.nationality_id) ? parseInt(patientStore.selectedPatient.nationality_id) : '';
+    
+            // For HMO GUARANTORS
+            const Guarantor = ref([]);
+            if (patientStore.selectedPatient.patient_registry_details) {
+                patientStore.selectedPatient.patient_registry_details.guarantor_approval_date = useDateMMDDYYY(patientStore.selectedPatient.patient_registry_details.guarantor_approval_date);
+                patientStore.selectedPatient.patient_registry_details.guarantor_validity_date = useDateMMDDYYY(patientStore.selectedPatient.patient_registry_details.guarantor_validity_date);
+                Guarantor.value.push(patientStore.selectedPatient.patient_registry_details)
+            }
+            payload.value.selectedGuarantor = Guarantor.value;
+    
+            // For CONSULTANTS
+            const Consultant = ref([]);
+            if (patientStore.selectedPatient.patient_registry_details) {
+                Consultant.value.push(patientStore.selectedPatient.patient_registry_details)
+            }
+            payload.value.selectedConsultant = Consultant.value;
+    
+            payload.value.registry_remarks = patientStore.selectedPatient.patient_registry_details && patientStore.selectedPatient.patient_registry_details.registry_remarks ? patientStore.selectedPatient.patient_registry_details.registry_remarks : '';
+        }
+    }
 });
 </script>
 

@@ -1033,11 +1033,11 @@ watchEffect(() => {
     }
 })
 
-const pendingStatus = await useStatus("Pending");
+//const pendingStatus = await useStatus("Pending"); 
 onUpdated(() => {
-    if (pendingStatus && pendingStatus.length > 0) {
-        payload.value.status = pendingStatus[0].id;
-    }
+    // if (pendingStatus && pendingStatus.length > 0) {
+    //     payload.value.status = pendingStatus[0].id;
+    // }
     // Forda display
     payload.value.patient_name = selectedRowDetails.value.lastname + ', ' + selectedRowDetails.value.firstname + ' ' + selectedRowDetails.value.middlename || '';
     payload.value.patient_id = selectedRowDetails.value.patient_id || '';
