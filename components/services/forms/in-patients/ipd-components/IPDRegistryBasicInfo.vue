@@ -1,9 +1,9 @@
 <template>
     <v-row>
-        <v-col cols="6">
+        <v-col cols="4">
             <v-col cols="12" class="form-col">
                 <v-list-subheader class="form-header">
-                    OPD Case Date<span style="color: red;" class="mdi mdi-check"></span>
+                    IPD Case Date<span style="color: red;" class="mdi mdi-check"></span>
                 </v-list-subheader>
                 <v-text-field
                     variant="underlined"
@@ -70,7 +70,7 @@
                 ></v-autocomplete>
             </v-col>
         </v-col>
-        <v-col cols="6">
+        <v-col cols="4">
             <v-col cols="12" class="form-col">
                 <v-list-subheader class="form-header">Price Group <span style="color: red;" class="mdi mdi-check"></span></v-list-subheader>
                 <v-autocomplete
@@ -99,6 +99,34 @@
                     :error-messages="formErrors.mscPrice_Schemes ? [formErrors.mscPrice_Schemes] : []"
                 ></v-autocomplete>
             </v-col>
+            <v-col cols="12" class="form-col">
+                <v-row>
+                    <v-col cols="7">
+                        <v-list-subheader class="form-header">Room </v-list-subheader>
+                        <v-text-field
+                            v-model="payload.room_Id"
+                            prepend-icon="mdi-plus-box"
+                            @click:prepend="openHandleDiscountScheme"
+                            readonly
+                            class="cursor-pointer"
+                            density="compact"
+                            variant="underlined"
+                        ></v-text-field>
+                    </v-col>
+                    <v-col cols="5">
+                        <v-list-subheader class="form-header">Rate</v-list-subheader>
+                        <v-text-field
+                            v-model="payload.room_Rate"
+                            readonly
+                            class="cursor-pointer"
+                            density="compact"
+                            variant="underlined"
+                        ></v-text-field>
+                    </v-col>
+                </v-row>
+            </v-col>
+        </v-col>
+        <v-col cols="4">
             <v-col cols="12" class="form-col">
                 <v-list-subheader class="form-header">ID Presented </v-list-subheader>
                 <v-autocomplete
@@ -264,6 +292,8 @@ const getRegisterSource = async () => {
         let register_source = response.find(item => item.description === "Emergency Room");
         props.payload.register_Source = parseInt(register_source.id);
     } else if (props.form_type === "inpatient") {
+        let ipd_filter = ["Emergency Room", "Happydoc ", "Outpatient"];
+        register_source_data.value = response.filter(item => !ipd_filter.includes(item.description));
         let register_source = response.find(item => item.description === "Inpatient");
         props.payload.register_Source = parseInt(register_source.id);
     } else {
@@ -289,6 +319,8 @@ const getTransactionType = async () => {
         let transaction_type = response.find(item => item.description === "Emergency Case");
         props.payload.mscAccount_trans_types = parseInt(transaction_type.id);
     } else if (props.form_type === "inpatient") {
+        let ipd_filter = ["Emergency Case", "Outpatient Consultation", "HappyDoc OutPatient", "Annual Physical Examination", "Executive Checkup"];
+        transaction_type_data.value = response.filter(item => !ipd_filter.includes(item.description));
         let transaction_type = response.find(item => item.description === "Inpatient Case");
         props.payload.mscAccount_trans_types = parseInt(transaction_type.id);
     } else {
@@ -314,6 +346,8 @@ const getRegisteryCaseType = async () => {
         let register_casetype = response.find(item => item.description === "Emergency Patient");
         props.payload.register_Casetype = parseInt(register_casetype.id);
     } else if (props.form_type === "inpatient") {
+        let ipd_filter = ["Outpatient", "Emergency Patient", "Day Patient (Day Case)"];
+        register_casetype_data.value = response.filter(item => !ipd_filter.includes(item.description));
         let register_casetype = response.find(item => item.description === "Inpatient");
         props.payload.register_Casetype = parseInt(register_casetype.id);
     } else {

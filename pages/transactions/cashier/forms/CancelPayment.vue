@@ -147,12 +147,12 @@ const onSubmit = async (user_details) => {
     }
 };
 
-const cancelledStatus = await useStatus("Cancelled");
-onUpdated(() => {
-    if (cancelledStatus && cancelledStatus.length > 0) {
-        payload.value.status = cancelledStatus[0].id;
-    }
-});
+// const cancelledStatus = await useStatus("Cancelled");
+// onUpdated(() => {
+//     if (cancelledStatus && cancelledStatus.length > 0) {
+//         payload.value.status = cancelledStatus[0].id;
+//     }
+// });
 </script>
 
 <style scoped>

@@ -115,6 +115,16 @@ const closeDialog = () => {
 const findTabIndexByError = (field) => {
     switch (field) {
         case "lastname": return "0";
+        case "firstname": return "0";
+        case "sex_id": return "0";
+        case "civilstatus_id": return "0";
+        case "birthdate": return "0";
+        case "register_Source": return "1";
+        case "register_Casetype": return "1";
+        case "mscAccount_trans_types": return "1";
+        case "mscAccount_type": return "1";
+        case "mscPrice_Groups": return "1";
+        case "mscPrice_Schemes": return "1";
         default: return "0";
     }
 }
@@ -136,6 +146,42 @@ const onSubmit = async () => {
     }
     if (!payload.value.firstname) {
         formErrors.value.firstname = "Firstname is required";
+        valid.value = false;
+    }
+    if (!payload.value.sex_id) {
+        formErrors.value.sex_id = "Sex is required";
+        valid.value = false;
+    }
+    if (!payload.value.civilstatus_id) {
+        formErrors.value.civilstatus_id = "Civil Status is required";
+        valid.value = false;
+    }
+    if (!payload.value.birthdate) {
+        formErrors.value.birthdate = "Birthdate is required";
+        valid.value = false;
+    }
+    if (!payload.value.register_Source) {
+        formErrors.value.register_Source = "Register Source is required";
+        valid.value = false;
+    }
+    if (!payload.value.register_Casetype) {
+        formErrors.value.register_Casetype = "Register Casetype is required";
+        valid.value = false;
+    }
+    if (!payload.value.mscAccount_trans_types) {
+        formErrors.value.mscAccount_trans_types = "Transaction type is required";
+        valid.value = false;
+    }
+    if (!payload.value.mscAccount_type) {
+        formErrors.value.mscAccount_type = "Hospitalization  type is required";
+        valid.value = false;
+    }
+    if (!payload.value.mscPrice_Groups) {
+        formErrors.value.mscPrice_Groups = "Price Group is required";
+        valid.value = false;
+    }
+    if (!payload.value.mscPrice_Schemes) {
+        formErrors.value.mscPrice_Schemes = "Price Scheme is required";
         valid.value = false;
     }
 
