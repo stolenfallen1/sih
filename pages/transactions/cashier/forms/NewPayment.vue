@@ -401,7 +401,6 @@ const tempCashAmount = ref(payload.value.cash_amount);
 const tempCashTendered = ref(payload.value.cash_tendered);
 const tempCardAmount = ref(payload.value.card_amount);
 const tempCheckAmount = ref(payload.value.check_amount);
-})
 
 const openRecieptsInfo = () => {
     open_reciepts_form.value = true;
