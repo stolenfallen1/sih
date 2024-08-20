@@ -1,6 +1,6 @@
 <template>
     <v-row>
-        <v-col cols="6">
+        <v-col cols="4">
             <v-col cols="12" class="form-col">
                 <v-list-subheader class="form-header">
                     OPD Case Date<span style="color: red;" class="mdi mdi-check"></span>
@@ -70,7 +70,7 @@
                 ></v-autocomplete>
             </v-col>
         </v-col>
-        <v-col cols="6">
+        <v-col cols="4">
             <v-col cols="12" class="form-col">
                 <v-list-subheader class="form-header">Price Group <span style="color: red;" class="mdi mdi-check"></span></v-list-subheader>
                 <v-autocomplete
@@ -97,6 +97,48 @@
                     density="compact"
                     variant="underlined"
                     :error-messages="formErrors.mscPrice_Schemes ? [formErrors.mscPrice_Schemes] : []"
+                ></v-autocomplete>
+            </v-col>
+            <v-col cols="12" class="form-col">
+                <v-list-subheader class="form-header">Service Type </v-list-subheader>
+                <v-autocomplete
+                    :items="service_type_data"
+                    item-title="description"
+                    item-value="id"
+                    v-model="payload.mscService_Type"
+                    :readonly="clicked_option === 'view'"
+                    :clearable="clicked_option === 'new' || clicked_option === 'edit'"
+                    density="compact"
+                    variant="underlined"
+                ></v-autocomplete>
+            </v-col>
+            <v-col cols="12" class="form-col">
+                <v-list-subheader class="form-header">Case Indicator </v-list-subheader>
+                <v-autocomplete
+                    :items="case_indicator_data"
+                    item-title="description"
+                    item-value="id"
+                    v-model="payload.mscCase_Indicators_Id"
+                    :readonly="clicked_option === 'view'"
+                    :clearable="clicked_option === 'new' || clicked_option === 'edit'"
+                    density="compact"
+                    variant="underlined"
+                ></v-autocomplete>
+            </v-col>
+        </v-col>
+        <v-col cols="4">
+            <v-col cols="12" class="form-col">
+                <v-list-subheader class="form-header">Patient Brought By </v-list-subheader>
+                <v-autocomplete
+                    :items="patient_brought_by"
+                    item-title="description"
+                    item-value="id"
+                    v-model="payload.mscBroughtBy_Relationship_Id"
+                    :readonly="clicked_option === 'view'"
+                    :clearable="clicked_option === 'new' || clicked_option === 'edit'"
+                    density="compact"
+                    variant="underlined"
+                    :error-messages="formErrors.mscPrice_Groups ? [formErrors.mscPrice_Groups] : []"
                 ></v-autocomplete>
             </v-col>
             <v-col cols="12" class="form-col">
@@ -353,6 +395,39 @@ const getPriceScheme = async () => {
     } 
 };
 
+const service_type_data = ref([]);
+const service_type_loading = ref(false);
+const getServiceType = async () => {
+    service_type_loading.value = true;
+    const response = await useMethod("get", "get-services-type", "", "");
+    if (response) {
+        service_type_data.value = response;
+        service_type_loading.value = false;
+    } 
+};
+
+const patient_brought_by = ref([]);
+const patient_brought_by_loading = ref(false);
+const getPatientBroughtBy = async () => {
+    patient_brought_by_loading.value = true;
+    const response = await useMethod("get", "patient-brought-by", "", "");
+    if(response) {
+        patient_brought_by.value = response;
+        patient_brought_by_loading.value = false;
+    }
+};
+
+const case_indicator_data = ref([]);
+const case_indicator_loading = ref(false);
+const getCaseIndicator = async () => {
+    case_indicator_loading.value = true;
+    const response = await useMethod("get", "get-case-indicators", "", "");
+    if(response) {
+        case_indicator_data.value = response;
+        case_indicator_loading.value = false;
+    }
+};
+
 const id_types_data = ref([]);
 const id_types_loading = ref(false);
 const getIdTypes = async () => {
@@ -371,6 +446,9 @@ onMounted(() => {
     getHospitalizationPlan();
     getPriceGroup();
     getPriceScheme();
+    getServiceType();
+    getPatientBroughtBy();
+    getCaseIndicator();
     getIdTypes();
 });
 </script>
