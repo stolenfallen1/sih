@@ -1,6 +1,6 @@
 <template>
     <v-row>
-        <v-col cols="4">
+        <v-col cols="3">
             <v-col cols="12" class="form-col">
                 <v-list-subheader class="form-header">
                     IPD Case Date<span style="color: red;" class="mdi mdi-check"></span>
@@ -70,7 +70,7 @@
                 ></v-autocomplete>
             </v-col>
         </v-col>
-        <v-col cols="4">
+        <v-col cols="3">
             <v-col cols="12" class="form-col">
                 <v-list-subheader class="form-header">Price Group <span style="color: red;" class="mdi mdi-check"></span></v-list-subheader>
                 <v-autocomplete
@@ -125,8 +125,64 @@
                     </v-col>
                 </v-row>
             </v-col>
+            <v-col cols="12" class="form-col">
+                <v-list-subheader class="form-header">Diet </v-list-subheader>
+                <v-text-field
+                    v-model="payload.mscDiet_Meal_Id"
+                    prepend-icon="mdi-plus-box"
+                    @click:prepend="openHandleDiscountScheme"
+                    readonly
+                    class="cursor-pointer"
+                    density="compact"
+                    variant="underlined"
+                ></v-text-field>
+            </v-col>
+            <v-col cols="12" class="form-col">
+                <v-list-subheader class="form-header">Disposition </v-list-subheader>
+                <v-autocomplete
+                    :items="disposition_data"
+                    item-title="description"
+                    item-value="id"
+                    v-model="payload.mscDisposition_Id"
+                    :readonly="clicked_option === 'view'"
+                    :clearable="clicked_option === 'new' || clicked_option === 'edit'"
+                    density="compact"
+                    variant="underlined"
+                ></v-autocomplete>
+            </v-col>
         </v-col>
-        <v-col cols="4">
+        <v-col cols="3">
+            <h1>SPACE FOR MGA IPANG ADD TOMS</h1>
+        </v-col>
+        <v-col cols="3">
+            <v-col cols="12" class="form-col">
+                <v-list-subheader class="form-header">Service Type </v-list-subheader>
+                <v-autocomplete
+                    :items="service_type_data"
+                    item-title="description"
+                    item-value="id"
+                    v-model="payload.mscService_Type"
+                    :readonly="clicked_option === 'view'"
+                    :clearable="clicked_option === 'new' || clicked_option === 'edit'"
+                    density="compact"
+                    variant="underlined"
+                    :error-messages="formErrors.mscPrice_Groups ? [formErrors.mscPrice_Groups] : []"
+                ></v-autocomplete>
+            </v-col>
+            <v-col cols="12" class="form-col">
+                <v-list-subheader class="form-header">Patient Brought By </v-list-subheader>
+                <v-autocomplete
+                    :items="patient_brought_by"
+                    item-title="description"
+                    item-value="id"
+                    v-model="payload.mscBroughtBy_Relationship_Id"
+                    :readonly="clicked_option === 'view'"
+                    :clearable="clicked_option === 'new' || clicked_option === 'edit'"
+                    density="compact"
+                    variant="underlined"
+                    :error-messages="formErrors.mscPrice_Groups ? [formErrors.mscPrice_Groups] : []"
+                ></v-autocomplete>
+            </v-col>
             <v-col cols="12" class="form-col">
                 <v-list-subheader class="form-header">ID Presented </v-list-subheader>
                 <v-autocomplete
@@ -387,6 +443,39 @@ const getPriceScheme = async () => {
     } 
 };
 
+const disposition_data = ref([]);
+const disposition_loading = ref(false);
+const getDisposition = async () => {
+    disposition_loading.value = true;
+    const response = await useMethod("get", "disposition", "", "");
+    if (response) {
+        disposition_data.value = response;
+        disposition_loading.value = false;
+    } 
+};
+
+const service_type_data = ref([]);
+const service_type_loading = ref(false);
+const getServiceType = async () => {
+    service_type_loading.value = true;
+    const response = await useMethod("get", "get-services-type", "", "");
+    if (response) {
+        service_type_data.value = response;
+        service_type_loading.value = false;
+    } 
+};
+
+const patient_brought_by = ref([]);
+const patient_brought_by_loading = ref(false);
+const getPatientBroughtBy = async () => {
+    patient_brought_by_loading.value = true;
+    const response = await useMethod("get", "patient-brought-by", "", "");
+    if(response) {
+        patient_brought_by.value = response;
+        patient_brought_by_loading.value = false;
+    }
+};
+
 const id_types_data = ref([]);
 const id_types_loading = ref(false);
 const getIdTypes = async () => {
@@ -405,6 +494,9 @@ onMounted(() => {
     getHospitalizationPlan();
     getPriceGroup();
     getPriceScheme();
+    getDisposition();
+    getServiceType();
+    getPatientBroughtBy();
     getIdTypes();
 });
 </script>

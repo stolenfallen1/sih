@@ -109,10 +109,10 @@
           {{ item.birthdate ? useDateMMDDYYY(item.birthdate) : "..." }}
         </span>
         <span v-if="column.key === 'registry_date'" :key="column.key">
-          {{ item.patient_registry && item.patient_registry.registry_date ? useDateMMDDYYY(item.patient_registry.registry_date) : "..." }}
+          {{ item.patient_registry && item.patient_registry.registry_Date ? useDateMMDDYYY(item.patient_registry.registry_Date) : "..." }}
         </span>
         <span v-if="column.key === 'discharged_date'" :key="column.key">
-          {{ item.patient_registry && item.patient_registry.discharged_date ? useDateMMDDYYY(item.patient_registry.discharged_date) : "..." }}
+          {{ item.patient_registry && item.patient_registry.discharged_Date ? useDateMMDDYYY(item.patient_registry.discharged_Date) : "..." }}
         </span>
         <span v-if="column.key === 'revoked_date'" :key="column.key">
           {{ item.patient_registry && item.patient_registry.revoked_date ? useDateMMDDYYY(item.patient_registry.revoked_date) : "..." }}
@@ -283,7 +283,7 @@ const tableTabs = ref([
                 title: "Patient ID",
                 align: "start",
                 sortable: false,
-                key: "patient_id",
+                key: "patient_Id",
               },
               {
                 title: "Case No.",
