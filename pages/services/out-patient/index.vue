@@ -631,8 +631,6 @@ const openAddFormDialog = (type) => {
         closeCentralFormDialog(); 
     } else if (type === 'old') {  
         let currentDate = useDateMMDDYYY(new Date());
-        console.log('test', selectedPatient.value);
-        console.log('selectedPatient:', useDateMMDDYYY(selectedPatient.value.updated_at));
         if (useDateMMDDYYY(selectedPatient.value.updated_at) == currentDate) {
             return useSnackbar(true, "error", "Patient already registered today.");
         } else {

@@ -31,6 +31,6 @@ const props = defineProps({
 .form-header {
     color: #000;
     margin: -12px 0px -12px 0px;
-    font-weight: 500;
+    font-weight: bold;
 }
 </style>
