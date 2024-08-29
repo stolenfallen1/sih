@@ -4,7 +4,7 @@
             <v-col cols="12" class="form-col">
                 <v-list-subheader class="form-header">Patient ID</v-list-subheader>
                 <v-text-field
-                    variant="underlined"
+                    variant="outlined"
                     v-model="payload.patient_id"
                     placeholder="Auto Generated"
                     readonly
@@ -14,7 +14,7 @@
             <v-col cols="12" class="form-col">
                 <v-list-subheader class="form-header">Patient Case No.</v-list-subheader>
                 <v-text-field
-                    variant="underlined"
+                    variant="outlined"
                     v-model="payload.register_id_no"
                     placeholder="Auto Generated"
                     readonly
@@ -30,14 +30,14 @@
                     type="text"
                     autofocus
                     density="compact"
-                    variant="underlined"
+                    variant="outlined"
                     :error-messages="formErrors.lastname ? [formErrors.lastname] : []"
                     ></v-text-field>
             </v-col>
             <v-col cols="12" class="form-col">
                 <v-list-subheader class="form-header">First name <span style="color: red;" class="mdi mdi-check"></span></v-list-subheader>
                 <v-text-field
-                    variant="underlined"
+                    variant="outlined"
                     v-model="payload.firstname"
                     :readonly="clicked_option === 'view'"
                     type="text"
@@ -48,7 +48,7 @@
             <v-col cols="12" class="form-col">
                 <v-list-subheader class="form-header">Middle name</v-list-subheader>
                 <v-text-field
-                    variant="underlined"
+                    variant="outlined"
                     v-model="payload.middlename"
                     :readonly="clicked_option === 'view'"
                     density="compact"
@@ -66,7 +66,7 @@
                     :readonly="clicked_option === 'view'"
                     :clearable="clicked_option === 'new' || clicked_option === 'edit'"
                     density="compact"
-                    variant="underlined"
+                    variant="outlined"
                 ></v-autocomplete>
             </v-col>
             <v-col cols="12" class="form-col">
@@ -79,14 +79,14 @@
                     :readonly="clicked_option === 'view'"
                     :clearable="clicked_option === 'new' || clicked_option === 'edit'"
                     density="compact"
-                    variant="underlined"
+                    variant="outlined"
                     :error-messages="formErrors.sex_id ? [formErrors.sex_id] : []"
                 ></v-autocomplete>
             </v-col>
             <v-col cols="12" class="form-col">
                 <v-list-subheader class="form-header">Telephone No.</v-list-subheader>
                 <v-text-field
-                    variant="underlined"
+                    variant="outlined"
                     v-model="payload.telephone_number"
                     :readonly="clicked_option === 'view'"
                     type="number"
@@ -96,7 +96,7 @@
             <v-col cols="12" class="form-col">
                 <v-list-subheader class="form-header">Mobile No.</v-list-subheader>
                 <v-text-field
-                    variant="underlined"
+                    variant="outlined"
                     v-model="payload.mobile_number"
                     :readonly="clicked_option === 'view'"
                     type="number"
@@ -106,7 +106,7 @@
             <v-col cols="12" class="form-col">
                 <v-list-subheader class="form-header">Email Address</v-list-subheader>
                 <v-text-field
-                    variant="underlined"
+                    variant="outlined"
                     v-model="payload.email_address"
                     :readonly="clicked_option === 'view'"
                     type="email"
@@ -125,14 +125,14 @@
                     :readonly="clicked_option === 'view'"
                     :clearable="clicked_option === 'new' || clicked_option === 'edit'"
                     density="compact"
-                    variant="underlined"
+                    variant="outlined"
                     :error-messages="formErrors.civilstatus_id ? [formErrors.civilstatus_id] : []"
                 ></v-autocomplete>
             </v-col>
             <v-col cols="12" class="form-col">
                 <v-list-subheader class="form-header">Birth Date <span style="color: red;" class="mdi mdi-check"></span></v-list-subheader>
                 <v-text-field
-                    variant="underlined"
+                    variant="outlined"
                     v-model="payload.birthdate"
                     :readonly="clicked_option === 'view'"
                     type="date"
@@ -144,7 +144,7 @@
             <v-col cols="12" class="form-col">
                 <v-list-subheader class="form-header">Birth Time</v-list-subheader>
                 <v-text-field
-                    variant="underlined"
+                    variant="outlined"
                     v-model="payload.birthtime"
                     :readonly="clicked_option === 'view'"
                     readonly
@@ -154,7 +154,7 @@
             <v-col cols="12" class="form-col">
                 <v-list-subheader class="form-header">Age</v-list-subheader>
                 <v-text-field
-                    variant="underlined"
+                    variant="outlined"
                     v-model="payload.age"
                     placeholder="Auto Compute"
                     readonly
@@ -165,7 +165,7 @@
             <v-col cols="12" class="form-col">
                 <v-list-subheader class="form-header">Alias</v-list-subheader>
                 <v-text-field
-                    variant="underlined"
+                    variant="outlined"
                     v-model="payload.alias"
                     :readonly="clicked_option === 'view'"
                     density="compact"
@@ -176,7 +176,7 @@
             <v-col cols="12" class="form-col">
                 <v-list-subheader class="form-header">Temperature</v-list-subheader>
                 <v-text-field
-                    variant="underlined"
+                    variant="outlined"
                     v-model="payload.temperature"
                     :readonly="clicked_option === 'view'"
                     density="compact"
@@ -187,7 +187,7 @@
                     <v-col cols="6">
                         <v-list-subheader class="form-header">BP Sys</v-list-subheader>
                         <v-text-field
-                            variant="underlined"
+                            variant="outlined"
                             v-model="payload.bloodPressureSystolic"
                             :readonly="clicked_option === 'view'"
                             density="compact"
@@ -196,7 +196,7 @@
                     <v-col cols="6">
                         <v-list-subheader class="form-header">BP Dias</v-list-subheader>
                         <v-text-field
-                            variant="underlined"
+                            variant="outlined"
                             v-model="payload.bloodPressureDiastolic"
                             :readonly="clicked_option === 'view'"
                             density="compact"
@@ -207,7 +207,7 @@
             <v-col cols="12" class="form-col">
                 <v-list-subheader class="form-header">Weight (kg)</v-list-subheader>
                 <v-text-field
-                    variant="underlined"
+                    variant="outlined"
                     type="number"
                     v-model="payload.weight"
                     :readonly="clicked_option === 'view'"
@@ -218,7 +218,7 @@
             <v-col cols="12" class="form-col">
                 <v-list-subheader class="form-header">Height (cm)</v-list-subheader>
                 <v-text-field
-                    variant="underlined"
+                    variant="outlined"
                     type="number"
                     v-model="payload.height"
                     :readonly="clicked_option === 'view'"
@@ -229,7 +229,7 @@
             <v-col cols="12" class="form-col">
                 <v-list-subheader class="form-header">BMI</v-list-subheader>
                 <v-text-field
-                    variant="underlined"
+                    variant="outlined"
                     v-model="payload.bmi"
                     placeholder="Auto Generated"
                     readonly
@@ -319,7 +319,7 @@ onMounted(() => {
 .form-header {
     color: #000;
     margin: -12px 0px -12px 0px;
-    font-weight: 500;
+    font-weight: bold;
 }
 .form-col {
     padding: 3.25px 0px 3.25px 0px !important;

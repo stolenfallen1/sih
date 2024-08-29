@@ -1,22 +1,39 @@
 <template>
-    <v-dialog :model-value="open_medical_package_list" rounded="lg" @update:model-value="closeDialog" scrollable max-width="700px">
+    <v-dialog :model-value="open_room_list" rounded="lg" @update:model-value="closeDialog" scrollable max-width="700px">
         <v-card rounded="lg">
             <v-toolbar density="compact" color="#107bac" hide-details>
-                <v-toolbar-title>Medical Package List</v-toolbar-title>
+                <v-toolbar-title>Room Lists</v-toolbar-title>
                 <v-btn color="white" @click="closeDialog">
                     <v-icon>mdi-close</v-icon>
                 </v-btn>
             </v-toolbar>
             <v-divider></v-divider>
             <v-card-text>
-                <v-text-field
-                    label="Search by Description"
-                    density="compact"
-                    variant="outlined"
-                    prepend-inner-icon="mdi-magnify"
-                    v-model="data.keyword"
-                    @keyup.enter="search"
-                ></v-text-field>
+                <v-row>
+                    <v-col cols="7">
+                        <v-autocomplete
+                            label="Select by Station"
+                            v-model="data.station_code"
+                            :items="station_data"
+                            item-title="station_description"
+                            item-value="station_code"
+                            variant="outlined"
+                            clearable
+                            hide-details
+                            density="compact"
+                        ></v-autocomplete>
+                    </v-col>
+                    <v-col cols="5">
+                        <v-text-field
+                            label="Search by Room ID"
+                            density="compact"
+                            variant="outlined"
+                            prepend-inner-icon="mdi-magnify"
+                            v-model="data.keyword"
+                            @keyup.enter="search"
+                        ></v-text-field>
+                    </v-col>
+                </v-row>
                 <v-divider></v-divider>
                 <v-data-table-server 
                     class="animated animatedFadeInUp fadeInUp"
@@ -32,7 +49,6 @@
                     @update:model-value="handleSelectedRow"
                     show-select
                     select-strategy="single"
-                    fixed-header
                     density="compact" 
                     height="50vh"
                     >
@@ -44,14 +60,13 @@
                         </slot>
                         </td>
                     </template>
-                    <template #bottom></template>
                 </v-data-table-server>
             </v-card-text>
             <v-divider></v-divider>
             <v-card-actions>
                 <v-btn color="blue-darken-1 border border-info" @click="closeDialog"> Close </v-btn>
                 <v-spacer></v-spacer>
-                <v-btn class="bg-primary text-white" @click="onSubmit">Select Medical Package</v-btn>
+                <v-btn class="bg-primary text-white" @click="onSelect">Submit Selected Room</v-btn>
             </v-card-actions>
         </v-card>
     </v-dialog>
@@ -59,7 +74,7 @@
 
 <script setup>
 const props = defineProps({
-    open_medical_package_list: {
+    open_room_list: {
         type: Boolean,
         default: () => false,
         required: true,
@@ -70,53 +85,58 @@ const emits = defineEmits(['close-dialog', 'handle-select']);
 const selected_item = ref([]);
 const isloading = ref(false);
 const headers = [
-    {
-        title: 'ID',
-        align: 'start',
-        sortable: false,
-        key: 'id',
-    },
-    { title: 'Description', key: 'package_description', align: 'start', width:"60%" },
-    { title: 'Price', key: 'package_amount', align: 'start' },
+    { title: 'Station', key: 'station_id', align: 'start', width:"30%" },
+    { title: 'Room', key: 'room_id', align: 'start', width:"30%" },
+    { title: 'Rate', key: 'room_rate', align: 'start', width:"30%" },
 ];
 const data = ref({
-    title: "List of Medical Packages",
+    title: "List of Rooms",
     keyword: "",
     loading: false,
+    station_code: "",
     filter: {},
     tab: 0,
     param_tab: 1,
 });
-const itemsPerPage = ref(100);
+const itemsPerPage = ref(50);
 const totalItems = ref(0);
 const serverItems = ref([]);
 const initialize =  ({ page, itemsPerPage, sortBy }) => {
     loadItems(page,itemsPerPage,sortBy) 
+    // null
 }
 const loadItems = async(page = null,itemsPerPage = null,sortBy = null)=>{
     data.value.loading = true;
     let pageno = page || 1;
-    let itemPerpageno = itemsPerPage || 10;
+    let itemPerpageno = itemsPerPage || 50;
     let params = "page=" +pageno + "&per_page=" + itemPerpageno + "&keyword=" + data.value.keyword;
-    const response = await useMethod("get","get-medical-package?","",params);
+    if (data.value.station_code) {
+        params += "&station_code=" + data.value.station_code;
+    }
+    const response = await useMethod("get","get-ipd-rooms?","",params);
     if(response){
         serverItems.value = response.data;
         totalItems.value = response.total;
         data.value.loading = false;
     }
 }
-const search = ()=>{
+
+watch(() => data.value.station_code, () => {
+    loadItems();
+});
+
+const search = () => {
     loadItems();
 }
+
 
 const handleSelectedRow = (selectedRows) => {
     const selectedItems = selectedRows.map(rowId => {
         const item = serverItems.value.find(item => item.id === rowId);
         if (item) {
             return {
-                id: item.id,
-                package_description: item.package_description,
-                package_amount: item.package_amount,
+                room_id: item.room_id,
+                room_rate: item.room_rate,
             }
         }
         return null;
@@ -124,19 +144,32 @@ const handleSelectedRow = (selectedRows) => {
     emits('handle-select', selectedItems);
 }
 
-const onSubmit = () => {
-    if (selected_item.value.length === 0) {
-        return alert('Please select a package');
-    } else {
-        handleSelectedRow(selected_item.value);
-        closeDialog();
-    }
+const onSelect = () => {
+    handleSelectedRow(selected_item.value);
+    closeDialog();
 }
 
 const closeDialog = () => {
     emits('close-dialog');
     selected_item.value = [];
+    data.value.keyword = "";
+    data.value.station_code = "";
 }
+
+const station_data = ref([]);
+const station_loading = ref(false);
+const getStation = async () => {
+    station_loading.value = true;
+    const response = await useMethod("get", "get-station-list", "", "");
+    if (response) {
+        station_data.value = response;
+        station_loading.value = false;
+    } 
+};
+
+onMounted(() => {
+    getStation();
+});
 
 </script>
 

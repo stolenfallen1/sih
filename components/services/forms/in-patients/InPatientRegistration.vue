@@ -184,6 +184,14 @@ const onSubmit = async () => {
         formErrors.value.mscPrice_Schemes = "Price Scheme is required";
         valid.value = false;
     }
+    if (!payload.value.mscService_Type) {
+        formErrors.value.mscService_Type = "Service Type is required";
+        valid.value = false;
+    }
+    if (!payload.value.mscBroughtBy_Relationship_Id) {
+        formErrors.value.mscBroughtBy_Relationship_Id = "Brought By is required";
+        valid.value = false;
+    }
 
     if (!valid.value) {
         const firstErrorField = Object.keys(formErrors.value)[0];

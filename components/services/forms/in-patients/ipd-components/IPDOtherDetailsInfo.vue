@@ -4,7 +4,7 @@
             <v-col cols="12" class="form-col">
                 <v-list-subheader class="form-header">Birth Place</v-list-subheader>
                 <v-text-field
-                    variant="underlined"
+                    variant="outlined"
                     v-model="payload.birthplace"
                     :readonly="clicked_option === 'view'"
                     density="compact"
@@ -20,7 +20,7 @@
                     :clearable="clicked_option === 'new' || clicked_option === 'edit'"
                     :items="religion_data"
                     density="compact"
-                    variant="underlined"
+                    variant="outlined"
                 ></v-autocomplete>
             </v-col>
             <v-col cols="12" class="form-col">
@@ -33,7 +33,7 @@
                     :clearable="clicked_option === 'new' || clicked_option === 'edit'"
                     :items="nationality_data"
                     density="compact"
-                    variant="underlined"
+                    variant="outlined"
                 ></v-autocomplete>
             </v-col>
             <v-col cols="12" class="form-col">
@@ -54,7 +54,7 @@
             <v-col cols="12" class="form-col">
                 <v-list-subheader class="form-header">Father Last Name</v-list-subheader>
                 <v-text-field
-                    variant="underlined"
+                    variant="outlined"
                     v-model="payload.fatherLastname"
                     :readonly="clicked_option === 'view'"
                     density="compact"
@@ -63,7 +63,7 @@
             <v-col cols="12" class="form-col">
                 <v-list-subheader class="form-header">Father First Name</v-list-subheader>
                 <v-text-field
-                    variant="underlined"
+                    variant="outlined"
                     v-model="payload.fatherFirstname"
                     :readonly="clicked_option === 'view'"
                     density="compact"
@@ -72,7 +72,7 @@
             <v-col cols="12" class="form-col">
                 <v-list-subheader class="form-header">Father Middle Name</v-list-subheader>
                 <v-text-field
-                    variant="underlined"
+                    variant="outlined"
                     v-model="payload.fatherMiddlename"
                     :readonly="clicked_option === 'view'"
                     density="compact"
@@ -81,7 +81,7 @@
             <v-col cols="12" class="form-col">
                 <v-list-subheader class="form-header">Father Birth Date</v-list-subheader>
                 <v-text-field
-                    variant="underlined"
+                    variant="outlined"
                     type="date"
                     v-model="payload.fatherBirthdate"
                     :readonly="clicked_option === 'view'"
@@ -91,7 +91,7 @@
             <v-col cols="12" class="form-col">
                 <v-list-subheader class="form-header">Father Age</v-list-subheader>
                 <v-text-field
-                    variant="underlined"
+                    variant="outlined"
                     v-model="payload.fatherAge"
                     readonly
                     placeholder="Auto Compute"
@@ -103,7 +103,7 @@
             <v-col cols="12" class="form-col">
                 <v-list-subheader class="form-header">Mother Last Name</v-list-subheader>
                 <v-text-field
-                    variant="underlined"
+                    variant="outlined"
                     v-model="payload.motherLastname"
                     :readonly="clicked_option === 'view'"
                     density="compact"
@@ -112,7 +112,7 @@
             <v-col cols="12" class="form-col">
                 <v-list-subheader class="form-header">Mother First Name</v-list-subheader>
                 <v-text-field
-                    variant="underlined"
+                    variant="outlined"
                     v-model="payload.motherFirstname"
                     :readonly="clicked_option === 'view'"
                     density="compact"
@@ -121,7 +121,7 @@
             <v-col cols="12" class="form-col">
                 <v-list-subheader class="form-header">Mother Middle Name</v-list-subheader>
                 <v-text-field
-                    variant="underlined"
+                    variant="outlined"
                     v-model="payload.motherMiddlename"
                     :readonly="clicked_option === 'view'"
                     density="compact"
@@ -130,7 +130,7 @@
             <v-col cols="12" class="form-col">
                 <v-list-subheader class="form-header">Mother Birth Date</v-list-subheader>
                 <v-text-field
-                    variant="underlined"
+                    variant="outlined"
                     type="date"
                     v-model="payload.motherBirthdate"
                     :readonly="clicked_option === 'view'"
@@ -140,7 +140,7 @@
             <v-col cols="12" class="form-col">
                 <v-list-subheader class="form-header">Mother Age</v-list-subheader>
                 <v-text-field
-                    variant="underlined"
+                    variant="outlined"
                     v-model="payload.motherAge"
                     readonly
                     placeholder="Auto Compute"
@@ -152,7 +152,7 @@
             <v-col cols="12" class="form-col">
                 <v-list-subheader class="form-header">Spouse Last Name</v-list-subheader>
                 <v-text-field
-                    variant="underlined"
+                    variant="outlined"
                     v-model="payload.fatherLastname"
                     :readonly="clicked_option === 'view'"
                     density="compact"
@@ -161,7 +161,7 @@
             <v-col cols="12" class="form-col">
                 <v-list-subheader class="form-header">Spouse First Name</v-list-subheader>
                 <v-text-field
-                    variant="underlined"
+                    variant="outlined"
                     v-model="payload.fatherFirstname"
                     :readonly="clicked_option === 'view'"
                     density="compact"
@@ -170,7 +170,7 @@
             <v-col cols="12" class="form-col">
                 <v-list-subheader class="form-header">Spouse Middle Name</v-list-subheader>
                 <v-text-field
-                    variant="underlined"
+                    variant="outlined"
                     v-model="payload.fatherMiddlename"
                     :readonly="clicked_option === 'view'"
                     density="compact"
@@ -179,7 +179,7 @@
             <v-col cols="12" class="form-col">
                 <v-list-subheader class="form-header">Spouse Birth Date</v-list-subheader>
                 <v-text-field
-                    variant="underlined"
+                    variant="outlined"
                     type="date"
                     v-model="payload.fatherBirthdate"
                     :readonly="clicked_option === 'view'"
@@ -189,7 +189,7 @@
             <v-col cols="12" class="form-col">
                 <v-list-subheader class="form-header">Spouse Age</v-list-subheader>
                 <v-text-field
-                    variant="underlined"
+                    variant="outlined"
                     v-model="payload.fatherAge"
                     readonly
                     placeholder="Auto Compute"
@@ -201,7 +201,7 @@
             <v-col cols="12" class="form-col">
                 <v-list-subheader class="form-header">Guardian Last Name</v-list-subheader>
                 <v-text-field
-                    variant="underlined"
+                    variant="outlined"
                     v-model="payload.motherLastname"
                     :readonly="clicked_option === 'view'"
                     density="compact"
@@ -210,7 +210,7 @@
             <v-col cols="12" class="form-col">
                 <v-list-subheader class="form-header">Guardian First Name</v-list-subheader>
                 <v-text-field
-                    variant="underlined"
+                    variant="outlined"
                     v-model="payload.motherFirstname"
                     :readonly="clicked_option === 'view'"
                     density="compact"
@@ -219,7 +219,7 @@
             <v-col cols="12" class="form-col">
                 <v-list-subheader class="form-header">Guardian Middle Name</v-list-subheader>
                 <v-text-field
-                    variant="underlined"
+                    variant="outlined"
                     v-model="payload.motherMiddlename"
                     :readonly="clicked_option === 'view'"
                     density="compact"
@@ -228,7 +228,7 @@
             <v-col cols="12" class="form-col">
                 <v-list-subheader class="form-header">Guardian Birth Date</v-list-subheader>
                 <v-text-field
-                    variant="underlined"
+                    variant="outlined"
                     type="date"
                     v-model="payload.motherBirthdate"
                     :readonly="clicked_option === 'view'"
@@ -238,7 +238,7 @@
             <v-col cols="12" class="form-col">
                 <v-list-subheader class="form-header">Guardian Age</v-list-subheader>
                 <v-text-field
-                    variant="underlined"
+                    variant="outlined"
                     v-model="payload.motherAge"
                     readonly
                     placeholder="Auto Compute"
@@ -280,7 +280,6 @@ const handleOpenAddressForm = () => {
 
 const fullAddress = ref("");
 const handleSubmitAddress = (address) => {
-    console.log(address);
     const { bldgstreet, region_name, province_name, municipality_name, barangay_name, country_name } = address;
     const { region_id, province_id, municipality_id, barangay_id, country_id } = address;
 
@@ -355,7 +354,7 @@ onMounted(() => {
 .form-header {
     color: #000;
     margin: -12px 0px -12px 0px;
-    font-weight: 500;
+    font-weight: bold;
 }
 .form-col {
     padding: 3.25px 0px 3.25px 0px !important;

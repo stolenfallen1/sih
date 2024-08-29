@@ -3,7 +3,7 @@
         <v-form ref="form" @submit.prevent="onSubmit">
             <v-card rounded="lg">
                 <v-toolbar density="compact" color="#107bac" hide-details>
-                    <v-toolbar-title>Outpatient Registration Form</v-toolbar-title>
+                    <v-toolbar-title>OPD Registration</v-toolbar-title>
                     <v-btn color="white" @click="closeDialog">
                         <v-icon>mdi-close</v-icon>
                     </v-btn>
@@ -18,16 +18,16 @@
                                 center-active
                                 density="compact"
                             >
-                                <v-tab value="0"><v-icon start>mdi-form-select</v-icon> Patient Basic Information </v-tab>
+                                <v-tab value="0"><v-icon start>mdi-form-select</v-icon> Personal Information </v-tab>
                                 <v-tab value="1"><v-icon start>mdi-form-select</v-icon> Registry Information </v-tab>
                                 <v-tab value="2"><v-icon start>mdi-form-select</v-icon> Other Details </v-tab>
-                                <v-tab value="3"><v-icon start>mdi-form-select</v-icon> HMOs .Guarantors </v-tab>
-                                <v-tab value="4"><v-icon start>mdi-form-select</v-icon> Consultants .Physicians </v-tab>
+                                <v-tab value="3"><v-icon start>mdi-form-select</v-icon> Guarantors </v-tab>
+                                <v-tab value="4"><v-icon start>mdi-form-select</v-icon> Consultants </v-tab>
                                 <v-tab value="5"><v-icon start>mdi-form-select</v-icon> Allergies </v-tab>
                                 <v-tab value="6"><v-icon start>mdi-form-select</v-icon> Notes .Remarks </v-tab>
                             </v-tabs>
                         </v-col>
-                        <v-divider vertical color="#2a73c5"></v-divider>
+                        <v-divider vertical color="#000"></v-divider>
                         <v-col cols="9" class="scrollable-content">
                             <v-window v-model="tab">
                                 <v-window-item class="pa-1">
@@ -173,7 +173,7 @@ const onSubmit = async () => {
         valid.value = false;
     }
     if (!payload.value.mscAccount_type) {
-        formErrors.value.mscAccount_type = "Hospitalization  type is required";
+        formErrors.value.mscAccount_type = "Hospital  plan is required";
         valid.value = false;
     }
     if (!payload.value.mscPrice_Groups) {
