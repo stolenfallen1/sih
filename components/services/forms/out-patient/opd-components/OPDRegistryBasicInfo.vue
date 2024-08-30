@@ -5,7 +5,7 @@
                 <v-col cols="12" class="form-group">
                     <label class="form-label">Register Source <span style="color: red;">*</span></label>
                     <div class="select-wrapper">
-                        <select class="form-select" :class="{ 'input-error': formErrors.register_Source }" v-model="payload.register_Source">
+                        <select class="form-select" :class="{ 'input-error': formErrors.register_Source }" :disabled="clicked_option === 'view'" v-model="payload.register_Source">
                             <option v-for="(item, index) in register_source_data" :key="index" :value="item.id">
                                 {{ item.description }}
                             </option>
@@ -18,7 +18,7 @@
                 <v-col cols="12" class="form-group">
                     <label class="form-label">Register CaseType <span style="color: red;">*</span></label>
                     <div class="select-wrapper">
-                        <select class="form-select" :class="{ 'input-error': formErrors.register_Casetype }" v-model="payload.register_Casetype">
+                        <select class="form-select" :class="{ 'input-error': formErrors.register_Casetype }" :disabled="clicked_option === 'view'" v-model="payload.register_Casetype">
                             <option v-for="(item, index) in register_casetype_data" :key="index" :value="item.id">
                                 {{ item.description }}
                             </option>
@@ -31,7 +31,7 @@
                 <v-col cols="12" class="form-group">
                     <label class="form-label">Transaction Type <span style="color: red;">*</span></label>
                     <div class="select-wrapper">
-                        <select class="form-select" :class="{ 'input-error': formErrors.mscAccount_trans_types }" v-model="payload.mscAccount_trans_types">
+                        <select class="form-select" :class="{ 'input-error': formErrors.mscAccount_trans_types }" :disabled="clicked_option === 'view'" v-model="payload.mscAccount_trans_types">
                             <option v-for="(item, index) in transaction_type_data" :key="index" :value="item.id">
                                 {{ item.description }}
                             </option>
@@ -44,7 +44,7 @@
                 <v-col cols="12" class="form-group">
                     <label class="form-label">Hospital Plan <span style="color: red;">*</span></label>
                     <div class="select-wrapper">
-                        <select class="form-select" :class="{ 'input-error': formErrors.mscAccount_type }" v-model="payload.mscAccount_type">
+                        <select class="form-select" :class="{ 'input-error': formErrors.mscAccount_type }" :disabled="clicked_option === 'view'" v-model="payload.mscAccount_type">
                             <option v-for="(item, index) in hospitalization_plan_data" :key="index" :value="item.id">
                                 {{ item.description }}
                             </option>
@@ -57,7 +57,7 @@
                 <v-col cols="12" class="form-group">
                     <label class="form-label">Price Group <span style="color: red;">*</span></label>
                     <div class="select-wrapper">
-                        <select class="form-select" :class="{ 'input-error': formErrors.mscPrice_Groups }" v-model="payload.mscPrice_Groups">
+                        <select class="form-select" :class="{ 'input-error': formErrors.mscPrice_Groups }" :disabled="clicked_option === 'view'" v-model="payload.mscPrice_Groups">
                             <option v-for="(item, index) in price_group_data" :key="index" :value="item.id">
                                 {{ item.description }}
                             </option>
@@ -70,7 +70,7 @@
                 <v-col cols="12" class="form-group">
                     <label class="form-label">Price Scheme <span style="color: red;">*</span></label>
                     <div class="select-wrapper">
-                        <select class="form-select" :class="{ 'input-error': formErrors.mscPrice_Schemes }" v-model="payload.mscPrice_Schemes">
+                        <select class="form-select" :class="{ 'input-error': formErrors.mscPrice_Schemes }" :disabled="clicked_option === 'view'" v-model="payload.mscPrice_Schemes">
                             <option v-for="(item, index) in price_scheme_data" :key="index" :value="item.id">
                                 {{ item.description }}
                             </option>
@@ -83,7 +83,7 @@
                 <v-col cols="12" class="form-group">
                     <label class="form-label">Service Type</label>
                     <div class="select-wrapper">
-                        <select class="form-select" v-model="payload.mscService_Type">
+                        <select class="form-select" :disabled="clicked_option === 'view'" v-model="payload.mscService_Type">
                             <option v-for="(item, index) in service_type_data" :key="index" :value="item.id">
                                 {{ item.description }}
                             </option>
@@ -98,7 +98,7 @@
                 <v-col cols="12" class="form-group">
                     <label class="form-label">Case Indicator</label>
                     <div class="select-wrapper">
-                        <select class="form-select" v-model="payload.mscCase_Indicators_Id">
+                        <select class="form-select" :disabled="clicked_option === 'view'" v-model="payload.mscCase_Indicators_Id">
                             <option v-for="(item, index) in case_indicator_data" :key="index" :value="item.id">
                                 {{ item.description }}
                             </option>
@@ -110,7 +110,7 @@
             <v-row>
                 <v-col cols="12" class="form-group">
                     <label class="form-label">Medical Package</label>
-                    <span class="mdi mdi-plus-box" style="cursor: pointer; margin-right: 10px;" @click="openMedicalPackageList"></span>
+                    <span class="mdi mdi-plus-box" style="cursor: pointer; margin-right: 10px;" @click="openMedicalPackageList" :disabled="clicked_option === 'view'"></span>
                     <input
                         v-model="payload.medical_Package_Name"
                         class="form-input"
@@ -122,7 +122,7 @@
                 <v-col cols="12" class="form-group">
                     <label class="form-label">Companion</label>
                     <div class="select-wrapper">
-                        <select class="form-select" v-model="payload.mscBroughtBy_Relationship_Id">
+                        <select class="form-select" :disabled="clicked_option === 'view'" v-model="payload.mscBroughtBy_Relationship_Id">
                             <option v-for="(item, index) in patient_brought_by" :key="index" :value="item.id">
                                 {{ item.description }}
                             </option>
@@ -135,7 +135,7 @@
                 <v-col cols="12" class="form-group">
                     <label class="form-label">ID Presented</label>
                     <div class="select-wrapper">
-                        <select class="form-select" v-model="payload.id_presented">
+                        <select class="form-select" :disabled="clicked_option === 'view'" v-model="payload.id_presented">
                             <option v-for="(item, index) in id_types_data" :key="index" :value="item.id">
                                 {{ item.id_description }}
                             </option>
@@ -151,6 +151,7 @@
                         type="number"
                         v-model="payload.id_number"
                         class="form-input"
+                        :disabled="clicked_option === 'view'"
                     />
                 </v-col>
             </v-row>
@@ -158,7 +159,7 @@
                 <v-col cols="12" class="form-group">
                     <label class="form-label">Patient Identifier</label>
                     <div class="select-wrapper">
-                        <select class="form-select" v-model="payload.patientIdentifier">
+                        <select class="form-select" :disabled="clicked_option === 'view'" v-model="payload.patientIdentifier">
                             <option v-for="(item, index) in patientIdentifiers" :key="index" :value="item.id">
                                 {{ item.name }}
                             </option>
