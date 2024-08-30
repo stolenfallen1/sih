@@ -31,6 +31,7 @@
                         v-model="payload.lastname"
                         class="form-input"
                         :class="{ 'input-error': formErrors.lastname }"
+                        :disabled="clicked_option === 'view'"
                     />
                 </v-col>
             </v-row>
@@ -42,6 +43,7 @@
                         v-model="payload.firstname"
                         class="form-input"
                         :class="{ 'input-error': formErrors.firstname }"
+                        :disabled="clicked_option === 'view'"
                     />
                 </v-col>
             </v-row>
@@ -52,6 +54,7 @@
                         :type="payload.isConfidentialPatient ? 'password' : 'text'"
                         v-model="payload.middlename"
                         class="form-input"
+                        :disabled="clicked_option === 'view'"
                     />
                 </v-col>
             </v-row>
@@ -74,7 +77,7 @@
                         <v-col cols="12" class="form-group">
                             <label class="form-label">Suffix</label>
                             <div class="select-wrapper">
-                                <select class="form-select" v-model="payload.suffix_id">
+                                <select class="form-select" :disabled="clicked_option === 'view'" v-model="payload.suffix_id">
                                     <option v-for="(suffix, index) in suffix_data" :key="index" :value="suffix.id">
                                         {{ suffix.abbreviations }}
                                     </option>
@@ -87,7 +90,7 @@
                         <v-col cols="12" class="form-group">
                             <label class="form-label">Sex <span style="color: red;">*</span></label>
                             <div class="select-wrapper">
-                                <select class="form-select" :class="{ 'input-error': formErrors.sex_id }" v-model="payload.sex_id">
+                                <select class="form-select" :class="{ 'input-error': formErrors.sex_id }" :disabled="clicked_option === 'view'" v-model="payload.sex_id">
                                     <option v-for="(sex, index) in sex_data" :key="index" :value="sex.id">
                                         {{ sex.sex_description }}
                                     </option>
@@ -103,6 +106,7 @@
                                 type="number"
                                 v-model="payload.telephone_number"
                                 class="form-input"
+                                :disabled="clicked_option === 'view'"
                             />
                         </v-col>
                     </v-row>
@@ -113,6 +117,7 @@
                                 type="number"
                                 v-model="payload.mobile_number"
                                 class="form-input"
+                                :disabled="clicked_option === 'view'"
                             />
                         </v-col>
                     </v-row>
@@ -123,6 +128,7 @@
                                 type="email"
                                 v-model="payload.email_address"
                                 class="form-input"
+                                :disabled="clicked_option === 'view'"
                             />
                         </v-col>
                     </v-row>
@@ -132,7 +138,7 @@
                         <v-col cols="12" class="form-group">
                             <label class="form-label">Civil Status <span style="color: red;">*</span></label>
                             <div class="select-wrapper">
-                                <select class="form-select" :class="{ 'input-error': formErrors.civilstatus_id }" v-model="payload.civilstatus_id">
+                                <select class="form-select" :class="{ 'input-error': formErrors.civilstatus_id }" :disabled="clicked_option === 'view'" v-model="payload.civilstatus_id">
                                     <option v-for="(civil_status, index) in civil_status_data" :key="index" :value="civil_status.id">
                                         {{ civil_status.civil_status_description }}
                                     </option>
@@ -150,6 +156,7 @@
                                 class="form-input"
                                 @change="updatebirthdate"
                                 :class="{ 'input-error': formErrors.birthdate }"
+                                :disabled="clicked_option === 'view'"
                             />
                         </v-col>
                     </v-row>
@@ -160,6 +167,7 @@
                                 type="time"
                                 v-model="payload.birthtime"
                                 class="form-input"
+                                :disabled="clicked_option === 'view'"
                             />
                         </v-col>
                     </v-row>
@@ -177,7 +185,7 @@
                     </v-row>
                     <v-row>
                         <v-col cols="12" class="form-group">
-                            <input type="checkbox" id="isConfidentialPatient" name="isConfidentialPatient" v-model="payload.isConfidentialPatient" style="cursor: pointer;">
+                            <input type="checkbox" id="isConfidentialPatient" name="isConfidentialPatient" v-model="payload.isConfidentialPatient" style="cursor: pointer;" :disabled="clicked_option === 'view'">
                             <label style="margin-left: 10px;">Confidential Record</label>
                         </v-col>
                     </v-row>
@@ -186,7 +194,7 @@
             <v-row>
                 <v-col cols="12" class="form-group">
                     <label style="margin-right: 15px;">Full Address</label>
-                    <span class="mdi mdi-plus-box" style="cursor: pointer; margin-right: 10px;" @click="handleOpenAddressForm"></span>
+                    <span class="mdi mdi-plus-box" style="cursor: pointer; margin-right: 10px;" @click="handleOpenAddressForm" :disabled="clicked_option === 'view'"></span>
                     <textarea
                         :value="fullAddress"
                         class="form-input"

@@ -10,6 +10,7 @@
                         type="text"
                         v-model="payload.birthplace"
                         class="form-input"
+                        :disabled="clicked_option === 'view'"
                     />
                 </v-col>
             </v-row>
@@ -17,7 +18,7 @@
                 <v-col cols="12" class="form-group">
                     <label class="form-label">Religion</label>
                     <div class="select-wrapper">
-                        <select class="form-select" v-model="payload.religion_id">
+                        <select class="form-select" :disabled="clicked_option === 'view'" v-model="payload.religion_id">
                             <option v-for="(item, index) in religion_data" :key="index" :value="item.id">
                                 {{ item.religion_name }}
                             </option>
@@ -30,7 +31,7 @@
                 <v-col cols="12" class="form-group">
                     <label class="form-label">Nationality</label>
                     <div class="select-wrapper">
-                        <select class="form-select" v-model="payload.nationality_id">
+                        <select class="form-select" :disabled="clicked_option === 'view'" v-model="payload.nationality_id">
                             <option v-for="(item, index) in nationality_data" :key="index" :value="item.id">
                                 {{ item.nationality }}
                             </option>
@@ -48,6 +49,7 @@
                         type="text"
                         v-model="payload.temperature"
                         class="form-input"
+                        :disabled="clicked_option === 'view'"
                     />
                 </v-col>
             </v-row>
@@ -58,6 +60,7 @@
                         type="text"
                         v-model="payload.bloodPressureSystolic"
                         class="form-input"
+                        :disabled="clicked_option === 'view'"
                     />
                 </v-col>
             </v-row>
@@ -68,6 +71,7 @@
                         type="text"
                         v-model="payload.bloodPressureDiastolic"
                         class="form-input"
+                        :disabled="clicked_option === 'view'"
                     />
                 </v-col>
             </v-row>
@@ -81,6 +85,7 @@
                         v-model="payload.weight"
                         @change="calculateBmi"
                         class="form-input"
+                        :disabled="clicked_option === 'view'"
                     />
                 </v-col>
             </v-row>
@@ -92,6 +97,7 @@
                         v-model="payload.height"
                         @change="calculateBmi"
                         class="form-input"
+                        :disabled="clicked_option === 'view'"
                     />
                 </v-col>
             </v-row>
@@ -120,6 +126,7 @@
                         type="text"
                         v-model="payload.fatherLastname"
                         class="form-input"
+                        :disabled="clicked_option === 'view'"
                     />
                 </v-col>
             </v-row>
@@ -130,6 +137,7 @@
                         type="text"
                         v-model="payload.fatherFirstname"
                         class="form-input"
+                        :disabled="clicked_option === 'view'"
                     />
                 </v-col>
             </v-row>
@@ -140,6 +148,7 @@
                         type="text"
                         v-model="payload.fatherMiddlename"
                         class="form-input"
+                        :disabled="clicked_option === 'view'"
                     />
                 </v-col>
             </v-row>
@@ -151,6 +160,7 @@
                         v-model="payload.fatherBirthdate"
                         class="form-input"
                         @change="updateFatherBirthDate"
+                        :disabled="clicked_option === 'view'"
                     />
                 </v-col>
             </v-row>
@@ -175,6 +185,7 @@
                         type="text"
                         v-model="payload.motherLastname"
                         class="form-input"
+                        :disabled="clicked_option === 'view'"
                     />
                 </v-col>
             </v-row>
@@ -185,6 +196,7 @@
                         type="text"
                         v-model="payload.motherFirstname"
                         class="form-input"
+                        :disabled="clicked_option === 'view'"
                     />
                 </v-col>
             </v-row>
@@ -195,6 +207,7 @@
                         type="text"
                         v-model="payload.motherMiddlename"
                         class="form-input"
+                        :disabled="clicked_option === 'view'"
                     />
                 </v-col>
             </v-row>
@@ -206,6 +219,7 @@
                         v-model="payload.motherBirthdate"
                         class="form-input"
                         @change="updateMotherBirthDate"
+                        :disabled="clicked_option === 'view'"
                     />
                 </v-col>
             </v-row>
@@ -229,6 +243,7 @@
                     <input
                         type="text"
                         class="form-input"
+                        :disabled="clicked_option === 'view'"
                     />
                 </v-col>
             </v-row>
@@ -238,6 +253,7 @@
                     <input
                         type="text"
                         class="form-input"
+                        :disabled="clicked_option === 'view'"
                     />
                 </v-col>
             </v-row>
@@ -247,6 +263,7 @@
                     <input
                         type="text"
                         class="form-input"
+                        :disabled="clicked_option === 'view'"
                     />
                 </v-col>
             </v-row>
@@ -256,6 +273,7 @@
                     <input
                         type="date"
                         class="form-input"
+                        :disabled="clicked_option === 'view'"
                     />
                 </v-col>
             </v-row>
