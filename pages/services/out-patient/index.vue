@@ -87,18 +87,18 @@
       <template v-for="column in columns" v-slot:[`column-${column.key}`]="{ item }">
         <div v-if="column.key === 'registry_status'" :key="column.key" class="isActive">
           <span 
-            :style="{ cursor: 'default', display: 'block', height: '26px', width: '9px', backgroundColor: item.patient_registry && item.patient_registry.registry_status == 2 ? 'blue' : 'green' }" 
-            :title="item.patient_registry && item.patient_registry.registry_status == 2 ? 'New Patient' : 'Old Patient'"
+            :style="{ cursor: 'default', display: 'block', height: '26px', width: '9px', backgroundColor: item.patient_registry && item.patient_registry[0].mscPatient_Category == 2 ? 'blue' : 'green' }" 
+            :title="item.patient_registry && item.patient_registry[0].mscPatient_Category == 2 ? 'New Patient' : 'Old Patient'"
             />
         </div>
         <div v-if="column.key === 'isHMO'" :key="column.key" class="isHMO">
           <span 
-            :style="{ cursor: 'default', display: 'block', height: '26px', width: '9px', backgroundColor: item.patient_registry && item.patient_registry.guarantor_id !== null ? 'yellow' : 'orange' }" 
-            :title="item.patient_registry && item.patient_registry.guarantor_id !== null ? 'HMO ' : 'Self Pay'"
+            :style="{ cursor: 'default', display: 'block', height: '26px', width: '9px', backgroundColor: item.patient_registry && item.patient_registry[0].guarantor_Id !== null ? 'yellow' : 'orange' }" 
+            :title="item.patient_registry && item.patient_registry[0].guarantor_Id !== null ? 'HMO ' : 'Self Pay'"
             />
         </div>
         <span v-if="column.key === 'case_No'" :key="column.key">
-          {{ item.patient_registry ? item.patient_registry.case_No : "..." }}
+          {{ item.patient_registry ? item.patient_registry[0].case_No : "..." }}
         </span>
         <span v-if="column.key === 'sex'" :key="column.key" style="display: flex;">
           <v-icon v-if="item.sex && item.sex.sex_description === 'Male'" color="primary">mdi-gender-male</v-icon>
@@ -109,13 +109,13 @@
           {{ item.birthdate ? useDateMMDDYYY(item.birthdate) : "..." }}
         </span>
         <span v-if="column.key === 'registry_date'" :key="column.key">
-          {{ item.patient_registry && item.patient_registry.registry_date ? useDateMMDDYYY(item.patient_registry.registry_date) : "..." }}
+          {{ item.patient_registry && item.patient_registry[0].registry_Date ? useDateMMDDYYY(item.patient_registry[0].registry_Date) : "..." }}
         </span>
         <span v-if="column.key === 'discharged_date'" :key="column.key">
-          {{ item.patient_registry && item.patient_registry.discharged_date ? useDateMMDDYYY(item.patient_registry.discharged_date) : "..." }}
+          {{ item.patient_registry && item.patient_registry[0].discharged_Date ? useDateMMDDYYY(item.patient_registry[0].discharged_Date) : "..." }}
         </span>
         <span v-if="column.key === 'revoked_date'" :key="column.key">
-          {{ item.patient_registry && item.patient_registry.revoked_date ? useDateMMDDYYY(item.patient_registry.revoked_date) : "..." }}
+          {{ item.patient_registry && item.patient_registry[0].revoked_date ? useDateMMDDYYY(item.patient_registry[0].revoked_date) : "..." }}
         </span>
       </template>
     </ReusableTable>
@@ -283,7 +283,7 @@ const tableTabs = ref([
                 title: "Patient ID",
                 align: "start",
                 sortable: false,
-                key: "patient_id",
+                key: "patient_Id",
               },
               {
                 title: "Case No.",
@@ -631,8 +631,6 @@ const openAddFormDialog = (type) => {
         closeCentralFormDialog(); 
     } else if (type === 'old') {  
         let currentDate = useDateMMDDYYY(new Date());
-        console.log('test', selectedPatient.value);
-        console.log('selectedPatient:', useDateMMDDYYY(selectedPatient.value.updated_at));
         if (useDateMMDDYYY(selectedPatient.value.updated_at) == currentDate) {
             return useSnackbar(true, "error", "Patient already registered today.");
         } else {

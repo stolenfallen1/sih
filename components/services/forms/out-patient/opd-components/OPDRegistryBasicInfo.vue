@@ -1,142 +1,177 @@
 <template>
     <v-row>
         <v-col cols="6">
-            <v-col cols="12" class="form-col">
-                <v-list-subheader class="form-header">
-                    OPD Case Date<span style="color: red;" class="mdi mdi-check"></span>
-                </v-list-subheader>
-                <v-text-field
-                    variant="underlined"
-                    :value="handleCaseDate"
-                    readonly
-                    type="date"
-                    density="compact"
-                ></v-text-field>
-            </v-col>
-            <v-col cols="12" class="form-col">
-                <v-list-subheader class="form-header">Register Source <span style="color: red;" class="mdi mdi-check"></span></v-list-subheader>
-                <v-autocomplete
-                    :items="register_source_data"
-                    item-title="description"
-                    item-value="id"
-                    v-model="payload.register_Source"
-                    :readonly="clicked_option === 'view'"
-                    :clearable="clicked_option === 'new' || clicked_option === 'edit'"
-                    density="compact"
-                    variant="underlined"
-                    :error-messages="formErrors.register_Source ? [formErrors.register_Source] : []"
-                ></v-autocomplete>
-            </v-col>
-            <v-col cols="12" class="form-col">
-                <v-list-subheader class="form-header">Register Casetype <span style="color: red;" class="mdi mdi-check"></span></v-list-subheader>
-                <v-autocomplete
-                    :items="register_casetype_data"
-                    item-title="description"
-                    item-value="id"
-                    v-model="payload.register_Casetype"
-                    :readonly="clicked_option === 'view'"
-                    :clearable="clicked_option === 'new' || clicked_option === 'edit'"
-                    density="compact"
-                    variant="underlined"
-                    :error-messages="formErrors.register_Casetype ? [formErrors.register_Casetype] : []"
-                ></v-autocomplete>
-            </v-col>
-            <v-col cols="12" class="form-col">
-                <v-list-subheader class="form-header">Transaction Type <span style="color: red;" class="mdi mdi-check"></span></v-list-subheader>
-                <v-autocomplete
-                    :items="transaction_type_data"
-                    item-title="description"
-                    item-value="id"
-                    v-model="payload.mscAccount_trans_types"
-                    :readonly="clicked_option === 'view'"
-                    :clearable="clicked_option === 'new' || clicked_option === 'edit'"
-                    density="compact"
-                    variant="underlined"
-                    :error-messages="formErrors.mscAccount_trans_types ? [formErrors.mscAccount_trans_types] : []"
-                ></v-autocomplete>
-            </v-col>
-            <v-col cols="12" class="form-col">
-                <v-list-subheader class="form-header">Hospitalization Plan <span style="color: red;" class="mdi mdi-check"></span></v-list-subheader>
-                <v-autocomplete
-                    :items="hospitalization_plan_data"
-                    item-title="description"
-                    item-value="id"
-                    v-model="payload.mscAccount_type"
-                    :readonly="clicked_option === 'view'"
-                    :clearable="clicked_option === 'new' || clicked_option === 'edit'"
-                    density="compact"
-                    variant="underlined"
-                    :error-messages="formErrors.mscAccount_type ? [formErrors.mscAccount_type] : []"
-                ></v-autocomplete>
-            </v-col>
+            <v-row>
+                <v-col cols="12" class="form-group">
+                    <label class="form-label">Register Source <span style="color: red;">*</span></label>
+                    <div class="select-wrapper">
+                        <select class="form-select" :class="{ 'input-error': formErrors.register_Source }" :disabled="clicked_option === 'view'" v-model="payload.register_Source">
+                            <option v-for="(item, index) in register_source_data" :key="index" :value="item.id">
+                                {{ item.description }}
+                            </option>
+                        </select>
+                        <span class="arrow-icon mdi mdi-chevron-down"></span>
+                    </div>
+                </v-col>
+            </v-row>
+            <v-row>
+                <v-col cols="12" class="form-group">
+                    <label class="form-label">Register CaseType <span style="color: red;">*</span></label>
+                    <div class="select-wrapper">
+                        <select class="form-select" :class="{ 'input-error': formErrors.register_Casetype }" :disabled="clicked_option === 'view'" v-model="payload.register_Casetype">
+                            <option v-for="(item, index) in register_casetype_data" :key="index" :value="item.id">
+                                {{ item.description }}
+                            </option>
+                        </select>
+                        <span class="arrow-icon mdi mdi-chevron-down"></span>
+                    </div>
+                </v-col>
+            </v-row>
+            <v-row>
+                <v-col cols="12" class="form-group">
+                    <label class="form-label">Transaction Type <span style="color: red;">*</span></label>
+                    <div class="select-wrapper">
+                        <select class="form-select" :class="{ 'input-error': formErrors.mscAccount_trans_types }" :disabled="clicked_option === 'view'" v-model="payload.mscAccount_trans_types">
+                            <option v-for="(item, index) in transaction_type_data" :key="index" :value="item.id">
+                                {{ item.description }}
+                            </option>
+                        </select>
+                        <span class="arrow-icon mdi mdi-chevron-down"></span>
+                    </div>
+                </v-col>
+            </v-row>
+            <v-row>
+                <v-col cols="12" class="form-group">
+                    <label class="form-label">Hospital Plan <span style="color: red;">*</span></label>
+                    <div class="select-wrapper">
+                        <select class="form-select" :class="{ 'input-error': formErrors.mscAccount_type }" :disabled="clicked_option === 'view'" v-model="payload.mscAccount_type">
+                            <option v-for="(item, index) in hospitalization_plan_data" :key="index" :value="item.id">
+                                {{ item.description }}
+                            </option>
+                        </select>
+                        <span class="arrow-icon mdi mdi-chevron-down"></span>
+                    </div>
+                </v-col>
+            </v-row>
+            <v-row>
+                <v-col cols="12" class="form-group">
+                    <label class="form-label">Price Group <span style="color: red;">*</span></label>
+                    <div class="select-wrapper">
+                        <select class="form-select" :class="{ 'input-error': formErrors.mscPrice_Groups }" :disabled="clicked_option === 'view'" v-model="payload.mscPrice_Groups">
+                            <option v-for="(item, index) in price_group_data" :key="index" :value="item.id">
+                                {{ item.description }}
+                            </option>
+                        </select>
+                        <span class="arrow-icon mdi mdi-chevron-down"></span>
+                    </div>
+                </v-col>
+            </v-row>
+            <v-row>
+                <v-col cols="12" class="form-group">
+                    <label class="form-label">Price Scheme <span style="color: red;">*</span></label>
+                    <div class="select-wrapper">
+                        <select class="form-select" :class="{ 'input-error': formErrors.mscPrice_Schemes }" :disabled="clicked_option === 'view'" v-model="payload.mscPrice_Schemes">
+                            <option v-for="(item, index) in price_scheme_data" :key="index" :value="item.id">
+                                {{ item.description }}
+                            </option>
+                        </select>
+                        <span class="arrow-icon mdi mdi-chevron-down"></span>
+                    </div>
+                </v-col>
+            </v-row>
+            <v-row>
+                <v-col cols="12" class="form-group">
+                    <label class="form-label">Service Type</label>
+                    <div class="select-wrapper">
+                        <select class="form-select" :disabled="clicked_option === 'view'" v-model="payload.mscService_Type">
+                            <option v-for="(item, index) in service_type_data" :key="index" :value="item.id">
+                                {{ item.description }}
+                            </option>
+                        </select>
+                        <span class="arrow-icon mdi mdi-chevron-down"></span>
+                    </div>
+                </v-col>
+            </v-row>
         </v-col>
         <v-col cols="6">
-            <v-col cols="12" class="form-col">
-                <v-list-subheader class="form-header">Price Group <span style="color: red;" class="mdi mdi-check"></span></v-list-subheader>
-                <v-autocomplete
-                    :items="price_group_data"
-                    item-title="description"
-                    item-value="id"
-                    v-model="payload.mscPrice_Groups"
-                    :readonly="clicked_option === 'view'"
-                    :clearable="clicked_option === 'new' || clicked_option === 'edit'"
-                    density="compact"
-                    variant="underlined"
-                    :error-messages="formErrors.mscPrice_Groups ? [formErrors.mscPrice_Groups] : []"
-                ></v-autocomplete>
-            </v-col>
-            <v-col cols="12" class="form-col">
-                <v-list-subheader class="form-header">Price Scheme <span style="color: red;" class="mdi mdi-check"></span></v-list-subheader>
-                <v-autocomplete
-                    :items="price_scheme_data"
-                    item-title="description"
-                    item-value="id"
-                    v-model="payload.mscPrice_Schemes"
-                    :readonly="clicked_option === 'view'"
-                    :clearable="clicked_option === 'new' || clicked_option === 'edit'"
-                    density="compact"
-                    variant="underlined"
-                    :error-messages="formErrors.mscPrice_Schemes ? [formErrors.mscPrice_Schemes] : []"
-                ></v-autocomplete>
-            </v-col>
-            <v-col cols="12" class="form-col">
-                <v-list-subheader class="form-header">ID Presented </v-list-subheader>
-                <v-autocomplete
-                    item-title="id_description"
-                    item-value="id"
-                    v-model="payload.id_presented"
-                    :readonly="clicked_option === 'view'"
-                    :clearable="clicked_option === 'new' || clicked_option === 'edit'"
-                    :items="id_types_data"
-                    density="compact"
-                    variant="underlined"
-                ></v-autocomplete>
-            </v-col>
-            <v-col cols="12" class="form-col">
-                <v-list-subheader class="form-header">ID Number </v-list-subheader>
-                <v-text-field
-                    variant="underlined"
-                    type="number"
-                    v-model="payload.id_number"
-                    :readonly="clicked_option === 'view'"
-                    density="compact"
-                ></v-text-field>
-            </v-col>
-            <v-col cols="12" class="form-col">
-                <v-list-subheader class="form-header">Patient Identifier</v-list-subheader>
-                <v-autocomplete
-                    v-model="payload.patientIdentifier"
-                    :items="patientIdentifiers"
-                    item-title="name"
-                    item-value="id"
-                    :readonly="clicked_option === 'view'"
-                    :clearable="clicked_option === 'new' || clicked_option === 'edit'"
-                    variant="underlined"
-                    density="compact"
-                ></v-autocomplete>
-            </v-col>
+            <v-row>
+                <v-col cols="12" class="form-group">
+                    <label class="form-label">Case Indicator</label>
+                    <div class="select-wrapper">
+                        <select class="form-select" :disabled="clicked_option === 'view'" v-model="payload.mscCase_Indicators_Id">
+                            <option v-for="(item, index) in case_indicator_data" :key="index" :value="item.id">
+                                {{ item.description }}
+                            </option>
+                        </select>
+                        <span class="arrow-icon mdi mdi-chevron-down"></span>
+                    </div>
+                </v-col>
+            </v-row>
+            <v-row>
+                <v-col cols="12" class="form-group">
+                    <label class="form-label">Medical Package</label>
+                    <span class="mdi mdi-plus-box" style="cursor: pointer; margin-right: 10px;" @click="openMedicalPackageList" :disabled="clicked_option === 'view'"></span>
+                    <input
+                        v-model="payload.medical_Package_Name"
+                        class="form-input"
+                        readonly
+                    />
+                </v-col>
+            </v-row>
+            <v-row>
+                <v-col cols="12" class="form-group">
+                    <label class="form-label">Companion</label>
+                    <div class="select-wrapper">
+                        <select class="form-select" :disabled="clicked_option === 'view'" v-model="payload.mscBroughtBy_Relationship_Id">
+                            <option v-for="(item, index) in patient_brought_by" :key="index" :value="item.id">
+                                {{ item.description }}
+                            </option>
+                        </select>
+                        <span class="arrow-icon mdi mdi-chevron-down"></span>
+                    </div>
+                </v-col>
+            </v-row>
+            <v-row>
+                <v-col cols="12" class="form-group">
+                    <label class="form-label">ID Presented</label>
+                    <div class="select-wrapper">
+                        <select class="form-select" :disabled="clicked_option === 'view'" v-model="payload.id_presented">
+                            <option v-for="(item, index) in id_types_data" :key="index" :value="item.id">
+                                {{ item.id_description }}
+                            </option>
+                        </select>
+                        <span class="arrow-icon mdi mdi-chevron-down"></span>
+                    </div>
+                </v-col>
+            </v-row>
+            <v-row>
+                <v-col cols="12" class="form-group">
+                    <label class="form-label">ID Number</label>
+                    <input
+                        type="number"
+                        v-model="payload.id_number"
+                        class="form-input"
+                        :disabled="clicked_option === 'view'"
+                    />
+                </v-col>
+            </v-row>
+            <v-row>
+                <v-col cols="12" class="form-group">
+                    <label class="form-label">Patient Identifier</label>
+                    <div class="select-wrapper">
+                        <select class="form-select" :disabled="clicked_option === 'view'" v-model="payload.patientIdentifier">
+                            <option v-for="(item, index) in patientIdentifiers" :key="index" :value="item.id">
+                                {{ item.name }}
+                            </option>
+                        </select>
+                        <span class="arrow-icon mdi mdi-chevron-down"></span>
+                    </div>
+                </v-col>
+            </v-row>
         </v-col>
     </v-row>
+
+    <o-p-d-medical-package-list :open_medical_package_list="open_medical_package_list" @close-dialog="closeMedicalPackageList" @handle-select="handleSelectPackage" />
 </template>
 
 <script setup>
@@ -161,90 +196,33 @@ const props = defineProps({
     },
 });
 
-const emits = defineEmits(['hospitalization-plan']);
+const open_medical_package_list = ref(false);
 
-let referring_hci_code = ref([]);
-const open_discount_scheme_table = ref(false);
-const open_referring_hci_code_table = ref(false);
-const open_referring_hci_address_form = ref(false);
-const open_diet_desc = ref(false);
-
-const handleCaseDate = computed(() => {
-    const today = new Date().toISOString().split('T')[0];
-    props.payload.registry_date = today;
-    return today;
-});
-
-const openHandleDiscountScheme = () => {
-    open_discount_scheme_table.value = true;
+const openMedicalPackageList = () => {
+    open_medical_package_list.value = true;
 }
-const handleSelectDiscountScheme = (selected_item) => {
-    // props.payload.discount_scheme = selected_item.item.description;
-    // props.payload.discount_scheme_id = selected_item.item.id;
-    open_discount_scheme_table.value = false;
-}
-const closeHandleDiscountScheme = () => {
-    open_discount_scheme_table.value = false;
+const handleSelectPackage = (selected_item) => {
+    props.payload.medical_Package_Id = selected_item[0].id;
+    props.payload.medical_Package_Name = selected_item[0].package_description;
+    props.payload.medical_Package_Amount = selected_item[0].package_amount;
+};
+const closeMedicalPackageList = () => {
+    open_medical_package_list.value = false;
 }
 
-const openReferringHciCode = () => {
-    open_referring_hci_code_table.value = true;
-}
-const handleReferringHciCode = (selected_item) => {
-    referring_hci_code.value = selected_item.item;
-    open_referring_hci_code_table.value = false;
-}
-const closeReferringHciCode = () => {
-    open_referring_hci_code_table.value = false;
-}
-
-const openReferringHciAddress = () => {
-    open_referring_hci_address_form.value = true;
-}
-const handleReferringHciAddress = () => {
-
-}
-const closeReferringHciAddress = () => {
-    open_referring_hci_address_form.value = false;
-}
-
-const openDietDesc = () => {
-    open_diet_desc.value = true;
-}
-const handleDietDesc = () => {
-    alert('Diet Desc');
-    open_diet_desc.value = false;
-}
-const closeDietDesc = () => {
-    open_diet_desc.value = false;
-}
-
-// const patientIdentifiers = ref([
-//     { id: 1, name: 'Hemo Patient' },
-//     { id: 2, name: 'Peritoneal Patient' },
-//     { id: 3, name: 'LINAC' },
-//     { id: 4, name: 'COBALT' },
-//     { id: 5, name: 'Blood Trans Patient' },
-//     { id: 6, name: 'Chemo Patient' },
-//     { id: 7, name: 'Brachytherapy Patient' },
-//     { id: 8, name: 'Debridement' },
-//     { id: 9, name: 'TB DOTS' },
-//     { id: 10, name: 'PAD Patient' },
-//     { id: 11, name: 'Radio Patient' },
-// ]);
 const patientIdentifiers = ref([
-    "Hemo Patient",
-    "Peritoneal Patient",
-    "LINAC",
-    "COBALT",
-    "Blood Trans Patient",
-    "Chemo Patient",
-    "Brachytherapy Patient",
-    "Debridement",
-    "TB DOTS",
-    "PAD Patient",
-    "Radio Patient",
-])
+    { id: 1, name: 'Hemo Patient' },
+    { id: 2, name: 'Peritoneal Patient' },
+    { id: 3, name: 'LINAC' },
+    { id: 4, name: 'COBALT' },
+    { id: 5, name: 'Blood Trans Patient' },
+    { id: 6, name: 'Chemo Patient' },
+    { id: 7, name: 'Brachytherapy Patient' },
+    { id: 8, name: 'Debridement' },
+    { id: 9, name: 'TB DOTS' },
+    { id: 10, name: 'PAD Patient' },
+    { id: 11, name: 'Radio Patient' },
+]);
 
 const register_source_data = ref([]);
 const register_source_loading = ref(false);
@@ -353,6 +331,39 @@ const getPriceScheme = async () => {
     } 
 };
 
+const service_type_data = ref([]);
+const service_type_loading = ref(false);
+const getServiceType = async () => {
+    service_type_loading.value = true;
+    const response = await useMethod("get", "get-services-type", "", "");
+    if (response) {
+        service_type_data.value = response;
+        service_type_loading.value = false;
+    } 
+};
+
+const patient_brought_by = ref([]);
+const patient_brought_by_loading = ref(false);
+const getPatientBroughtBy = async () => {
+    patient_brought_by_loading.value = true;
+    const response = await useMethod("get", "patient-brought-by", "", "");
+    if(response) {
+        patient_brought_by.value = response;
+        patient_brought_by_loading.value = false;
+    }
+};
+
+const case_indicator_data = ref([]);
+const case_indicator_loading = ref(false);
+const getCaseIndicator = async () => {
+    case_indicator_loading.value = true;
+    const response = await useMethod("get", "get-case-indicators", "", "");
+    if(response) {
+        case_indicator_data.value = response;
+        case_indicator_loading.value = false;
+    }
+};
+
 const id_types_data = ref([]);
 const id_types_loading = ref(false);
 const getIdTypes = async () => {
@@ -371,18 +382,54 @@ onMounted(() => {
     getHospitalizationPlan();
     getPriceGroup();
     getPriceScheme();
+    getServiceType();
+    getPatientBroughtBy();
+    getCaseIndicator();
     getIdTypes();
 });
 </script>
 
 <style scoped>
-.form-header {
-    color: #000;
-    margin: -12px 0px -12px 0px;
-    font-weight: 500;
+.form-group {
+    display: flex;
+    align-items: center;
 }
-.form-col {
-    padding: 3.25px 0px 3.25px 0px !important;
-    margin: 0px !important;
+.form-label {
+    flex: 0 0 40%;
+    text-align: left;
+    margin-right: 8px;
+}
+.form-input,
+.form-select {
+    flex: 1;
+    width: 100%;
+    padding: 4px;
+    border: 1px solid #000;
+    border-radius: 4px;
+    background-color: #fff;
+    box-sizing: border-box;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+.input-error {
+    border-color: red;
+}
+.select-wrapper {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+}
+.arrow-icon {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    font-size: 16px;
+    color: #000;
+    pointer-events: none; 
+}
+input[readonly] {
+    background-color: #f5f5f5;
 }
 </style>

@@ -17,16 +17,16 @@
                     <v-container>
                         <v-row>
                             <v-col cols="6" class="pa-1">
-                                <v-list-subheader class="form-header">Building No. / Street <span style="color: red;" class="mdi mdi-check"></span></v-list-subheader>
+                                <v-list-subheader class="form-header">Building No. / Street </v-list-subheader>
                                 <v-text-field
                                     v-model="address_data.bldgstreet"
-                                    variant="underlined"
+                                    variant="outlined"
                                     density="compact"
                                     hide-details
                                 ></v-text-field>
                             </v-col>
                             <v-col cols="6" class="pa-1">
-                                <v-list-subheader class="form-header">Region <span style="color: red;" class="mdi mdi-check"></span></v-list-subheader>
+                                <v-list-subheader class="form-header">Region </v-list-subheader>
                                 <v-autocomplete
                                     v-model="address_data.region_id"
                                     item-title="region_name"
@@ -37,11 +37,11 @@
                                     hide-details
                                     clearable
                                     density="compact" 
-                                    variant="underlined"
+                                    variant="outlined"
                                 ></v-autocomplete>
                             </v-col>
                             <v-col cols="6" class="pa-1">
-                                <v-list-subheader class="form-header">Province / State <span style="color: red;" class="mdi mdi-check"></span></v-list-subheader>
+                                <v-list-subheader class="form-header">Province / State </v-list-subheader>
                                 <v-autocomplete
                                     v-model="address_data.province_id"
                                     item-title="province_name"
@@ -52,11 +52,11 @@
                                     hide-details
                                     clearable
                                     density="compact"
-                                    variant="underlined"
+                                    variant="outlined"
                                 ></v-autocomplete>
                             </v-col>
                             <v-col cols="6" class="pa-1">
-                                <v-list-subheader class="form-header">Town / Municipality <span style="color: red;" class="mdi mdi-check"></span></v-list-subheader>
+                                <v-list-subheader class="form-header">Town / Municipality </v-list-subheader>
                                 <v-autocomplete
                                     v-model="address_data.municipality_id"
                                     item-title="municipality_name"
@@ -67,11 +67,11 @@
                                     hide-details
                                     clearable
                                     density="compact"
-                                    variant="underlined"
+                                    variant="outlined"
                                 ></v-autocomplete>
                             </v-col>
                             <v-col cols="6" class="pa-1">
-                                <v-list-subheader class="form-header">Barangay <span style="color: red;" class="mdi mdi-check"></span></v-list-subheader>
+                                <v-list-subheader class="form-header">Barangay </v-list-subheader>
                                 <v-autocomplete
                                     v-model="computedBarangayID"
                                     item-title="barangay_name"
@@ -82,7 +82,7 @@
                                     hide-details
                                     clearable
                                     density="compact"
-                                    variant="underlined"
+                                    variant="outlined"
                                 ></v-autocomplete>
                             </v-col>
                             <v-col cols="6" class="pa-1">
@@ -97,7 +97,7 @@
                                     hide-details
                                     clearable
                                     density="compact"
-                                    variant="underlined"
+                                    variant="outlined"
                                 ></v-autocomplete>
                             </v-col>
                         </v-row>

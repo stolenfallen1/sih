@@ -1,250 +1,293 @@
 <template>
+    <p style="font-weight: bold; font-style: italic; font-size: large;">Additional Patient Information</p>
+    <v-divider color="#000" style="margin-bottom: 15px;"></v-divider>
+    <v-row style="margin-bottom: 25px;">
+        <v-col cols="4">
+            <v-row>
+                <v-col cols="12" class="form-group">
+                    <label class="form-label">Birth Place</label>
+                    <input
+                        type="text"
+                        v-model="payload.birthplace"
+                        class="form-input"
+                        :disabled="clicked_option === 'view'"
+                    />
+                </v-col>
+            </v-row>
+            <v-row>
+                <v-col cols="12" class="form-group">
+                    <label class="form-label">Religion</label>
+                    <div class="select-wrapper">
+                        <select class="form-select" :disabled="clicked_option === 'view'" v-model="payload.religion_id">
+                            <option v-for="(item, index) in religion_data" :key="index" :value="item.id">
+                                {{ item.religion_name }}
+                            </option>
+                        </select>
+                        <span class="arrow-icon mdi mdi-chevron-down"></span>
+                    </div>
+                </v-col>
+            </v-row>
+            <v-row>
+                <v-col cols="12" class="form-group">
+                    <label class="form-label">Nationality</label>
+                    <div class="select-wrapper">
+                        <select class="form-select" :disabled="clicked_option === 'view'" v-model="payload.nationality_id">
+                            <option v-for="(item, index) in nationality_data" :key="index" :value="item.id">
+                                {{ item.nationality }}
+                            </option>
+                        </select>
+                        <span class="arrow-icon mdi mdi-chevron-down"></span>
+                    </div>
+                </v-col>
+            </v-row>
+        </v-col>
+        <v-col cols="4">
+            <v-row>
+                <v-col cols="12" class="form-group">
+                    <label class="form-label">Temperature</label>
+                    <input
+                        type="text"
+                        v-model="payload.temperature"
+                        class="form-input"
+                        :disabled="clicked_option === 'view'"
+                    />
+                </v-col>
+            </v-row>
+            <v-row>
+                <v-col cols="12" class="form-group">
+                    <label class="form-label">BP Sys</label>
+                    <input
+                        type="text"
+                        v-model="payload.bloodPressureSystolic"
+                        class="form-input"
+                        :disabled="clicked_option === 'view'"
+                    />
+                </v-col>
+            </v-row>
+            <v-row>
+                <v-col cols="12" class="form-group">
+                    <label class="form-label">BP Dias</label>
+                    <input
+                        type="text"
+                        v-model="payload.bloodPressureDiastolic"
+                        class="form-input"
+                        :disabled="clicked_option === 'view'"
+                    />
+                </v-col>
+            </v-row>
+        </v-col>
+        <v-col cols="4">
+            <v-row>
+                <v-col cols="12" class="form-group">
+                    <label class="form-label">Weight (kg)</label>
+                    <input
+                        type="text"
+                        v-model="payload.weight"
+                        @change="calculateBmi"
+                        class="form-input"
+                        :disabled="clicked_option === 'view'"
+                    />
+                </v-col>
+            </v-row>
+            <v-row>
+                <v-col cols="12" class="form-group">
+                    <label class="form-label">Height (cm)</label>
+                    <input
+                        type="text"
+                        v-model="payload.height"
+                        @change="calculateBmi"
+                        class="form-input"
+                        :disabled="clicked_option === 'view'"
+                    />
+                </v-col>
+            </v-row>
+            <v-row>
+                <v-col cols="12" class="form-group">
+                    <label class="form-label">BMI</label>
+                    <input
+                        type="text"
+                        v-model="payload.bmi"
+                        placeholder="Auto Generate"
+                        class="form-input"
+                        readonly
+                    />
+                </v-col>
+            </v-row>
+        </v-col>
+    </v-row>
+    <p style="margin-top: 25px; font-weight: bold; font-style: italic; font-size: large;">Parent's / Spouse Information</p>
+    <v-divider color="#000" style="margin-bottom: 15px;"></v-divider>
     <v-row>
         <v-col cols="4">
-            <v-col cols="12" class="form-col">
-                <v-list-subheader class="form-header">Birth Place</v-list-subheader>
-                <v-text-field
-                    variant="underlined"
-                    v-model="payload.birthplace"
-                    :readonly="clicked_option === 'view'"
-                    density="compact"
-                ></v-text-field>
-            </v-col>
-            <v-col cols="12" class="form-col">
-                <v-list-subheader class="form-header">Religion</v-list-subheader>
-                <v-autocomplete
-                    item-title="religion_name"
-                    item-value="id"
-                    v-model="payload.religion_id"
-                    :readonly="clicked_option === 'view'"
-                    :clearable="clicked_option === 'new' || clicked_option === 'edit'"
-                    :items="religion_data"
-                    density="compact"
-                    variant="underlined"
-                ></v-autocomplete>
-            </v-col>
-            <v-col cols="12" class="form-col">
-                <v-list-subheader class="form-header">Nationality</v-list-subheader>
-                <v-autocomplete
-                    item-title="nationality"
-                    item-value="id"
-                    v-model="payload.nationality_id"
-                    :readonly="clicked_option === 'view'"
-                    :clearable="clicked_option === 'new' || clicked_option === 'edit'"
-                    :items="nationality_data"
-                    density="compact"
-                    variant="underlined"
-                ></v-autocomplete>
-            </v-col>
-            <v-col cols="12" class="form-col">
-                <v-list-subheader class="form-header">Full Address</v-list-subheader>
-                <v-textarea 
-                    density="compact" 
-                    variant="outlined"
-                    v-model="payload.address"
-                    :value="fullAddress"
-                    readonly
-                    class="cursor-pointer"
-                    prepend-icon="mdi-plus-box"
-                    @click:prepend="handleOpenAddressForm"
-                ></v-textarea>
-            </v-col>
+            <v-row>
+                <v-col cols="12" class="form-group">
+                    <label class="form-label">Father Lastname</label>
+                    <input
+                        type="text"
+                        v-model="payload.fatherLastname"
+                        class="form-input"
+                        :disabled="clicked_option === 'view'"
+                    />
+                </v-col>
+            </v-row>
+            <v-row>
+                <v-col cols="12" class="form-group">
+                    <label class="form-label">Father Firstname</label>
+                    <input
+                        type="text"
+                        v-model="payload.fatherFirstname"
+                        class="form-input"
+                        :disabled="clicked_option === 'view'"
+                    />
+                </v-col>
+            </v-row>
+            <v-row>
+                <v-col cols="12" class="form-group">
+                    <label class="form-label">Father Middlename</label>
+                    <input
+                        type="text"
+                        v-model="payload.fatherMiddlename"
+                        class="form-input"
+                        :disabled="clicked_option === 'view'"
+                    />
+                </v-col>
+            </v-row>
+            <v-row>
+                <v-col cols="12" class="form-group">
+                    <label class="form-label">Father Birthdate</label>
+                    <input
+                        type="date"
+                        v-model="payload.fatherBirthdate"
+                        class="form-input"
+                        @change="updateFatherBirthDate"
+                        :disabled="clicked_option === 'view'"
+                    />
+                </v-col>
+            </v-row>
+            <v-row>
+                <v-col cols="12" class="form-group">
+                    <label class="form-label">Father Age</label>
+                    <input
+                        type="number"
+                        v-model="payload.fatherAge"
+                        class="form-input"
+                        placeholder="Auto Compute"
+                        readonly
+                    />
+                </v-col>
+            </v-row>
         </v-col>
-        <v-col cols="4" v-if="payload.civilstatus_id !== 3">
-            <v-col cols="12" class="form-col">
-                <v-list-subheader class="form-header">Father Last Name</v-list-subheader>
-                <v-text-field
-                    variant="underlined"
-                    v-model="payload.fatherLastname"
-                    :readonly="clicked_option === 'view'"
-                    density="compact"
-                ></v-text-field>
-            </v-col>
-            <v-col cols="12" class="form-col">
-                <v-list-subheader class="form-header">Father First Name</v-list-subheader>
-                <v-text-field
-                    variant="underlined"
-                    v-model="payload.fatherFirstname"
-                    :readonly="clicked_option === 'view'"
-                    density="compact"
-                ></v-text-field>
-            </v-col>
-            <v-col cols="12" class="form-col">
-                <v-list-subheader class="form-header">Father Middle Name</v-list-subheader>
-                <v-text-field
-                    variant="underlined"
-                    v-model="payload.fatherMiddlename"
-                    :readonly="clicked_option === 'view'"
-                    density="compact"
-                ></v-text-field>
-            </v-col>
-            <v-col cols="12" class="form-col">
-                <v-list-subheader class="form-header">Father Birth Date</v-list-subheader>
-                <v-text-field
-                    variant="underlined"
-                    type="date"
-                    v-model="payload.fatherBirthdate"
-                    :readonly="clicked_option === 'view'"
-                    density="compact"
-                ></v-text-field>
-            </v-col>
-            <v-col cols="12" class="form-col">
-                <v-list-subheader class="form-header">Father Age</v-list-subheader>
-                <v-text-field
-                    variant="underlined"
-                    v-model="payload.fatherAge"
-                    readonly
-                    placeholder="Auto Compute"
-                    density="compact"
-                ></v-text-field>
-            </v-col>
+        <v-col cols="4">
+            <v-row>
+                <v-col cols="12" class="form-group">
+                    <label class="form-label">Mother Lastname</label>
+                    <input
+                        type="text"
+                        v-model="payload.motherLastname"
+                        class="form-input"
+                        :disabled="clicked_option === 'view'"
+                    />
+                </v-col>
+            </v-row>
+            <v-row>
+                <v-col cols="12" class="form-group">
+                    <label class="form-label">Mother Firstname</label>
+                    <input
+                        type="text"
+                        v-model="payload.motherFirstname"
+                        class="form-input"
+                        :disabled="clicked_option === 'view'"
+                    />
+                </v-col>
+            </v-row>
+            <v-row>
+                <v-col cols="12" class="form-group">
+                    <label class="form-label">Mother Middlename</label>
+                    <input
+                        type="text"
+                        v-model="payload.motherMiddlename"
+                        class="form-input"
+                        :disabled="clicked_option === 'view'"
+                    />
+                </v-col>
+            </v-row>
+            <v-row>
+                <v-col cols="12" class="form-group">
+                    <label class="form-label">Mother Birthdate</label>
+                    <input
+                        type="date"
+                        v-model="payload.motherBirthdate"
+                        class="form-input"
+                        @change="updateMotherBirthDate"
+                        :disabled="clicked_option === 'view'"
+                    />
+                </v-col>
+            </v-row>
+            <v-row>
+                <v-col cols="12" class="form-group">
+                    <label class="form-label">Mother Age</label>
+                    <input
+                        type="number"
+                        v-model="payload.motherAge"
+                        class="form-input"
+                        placeholder="Auto Compute"
+                        readonly
+                    />
+                </v-col>
+            </v-row>
         </v-col>
-        <v-col cols="4" v-if="payload.civilstatus_id !== 3">
-            <v-col cols="12" class="form-col">
-                <v-list-subheader class="form-header">Mother Last Name</v-list-subheader>
-                <v-text-field
-                    variant="underlined"
-                    v-model="payload.motherLastname"
-                    :readonly="clicked_option === 'view'"
-                    density="compact"
-                ></v-text-field>
-            </v-col>
-            <v-col cols="12" class="form-col">
-                <v-list-subheader class="form-header">Mother First Name</v-list-subheader>
-                <v-text-field
-                    variant="underlined"
-                    v-model="payload.motherFirstname"
-                    :readonly="clicked_option === 'view'"
-                    density="compact"
-                ></v-text-field>
-            </v-col>
-            <v-col cols="12" class="form-col">
-                <v-list-subheader class="form-header">Mother Middle Name</v-list-subheader>
-                <v-text-field
-                    variant="underlined"
-                    v-model="payload.motherMiddlename"
-                    :readonly="clicked_option === 'view'"
-                    density="compact"
-                ></v-text-field>
-            </v-col>
-            <v-col cols="12" class="form-col">
-                <v-list-subheader class="form-header">Mother Birth Date</v-list-subheader>
-                <v-text-field
-                    variant="underlined"
-                    type="date"
-                    v-model="payload.motherBirthdate"
-                    :readonly="clicked_option === 'view'"
-                    density="compact"
-                ></v-text-field>
-            </v-col>
-            <v-col cols="12" class="form-col">
-                <v-list-subheader class="form-header">Mother Age</v-list-subheader>
-                <v-text-field
-                    variant="underlined"
-                    v-model="payload.motherAge"
-                    readonly
-                    placeholder="Auto Compute"
-                    density="compact"
-                ></v-text-field>
-            </v-col>
-        </v-col>
-        <v-col cols="4" v-if="payload.civilstatus_id === 3">
-            <v-col cols="12" class="form-col">
-                <v-list-subheader class="form-header">Spouse Last Name</v-list-subheader>
-                <v-text-field
-                    variant="underlined"
-                    v-model="payload.fatherLastname"
-                    :readonly="clicked_option === 'view'"
-                    density="compact"
-                ></v-text-field>
-            </v-col>
-            <v-col cols="12" class="form-col">
-                <v-list-subheader class="form-header">Spouse First Name</v-list-subheader>
-                <v-text-field
-                    variant="underlined"
-                    v-model="payload.fatherFirstname"
-                    :readonly="clicked_option === 'view'"
-                    density="compact"
-                ></v-text-field>
-            </v-col>
-            <v-col cols="12" class="form-col">
-                <v-list-subheader class="form-header">Spouse Middle Name</v-list-subheader>
-                <v-text-field
-                    variant="underlined"
-                    v-model="payload.fatherMiddlename"
-                    :readonly="clicked_option === 'view'"
-                    density="compact"
-                ></v-text-field>
-            </v-col>
-            <v-col cols="12" class="form-col">
-                <v-list-subheader class="form-header">Spouse Birth Date</v-list-subheader>
-                <v-text-field
-                    variant="underlined"
-                    type="date"
-                    v-model="payload.fatherBirthdate"
-                    :readonly="clicked_option === 'view'"
-                    density="compact"
-                ></v-text-field>
-            </v-col>
-            <v-col cols="12" class="form-col">
-                <v-list-subheader class="form-header">Spouse Age</v-list-subheader>
-                <v-text-field
-                    variant="underlined"
-                    v-model="payload.fatherAge"
-                    readonly
-                    placeholder="Auto Compute"
-                    density="compact"
-                ></v-text-field>
-            </v-col>
-        </v-col>
-        <v-col cols="4" v-if="payload.civilstatus_id === 3">
-            <v-col cols="12" class="form-col">
-                <v-list-subheader class="form-header">Guardian Last Name</v-list-subheader>
-                <v-text-field
-                    variant="underlined"
-                    v-model="payload.motherLastname"
-                    :readonly="clicked_option === 'view'"
-                    density="compact"
-                ></v-text-field>
-            </v-col>
-            <v-col cols="12" class="form-col">
-                <v-list-subheader class="form-header">Guardian First Name</v-list-subheader>
-                <v-text-field
-                    variant="underlined"
-                    v-model="payload.motherFirstname"
-                    :readonly="clicked_option === 'view'"
-                    density="compact"
-                ></v-text-field>
-            </v-col>
-            <v-col cols="12" class="form-col">
-                <v-list-subheader class="form-header">Guardian Middle Name</v-list-subheader>
-                <v-text-field
-                    variant="underlined"
-                    v-model="payload.motherMiddlename"
-                    :readonly="clicked_option === 'view'"
-                    density="compact"
-                ></v-text-field>
-            </v-col>
-            <v-col cols="12" class="form-col">
-                <v-list-subheader class="form-header">Guardian Birth Date</v-list-subheader>
-                <v-text-field
-                    variant="underlined"
-                    type="date"
-                    v-model="payload.motherBirthdate"
-                    :readonly="clicked_option === 'view'"
-                    density="compact"
-                ></v-text-field>
-            </v-col>
-            <v-col cols="12" class="form-col">
-                <v-list-subheader class="form-header">Guardian Age</v-list-subheader>
-                <v-text-field
-                    variant="underlined"
-                    v-model="payload.motherAge"
-                    readonly
-                    placeholder="Auto Compute"
-                    density="compact"
-                ></v-text-field>
-            </v-col>
+        <v-col cols="4">
+            <v-row>
+                <v-col cols="12" class="form-group">
+                    <label class="form-label">Spouse Lastname</label>
+                    <input
+                        type="text"
+                        class="form-input"
+                        :disabled="clicked_option === 'view'"
+                    />
+                </v-col>
+            </v-row>
+            <v-row>
+                <v-col cols="12" class="form-group">
+                    <label class="form-label">Spouse Firstname</label>
+                    <input
+                        type="text"
+                        class="form-input"
+                        :disabled="clicked_option === 'view'"
+                    />
+                </v-col>
+            </v-row>
+            <v-row>
+                <v-col cols="12" class="form-group">
+                    <label class="form-label">Spouse Middlename</label>
+                    <input
+                        type="text"
+                        class="form-input"
+                        :disabled="clicked_option === 'view'"
+                    />
+                </v-col>
+            </v-row>
+            <v-row>
+                <v-col cols="12" class="form-group">
+                    <label class="form-label">Spouse Birthdate</label>
+                    <input
+                        type="date"
+                        class="form-input"
+                        :disabled="clicked_option === 'view'"
+                    />
+                </v-col>
+            </v-row>
+            <v-row>
+                <v-col cols="12" class="form-group">
+                    <label class="form-label">Spouse Age</label>
+                    <input
+                        type="number"
+                        class="form-input"
+                        placeholder="Auto Compute"
+                        readonly
+                    />
+                </v-col>
+            </v-row>
         </v-col>
     </v-row>
     <o-p-d-address-details-form :address_form_dialog="address_form_dialog" :payload="payload" @close-dialog="closeAddressForm" @handle-submit="handleSubmitAddress" />
@@ -344,6 +387,31 @@ const getDeathTypes = async () => {
     } 
 };
 
+const updateFatherBirthDate = ()=>{
+    props.payload.fatherAge = 0;
+    if(props.payload.fatherBirthdate){
+        props.payload.fatherAge = useCalculateAge(useDateMMDDYYY(props.payload.fatherBirthdate));
+    }
+}
+
+const updateMotherBirthDate = ()=>{
+    props.payload.motherAge = 0;
+    if(props.payload.motherBirthdate){
+        props.payload.motherAge = useCalculateAge(useDateMMDDYYY(props.payload.motherBirthdate));
+    }
+}
+
+const calculateBmi = () => {
+    if (props.payload.weight && props.payload.height) {
+        const weight = parseFloat(props.payload.weight);
+        const height = parseFloat(props.payload.height);
+        const bmi = weight / (height * height);
+        props.payload.bmi = bmi.toFixed(2);
+    } else {
+        props.payload.bmi = "";
+    }
+}
+
 onMounted(() => {
     getReligion();
     getNationality();
@@ -355,10 +423,49 @@ onMounted(() => {
 .form-header {
     color: #000;
     margin: -12px 0px -12px 0px;
-    font-weight: 500;
+    font-weight: bold;
 }
 .form-col {
     padding: 3.25px 0px 3.25px 0px !important;
     margin: 0px !important;
+}
+.form-group {
+    display: flex;
+    align-items: center;
+}
+.form-label {
+    flex: 0 0 40%;
+    text-align: left;
+    margin-right: 8px;
+}
+.form-input,
+.form-select {
+    flex: 1;
+    width: 100%;
+    padding: 4px;
+    border: 1px solid #000;
+    border-radius: 4px;
+    background-color: #fff;
+    box-sizing: border-box;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+.select-wrapper {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+}
+.arrow-icon {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    font-size: 16px;
+    color: #000;
+    pointer-events: none; 
+}
+input[readonly] {
+    background-color: #f5f5f5;
 }
 </style>

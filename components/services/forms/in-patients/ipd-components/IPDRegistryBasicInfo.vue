@@ -2,18 +2,6 @@
     <v-row>
         <v-col cols="4">
             <v-col cols="12" class="form-col">
-                <v-list-subheader class="form-header">
-                    IPD Case Date<span style="color: red;" class="mdi mdi-check"></span>
-                </v-list-subheader>
-                <v-text-field
-                    variant="underlined"
-                    :value="handleCaseDate"
-                    readonly
-                    type="date"
-                    density="compact"
-                ></v-text-field>
-            </v-col>
-            <v-col cols="12" class="form-col">
                 <v-list-subheader class="form-header">Register Source <span style="color: red;" class="mdi mdi-check"></span></v-list-subheader>
                 <v-autocomplete
                     :items="register_source_data"
@@ -23,7 +11,7 @@
                     :readonly="clicked_option === 'view'"
                     :clearable="clicked_option === 'new' || clicked_option === 'edit'"
                     density="compact"
-                    variant="underlined"
+                    variant="outlined"
                     :error-messages="formErrors.register_Source ? [formErrors.register_Source] : []"
                 ></v-autocomplete>
             </v-col>
@@ -37,7 +25,7 @@
                     :readonly="clicked_option === 'view'"
                     :clearable="clicked_option === 'new' || clicked_option === 'edit'"
                     density="compact"
-                    variant="underlined"
+                    variant="outlined"
                     :error-messages="formErrors.register_Casetype ? [formErrors.register_Casetype] : []"
                 ></v-autocomplete>
             </v-col>
@@ -51,7 +39,7 @@
                     :readonly="clicked_option === 'view'"
                     :clearable="clicked_option === 'new' || clicked_option === 'edit'"
                     density="compact"
-                    variant="underlined"
+                    variant="outlined"
                     :error-messages="formErrors.mscAccount_trans_types ? [formErrors.mscAccount_trans_types] : []"
                 ></v-autocomplete>
             </v-col>
@@ -65,12 +53,10 @@
                     :readonly="clicked_option === 'view'"
                     :clearable="clicked_option === 'new' || clicked_option === 'edit'"
                     density="compact"
-                    variant="underlined"
+                    variant="outlined"
                     :error-messages="formErrors.mscAccount_type ? [formErrors.mscAccount_type] : []"
                 ></v-autocomplete>
             </v-col>
-        </v-col>
-        <v-col cols="4">
             <v-col cols="12" class="form-col">
                 <v-list-subheader class="form-header">Price Group <span style="color: red;" class="mdi mdi-check"></span></v-list-subheader>
                 <v-autocomplete
@@ -81,10 +67,12 @@
                     :readonly="clicked_option === 'view'"
                     :clearable="clicked_option === 'new' || clicked_option === 'edit'"
                     density="compact"
-                    variant="underlined"
+                    variant="outlined"
                     :error-messages="formErrors.mscPrice_Groups ? [formErrors.mscPrice_Groups] : []"
                 ></v-autocomplete>
             </v-col>
+        </v-col>
+        <v-col cols="4">
             <v-col cols="12" class="form-col">
                 <v-list-subheader class="form-header">Price Scheme <span style="color: red;" class="mdi mdi-check"></span></v-list-subheader>
                 <v-autocomplete
@@ -95,7 +83,7 @@
                     :readonly="clicked_option === 'view'"
                     :clearable="clicked_option === 'new' || clicked_option === 'edit'"
                     density="compact"
-                    variant="underlined"
+                    variant="outlined"
                     :error-messages="formErrors.mscPrice_Schemes ? [formErrors.mscPrice_Schemes] : []"
                 ></v-autocomplete>
             </v-col>
@@ -106,11 +94,11 @@
                         <v-text-field
                             v-model="payload.room_Id"
                             prepend-icon="mdi-plus-box"
-                            @click:prepend="openHandleDiscountScheme"
+                            @click:prepend="openHandleRoomList"
                             readonly
                             class="cursor-pointer"
                             density="compact"
-                            variant="underlined"
+                            variant="outlined"
                         ></v-text-field>
                     </v-col>
                     <v-col cols="5">
@@ -120,13 +108,90 @@
                             readonly
                             class="cursor-pointer"
                             density="compact"
-                            variant="underlined"
+                            variant="outlined"
                         ></v-text-field>
                     </v-col>
                 </v-row>
             </v-col>
+            <v-col cols="12" class="form-col">
+                <v-list-subheader class="form-header">Medical Package </v-list-subheader>
+                <v-text-field
+                    v-model="payload.medical_Package_Id"
+                    :value="payload.medical_Package_Name"
+                    prepend-icon="mdi-plus-box"
+                    @click:prepend="openMedicalPackageList"
+                    readonly
+                    class="cursor-pointer"
+                    density="compact"
+                    variant="outlined"
+                ></v-text-field>
+            </v-col>
+            <v-col cols="12" class="form-col">
+                <v-list-subheader class="form-header">Diet </v-list-subheader>
+                <v-text-field
+                    v-model="payload.mscDiet_Meal_Id"
+                    readonly
+                    class="cursor-pointer"
+                    density="compact"
+                    variant="outlined"
+                ></v-text-field>
+            </v-col>
+            <v-col cols="12" class="form-col">
+                <v-list-subheader class="form-header">Disposition </v-list-subheader>
+                <v-autocomplete
+                    :items="disposition_data"
+                    item-title="description"
+                    item-value="id"
+                    v-model="payload.mscDisposition_Id"
+                    :readonly="clicked_option === 'view'"
+                    :clearable="clicked_option === 'new' || clicked_option === 'edit'"
+                    density="compact"
+                    variant="outlined"
+                ></v-autocomplete>
+            </v-col>
+            <v-col cols="12" class="form-col">
+                <v-list-subheader class="form-header">Case Indicator </v-list-subheader>
+                <v-autocomplete
+                    :items="case_indicator_data"
+                    item-title="description"
+                    item-value="id"
+                    v-model="payload.mscCase_Indicators_Id"
+                    :readonly="clicked_option === 'view'"
+                    :clearable="clicked_option === 'new' || clicked_option === 'edit'"
+                    density="compact"
+                    variant="outlined"
+                ></v-autocomplete>
+            </v-col>
         </v-col>
         <v-col cols="4">
+            <v-col cols="12" class="form-col">
+                <v-list-subheader class="form-header">Service Type </v-list-subheader>
+                <v-autocomplete
+                    :items="service_type_data"
+                    item-title="description"
+                    item-value="id"
+                    v-model="payload.mscService_Type"
+                    :readonly="clicked_option === 'view'"
+                    :clearable="clicked_option === 'new' || clicked_option === 'edit'"
+                    density="compact"
+                    variant="outlined"
+                    :error-messages="formErrors.mscService_Type ? [formErrors.mscService_Type] : []"
+                ></v-autocomplete>
+            </v-col>
+            <v-col cols="12" class="form-col">
+                <v-list-subheader class="form-header">Patient Brought By </v-list-subheader>
+                <v-autocomplete
+                    :items="patient_brought_by"
+                    item-title="description"
+                    item-value="id"
+                    v-model="payload.mscBroughtBy_Relationship_Id"
+                    :readonly="clicked_option === 'view'"
+                    :clearable="clicked_option === 'new' || clicked_option === 'edit'"
+                    density="compact"
+                    variant="outlined"
+                    :error-messages="formErrors.mscBroughtBy_Relationship_Id ? [formErrors.mscBroughtBy_Relationship_Id] : []"
+                ></v-autocomplete>
+            </v-col>
             <v-col cols="12" class="form-col">
                 <v-list-subheader class="form-header">ID Presented </v-list-subheader>
                 <v-autocomplete
@@ -137,13 +202,13 @@
                     :clearable="clicked_option === 'new' || clicked_option === 'edit'"
                     :items="id_types_data"
                     density="compact"
-                    variant="underlined"
+                    variant="outlined"
                 ></v-autocomplete>
             </v-col>
             <v-col cols="12" class="form-col">
                 <v-list-subheader class="form-header">ID Number </v-list-subheader>
                 <v-text-field
-                    variant="underlined"
+                    variant="outlined"
                     type="number"
                     v-model="payload.id_number"
                     :readonly="clicked_option === 'view'"
@@ -159,12 +224,15 @@
                     item-value="id"
                     :readonly="clicked_option === 'view'"
                     :clearable="clicked_option === 'new' || clicked_option === 'edit'"
-                    variant="underlined"
+                    variant="outlined"
                     density="compact"
                 ></v-autocomplete>
             </v-col>
         </v-col>
     </v-row>
+
+    <i-p-d-room-list :open_room_list="open_room_list" @close-dialog="closeRoomList" @handle-select="handleSelectRoom" />
+    <i-p-d-medical-package-list :open_medical_package_list="open_medical_package_list" @close-dialog="closeMedicalPackageList" @handle-select="handleSelectPackage" />
 </template>
 
 <script setup>
@@ -196,12 +264,31 @@ const open_discount_scheme_table = ref(false);
 const open_referring_hci_code_table = ref(false);
 const open_referring_hci_address_form = ref(false);
 const open_diet_desc = ref(false);
+const open_room_list = ref(false);
+const open_medical_package_list = ref(false);
 
-const handleCaseDate = computed(() => {
-    const today = new Date().toISOString().split('T')[0];
-    props.payload.registry_date = today;
-    return today;
-});
+const openHandleRoomList = () => {
+    open_room_list.value = true;
+}
+const handleSelectRoom = (selected_item) => {
+    props.payload.room_Id = selected_item[0].room_id;
+    if (selected_item[0].room_rate === null) selected_item[0].room_rate = 'N/A';
+    props.payload.room_Rate = selected_item[0].room_rate;
+};
+const closeRoomList = () => {
+    open_room_list.value = false;
+}
+const openMedicalPackageList = () => {
+    open_medical_package_list.value = true;
+}
+const handleSelectPackage = (selected_item) => {
+    props.payload.medical_Package_Id = selected_item[0].id;
+    props.payload.medical_Package_Name = selected_item[0].package_description;
+    props.payload.medical_Package_Amount = selected_item[0].package_amount;
+};
+const closeMedicalPackageList = () => {
+    open_medical_package_list.value = false;
+}
 
 const openHandleDiscountScheme = () => {
     open_discount_scheme_table.value = true;
@@ -225,7 +312,6 @@ const handleReferringHciCode = (selected_item) => {
 const closeReferringHciCode = () => {
     open_referring_hci_code_table.value = false;
 }
-
 const openReferringHciAddress = () => {
     open_referring_hci_address_form.value = true;
 }
@@ -319,7 +405,7 @@ const getTransactionType = async () => {
         let transaction_type = response.find(item => item.description === "Emergency Case");
         props.payload.mscAccount_trans_types = parseInt(transaction_type.id);
     } else if (props.form_type === "inpatient") {
-        let ipd_filter = ["Emergency Case", "Outpatient Consultation", "HappyDoc OutPatient", "Annual Physical Examination", "Executive Checkup"];
+        let ipd_filter = ["Emergency Case", "Outpatient Consultation", "HappyDoc OutPatient", "Annual Physical Examination"];
         transaction_type_data.value = response.filter(item => !ipd_filter.includes(item.description));
         let transaction_type = response.find(item => item.description === "Inpatient Case");
         props.payload.mscAccount_trans_types = parseInt(transaction_type.id);
@@ -387,6 +473,50 @@ const getPriceScheme = async () => {
     } 
 };
 
+const disposition_data = ref([]);
+const disposition_loading = ref(false);
+const getDisposition = async () => {
+    disposition_loading.value = true;
+    const response = await useMethod("get", "disposition", "", "");
+    if (response) {
+        disposition_data.value = response;
+        disposition_loading.value = false;
+    } 
+};
+
+const case_indicator_data = ref([]);
+const case_indicator_loading = ref(false);
+const getCaseIndicator = async () => {
+    case_indicator_loading.value = true;
+    const response = await useMethod("get", "get-case-indicators", "", "");
+    if(response) {
+        case_indicator_data.value = response;
+        case_indicator_loading.value = false;
+    }
+};
+
+const service_type_data = ref([]);
+const service_type_loading = ref(false);
+const getServiceType = async () => {
+    service_type_loading.value = true;
+    const response = await useMethod("get", "get-services-type", "", "");
+    if (response) {
+        service_type_data.value = response;
+        service_type_loading.value = false;
+    } 
+};
+
+const patient_brought_by = ref([]);
+const patient_brought_by_loading = ref(false);
+const getPatientBroughtBy = async () => {
+    patient_brought_by_loading.value = true;
+    const response = await useMethod("get", "patient-brought-by", "", "");
+    if(response) {
+        patient_brought_by.value = response;
+        patient_brought_by_loading.value = false;
+    }
+};
+
 const id_types_data = ref([]);
 const id_types_loading = ref(false);
 const getIdTypes = async () => {
@@ -405,6 +535,10 @@ onMounted(() => {
     getHospitalizationPlan();
     getPriceGroup();
     getPriceScheme();
+    getDisposition();
+    getCaseIndicator();
+    getServiceType();
+    getPatientBroughtBy();
     getIdTypes();
 });
 </script>
@@ -413,7 +547,7 @@ onMounted(() => {
 .form-header {
     color: #000;
     margin: -12px 0px -12px 0px;
-    font-weight: 500;
+    font-weight: bold;
 }
 .form-col {
     padding: 3.25px 0px 3.25px 0px !important;
