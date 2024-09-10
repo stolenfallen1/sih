@@ -1,18 +1,16 @@
 <template>
-    <v-row>
+    <v-row class="py-2">
         <v-col cols="3">
             <v-col cols="12" class="form-col">
                 <v-list-subheader class="form-header">Birth Place</v-list-subheader>
                 <v-text-field
-                    variant="solo"
+                    variant="outlined"
                     v-model="payload.birthplace"
                     :readonly="clicked_option === 'view'"
                     hide-details
                     density="compact"
                 ></v-text-field>
             </v-col>
-        </v-col>
-        <v-col cols="3">
             <v-col cols="12" class="form-col">
                 <v-list-subheader class="form-header">Religion</v-list-subheader>
                 <v-autocomplete
@@ -24,11 +22,9 @@
                     :clearable="clicked_option === 'new' || clicked_option === 'edit'"
                     :items="religion_data"
                     density="compact"
-                    variant="solo"
+                    variant="outlined"
                 ></v-autocomplete>
             </v-col>
-        </v-col>
-        <v-col cols="3">
             <v-col cols="12" class="form-col">
                 <v-list-subheader class="form-header">Nationality</v-list-subheader>
                 <v-autocomplete
@@ -40,13 +36,10 @@
                     :clearable="clicked_option === 'new' || clicked_option === 'edit'"
                     :items="nationality_data"
                     density="compact"
-                    variant="solo"
+                    variant="outlined"
                 ></v-autocomplete>
             </v-col>
         </v-col>
-    </v-row>
-
-    <v-row>
         <v-col cols="3">
             <v-col cols="12" class="form-col">
                 <v-list-subheader class="form-header">ID Presented </v-list-subheader>
@@ -59,15 +52,13 @@
                     hide-details
                     :items="id_types_data"
                     density="compact"
-                    variant="solo"
+                    variant="outlined"
                 ></v-autocomplete>
             </v-col>
-        </v-col>
-        <v-col cols="3">
             <v-col cols="12" class="form-col">
                 <v-list-subheader class="form-header">ID Number </v-list-subheader>
                 <v-text-field
-                    variant="solo"
+                    variant="outlined"
                     type="number"
                     v-model="payload.id_number"
                     :readonly="clicked_option === 'view'"
@@ -75,12 +66,10 @@
                     density="compact"
                 ></v-text-field>
             </v-col>
-        </v-col>
-        <v-col cols="3">
             <v-col cols="12" class="form-col">
                 <v-list-subheader class="form-header">OSCA ID No. </v-list-subheader>
                 <v-text-field
-                    variant="solo"
+                    variant="outlined"
                     type="number"
                     v-model="payload.osca_id_no"
                     :readonly="clicked_option === 'view'"
@@ -91,305 +80,124 @@
         </v-col>
         <v-col cols="3">
             <v-col cols="12" class="form-col">
-                <v-list-subheader class="form-header">Patient Brought By</v-list-subheader>
-                <v-autocomplete
-                    v-model="payload.mscBroughtBy_Relationship_Id"
-                    :items="patientBroughtBy"
-                    item-title="description"
-                    item-value="id"
-                    :readonly="clicked_option === 'view'"
-                    :clearable="clicked_option === 'new' || clicked_option === 'edit'"
-                    variant="solo"
-                    density="compact"
-                    hide-details
-                ></v-autocomplete>
-            </v-col>
-        </v-col>
-    </v-row>
-
-    <div v-if="parseInt(payload.civilstatus_id) !== 3">
-        <v-row>
-            <v-col cols="3">
-                <v-col cols="12" class="form-col">
-                    <v-list-subheader class="form-header">Mother Lastname </v-list-subheader>
-                    <v-text-field
-                        variant="solo"
-                        v-model="payload.motherLastname"
-                        :readonly="clicked_option === 'view'"
-                        hide-details
-                        density="compact"
-                    ></v-text-field>
-                </v-col>
-            </v-col>
-            
-            <v-col cols="3">
-                <v-col cols="12" class="form-col">
-                    <v-list-subheader class="form-header">Mother Firstname </v-list-subheader>
-                    <v-text-field
-                        variant="solo"
-                        v-model="payload.motherFirstname"
-                        :readonly="clicked_option === 'view'"
-                        hide-details
-                        density="compact"
-                    ></v-text-field>
-                </v-col>
-            </v-col>
-
-            <v-col cols="3">
-                <v-col cols="12" class="form-col">
-                    <v-list-subheader class="form-header">Mother Middlename </v-list-subheader>
-                    <v-text-field
-                        variant="solo"
-                        v-model="payload.motherMiddlename"
-                        :readonly="clicked_option === 'view'"
-                        hide-details
-                        density="compact"
-                    ></v-text-field>
-                </v-col>
-            </v-col>
-
-            <v-col cols="3">
-                <v-col cols="12" class="form-col">
-                    <v-list-subheader class="form-header">Mothers Suffix </v-list-subheader>
-                    <v-autocomplete
-                        item-title="abbreviations"
-                        item-value="id"
-                        :items="suffix_data"
-                        v-model="payload.motherSuffix_id"
-                        :readonly="clicked_option === 'view'"
-                        hide-details
-                        :clearable="clicked_option === 'new' || clicked_option === 'edit'"
-                        density="compact"
-                        variant="solo"
-                    ></v-autocomplete>
-                </v-col>
-            </v-col>
-        </v-row>
-        <v-row>
-            <v-col cols="3">
-                <v-col cols="12" class="form-col">
-                    <v-list-subheader class="form-header">Father Lastname </v-list-subheader>
-                    <v-text-field
-                        variant="solo"
-                        v-model="payload.fatherLastname"
-                        :readonly="clicked_option === 'view'"
-                        hide-details
-                        density="compact"
-                    ></v-text-field>
-                </v-col>
-            </v-col>
-            
-            <v-col cols="3">
-                <v-col cols="12" class="form-col">
-                    <v-list-subheader class="form-header">Fathers Firstname </v-list-subheader>
-                    <v-text-field
-                        variant="solo"
-                        v-model="payload.fatherFirstname"
-                        :readonly="clicked_option === 'view'"
-                        hide-details
-                        density="compact"
-                    ></v-text-field>
-                </v-col>
-            </v-col>
-
-            <v-col cols="3">
-                <v-col cols="12" class="form-col">
-                    <v-list-subheader class="form-header">Father Middlename </v-list-subheader>
-                    <v-text-field
-                        variant="solo"
-                        v-model="payload.fatherMiddlename"
-                        :readonly="clicked_option === 'view'"
-                        hide-details
-                        density="compact"
-                    ></v-text-field>
-                </v-col>
-            </v-col>
-
-            <v-col cols="3">
-                <v-col cols="12" class="form-col">
-                    <v-list-subheader class="form-header">Fathers Suffix </v-list-subheader>
-                    <v-autocomplete
-                        item-title="abbreviations"
-                        item-value="id"
-                        :items="suffix_data"
-                        v-model="payload.fatherSuffix_id"
-                        :readonly="clicked_option === 'view'"
-                        hide-details
-                        :clearable="clicked_option === 'new' || clicked_option === 'edit'"
-                        density="compact"
-                        variant="solo"
-                    ></v-autocomplete>
-                </v-col>
-            </v-col>
-        </v-row>
-    </div>
-
-    <div v-if="parseInt(payload.civilstatus_id) === 3">
-        <v-row>
-            <v-col cols="3">
-                <v-col cols="12" class="form-col">
-                    <v-list-subheader class="form-header">Spouse Lastname </v-list-subheader>
-                    <v-text-field
-                        variant="solo"
-                        v-model="payload.spLastname"
-                        :readonly="clicked_option === 'view'"
-                        hide-details
-                        density="compact"
-                    ></v-text-field>
-                </v-col>
-            </v-col>
-
-            <v-col cols="3">
-                <v-col cols="12" class="form-col">
-                    <v-list-subheader class="form-header">Spouse Firstname </v-list-subheader>
-                    <v-text-field
-                        variant="solo"
-                        v-model="payload.spFirstname"
-                        :readonly="clicked_option === 'view'"
-                        hide-details
-                        density="compact"
-                    ></v-text-field>
-                </v-col>
-            </v-col>
-
-            <v-col cols="3">
-                <v-col cols="12" class="form-col">
-                    <v-list-subheader class="form-header">Spouse Middlename </v-list-subheader>
-                    <v-text-field
-                        variant="solo"
-                        v-model="payload.spMiddlename"
-                        :readonly="clicked_option === 'view'"
-                        hide-details
-                        density="compact"
-                    ></v-text-field>
-                </v-col>
-            </v-col>
-
-            <v-col cols="3">
-                <v-col cols="12" class="form-col">
-                    <v-list-subheader class="form-header">Spouse Suffix </v-list-subheader>
-                    <v-autocomplete
-                        item-title="abbreviations"
-                        item-value="id"
-                        :items="suffix_data"
-                        v-model="payload.spSuffix_id"
-                        :readonly="clicked_option === 'view'"
-                        hide-details
-                        :clearable="clicked_option === 'new' || clicked_option === 'edit'"
-                        density="compact"
-                        variant="solo"
-                    ></v-autocomplete>
-                </v-col>
-            </v-col>
-        </v-row>
-    </div>
-
-    <v-row>
-        <v-col cols="4">
-            <!-- <v-col cols="12" class="form-col">
-                <v-checkbox v-model="payload.isWithMedicalPackage" :readonly="clicked_option === 'view'" label="With Hospital Package?" hide-details density="compact"></v-checkbox>
-                <v-btn :disabled="!payload.isWithMedicalPackage" :readonly="clicked_option === 'view'" @click="handleMedicalPackage">Apply Medical Package</v-btn>
-            </v-col> -->
-
-            <v-col cols="12" class="form-col">
-                <v-checkbox 
-                    label="Is the patient employed" 
-                    v-model="payload.isEmployee" 
-                    color="primary" 
-                    density="compact"
-                ></v-checkbox>
-            </v-col>
-
-            <v-col cols="12" class="form-col">
-                <v-checkbox 
-                    label="Dead on Arrival?" 
-                    v-model="payload.dead_on_arrival" 
-                    color="primary" 
-                    :readonly="clicked_option === 'view'" 
-                    hide-details density="compact"
-                ></v-checkbox>
-            </v-col>
-        </v-col>
-        <v-col cols="8">
-            <v-col cols="12" class="form-col">
-                <v-list-subheader class="form-header">Patient Full Address</v-list-subheader>
-                <v-textarea 
-                    hide-details 
-                    density="compact" 
-                    variant="solo"
-                    v-model="payload.address"
-                    :value="fullAddress"
-                    readonly
-                    class="cursor-pointer"
-                    prepend-icon="mdi-plus-box"
-                    @click:prepend="handleOpenAddressForm"
-                ></v-textarea>
-            </v-col>
-        </v-col>
-    </v-row>
-    <v-row>
-        <v-col cols="3">
-            <v-col cols="12" class="form-col">
-                <v-list-subheader class="form-header">Occupation</v-list-subheader>
+                <v-list-subheader class="form-header">Weight (kg)</v-list-subheader>
                 <v-text-field
-                    :disabled="!payload.isEmployee"
-                    variant="solo"
-                    v-model="payload.occupation"
+                    variant="outlined"
+                    type="number"
+                    v-model="payload.weight"
+                    :readonly="clicked_option === 'view'"
+                    @update:model-value="calculateBmi"
+                    hide-details
+                    density="compact"
+                ></v-text-field>
+            </v-col>
+            <v-col cols="12" class="form-col">
+                <v-list-subheader class="form-header">Height (cm)</v-list-subheader>
+                <v-text-field
+                    variant="outlined"
+                    type="number"
+                    v-model="payload.height"
+                    :readonly="clicked_option === 'view'"
+                    @update:model-value="calculateBmi"
+                    hide-details
+                    density="compact"
+                ></v-text-field>
+            </v-col>
+            <v-col cols="12" class="form-col">
+                <v-list-subheader class="form-header">BMI</v-list-subheader>
+                <v-text-field
+                    variant="outlined"
+                    v-model="payload.bmi"
+                    placeholder="Auto Generated"
+                    readonly
                     hide-details
                     density="compact"
                 ></v-text-field>
             </v-col>
         </v-col>
         <v-col cols="3">
-            <v-col cols="12" class="form-col">
-                <v-list-subheader class="form-header">Date & Time of Death</v-list-subheader>
-                <v-text-field
-                        variant="solo"
-                        v-model="payload.death_date"
-                        :disabled="!payload.dead_on_arrival"
+            <v-row>
+                <v-col cols="6">
+                    <v-list-subheader class="form-header">BP Sys</v-list-subheader>
+                    <v-text-field
+                        variant="outlined"
+                        v-model="payload.bloodPressureSystolic"
                         :readonly="clicked_option === 'view'"
-                        type="date"
                         hide-details
                         density="compact"
                     ></v-text-field>
-            </v-col>
-        </v-col>
-        <v-col cols="3">
-            <v-col cols="12" class="form-col">
-                <v-list-subheader class="form-header">Type of Death</v-list-subheader>
-                    <v-autocomplete
-                        item-title="description"
-                        item-value="id"
-                        placeholder="Choose Type of Death"
-                        v-model="payload.mscDeath_types_id"
-                        :disabled="!payload.dead_on_arrival"
+                </v-col>
+                <v-col cols="6">
+                    <v-list-subheader class="form-header">BP Dias</v-list-subheader>
+                    <v-text-field
+                        variant="outlined"
+                        v-model="payload.bloodPressureDiastolic"
                         :readonly="clicked_option === 'view'"
                         hide-details
-                        :clearable="clicked_option === 'new' || clicked_option === 'edit'"
-                        :items="death_types_data"
                         density="compact"
-                        variant="solo"
-                    ></v-autocomplete>
+                    ></v-text-field>
+                </v-col>
+            </v-row>
+            <v-col cols="12" class="form-col">
+                <v-list-subheader class="form-header">Temperature</v-list-subheader>
+                <v-text-field
+                    variant="outlined"
+                    v-model="payload.temperature"
+                    :readonly="clicked_option === 'view'"
+                    hide-details
+                    density="compact"
+                ></v-text-field>
+            </v-col>
+            <v-col cols="12" class="form-col">
+                <v-list-subheader class="form-header">Pulse Rate</v-list-subheader>
+                <v-text-field
+                    variant="outlined"
+                    v-model="payload.pulseRate"
+                    :readonly="clicked_option === 'view'"
+                    hide-details
+                    density="compact"
+                ></v-text-field>
+            </v-col>
+            <v-col cols="12" class="form-col">
+                <v-list-subheader class="form-header">Respitory Rate</v-list-subheader>
+                <v-text-field
+                    variant="outlined"
+                    v-model="payload.respiratoryRate"
+                    :readonly="clicked_option === 'view'"
+                    hide-details
+                    density="compact"
+                ></v-text-field>
+            </v-col>
+            <v-col cols="12" class="form-col">
+                <v-list-subheader class="form-header">Oxygen Saturation</v-list-subheader>
+                <v-text-field
+                    variant="outlined"
+                    v-model="payload.oxygenSaturation"
+                    :readonly="clicked_option === 'view'"
+                    hide-details
+                    density="compact"
+                ></v-text-field>
             </v-col>
         </v-col>
     </v-row>
+    <v-divider class="py-2"></v-divider>
     <v-row>
         <v-col cols="12">
             <v-col cols="12" class="form-col">
                     <v-list-subheader class="form-header mt-1">Chief Complaints <span v-if="form_type === 'emergency'" style="color: red;" class="mdi mdi-check"></span></v-list-subheader>
                     <v-textarea 
-                        hide-details 
+                        ref="chief_Complaint_Description"
                         density="compact" 
-                        variant="solo" 
-                        v-model="payload.clinical_chief_complaint"
+                        variant="outlined" 
+                        v-model="payload.chief_Complaint_Description"
                         :readonly="clicked_option === 'view'"
                         :required="form_type === 'emergency'"
+                        :error-messages="formErrors.chief_Complaint_Description ? [formErrors.chief_Complaint_Description] : []"
                     ></v-textarea>
             </v-col>
         </v-col>
     </v-row>
     <medical-package-list :medical_package_dialog="medical_package_dialog" @close-dialog="closeMedicalPackage" @handle-select="handleSelectPackage" />
-    <e-r-address-details-form :address_form_dialog="address_form_dialog" :payload="payload" @close-dialog="closeAddressForm" @handle-submit="handleSubmitAddress" />
 </template>
 
 <script setup>
@@ -409,34 +217,16 @@ const props = defineProps({
     clicked_option: {
         type: String,
         default: () => ''
-    }
+    },
+    formErrors: {
+        type: Object,
+        default: () => ({})
+    },
 })
 
 const medical_package_dialog = ref(false);
-const address_form_dialog = ref(false);
 const isEmployee = ref(false);
 
-const handleOpenAddressForm = () => {
-    if (props.clicked_option === 'view') return;
-    address_form_dialog.value = true;
-};
-
-const fullAddress = ref("");
-const handleSubmitAddress = (address) => {
-    console.log(address);
-    const { bldgstreet, region_name, province_name, municipality_name, barangay_name, country_name } = address;
-    const { region_id, province_id, municipality_id, barangay_id, country_id } = address;
-
-    fullAddress.value = [bldgstreet, barangay_name, municipality_name, province_name, region_name, country_name].filter(Boolean).join(', '); 
-    props.payload.address = {
-        bldgstreet,
-        region_id,
-        province_id,
-        municipality_id,
-        barangay_id,
-        country_id
-    };
-};
 
 const handleMedicalPackage = () => {
     medical_package_dialog.value = true;
@@ -451,10 +241,6 @@ const closeMedicalPackage = () => {
     medical_package_dialog.value = false;
 };
 
-const closeAddressForm = () => {
-    address_form_dialog.value = false;
-};
-
 const id_types_data = ref([]);
 const id_types_loading = ref(false);
 const getIdTypes = async () => {
@@ -467,16 +253,16 @@ const getIdTypes = async () => {
 };
 
 
-const patientBroughtBy = ref([]);
-const patientBroughtBy_loading = ref(false);
-const getPatientBroughtBy = async () => {
-    patientBroughtBy_loading.value = true;
-    const response = await useMethod("get", "patient-brought-by", "", "");
-    if(response) {
-        patientBroughtBy.value = response;
-        patientBroughtBy_loading.value = false;
+const calculateBmi = () => {
+    if (props.payload.weight && props.payload.height) {
+        const weight = parseFloat(props.payload.weight);
+        const height = (parseFloat(props.payload.height))/100;
+        const bmi = weight / (Math.pow(height, 2));
+        props.payload.bmi = bmi.toFixed(2);
+    } else {
+        props.payload.bmi = "";
     }
-};
+}
 
 const religion_data = ref([]);
 const religion_loading = ref(false);
@@ -523,10 +309,8 @@ const getmscComplsints = async () => {
 onMounted(() => {
     getReligion();
     getNationality();
-    getDeathTypes();
     getmscComplsints();
     getIdTypes();
-    getPatientBroughtBy();
 });
 </script>
 
@@ -542,5 +326,29 @@ onMounted(() => {
 }
 .v-input--density-compact {
     --v-input-control-height: 20px !important;
+}
+
+.bottom-aligned-textarea textarea {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end; /* Align text at the bottom */
+  height: 150px; /* Adjust height as needed */
+  padding-bottom: 10px; /* Add padding if needed */
+  box-sizing: border-box; /* Ensure padding is included in the height */
+}
+.truncate-text .v-input__control {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.truncate-text .v-field__input {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  max-height: 32px; /* Adjust this value as needed to ensure a consistent height */
+}
+.field-group-label {
+    color: #2196F3; 
 }
 </style>

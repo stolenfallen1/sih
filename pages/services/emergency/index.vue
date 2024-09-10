@@ -60,48 +60,33 @@
       :totalItems="totalItems"
       :loading="loading"
       :tabs="tableTabs"
-      :columns="headers"
+      :columns="columns"
       :showTabs="showTabs"
       :itemsPerPage="itemsPerPage"
       :tableTitle="pageTitle"
       :current-tab="currentTab"
       @fetchPage="loadItems"
       @selected-row="selectedUser"
+      @tab-change="handleTabChange"
       @action-search="handleSearch"
       @action-refresh="handleRefresh"
       @open-filter="openFilterOptions"
     >
-      <template v-for="column in headers" v-slot:[`column-${column.key}`]="{ item }">
-        <span v-if="column.key === 'case_No'" :key="column.key">
-          {{ item.patient_registry ? item.patient_registry.case_No : "..." }}
-        </span>
-        <span v-if="column.key === 'sex'" :key="column.key" style="display: flex;">
-          <v-icon v-if="item.sex && item.sex.sex_description === 'Male'" color="primary">mdi-gender-male</v-icon>
-          <v-icon v-else color="pink">mdi-gender-female</v-icon>
-          {{ item.sex ? item.sex.sex_description : "..." }}
-        </span>
-        <span v-if="column.key === 'birthdate'" :key="column.key">
-          {{ item.birthdate ? useDateMMDDYYY(item.birthdate) : "..." }}
-        </span>
-        <span v-if="column.key === 'patient_registry'" :key="column.key">
-          {{ item.patient_registry ? useDateMMDDYYY(item.patient_registry.registry_date) : "..." }}
-        </span>
-      </template>
-      <!-- <template v-for="column in columns" v-slot:[`column-${column.key}`]="{ item }">
+      <template v-for="column in columns" v-slot:[`column-${column.key}`]="{ item }">
         <div v-if="column.key === 'registry_status'" :key="column.key" class="isActive">
           <span 
-            :style="{ cursor: 'default', display: 'block', height: '26px', width: '9px', backgroundColor: item.patient_registry && item.patient_registry.registry_status == 2 ? 'blue' : 'green' }" 
-            :title="item.patient_registry && item.patient_registry.registry_status == 2 ? 'New Patient' : 'Old Patient'"
+            :style="{ cursor: 'default', display: 'block', height: '26px', width: '9px', backgroundColor: item.patient_registry && item.patient_registry[0].mscPatient_Category == 2 ? 'blue' : 'green' }" 
+            :title="item.patient_registry && item.patient_registry[0].mscPatient_Category == 2 ? 'New Patient' : 'Old Patient'"
             />
         </div>
         <div v-if="column.key === 'isHMO'" :key="column.key" class="isHMO">
           <span 
-            :style="{ cursor: 'default', display: 'block', height: '26px', width: '9px', backgroundColor: item.patient_registry && item.patient_registry.guarantor_id !== null ? 'yellow' : 'orange' }" 
-            :title="item.patient_registry && item.patient_registry.guarantor_id !== null ? 'HMO ' : 'Self Pay'"
+            :style="{ cursor: 'default', display: 'block', height: '26px', width: '9px', backgroundColor: item.patient_registry && item.patient_registry[0].guarantor_Id !== null ? 'yellow' : 'orange' }" 
+            :title="item.patient_registry && item.patient_registry[0].guarantor_Id !== null ? 'HMO ' : 'Self Pay'"
             />
         </div>
-        <span v-if="column.key === 'case_no'" :key="column.key">
-          {{ item.patient_registry ? item.patient_registry.case_no : "..." }}
+        <span v-if="column.key === 'case_No'" :key="column.key">
+          {{ item.patient_registry ? item.patient_registry[0].case_No : "..." }}
         </span>
         <span v-if="column.key === 'sex'" :key="column.key" style="display: flex;">
           <v-icon v-if="item.sex && item.sex.sex_description === 'Male'" color="primary">mdi-gender-male</v-icon>
@@ -112,15 +97,15 @@
           {{ item.birthdate ? useDateMMDDYYY(item.birthdate) : "..." }}
         </span>
         <span v-if="column.key === 'registry_date'" :key="column.key">
-          {{ item.patient_registry && item.patient_registry.registry_date ? useDateMMDDYYY(item.patient_registry.registry_date) : "..." }}
+          {{ item.patient_registry && item.patient_registry[0].registry_Date ? useDateMMDDYYY(item.patient_registry[0].registry_Date) : "..." }}
         </span>
         <span v-if="column.key === 'discharged_date'" :key="column.key">
-          {{ item.patient_registry && item.patient_registry.discharged_date ? useDateMMDDYYY(item.patient_registry.discharged_date) : "..." }}
+          {{ item.patient_registry && item.patient_registry[0].discharged_Date ? useDateMMDDYYY(item.patient_registry[0].discharged_Date) : "..." }}
         </span>
         <span v-if="column.key === 'revoked_date'" :key="column.key">
-          {{ item.patient_registry && item.patient_registry.revoked_date ? useDateMMDDYYY(item.patient_registry.revoked_date) : "..." }}
+          {{ item.patient_registry && item.patient_registry[0].revoked_date ? useDateMMDDYYY(item.patient_registry[0].revoked_date) : "..." }}
         </span>
-      </template> -->
+      </template>
     </ReusableTable>
   </v-card>
 
@@ -257,7 +242,6 @@ const pageTitle = ref("");
 const currentTab = ref(1);
 const showTabs = ref(true);
 const columns = ref([]);
-const tableTab = ref(1);
 const central_form_dialog = ref(false);
 const search_results = ref([]);
 const search_payload = ref({});
@@ -293,13 +277,13 @@ const tableTabs = ref([
                 title: "Patient ID",
                 align: "start",
                 sortable: false,
-                key: "patient_id",
+                key: "patient_Id",
               },
               {
                 title: "Case No.",
                 align: "start",
                 sortable: false,
-                key: "case_no",
+                key: "case_No",
               },
               {
                 title: "Last Name",
@@ -580,7 +564,7 @@ const headers = [
     title: "Patient ID",
     align: "start",
     sortable: false,
-    key: "patient_id",
+    key: "patient_Id",
   },
   {
     title: "Case No.",
@@ -772,11 +756,7 @@ const loadItems = async (options = null, searchkeyword = null) => {
     let keyword = searchkeyword || "";
       params.value = options  ? "page=" + options.page + "&per_page=" + options.itemsPerPage + "&keyword=" + options.keyword
     : "page=1&per_page=50&keyword=" + keyword;
-    // const response = await fetch(useApiUrl()+'/get-emergency'+ "?" + params.value || "", {
-    //   headers: {
-    //     Authorization: `Bearer `+ useToken(),
-    //   },
-    // });
+
     const currentTabInfo = tableTabs.value.find((tab) => tab.value === currentTab.value);
     const response = await fetch(currentTabInfo?.endpoint + "?" + params.value || "", {
       headers: {
@@ -784,10 +764,10 @@ const loadItems = async (options = null, searchkeyword = null) => {
       },
     });
     const data = await response.json();
+    console.log("TEST", data);
     updateTotalItems(data.total);
     updateServerItems(data.data);
     loading.value = false;
-    // tableColumns.value = currentTabInfo?.columns || [];
   } catch (error) {
     console.error("Error fetching data:", error);
     loading.value = false;
@@ -797,14 +777,12 @@ const loadItems = async (options = null, searchkeyword = null) => {
 };
 
 const handleTabChange = (tabValue) => {
-  console.log('Tab Values : ', tabValue);
   selectedRowDetails.value.id = "";
   payload.value = Object.assign({}, {});
   currentTab.value = tabValue;
   columns.value = tableTabs.value.find((tab) => tab.value === tabValue).columns;
   const currentTabInfo = tableTabs.value.find((tab) => tab.value === tabValue);
   pageTitle.value = currentTabInfo.title || "";
-
   loadItems();
 }
 

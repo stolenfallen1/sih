@@ -289,7 +289,7 @@ const tableTabs = ref([
                 title: "Case No.",
                 align: "start",
                 sortable: false,
-                key: "case_No",
+                key: "case_no",
               },
               {
                 title: "Last Name",
@@ -357,7 +357,7 @@ const tableTabs = ref([
                 title: "Case No.",
                 align: "start",
                 sortable: false,
-                key: "case_No",
+                key: "case_no",
               },
               {
                 title: "Last Name",
@@ -425,7 +425,7 @@ const tableTabs = ref([
                 title: "ER Case No.",
                 align: "start",
                 sortable: false,
-                key: "er_case_No",
+                key: "er_case_no",
               },
               {
                 title: "ER Bed No.",
@@ -618,19 +618,21 @@ const handleNew = (clickedOption) => {
   central_form_dialog.value = true;
   clicked_option.value = clickedOption;
 };
-const closeCentralFormDialog = () => { 
+const closeCentralFormDialog = () => {
   central_form_dialog.value = false;
   search_payload.value = {};
   search_results.value = [];
-  selectedPatient.value = {}; 
+  selectedPatient.value = {};
 };
 
 const openAddFormDialog = (type) => {
     if (type === 'new') {
         form_dialog.value = true;
-        closeCentralFormDialog(); 
+        closeCentralFormDialog();
     } else if (type === 'old') {  
         let currentDate = useDateMMDDYYY(new Date());
+        console.log('test', selectedPatient.value);
+        console.log('selectedPatient:', useDateMMDDYYY(selectedPatient.value.updated_at));
         if (useDateMMDDYYY(selectedPatient.value.updated_at) == currentDate) {
             return useSnackbar(true, "error", "Patient already registered today.");
         } else {
@@ -679,6 +681,7 @@ const selectedOutPatient = (item) => {
 const RevokeUser = () => {
   open_revoke_form.value = true;
 };
+
 const closeRevokeUser = () => {
   open_revoke_form.value = false;
 };
