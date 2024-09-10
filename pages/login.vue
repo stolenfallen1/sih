@@ -84,12 +84,15 @@ const login = async () => {
         if (authenticated.value) {
             isLoading.value = false;
             useSnackbar(true, "success", "Login successful. Redirecting...");
+            console.log("TEST 123");
             router.push({ path: "/dashboard" });
         } else {
+            console.log("TEST 456");
             return useSnackbar(true, "error", "Invalid credentials. Please try again");
         }
     } catch(error) {
         console.error(error);
+        console.log("TEST 789");
         return useSnackbar(true, "error", "An error occurred. Please try again");
     } finally {
         isLoading.value = false;

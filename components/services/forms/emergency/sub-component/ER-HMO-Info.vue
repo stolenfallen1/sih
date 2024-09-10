@@ -2,7 +2,7 @@
     <v-card rounded="lg">
         <v-row>
             <v-col cols="12">
-                <v-table density="compact" height="40vh">
+                <v-table density="compact" height="40vh" class="styled-table">
                     <thead>
                         <tr>
                             <th>Guarantor Name</th>
@@ -11,6 +11,7 @@
                             <th>Approval Date</th>
                             <th>Validity Date</th>
                             <th>Credit Limit</th>
+                            <th width="4"></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -33,14 +34,14 @@
             <v-btn 
                 color="blue-darken-1 border border-info" 
                 @click="openHmoList" 
-                :disabled="payload.mscAccount_type !== 2"
+                :disabled="payload.mscAccount_Type !== 2"
             >
                 <v-icon class="mr-2">mdi-account-multiple-plus-outline</v-icon>
                 Add HMO Guarantor
             </v-btn>
         </v-card-actions>
     </v-card>
-    <hmo-list :open_hmo_list="open_hmo_list" @close-dialog="closeHmoList" @handle-select="handleHmoList" /> 
+    <ER-HMO-List :open_hmo_list="open_hmo_list" @close-dialog="closeHmoList" @handle-select="handleHmoList" /> 
 </template>
 
 <script setup>
@@ -93,5 +94,31 @@ const closeHmoList = () => {
     border: 1px solid #A9A9A9;
     border-radius: 5px;
     padding: 2.5px;
+}
+.styled-table th, .styled-table td {
+    padding: 8px;
+    border: 1px solid #eceaea;
+    margin: 0;
+}
+.input {
+    border-bottom: 1px solid #A9A9A9;
+    padding: 4px 8px;
+}
+.styled-table {
+    overflow-y: auto;
+    scrollbar-width: thin; 
+    scrollbar-color: #727272 #f5f5f5; 
+}
+.styled-table::-webkit-scrollbar {
+    width: 12px;
+}
+.styled-table::-webkit-scrollbar-thumb {
+    background-color: #107bac; 
+    border-radius: 10px; 
+    border: 3px solid #f5f5f5; 
+}
+.styled-table::-webkit-scrollbar-track {
+    background-color: #f5f5f5; 
+    border-radius: 10px; 
 }
 </style>

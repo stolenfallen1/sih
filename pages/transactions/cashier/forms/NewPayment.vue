@@ -5,7 +5,7 @@
                 <p style="font-size: 17px; font-weight: bolder; text-decoration: underline;">Item Details</p>
                 <v-btn color="primary" style="border-radius: 0; margin-bottom: 2px;" @click="openCashierSettings"><v-icon class="mr-2">mdi-cog-outline</v-icon>Change Cashier Settings</v-btn>
             </div>
-            <v-table density="compact" height="25vh"  class="styled-table" :hover="true">
+            <v-table density="compact" height="25vh"  class="styled-table" hover>
                 <thead>
                     <tr>
                         <th>Dept Code</th>
@@ -260,22 +260,8 @@
         </v-col>
         <v-col cols="4">
             <p style="font-size: 17px; font-weight: bolder; text-decoration: underline;">Card</p>
-            <v-col cols="12">
-                <v-list-subheader class="form-header">Card Type</v-list-subheader>
-                <v-autocomplete
-                    item-title="payment_description"
-                    item-value="id"
-                    v-model="payload.card_type_id"
-                    variant="solo"
-                    :items="card_types"
-                    clearable
-                    @update:model-value="handleCardItems"
-                    density="compact"
-                    hide-details
-                ></v-autocomplete>
-            </v-col>
-            <v-col cols="12">
-                <v-list-subheader class="form-header">Card Name</v-list-subheader>
+            <v-col cols="12" >
+                <v-list-subheader class="form-header">Card</v-list-subheader>
                 <v-autocomplete
                     item-title="description"
                     item-value="id"
@@ -606,26 +592,18 @@ const handleCardItems = async () => {
     } 
 }
 
-const getLastORNumber = async () => {
-    const response = await useMethod("get", "get-or-sequence", "", "");
-    if (response) {
-        payload.value.ORNumber = "OR" + response.data[0].LastORnumber + response.data[0].ORSuffix;
+const paidStatus = await useStatus("Paid");
+onUpdated(() => {
+    if (paidStatus && paidStatus.length > 0) {
+        payload.value.status = paidStatus[0].id;
     }
-};
-
-// const paidStatus = await useStatus("Paid");
-// onUpdated(() => {
-//     if (paidStatus && paidStatus.length > 0) {
-//         payload.value.status = paidStatus[0].id;
-//     }
-// })
+})
 
 onMounted(() => {
     setTimeout(() => {
         openCashierSettings();
         cardPaymentMethod();
         cashierPaymentCode();
-        getLastORNumber();
     }, 500);
 });
 </script>
