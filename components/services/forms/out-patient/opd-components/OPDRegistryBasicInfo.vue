@@ -31,7 +31,7 @@
                 <v-col cols="12" class="form-group">
                     <label class="form-label">Transaction Type <span style="color: red;">*</span></label>
                     <div class="select-wrapper">
-                        <select class="form-select" :class="{ 'input-error': formErrors.mscAccount_trans_types }" :disabled="clicked_option === 'view'" v-model="payload.mscAccount_trans_types">
+                        <select class="form-select" :class="{ 'input-error': formErrors.mscAccount_Trans_Types }" :disabled="clicked_option === 'view'" v-model="payload.mscAccount_Trans_Types">
                             <option v-for="(item, index) in transaction_type_data" :key="index" :value="item.id">
                                 {{ item.description }}
                             </option>
@@ -262,15 +262,15 @@ const getTransactionType = async () => {
         let opd_filter = ["Emergency Case", "Inpatient Case"];
         transaction_type_data.value = response.filter(item => !opd_filter.includes(item.description));
         let transaction_type = response.find(item => item.description === "Outpatient Consultation");
-        props.payload.mscAccount_trans_types = parseInt(transaction_type.id);
+        props.payload.mscAccount_Trans_Types = parseInt(transaction_type.id);
     } else if (props.form_type === "emergency") {
         let transaction_type = response.find(item => item.description === "Emergency Case");
-        props.payload.mscAccount_trans_types = parseInt(transaction_type.id);
+        props.payload.mscAccount_Trans_Types = parseInt(transaction_type.id);
     } else if (props.form_type === "inpatient") {
         let transaction_type = response.find(item => item.description === "Inpatient Case");
-        props.payload.mscAccount_trans_types = parseInt(transaction_type.id);
+        props.payload.mscAccount_Trans_Types = parseInt(transaction_type.id);
     } else {
-        props.payload.mscAccount_trans_types = [];
+        props.payload.mscAccount_Trans_Types = [];
     }
 };
 

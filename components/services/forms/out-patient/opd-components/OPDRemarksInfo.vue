@@ -4,7 +4,7 @@
             <v-list-subheader class="form-header">Remarks</v-list-subheader>
             <v-textarea
                 variant="outlined"
-                v-model="payload.registry_remarks"
+                v-model="payload.registry_Remarks"
                 hide-details
                 density="compact"
                 :readonly="clicked_option === 'view'"

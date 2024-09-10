@@ -75,7 +75,7 @@ const headers = [
         sortable: false,
         key: 'guarantor_code',
     },
-    { title: 'Guarantor Name', key: 'guarantor_Name', align: 'start', width:"70%" },
+    { title: 'Guarantor Name', key: 'guarantor_name', align: 'start', width:"70%" },
 ];
 const data = ref({
     title: "List of HMO Guarantors",

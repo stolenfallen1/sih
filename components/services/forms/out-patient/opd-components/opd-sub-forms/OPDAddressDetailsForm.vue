@@ -1,7 +1,7 @@
 <template>
     <v-dialog
         :model-value="address_form_dialog"
-        @update:model-value="closeDialog"
+        persistent
         hide-overlay
         width="750"
     >

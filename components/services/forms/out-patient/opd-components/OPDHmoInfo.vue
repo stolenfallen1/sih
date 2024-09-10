@@ -16,7 +16,7 @@
                     </thead>
                     <tbody>
                         <tr v-for="(item, index) in payload.selectedGuarantor" :key="index">
-                            <td style="margin: 0; padding: 1px;" width="100%"> <input v-model="item.guarantor_Name" class="hmo-input" readonly/> </td>
+                            <td style="margin: 0; padding: 1px;" width="100%"> <input v-model="item.guarantor_name" class="hmo-input" readonly/> </td>
                             <td style="margin: 0; padding: 1px;" width="100%"> <input v-model="item.guarantor_Approval_code" class="hmo-input fillable"/> </td>
                             <td style="margin: 0; padding: 1px;" width="100%"> <input v-model="item.guarantor_Approval_no" class="hmo-input fillable"/> </td>
                             <td style="margin: 0; padding: 1px;" width="100%"> <input v-model="item.guarantor_Approval_date" type="date" class="hmo-input fillable"/> </td>

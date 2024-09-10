@@ -1,9 +1,11 @@
 <template>
     <v-dialog :model-value="form_dialog" :persistent="true" hide-overlay width="1280">
-        <v-form ref="form" @submit.prevent="onSubmit">
+        <v-form ref="form" @submit.prevent="openConfirmDialog">
             <v-card rounded="lg">
                 <v-toolbar density="compact" color="#107bac" hide-details>
-                    <v-toolbar-title>OPD Registration</v-toolbar-title>
+                    <v-toolbar-title>
+                        {{ clicked_option === 'new' ? 'Out-Patient Registration' : (clicked_option === 'edit' ? 'View Out-Patient Registration' : 'Update Out-Patient Registration') }}
+                    </v-toolbar-title>
                     <v-btn color="white" @click="closeDialog">
                         <v-icon>mdi-close</v-icon>
                     </v-btn>
@@ -74,6 +76,12 @@
         </v-form>
     </v-dialog>
     <Snackbar />
+    <Confirmation 
+        :show="confirmDialog"
+        :payload="payload"
+        @submit="onSubmit"
+        @close="closeConfirmDialog"
+    />
 </template>
 
 <script setup>
@@ -100,6 +108,7 @@ const payload = ref({
     selectedGuarantor: [],
     selectedConsultant: [],
 });
+const confirmDialog = ref(false);
 const isLoading = ref(false);
 
 const emits = defineEmits(['close-dialog']);
@@ -121,7 +130,7 @@ const findTabIndexByError = (field) => {
         case "birthdate": return "0";
         case "register_Source": return "1";
         case "register_Casetype": return "1";
-        case "mscAccount_trans_types": return "1";
+        case "mscAccount_Trans_Types": return "1";
         case "mscAccount_type": return "1";
         case "mscPrice_Groups": return "1";
         case "mscPrice_Schemes": return "1";
@@ -136,7 +145,7 @@ const focusField = (fieldName) => {
     }
 }
 
-const onSubmit = async () => {
+const openConfirmDialog = async () => {
     formErrors.value = {};
     let valid = ref(true);
 
@@ -168,8 +177,8 @@ const onSubmit = async () => {
         formErrors.value.register_Casetype = "Register Casetype is required";
         valid.value = false;
     }
-    if (!payload.value.mscAccount_trans_types) {
-        formErrors.value.mscAccount_trans_types = "Transaction type is required";
+    if (!payload.value.mscAccount_Trans_Types) {
+        formErrors.value.mscAccount_Trans_Types = "Transaction type is required";
         valid.value = false;
     }
     if (!payload.value.mscAccount_type) {
@@ -192,32 +201,45 @@ const onSubmit = async () => {
         await nextTick();
         focusField(firstErrorField);
         return;
-    }
+    } 
+    confirmDialog.value = true;
+};
 
-    isLoading.value = true;
-    try {
-        if (payload.value.id) {
-            const response = await useMethod("put", "update-outpatient", payload.value, "", payload.value.patient_id);
-            if (response) {
-                useSnackbar(true, "green", response.message);
-                isLoading.value = false;
-                payload.value = Object.assign({});
-                closeDialog();
-                tab.value = "0";
-            } 
-        } else {
-            response = await useMethod("post", "register-outpatient", payload.value);
-            if (response) {
-                useSnackbar(true, "green", response.message);
-                isLoading.value = false;
-                payload.value = Object.assign({});
-                closeDialog();
-                tab.value = "0";
+const closeConfirmDialog = () => {
+    confirmDialog.value = false;
+};
+
+const onSubmit = async (user_details) => {
+    if (user_details.user_passcode === usePasscode()) {
+        isLoading.value = true;
+        try {
+            if (payload.value.id) {
+                const response = await useMethod("put", "update-outpatient", payload.value, "", payload.value.patient_id);
+                if (response) {
+                    useSnackbar(true, "green", response.message);
+                    isLoading.value = false;
+                    payload.value = Object.assign({});
+                    closeDialog();
+                    closeConfirmDialog();
+                    tab.value = "0";
+                } 
+            } else {
+                const response = await useMethod("post", "register-outpatient", payload.value);   
+                if (response) {
+                    useSnackbar(true, "green", response.message);
+                    isLoading.value = false;
+                    payload.value = Object.assign({});
+                    closeDialog();
+                    closeConfirmDialog();
+                    tab.value = "0";
+                }
             }
+        } catch (error) {
+            isLoading.value = false;
+            useSnackbar(true, "red", error.message);
         }
-    } catch (error) {
-        isLoading.value = false;
-        useSnackbar(true, "red", error.message);
+    } else {
+        return useSnackbar(true, "error", "Password incorrect.");
     }
 }
 
@@ -235,11 +257,12 @@ onUpdated(() => {
         // Registry Information
         payload.value.register_Source = selectedRowDetails.value.patient_registry && parseInt(selectedRowDetails.value.patient_registry[0].register_Source) ? parseInt(selectedRowDetails.value.patient_registry[0].register_Source) : '';
         payload.value.register_Casetype = selectedRowDetails.value.patient_registry && parseInt(selectedRowDetails.value.patient_registry[0].register_Casetype) ? parseInt(selectedRowDetails.value.patient_registry[0].register_Casetype) : '';
-        payload.value.mscAccount_trans_types = selectedRowDetails.value.patient_registry && parseInt(selectedRowDetails.value.patient_registry[0].mscAccount_trans_types) ? parseInt(selectedRowDetails.value.patient_registry[0].mscAccount_trans_types) : '';
+        payload.value.mscAccount_Trans_Types = selectedRowDetails.value.patient_registry && parseInt(selectedRowDetails.value.patient_registry[0].mscAccount_Trans_Types) ? parseInt(selectedRowDetails.value.patient_registry[0].mscAccount_Trans_Types) : '';
         payload.value.mscAccount_type = selectedRowDetails.value.patient_registry && parseInt(selectedRowDetails.value.patient_registry[0].mscAccount_Type) ? parseInt(selectedRowDetails.value.patient_registry[0].mscAccount_Type) : '';
         payload.value.mscPrice_Groups = selectedRowDetails.value.patient_registry && parseInt(selectedRowDetails.value.patient_registry[0].mscPrice_Groups) ? parseInt(selectedRowDetails.value.patient_registry[0].mscPrice_Groups) : '';
         payload.value.mscPrice_Schemes = selectedRowDetails.value.patient_registry && parseInt(selectedRowDetails.value.patient_registry[0].mscPrice_Schemes) ? parseInt(selectedRowDetails.value.patient_registry[0].mscPrice_Schemes) : '';
         payload.value.mscService_Type = selectedRowDetails.value.patient_registry && parseInt(selectedRowDetails.value.patient_registry[0].mscService_Type) ? parseInt(selectedRowDetails.value.patient_registry[0].mscService_Type) : '';
+        payload.value.mscCase_Indicators_Id = selectedRowDetails.value.patient_registry && parseInt(selectedRowDetails.value.patient_registry[0].mscCase_Indicators_Id) ? parseInt(selectedRowDetails.value.patient_registry[0].mscCase_Indicators_Id) : '';
         payload.value.mscBroughtBy_Relationship_Id = selectedRowDetails.value.patient_registry && parseInt(selectedRowDetails.value.patient_registry[0].mscBroughtBy_Relationship_Id) ? parseInt(selectedRowDetails.value.patient_registry[0].mscBroughtBy_Relationship_Id) : '';
         payload.value.medical_Package_Name = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0].medical_Package_Name ? selectedRowDetails.value.patient_registry[0].medical_Package_Name : '';
         // Other Details
@@ -272,9 +295,9 @@ onUpdated(() => {
 
         // For HMO GUARANTORS
         const Guarantor = ref([]);
-        if (selectedRowDetails.value.patient_registry) {
+        if (selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0].guarantor_Id != null) {
             let guarantor_Id = selectedRowDetails.value.patient_registry[0].guarantor_Id ? selectedRowDetails.value.patient_registry[0].guarantor_Id : '';
-            let guarantor_Name = selectedRowDetails.value.patient_registry[0].guarantor_Name ? selectedRowDetails.value.patient_registry[0].guarantor_Name : '';
+            let guarantor_name = selectedRowDetails.value.patient_registry[0].guarantor_Name ? selectedRowDetails.value.patient_registry[0].guarantor_Name : '';
             let guarantor_Approval_code = selectedRowDetails.value.patient_registry[0].guarantor_Approval_code ? selectedRowDetails.value.patient_registry[0].guarantor_Approval_code : '';
             let guarantor_Approval_no = selectedRowDetails.value.patient_registry[0].guarantor_Approval_no ? selectedRowDetails.value.patient_registry[0].guarantor_Approval_no : '';
             let guarantor_Approval_date = useDateMMDDYYY(selectedRowDetails.value.patient_registry[0].guarantor_Approval_date) ? useDateMMDDYYY(selectedRowDetails.value.patient_registry[0].guarantor_Approval_date) : '';
@@ -282,7 +305,7 @@ onUpdated(() => {
             let guarantor_Credit_Limit = selectedRowDetails.value.patient_registry[0].guarantor_Credit_Limit ? selectedRowDetails.value.patient_registry[0].guarantor_Credit_Limit : '';
             Guarantor.value.push({
                 guarantor_Id,
-                guarantor_Name,
+                guarantor_name,
                 guarantor_Approval_code,
                 guarantor_Approval_no,
                 guarantor_Approval_date,
@@ -294,22 +317,26 @@ onUpdated(() => {
 
         // For CONSULTANTS
         const Consultant = ref([]);
-        if (selectedRowDetails.value.patient_registry) {
-            Consultant.value.push(selectedRowDetails.value.patient_registry)
+        if (selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0].attending_Doctor != null) {
+            let attending_Doctor = selectedRowDetails.value.patient_registry[0].attending_Doctor ? selectedRowDetails.value.patient_registry[0].attending_Doctor : '';
+            let attending_Doctor_fullname = selectedRowDetails.value.patient_registry[0].attending_Doctor_fullname ? selectedRowDetails.value.patient_registry[0].attending_Doctor_fullname : '';
+            Consultant.value.push({
+                attending_Doctor,
+                attending_Doctor_fullname
+            });
         }
         payload.value.selectedConsultant = Consultant.value;
 
-        payload.value.registry_remarks = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry.registry_remarks ? selectedRowDetails.value.patient_registry.registry_remarks : '';
+        payload.value.registry_Remarks = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0].registry_Remarks ? selectedRowDetails.value.patient_registry[0].registry_Remarks : '';
     } else {
         if (patientStore.selectedPatient && patientStore.selectedPatient.id) {  
-            console.log(patientStore.selectedPatient);
             payload.value = Object.assign({}, patientStore.selectedPatient);
+            payload.value.patient_id = patientStore.selectedPatient.patient_Id ? patientStore.selectedPatient.patient_Id : '';
             payload.value.sex_id = parseInt(patientStore.selectedPatient.sex_id) ? parseInt(patientStore.selectedPatient.sex_id) : '';
             payload.value.suffix_id = parseInt(patientStore.selectedPatient.suffix_id) ? parseInt(patientStore.selectedPatient.suffix_id) : '';
             payload.value.civilstatus_id = parseInt(patientStore.selectedPatient.civilstatus_id) ? parseInt(patientStore.selectedPatient.civilstatus_id) : '';
             payload.value.birthdate = useDateMMDDYYY(patientStore.selectedPatient.birthdate) ? useDateMMDDYYY(patientStore.selectedPatient.birthdate) : '';
             payload.value.register_id_no = patientStore.selectedPatient.patient_registry_details && patientStore.selectedPatient.patient_registry_details.case_No ? patientStore.selectedPatient.patient_registry_details.case_No : '';
-            payload.value.registry_Date = useDateMMDDYYY(patientStore.selectedPatient.registry_date) ? useDateMMDDYYY(patientStore.selectedPatient.registry_date) : '';
             payload.value.mscPrice_Groups = patientStore.selectedPatient.patient_registry_details && parseInt(patientStore.selectedPatient.patient_registry_details.mscPrice_Groups) ? parseInt(patientStore.selectedPatient.patient_registry_details.mscPrice_Groups) : '';
             payload.value.mscPrice_Schemes = patientStore.selectedPatient.patient_registry_details && parseInt(patientStore.selectedPatient.patient_registry_details.mscPrice_Schemes) ? parseInt(patientStore.selectedPatient.patient_registry_details.mscPrice_Schemes) : '';
             payload.value.religion_id = parseInt(patientStore.selectedPatient.religion_id) ? parseInt(patientStore.selectedPatient.religion_id) : '';
