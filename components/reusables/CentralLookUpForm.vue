@@ -158,7 +158,7 @@ const headers = ref([
     title: "ID",
     align: "start",
     sortable: true,
-    key: "id",
+    key: "patient_Id",
     width: "5%",
   },
   {

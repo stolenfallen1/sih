@@ -85,7 +85,7 @@
       @open-filter="openFilterOptions"
     >
       <template v-for="column in columns" v-slot:[`column-${column.key}`]="{ item }">
-        <div v-if="column.key === 'registry_status'" :key="column.key" class="isActive">
+        <div v-if="column.key === 'registry_Status'" :key="column.key" class="isActive">
           <span 
             :style="{ cursor: 'default', display: 'block', height: '26px', width: '9px', backgroundColor: item.patient_registry && item.patient_registry[0].mscPatient_Category == 2 ? 'blue' : 'green' }" 
             :title="item.patient_registry && item.patient_registry[0].mscPatient_Category == 2 ? 'New Patient' : 'Old Patient'"
@@ -114,8 +114,8 @@
         <span v-if="column.key === 'discharged_date'" :key="column.key">
           {{ item.patient_registry && item.patient_registry[0].discharged_Date ? useDateMMDDYYY(item.patient_registry[0].discharged_Date) : "..." }}
         </span>
-        <span v-if="column.key === 'revoked_date'" :key="column.key">
-          {{ item.patient_registry && item.patient_registry[0].revoked_date ? useDateMMDDYYY(item.patient_registry[0].revoked_date) : "..." }}
+        <span v-if="column.key === 'revoked_Date'" :key="column.key">
+          {{ item.patient_registry && item.patient_registry[0].revoked_Date ? useDateMMDDYYY(item.patient_registry[0].revoked_Date) : "..." }}
         </span>
       </template>
     </ReusableTable>
@@ -271,7 +271,7 @@ const tableTabs = ref([
                 title: "",
                 align: "start",
                 sortable: false,
-                key: "registry_status",
+                key: "registry_Status",
               },
               {
                 title: "",
@@ -339,7 +339,7 @@ const tableTabs = ref([
                 title: "",
                 align: "start",
                 sortable: false,
-                key: "registry_status",
+                key: "registry_Status",
               },
               {
                 title: "",
@@ -351,7 +351,7 @@ const tableTabs = ref([
                 title: "Patient ID",
                 align: "start",
                 sortable: false,
-                key: "patient_id",
+                key: "patient_Id",
               },
               {
                 title: "Case No.",
@@ -391,7 +391,7 @@ const tableTabs = ref([
               },
               {
                 title: "Revoked Date",
-                key: "revoked_date",
+                key: "revoked_Date",
                 align: "start",
                 sortable: false,
               },
@@ -407,7 +407,7 @@ const tableTabs = ref([
                 title: "",
                 align: "start",
                 sortable: false,
-                key: "registry_status",
+                key: "registry_Status",
               },
               {
                 title: "",
@@ -419,7 +419,7 @@ const tableTabs = ref([
                 title: "Patient ID",
                 align: "start",
                 sortable: false,
-                key: "patient_id",
+                key: "patient_Id",
               },
               {
                 title: "ER Case No.",
@@ -481,7 +481,7 @@ const tableTabs = ref([
                 title: "",
                 align: "start",
                 sortable: false,
-                key: "registry_status",
+                key: "registry_Status",
               },
               {
                 title: "",
@@ -493,7 +493,7 @@ const tableTabs = ref([
                 title: "Patient ID",
                 align: "start",
                 sortable: false,
-                key: "patient_id",
+                key: "patient_Id",
               },
               {
                 title: "Admission No.",

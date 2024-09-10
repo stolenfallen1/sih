@@ -31,7 +31,7 @@
                         v-model="payload.lastname"
                         class="form-input"
                         :class="{ 'input-error': formErrors.lastname }"
-                        :disabled="clicked_option === 'view'"
+                        :disabled="clicked_option === 'view' || (patientStore?.selectedPatient?.lastname != null && payload.civilstatus_id !== 3)"
                     />
                 </v-col>
             </v-row>
@@ -43,7 +43,7 @@
                         v-model="payload.firstname"
                         class="form-input"
                         :class="{ 'input-error': formErrors.firstname }"
-                        :disabled="clicked_option === 'view'"
+                        :disabled="clicked_option === 'view' || (patientStore?.selectedPatient?.lastname != null && payload.civilstatus_id !== 3)"
                     />
                 </v-col>
             </v-row>
@@ -54,7 +54,7 @@
                         :type="payload.isConfidentialPatient ? 'password' : 'text'"
                         v-model="payload.middlename"
                         class="form-input"
-                        :disabled="clicked_option === 'view'"
+                        :disabled="clicked_option === 'view' || (patientStore?.selectedPatient?.lastname != null && payload.civilstatus_id !== 3)"
                     />
                 </v-col>
             </v-row>
@@ -208,6 +208,10 @@
 </template>
 
 <script setup>
+import { usePatientStore } from '@/store/selectedPatient';
+
+const patientStore = usePatientStore();
+
 const props = defineProps({
     payload: {
         type: Object,

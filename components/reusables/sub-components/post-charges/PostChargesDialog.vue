@@ -18,7 +18,7 @@
                                     <v-col cols="12">
                                         <v-text-field 
                                             label="Patient Name"
-                                            v-model="payload.patient_name"
+                                            v-model="payload.patient_Name"
                                             variant="solo"
                                             density="compact"
                                             hide-details
@@ -28,7 +28,7 @@
                                     <v-col cols="12" class="form-col">
                                         <v-text-field 
                                             label="ID No."
-                                            v-model="payload.patient_id"
+                                            v-model="payload.patient_Id"
                                             variant="solo"
                                             density="compact"
                                             hide-details
@@ -88,7 +88,7 @@
                                     <v-col cols="6">
                                         <v-text-field 
                                             label="Case No."
-                                            v-model="payload.case_no"
+                                            v-model="payload.case_No"
                                             variant="solo"
                                             density="compact"
                                             hide-details
@@ -108,7 +108,7 @@
                                     <v-col cols="3" class="form-col">
                                         <v-text-field
                                             label="ID"
-                                            v-model="payload.attending_doctor"
+                                            v-model="payload.attending_Doctor"
                                             variant="solo"
                                             density="compact"
                                             hide-details
@@ -118,7 +118,7 @@
                                     <v-col cols="9" class="form-col">
                                         <v-text-field
                                             label="Physician Name"
-                                            v-model="payload.attending_doctor_fullname"
+                                            v-model="payload.attending_Doctor_fullname"
                                             variant="solo"
                                             density="compact"
                                             hide-details
@@ -128,7 +128,7 @@
                                     <v-col cols="3" class="form-col">
                                         <v-text-field
                                             label="ID"
-                                            v-model="payload.guarantor_id"
+                                            v-model="payload.guarantor_Id"
                                             variant="solo"
                                             density="compact"
                                             hide-details
@@ -138,7 +138,7 @@
                                     <v-col cols="9" class="form-col">
                                         <v-text-field
                                             label="Guarantor Name"
-                                            v-model="payload.guarantor_name"
+                                            v-model="payload.guarantor_Name"
                                             variant="solo"
                                             density="compact"
                                             hide-details
@@ -148,7 +148,7 @@
                                     <v-col cols="6" class="form-col">
                                         <v-text-field 
                                             label="Registry Case Date"
-                                            v-model="payload.registry_date"
+                                            v-model="payload.registry_Date"
                                             type="date"
                                             variant="solo"
                                             density="compact"
@@ -194,7 +194,7 @@
                                         :key="index"
                                         :value="index"
                                     >
-                                        <v-list-item-title>{{ item.transaction_code }} - {{ item.transaction_description }}</v-list-item-title>
+                                        <v-list-item-title>{{ item.code }} - {{ item.description }}</v-list-item-title>
                                     </v-list-item>
                                     </v-list>
                                 </v-menu>
@@ -216,7 +216,7 @@
                                 <tbody>
                                     <template v-for="(item,index) in Charges">
                                         <tr>
-                                            <td> <input class="input charge-focus" v-model="item.transaction_code" @keyup.enter="handleAddCharge(item,index)" :readonly="item.isReadonly" /> </td>
+                                            <td> <input class="input charge-focus" v-model="item.code" @keyup.enter="handleAddCharge(item,index)" :readonly="item.isReadonly" /> </td>
                                             <td> <input class="input charge-focus" v-model="item.map_item_id" @keyup.enter="handleAddCharge(item,index)" readonly /> </td> 
                                             <td> <input class="input charge-focus" v-model="item.exam_description" @keyup.enter="handleAddCharge(item,index)" readonly /> </td>
                                             <td>
@@ -258,7 +258,7 @@
                                 <tbody>
                                     <template v-for="(item, index) in DoctorCharges">
                                         <tr>
-                                            <td> <input class="input pf-focus" v-model="item.transaction_code" @keyup.enter="handleAddProfessionalFee(item, index)" readonly /> </td>
+                                            <td> <input class="input pf-focus" v-model="item.code" @keyup.enter="handleAddProfessionalFee(item, index)" readonly /> </td>
                                             <td> <input class="input pf-focus" v-model="item.doctor_code" @keyup.enter="handleAddProfessionalFee(item, index)" readonly /> </td>
                                             <td> <input class="input pf-focus" v-model="item.doctor_name" @keyup.enter="handleAddProfessionalFee(item, index)" readonly/> </td>
                                             <td> <input class="input pf-focus" v-model="item.amount" type="number" /> </td>
@@ -501,7 +501,7 @@ const selected_charges = ref([]);
 const selected_cash_assessment = ref([]);
 const charge_to = ref([
     { value: 1, text: "Self-Pay" },
-    { value: 2, text: "Company / Insurance" },
+    { value: 2, text: "Company / Insurance" }, 
 ]);
 
 const revokeconfirmation = ref(false);
@@ -547,7 +547,7 @@ watch(pf_history_tab, (newTab) => {
 
 const chargecode = ref([]);
 const payload = ref({
-    patient_name: "",
+    patient_Name: "",
     patient_id: null,
     civil_status: "",
     sex: "",
@@ -556,7 +556,7 @@ const payload = ref({
     case_no: null,
     account: null,
     charge_to: null,
-    registry_date: null,
+    registry_Date: null,
     attending_doctor: null,
     attending_doctor_fullname: "",
     guarantor_id: null,
@@ -565,7 +565,7 @@ const payload = ref({
 
 const Charges = ref([
     {
-        transaction_code: "",
+        code: "",
         map_item_id: "",
         exam_description: "",
         charge_type: 1,
@@ -578,7 +578,7 @@ const Charges = ref([
 ]);
 const DoctorCharges = ref([
     {
-        transaction_code: "MD",
+        code: "MD",
         doctor_code: "",
         doctor_name: "",
         amount: null,
@@ -591,38 +591,44 @@ const getRevenueCode = async () => {
     const revenue_res = await useMethod("get", "get-transaction-codes", "", "");
     if (revenue_res) {
         const desiredCodes = useRevenueCode();
-        revenue_code_data.value = revenue_res.filter(item => {
-            return desiredCodes.includes(item.id.toString()) && item.transaction_code !== "MD";
-        });
+        console.log(desiredCodes);
+        if (desiredCodes && Array.isArray(desiredCodes)) {
+            revenue_code_data.value = revenue_res.filter(item => {
+                return desiredCodes.includes(item.id.toString()) && item.code !== "MD";
+            });
+        } 
+    } else {
+        useSnackbar(true, "error", "Failed to get revenue codes.");
     }
 };
 
+
 const handleAddCharge = (item, index) => {
-    item.transaction_code = item.transaction_code.toUpperCase();
+    item.code = item.code.toUpperCase();
     const lastRow = Charges.value[Charges.value.length - 1];
-    if (!item.transaction_code) {
+    if (!item.code) {
         return useSnackbar(true, "error", "Dept Code Should not be empty.");
     }
-    const desiredCodes = revenue_code_data.value.map(item => item.transaction_code);
-    if (desiredCodes.includes(item.transaction_code) === false) {
+    const desiredCodes = revenue_code_data.value.map(item => item.code);
+    if (desiredCodes.includes(item.code) === false) {
         return useSnackbar(true, "error", "Invalid Dept Code, refer to help code.");
     }
 
-    user_input_revenue_code.value = item.transaction_code;
-    if(item.transaction_code && !item.map_item_id && !item.exam_description){
+    user_input_revenue_code.value = item.code;
+    if(item.code && !item.map_item_id && !item.exam_description){
 
         open_charges_list.value = true;
         let charges = Charges.value.filter(function (obj) {
-            return obj.transaction_code !== '' && obj.map_item_id !== '' && obj.exam_description !== '';
+            return obj.code !== '' && obj.map_item_id !== '' && obj.exam_description !== '';
         });
-        let resultArray = charges.filter(item => item.transaction_code.toUpperCase() === lastRow.transaction_code.toUpperCase()).map(item => item.map_item_id);
+        let resultArray = charges.filter(item => item.code.toUpperCase() === lastRow.code.toUpperCase()).map(item => item.map_item_id);
         chargecode.value = resultArray;
     }
-    if(item.transaction_code && item.map_item_id && item.exam_description){
-        const isItemCodeAndRevenueAlreadyExists = Charges.value.slice(0, index).some(row => row.map_item_id === lastRow.map_item_id && row.transaction_code === lastRow.transaction_code);
+    if(item.code && item.map_item_id && item.exam_description){
+        const isItemCodeAndRevenueAlreadyExists = Charges.value.slice(0, index).some(row => row.map_item_id === lastRow.map_item_id && row.code === lastRow.code);
             if(!isItemCodeAndRevenueAlreadyExists){
                 Charges.value.push({
-                    transaction_code: "",
+                    code: "",
                     map_item_id: "",
                     exam_description: "",
                     charge_type: 1,
@@ -643,11 +649,11 @@ const handleAddCharge = (item, index) => {
 };
 
 const removeChargeItem = (selectedItem) => {
-    Charges.value = Charges.value.filter(item => !(item.map_item_id === selectedItem.map_item_id && item.transaction_code === selectedItem.transaction_code));
+    Charges.value = Charges.value.filter(item => !(item.map_item_id === selectedItem.map_item_id && item.code === selectedItem.code));
 }
 
 const removePFItem = (selectedItem) => {
-    const indexToRemove = DoctorCharges.value.findIndex(item => item.doctor_code === selectedItem.doctor_code && item.transaction_code === selectedItem.transaction_code);
+    const indexToRemove = DoctorCharges.value.findIndex(item => item.doctor_code === selectedItem.doctor_code && item.code === selectedItem.code);
     if (indexToRemove !== -1) {
         DoctorCharges.value.splice(indexToRemove, 1);
     }
@@ -678,24 +684,24 @@ const handleSelectedChargeItem = async (selected_item) => {
     lastRow.totalamount = selected_item.price;
     lastRow.barcode_prefix = selected_item?.sections?.barcodeid_prefix ? selected_item.sections.barcodeid_prefix : null;
 
-    if (lastRow.map_item_id && lastRow.transaction_code === 'LB') {
+    if (lastRow.map_item_id && lastRow.code === 'LB') {
         const response = await useMethod("get", "get-charges-specimen?map_item_id=", "", lastRow.map_item_id);
         if (response && response.data && response.data.length > 0) {
             lastRow.specimens = response.data.map(item => item.specimens) || [];
             lastRow.specimen = lastRow.specimens.length > 0 ? lastRow.specimens[0].id : '';
-        }
+        } 
     } 
 };
 
 const handleAddProfessionalFee = (item, index) => {
-    item.transaction_code  = "MD";
+    item.code  = "MD";
     const lastRow = DoctorCharges.value[DoctorCharges.value.length - 1];
-    if (item.transaction_code && !item.doctor_code && !item.doctor_name) {
+    if (item.code && !item.doctor_code && !item.doctor_name) {
         open_professionals_list.value = true;
     }
-    if (item.transaction_code && item.doctor_code && item.doctor_name) {
+    if (item.code && item.doctor_code && item.doctor_name) {
         DoctorCharges.value.push({
-            transaction_code: "MD",
+            code: "MD",
             doctor_code: "",
             doctor_name: "",
             amount: null,
@@ -769,7 +775,7 @@ const printCashAssessment = (payload, charges) => {
 
 const onSubmit = async () => {
     isLoadingBtn.value = true;
-    let charges = Charges.value.filter(obj => obj.transaction_code !== '');
+    let charges = Charges.value.filter(obj => obj.code !== '');
     let doctorcharges = DoctorCharges.value.filter(obj => obj.doctor_code !== '');
     if (doctorcharges.map(item => item.amount).includes(null)) {
         isLoadingBtn.value = false;
@@ -901,9 +907,9 @@ const getChargesHistory = async () => {
                 'Authorization': 'Bearer ' + useToken()
             },
             body: JSON.stringify({
-                patient_id: payload.value.patient_id,
-                case_no: payload.value.case_no,
-                transaction_code: '',
+                patient_Id: payload.value.patient_Id,
+                case_No: payload.value.case_No,
+                code: '',
             })
         });
 
@@ -927,9 +933,9 @@ const getCashAssessmentHistory = async () => {
                 'Authorization': 'Bearer ' + useToken()
             },
             body: JSON.stringify({
-                patient_id: payload.value.patient_id,
-                case_no: payload.value.case_no,
-                transaction_code: '',
+                patient_Id: payload.value.patient_Id,
+                case_No: payload.value.case_No,
+                code: '',
             })
         });
 
@@ -953,9 +959,9 @@ const getProfFeeHistory = async () => {
                 'Authorization': 'Bearer ' + useToken()
             },
             body: JSON.stringify({
-                patient_id: payload.value.patient_id,
-                case_no: payload.value.case_no,
-                transaction_code: 'MD',
+                patient_Id: payload.value.patient_Id,
+                case_No: payload.value.case_No,
+                code: 'MD',
             })
         });
 
@@ -979,9 +985,9 @@ const getCashProfHistory = async () => {
                 'Authorization': 'Bearer ' + useToken()
             },
             body: JSON.stringify({
-                patient_id: payload.value.patient_id,
-                case_no: payload.value.case_no,
-                transaction_code: 'MD',
+                patient_Id: payload.value.patient_Id,
+                case_No: payload.value.case_No,
+                code: 'MD',
             })
         });
 
@@ -1001,7 +1007,7 @@ const closeDialog = () => {
     panel.value = [0, 1];
     Charges.value = [
         {
-            transaction_code: "",
+            code: "",
             map_item_id: "",
             exam_description: "",
             charge_type: 1,
@@ -1012,7 +1018,7 @@ const closeDialog = () => {
     ];
     DoctorCharges.value = [
         {
-            transaction_code: "MD",
+            code: "MD",
             doctor_code: "",
             doctor_name: "",
             amount: null,
@@ -1039,22 +1045,22 @@ onUpdated(() => {
     //     payload.value.status = pendingStatus[0].id;
     // }
     // Forda display
-    payload.value.patient_name = selectedRowDetails.value.lastname + ', ' + selectedRowDetails.value.firstname + ' ' + selectedRowDetails.value.middlename || '';
-    payload.value.patient_id = selectedRowDetails.value.patient_id || '';
+    payload.value.patient_Name = selectedRowDetails.value.lastname + ', ' + selectedRowDetails.value.firstname + ' ' + selectedRowDetails.value.middlename || '';
+    payload.value.patient_Id = selectedRowDetails.value.patient_Id || '';
     payload.value.civil_status = selectedRowDetails.value.civil_status && selectedRowDetails.value.civil_status.civil_status_description || '';
     payload.value.sex = selectedRowDetails.value.sex && selectedRowDetails.value.sex.sex_description || '';
     payload.value.birthdate = useDateMMDDYYY(selectedRowDetails.value.birthdate) || '';
     payload.value.age = selectedRowDetails.value.age || '';
-    payload.value.case_no = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry.case_no || '';
-    payload.value.account = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry.mscPrice_Schemes == 1 ? "Self-Pay" : "Company / Insurance";
-    payload.value.registry_date = selectedRowDetails.value.patient_registry && useDateMMDDYYY(selectedRowDetails.value.patient_registry.registry_date) || '';
-    payload.value.attending_doctor = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry.attending_doctor || 'N/A';
-    payload.value.attending_doctor_fullname = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry.attending_doctor_fullname || 'N/A';
-    payload.value.guarantor_id = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry.guarantor_id || 'N/A';
-    payload.value.guarantor_name = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry.guarantor_name || 'N/A';
+    payload.value.case_No = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0].case_No || '';
+    payload.value.account = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0].mscPrice_Schemes == 1 ? "Self-Pay" : "Company / Insurance";
+    payload.value.registry_Date = selectedRowDetails.value.patient_registry && useDateMMDDYYY(selectedRowDetails.value.patient_registry[0].registry_Date) || '';
+    payload.value.attending_Doctor = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0].attending_Doctor || 'N/A';
+    payload.value.attending_Doctor_fullname = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0].attending_Doctor_fullname || 'N/A';
+    payload.value.guarantor_Id = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0].guarantor_Id || payload.value.patient_Id;
+    payload.value.guarantor_Name = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0].guarantor_Name || 'PERSONAL';
     
     // Charges history
-    if (payload.value.patient_id && payload.value.case_no) {
+    if (payload.value.patient_Id && payload.value.case_No) {
         getChargesHistory();
         getProfFeeHistory();
         getCashAssessmentHistory();

@@ -112,12 +112,13 @@ const handleSelectedRow = (selectedRows) => {
         const item = serverItems.value.find(item => item.id === rowId);
         if (item) {
             return {
-                attending_doctor: item.doctor_code,
-                attending_doctor_fullname: item.doctor_name,
+                attending_Doctor: item.doctor_code,
+                attending_Doctor_fullname: item.doctor_name,
             }
         }
         return null;
     }).filter(item => item !== null);
+    console.log(selectedItems);
     emits('handle-select', selectedItems);
 }
 
