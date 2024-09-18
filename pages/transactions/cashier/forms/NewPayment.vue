@@ -3,7 +3,6 @@
         <v-col cols="12">
             <div style="display: flex; justify-content: space-between; align-items: center;">
                 <p style="font-size: 17px; font-weight: bolder; text-decoration: underline;">Item Details</p>
-                <v-btn color="primary" style="border-radius: 0; margin-bottom: 2px;" @click="openCashierSettings"><v-icon class="mr-2">mdi-cog-outline</v-icon>Change Cashier Settings</v-btn>
             </div>
             <v-table density="compact" height="25vh"  class="styled-table" hover>
                 <thead>
@@ -20,7 +19,7 @@
                             <td> {{ item?.revenueID }} </td>
                             <td> {{ item?.itemID }} </td>
                             <td> {{ item?.items?.exam_description ? item?.items?.exam_description : item?.doctor_details?.doctor_name  }} </td>
-                            <td> {{ parseFloat(item?.amount).toFixed(2) }} </td>
+                            <td> {{ item.amount }} </td>
                         </tr>
                     </template>
                 </tbody>
@@ -30,18 +29,29 @@
     <v-row class="mt-7">
         <v-col cols="4">
             <v-row>
-                <v-col cols="6" >
-                    <v-list-subheader class="form-header">OR Number</v-list-subheader> 
+                <v-col cols="6">
+                    <v-list-subheader class="form-header" style="color: red; font-weight: bolder; cursor: pointer;">OR Number</v-list-subheader> 
                     <v-text-field
                         variant="solo"
                         density="compact"
                         v-model="payload.ORNumber"
+                        @click="openCashierSettings"
                         readonly
                         required
                         hide-details
                     ></v-text-field>
                 </v-col>
                 <v-col cols="6" >
+                    <v-list-subheader class="form-header">Admission No</v-list-subheader>
+                    <v-text-field
+                        v-model="payload.case_No"
+                        variant="solo"
+                        density="compact"
+                        hide-details
+                        @keyup.enter="getPatientByCaseNo"
+                    ></v-text-field>
+                </v-col>
+                <v-col cols="12" >
                     <v-list-subheader class="form-header">Payment Code</v-list-subheader>
                     <v-autocomplete
                         variant="solo"
@@ -54,13 +64,22 @@
                         hide-details
                     ></v-autocomplete>
                 </v-col>
-                <v-col cols="6" >
-                    <v-list-subheader class="form-header">Admission No</v-list-subheader>
+                <v-col cols="6" v-if="payload.payment_code !== 6">
+                    <v-list-subheader class="form-header">Charge Slip</v-list-subheader>
                     <v-text-field
-                        v-model="payload.case_no"
-                        readonly
                         variant="solo"
                         density="compact"
+                        v-model="payload.refNum"
+                        @keyup.enter="handleKeyEnter"
+                        hide-details
+                    ></v-text-field>
+                </v-col>
+                <v-col cols="6" v-if="payload.payment_code === 6">
+                    <v-list-subheader class="form-header">Company Code</v-list-subheader>
+                    <v-text-field
+                        variant="solo"
+                        density="compact"
+                        v-model="payload.company_code"
                         hide-details
                     ></v-text-field>
                 </v-col>
@@ -69,8 +88,9 @@
                     <v-text-field
                         variant="solo"
                         density="compact"
-                        v-model="payload.account_no"
+                        v-model="payload.accountnum"
                         hide-details
+                        readonly
                     ></v-text-field>
                 </v-col>
                 <v-col cols="12" >
@@ -83,42 +103,24 @@
                     ></v-text-field>
                 </v-col>
                 <v-col cols="6" >
-                    <v-list-subheader class="form-header">Charge Slip</v-list-subheader>
-                    <v-text-field
-                        variant="solo"
-                        density="compact"
-                        v-model="payload.refNum"
-                        @keyup.enter="searchChargeItem"
-                        hide-details
-                    ></v-text-field>
-                </v-col>
-                <v-col cols="6" >
-                    <v-list-subheader class="form-header">Collection Date</v-list-subheader>
-                    <v-text-field
-                        type="date"
-                        v-model="payload.collection_date"
-                        readonly
-                        variant="solo"
-                        density="compact"
-                        hide-details
-                    ></v-text-field>
-                </v-col>
-                <v-col cols="6" >
                     <v-list-subheader class="form-header">Hospital Bills</v-list-subheader>
                     <v-text-field
                         variant="solo"
                         density="compact"
                         v-model="payload.hospital_bills"
                         hide-details
+                        readonly
                     ></v-text-field>
                 </v-col>
                 <v-col cols="6" >
                     <v-list-subheader class="form-header">Credit Limit</v-list-subheader>
                     <v-text-field
+                        :style="{ border: payload.hospital_bills > payload.guarantor_Credit_Limit ? '1px solid red' : '' }"
                         variant="solo"
                         density="compact"
-                        v-model="payload.credit_limit"
+                        v-model="payload.guarantor_Credit_Limit"
                         hide-details
+                        readonly
                     ></v-text-field>
                 </v-col>
             </v-row>
@@ -132,6 +134,7 @@
                         variant="solo"
                         density="compact"
                         hide-details
+                        readonly
                     ></v-text-field>
                 </v-col>
                 <v-col cols="6" >
@@ -141,6 +144,7 @@
                         variant="solo"
                         density="compact"
                         hide-details
+                        readonly
                     ></v-text-field>
                 </v-col>
                 <v-col cols="12" >
@@ -150,6 +154,7 @@
                         variant="solo"
                         density="compact"
                         hide-details
+                        readonly
                     ></v-textarea>
                 </v-col>
                 <v-col cols="8" >
@@ -157,7 +162,10 @@
                     <v-autocomplete
                         variant="solo"
                         density="compact"
+                        item-title="description"
+                        item-value="id"
                         v-model="payload.discount"
+                        :items="discount_types"
                         hide-details
                     ></v-autocomplete>
                 </v-col>
@@ -178,7 +186,6 @@
                     <v-list-subheader class="form-header">Item Amount</v-list-subheader>
                     <v-text-field
                         v-model="payload.amount"
-                        type="number"
                         variant="solo"
                         density="compact"
                         hide-details
@@ -192,6 +199,7 @@
                         density="compact"
                         v-model="payload.total_discount"
                         hide-details
+                        readonly
                     ></v-text-field>
                 </v-col>
                 <v-col cols="12" >
@@ -202,6 +210,7 @@
                         density="compact"
                         v-model="payload.sub_total"
                         hide-details
+                        readonly
                     ></v-text-field>
                 </v-col>
                 <v-col cols="12" >
@@ -211,19 +220,22 @@
                         density="compact"
                         v-model="payload.withholding_tax"
                         hide-details
+                        readonly
                     ></v-text-field>
                 </v-col>
                 <v-col cols="12" >
-                <v-list-subheader class="form-header">TOTAL PAYMENT</v-list-subheader>
+                <v-list-subheader class="form-header" style="color:red; font-weight: bolder;">Total Payment</v-list-subheader>
                 <v-text-field
                     variant="outlined"
                     v-model="payload.total_payment"
                     hide-details
+                    readonly
                 ></v-text-field>
             </v-col>
             </v-row>
         </v-col>
     </v-row>
+    <p style="margin-top: 30px; margin-bottom: 10px; font-weight: bolder; color: red; border-top: 1px solid #E4E4E4;">Mode of Payment</p>
     <v-row>
         <v-col cols="4" >
             <p style="font-size: 17px; font-weight: bolder; text-decoration: underline;">Cash</p>
@@ -261,6 +273,20 @@
         <v-col cols="4">
             <p style="font-size: 17px; font-weight: bolder; text-decoration: underline;">Card</p>
             <v-col cols="12" >
+                <v-list-subheader class="form-header">Card Type</v-list-subheader>
+                <v-autocomplete
+                    item-title="payment_description"
+                    item-value="id"
+                    v-model="payload.card_type_id"
+                    variant="solo"
+                    clearable
+                    :items="card_types"
+                    @update:model-value="handleCardItems"
+                    density="compact"
+                    hide-details
+                ></v-autocomplete>
+            </v-col>
+            <v-col cols="12" >
                 <v-list-subheader class="form-header">Card</v-list-subheader>
                 <v-autocomplete
                     item-title="description"
@@ -276,15 +302,6 @@
             </v-col>
             <v-col cols="12" class="mt-3">
                 <v-row>
-                    <v-col cols="5">
-                        <v-list-subheader class="form-header">Approval #</v-list-subheader>
-                        <v-text-field
-                            variant="solo"
-                            density="compact" 
-                            v-model="payload.card_approval_number"
-                            hide-details
-                        ></v-text-field>
-                    </v-col>
                     <v-col cols="7">
                         <v-list-subheader class="form-header">Expiry Date</v-list-subheader>
                         <v-text-field
@@ -292,6 +309,15 @@
                             variant="solo"
                             v-model="payload.card_date"
                             density="compact"
+                            hide-details
+                        ></v-text-field>
+                    </v-col>
+                    <v-col cols="5">
+                        <v-list-subheader class="form-header">Approval #</v-list-subheader>
+                        <v-text-field
+                            variant="solo"
+                            density="compact" 
+                            v-model="payload.card_approval_number"
                             hide-details
                         ></v-text-field>
                     </v-col>
@@ -363,25 +389,16 @@
         :open_reciepts_form="open_reciepts_form"
         @close-dialog="closeRecieptsForm"
         @submit="onParseReciept"
-    />
-    <Confirmation 
-        :show="confirm_password"
-        :payload="password_payload"
-        @close="closeConfirmDialog"
-        @submit="onSubmit"
-    />    
+    /> 
 </template>
 <script setup>
 import ORSequenceNumber from "./ORSequenceNumber.vue";
 import RecieptsInfo from "./ReceiptsInfo.vue";
 
 const emits = defineEmits(["close-dialog"]);
-let table_tab = ref("0");
 const table_data = ref([]);
 const open_reciepts_form = ref(false);
 const open_cashier_settings = ref(false);
-const password_payload = ref({});
-const confirm_password = ref(false);
 const payload = ref({
     Items: [],
     collection_date: new Date().toISOString().substr(0, 10),
@@ -396,6 +413,7 @@ const payload = ref({
 const card_types = ref([]);
 const card_data = ref([]);
 const payment_codes = ref([]);
+const discount_types = ref([]);
 
 const tempCashAmount = ref(payload.value.cash_amount);
 const tempCashTendered = ref(payload.value.cash_tendered);
@@ -438,7 +456,7 @@ const searchChargeItem = async () => {
         if (response && response.data && response.data.length > 0) {
             table_data.value = response.data; 
             payload.value.patient_id = response.data[0].patient_id;
-            payload.value.case_no = response.data[0].case_no;
+            payload.value.case_No = response.data[0].case_No;
             payload.value.transaction_code = response.data[0].revenueID;
             payload.value.itemID = response.data.map(item => item.itemID) ? response.data.map(item => item.itemID).join(" , ") : null;
 
@@ -448,7 +466,6 @@ const searchChargeItem = async () => {
             payload.value.amount = response.data.map(item => parseFloat(item.amount)).filter(amount => !isNaN(amount)).reduce((a, b) => a + b, 0);
 
             payload.value.Items = table_data.value;
-            console.log(payload.value);
 
         } else if (response && response.data && response.data.length === 0) {
             return useSnackbar(true, "error", "Charge slip not found.");
@@ -458,10 +475,73 @@ const searchChargeItem = async () => {
     }
 }
 
+const getPatientByCaseNo = async () => {
+    if (payload.value.case_No) {
+        const response = await useMethod("get", "get-patient-by-caseno?case_No=", "", payload.value.case_No);
+        if (response && response.data && response.data.length > 0) {
+            payload.value.patient_Id = response.data[0].patient_Id ? response.data[0].patient_Id : null;
+            payload.value.guarantor_Credit_Limit = response.data[0].guarantor_Credit_Limit ? usePeso(response.data[0].guarantor_Credit_Limit) : "OPEN";
+            payload.value.accountnum = response.data[0].guarantor_Id ? response.data[0].guarantor_Id : null;
+            payload.value.payors_name = response.data[0].patient_details 
+                ? `${response.data[0].patient_details.lastname || ''}, ${response.data[0].patient_details.firstname || ''} ${response.data[0].patient_details.middlename || ''}`.trim()
+                : null;
+        } else {
+            return useSnackbar(true, "error", "Patient not found.");
+        }
+    } else {
+        return useSnackbar(true, "error", "Please enter admission number.");
+    }
+}
+
+const getOPDBill = async () => {
+    let items = {
+        HospitalBill: 'HB',
+        case_No: payload.value.case_No,
+    };
+    const response = await fetch(useApiUrl() + "/get-opd-bill", {
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + useToken()
+        },
+        body: JSON.stringify({ items })
+    });
+    if (response.ok) {
+        const data = await response.json();
+        
+        if (data && data.data && data.data[0] && data.data[0]["Total Hospital Bill"]) {
+            payload.value.itemID = "PY";
+            payload.value.hospital_bills = usePeso(data.data[0]["Total Hospital Bill"]);
+            payload.value.amount = usePeso(data.data[0]["Total Hospital Bill"]);
+            payload.value.particulars = "Hospital Bill";
+            table_data.value = [{ revenueID: "HB", itemID: "PY", items: { exam_description: "Hospital Bill" }, amount: payload.value.hospital_bills }];
+        }
+    }
+}
+
+const handleKeyEnter = () => {
+    if (payload.value.payment_code == null || payload.value.payment_code === "") return useSnackbar(true, "error", "Please select payment code.");
+
+    if (payload.value.payment_code === 1) {
+        searchChargeItem();
+    } else if (payload.value.payment_code === 5) {
+        if (!payload.value.case_No) return useSnackbar(true, "error", "Please enter admission number.");
+
+        payload.value.refNum = payload.value.refNum.toUpperCase();
+        if (payload.value.refNum !== 'HB') {
+            return useSnackbar(true, "error", "Use 'HB' to Trigger Hospital Bill.");
+        } else {
+            getOPDBill();
+        }
+    } else {
+        alert("Wala pana na develop");
+    }
+}
+
 const resetTransactionForm = () => {
     table_data.value = [];
     payload.value.patient_id = null;
-    payload.value.case_no = null;
+    payload.value.case_No = null;
     payload.value.account_no = null;
     payload.value.payors_name = null;
     payload.value.refNum = null;
@@ -571,10 +651,18 @@ const cardPaymentMethod = async () => {
     }
 }
 
+const discountMethod = async () => {
+    const response = await useMethod("get", "get-cashier-discount", "", "");
+    if (response) {
+        discount_types.value = response.data;
+    }
+}
+
 const cashierPaymentCode = async () => {
     const response = await useMethod("get", "get-payment-codes", "", "");
     if (response) {
-        payment_codes.value = response;
+        let payment_codes_filter = ["Deposit Transaction", "Partial Payment Transaction", "Lump Sum Transaction"];
+        payment_codes.value = response.filter(code => !payment_codes_filter.includes(code.description)); 
     }
 }
 
@@ -592,19 +680,10 @@ const handleCardItems = async () => {
     } 
 }
 
-const paidStatus = await useStatus("Paid");
-onUpdated(() => {
-    if (paidStatus && paidStatus.length > 0) {
-        payload.value.status = paidStatus[0].id;
-    }
-})
-
 onMounted(() => {
-    setTimeout(() => {
-        openCashierSettings();
-        cardPaymentMethod();
-        cashierPaymentCode();
-    }, 500);
+    cardPaymentMethod();
+    cashierPaymentCode();
+    discountMethod();
 });
 </script>
 

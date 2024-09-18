@@ -100,7 +100,7 @@
       class="drawer"
       v-model="drawer"
       elevation="4"
-      v-if="rightSidebarDisplay && authenticated && subcomponents.length > 0"
+      v-if="(rightSidebarDisplay || false) && (authenticated || false) && (subcomponents?.length > 0)"
     >
       <v-list
         rounded="lg"

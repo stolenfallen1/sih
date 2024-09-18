@@ -2344,55 +2344,8 @@ export default [
                 icon: "mdi-cash-register",
                 path: "/transactions/cashier",
                 rule: "browse_cashier",
-                subcomponents: [
-                    // {
-                    //     label: "Cash Receipt Details",
-                    //     icon: "mdi-file-document-edit",
-                    //     rule: "",
-                    // },
-                    // {
-                    //     label: "Re-print Cash Receipt",
-                    //     icon: "mdi-file-document-edit",
-                    //     rule: "",
-                    // },
-                    // {
-                    //     label: "Reapply Reciept",
-                    //     icon: "mdi-file-document-edit",
-                    //     rule: "",
-                    // },
-                    // {
-                    //     label: "Acknowledgement Reciepts",
-                    //     icon: "mdi-file-document-edit",
-                    //     rule: "",
-                    // },
-                    // {
-                    //     label: "A/R Transaction List",
-                    //     icon: "mdi-file-document-edit",
-                    //     rule: "",
-                    // },
-                    // {
-                    //     label: "Official Receipt Editing",
-                    //     icon: "mdi-file-document-edit",
-                    //     rule: "",
-                    // },
-                ],
-                processing_and_queries: [
-                    // {
-                    //     label: "Cash Receipts Subsidiary",
-                    //     icon: "mdi-file-document-edit",
-                    //     rule: "",
-                    // },
-                    // {
-                    //     label: "Cash Receipt Summary",
-                    //     icon: "mdi-file-document-edit",
-                    //     rule: "",
-                    // },
-                    // {
-                    //     label: "Apply PF Credit Adjustment",
-                    //     icon: "mdi-file-document-edit",
-                    //     rule: "",
-                    // },
-                ],
+                subcomponents: [],
+                processing_and_queries: [],
                 table_and_template: []
             },
             {

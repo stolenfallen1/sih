@@ -11,6 +11,7 @@
                             <th>Approval Date</th>
                             <th>Validity Date</th>
                             <th>Credit Limit</th>
+                            <th>isOpen</th>
                             <th width="4"></th>
                         </tr>
                     </thead>
@@ -21,7 +22,8 @@
                             <td style="margin: 0; padding: 1px;" width="100%"> <input v-model="item.guarantor_Approval_no" class="hmo-input fillable"/> </td>
                             <td style="margin: 0; padding: 1px;" width="100%"> <input v-model="item.guarantor_Approval_date" type="date" class="hmo-input fillable"/> </td>
                             <td style="margin: 0; padding: 1px;" width="100%"> <input v-model="item.guarantor_Validity_date" type="date" class="hmo-input fillable"/> </td>
-                            <td style="margin: 0; padding: 1px;" width="100%"> <input v-model="item.guarantor_Credit_Limit" class="hmo-input fillable"/> </td>
+                            <td style="margin: 0; padding: 1px;" width="100%"> <input v-model="item.guarantor_Credit_Limit" :readonly="item.isOpen === true" class="hmo-input fillable" />  </td>
+                            <td style="text-align: center"><input type="checkbox" v-model="item.isOpen" :checked="item.isOpen === true" /></td>
                             <td><v-icon color="red" @click="removeGuarantor(index)">mdi-delete</v-icon></td>
                         </tr>
                     </tbody>

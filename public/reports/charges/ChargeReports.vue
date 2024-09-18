@@ -15,11 +15,11 @@
             <section style="flex: 1;">
                 <div style="display: flex; margin: 5px 0;">
                     <span style="font-size: 13px; min-width: 150px;">Patient ID:</span>
-                    <span style="font-size: 13px;  display: inline-block; min-width: 150px;">{{ payload.patient_id }}</span>
+                    <span style="font-size: 13px;  display: inline-block; min-width: 150px;">{{ payload.patient_Id }}</span>
                 </div>
                 <div style="display: flex; margin: 5px 0;">
                     <span style="font-size: 13px; min-width: 150px;">Patient Name:</span>
-                    <span style="font-size: 13px;  display: inline-block; min-width: 150px;">{{ payload.patient_name }}</span>
+                    <span style="font-size: 13px;  display: inline-block; min-width: 150px;">{{ payload.patient_Name }}</span>
                 </div>
                 <div style="display: flex; margin: 5px 0;">
                     <span style="font-size: 13px; min-width: 150px;">DOB:</span>
@@ -40,8 +40,8 @@
                     <span style="font-size: 13px;  display: inline-block; min-width: 150px;">{{ payload.account }}</span>
                 </div>
                 <div style="display: flex; margin: 5px 0;">
-                    <span style="font-size: 13px; min-width: 150px;">Registry No:</span>
-                    <span style="font-size: 13px;  display: inline-block; min-width: 150px;">{{ payload.case_no }}</span>
+                    <span style="font-size: 13px; min-width: 150px;">Case No:</span>
+                    <span style="font-size: 13px;  display: inline-block; min-width: 150px;">{{ payload.case_No }}</span>
                 </div>
                 <div style="display: flex; margin: 5px 0;">
                     <span style="font-size: 13px; min-width: 150px;">Charge Date & Time:</span>
@@ -49,14 +49,14 @@
                 </div>
                 <div style="display: flex; margin: 5px 0;">
                     <span style="font-size: 13px; min-width: 150px;">Physician:</span>
-                    <span style="font-size: 13px;  display: inline-block; min-width: 150px;">{{ payload.attending_doctor_fullname }}</span>
+                    <span style="font-size: 13px;  display: inline-block; min-width: 150px;">{{ payload.attending_Doctor_fullname }}</span>
                 </div>
             </section>
         </div>
         <div style="margin-top: 12px;">
             <template v-if="groupedCharges">
-                <template v-for="(charges, refnum) in groupedCharges" :key="refnum">
-                    <p style="margin: 0;">CS #: {{ refnum }}</p>
+                <template v-for="(charges, groupKey) in groupedCharges" :key="groupKey">
+                    <p style="margin: 0;">CS #: {{ groupKey }}</p>
                     <table style="width: 100%; border-collapse: collapse; margin: 2px; text-align: left;">
                         <thead style="border-bottom: 1px solid #A9A9A9; border-top: 1px solid #A9A9A9;">
                             <tr>
@@ -69,15 +69,15 @@
                         </thead>
                         <tbody>
                             <tr v-for="(charge, index) in charges" :key="index" style="border-bottom: 1px solid #A9A9A9;">
-                                <td style="font-size: 12px;">{{ charge.revenue_id }}</td>
-                                <td style="font-size: 12px;">{{ charge.item_id }}</td>
-                                <td style="font-size: 12px;">{{ charge.revenue_id == 'MD' ? charge.doctor_details.doctor_name : charge.items.exam_description }}</td>
+                                <td style="font-size: 12px;">{{ charge.revenueID }}</td>
+                                <td style="font-size: 12px;">{{ charge.itemID }}</td>
+                                <td style="font-size: 12px;">{{ charge.revenueID == 'MD' ? charge.doctor_details?.doctor_name : charge.items?.exam_description }}</td>
                                 <td style="font-size: 12px;">{{ charge.quantity }}</td>
                                 <td style="font-size: 12px;">{{ usePeso(charge.amount) }}</td>
                             </tr>
                             <tr>
                                 <td colspan="4" style="text-align: right; font-size: 12px;">SUB-TOTAL:</td>
-                                <td style="font-size: 12px;">{{ usePeso(groupSubTotal(refnum)) }}</td>
+                                <td style="font-size: 12px;">{{ usePeso(groupSubTotal(groupKey)) }}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -113,10 +113,10 @@
                 <p style="margin: 0; font-size: 13px;">Processed by: <span style="">{{ chargeBy }}</span></p>
                 <p style="margin: 0; font-size: 13px;">Print Date: <span style="">{{ printDate }}</span></p>
             </div>
-            <div style="margin: 0; display: flex; justify-content: center; align-items: center;">
+            <!-- <div style="margin: 0; display: flex; justify-content: center; align-items: center;">
                 <p style="font-size: 13px;">To check results online</p>
                 <img src="/qr_code.png" width="100" height="100" />
-            </div>
+            </div> -->
         </footer>
     </main>
 </template>
@@ -141,18 +141,19 @@ const printDate = ref(new Date().toLocaleString([], { dateStyle: 'short', timeSt
 
 const groupedCharges = computed(() => {
     const grouped = props.charges.reduce((acc, charge) => {
-        if (!acc[charge.refnum]) {
-            acc[charge.refnum] = [];
+        const groupKey = `${charge.revenueID} - ${charge.refNum}`;
+        if (!acc[groupKey]) {
+            acc[groupKey] = [];
         }
-        acc[charge.refnum].push(charge);
+        acc[groupKey].push(charge);
         return acc;
     }, {});
     return grouped;
-})
+});
 
-const groupSubTotal = (refnum) => {
-    if (!groupedCharges.value[refnum]) return 0;
-    return groupedCharges.value[refnum].reduce((total, charge) => total + parseFloat(charge.amount), 0);
+const groupSubTotal = (groupKey) => {
+    if (!groupedCharges.value[groupKey]) return 0;
+    return groupedCharges.value[groupKey].reduce((total, charge) => total + parseFloat(charge.amount), 0);
 };
 
 const grandTotal = computed(() => {
