@@ -2,22 +2,34 @@
     <v-row class="py-4">
         <v-col cols="4">
             <v-col cols="12" class="form-col">
-                <v-col cols="12" class="form-col">
-                <v-list-subheader class="form-header">Transaction Type <span style="color: red;" class="mdi mdi-check"></span></v-list-subheader>
+                <v-list-subheader class="form-header">Register Source</v-list-subheader>
                 <v-autocomplete
-                    ref="mscAccount_Trans_Types"
-                    :items="transaction_type_data"
+                    variant="outlined"
+                    :items="register_source_data"
                     item-title="description"
                     item-value="id"
-                    v-model="payload.mscAccount_Trans_Types"
-                    :readonly="clicked_option === 'view'"
-                    :clearable="clicked_option === 'new' || clicked_option === 'edit'"
-                    density="compact"
-                    variant="outlined"
-                    :error-messages="formErrors.mscAccount_Trans_Types ? [formErrors.mscAccount_Trans_Types] : []"
+                    v-model="payload.register_source"
                     hide-details
+                    density="compact"
                 ></v-autocomplete>
             </v-col>
+            <v-col cols="12" class="form-col">
+                <v-col cols="12" class="form-col">
+                    <v-list-subheader class="form-header">Transaction Type <span style="color: red;" class="mdi mdi-check"></span></v-list-subheader>
+                    <v-autocomplete
+                        ref="mscAccount_Trans_Types"
+                        :items="transaction_type_data"
+                        item-title="description"
+                        item-value="id"
+                        v-model="payload.mscAccount_Trans_Types"
+                        :readonly="clicked_option === 'view'"
+                        :clearable="clicked_option === 'new' || clicked_option === 'edit'"
+                        density="compact"
+                        variant="outlined"
+                        :error-messages="formErrors.mscAccount_Trans_Types ? [formErrors.mscAccount_Trans_Types] : []"
+                        hide-details
+                    ></v-autocomplete>
+                </v-col>
             </v-col>
             <v-col cols="12" class="form-col">
                 <v-list-subheader class="form-header">Hospitalization Plan <span style="color: red;" class="mdi mdi-check"></span></v-list-subheader>
@@ -68,6 +80,18 @@
         </v-col>
         <v-col cols="4">
             <v-col cols="12" class="form-col">
+                <v-col cols="12" class="form-col">
+                    <v-list-subheader class="form-header">Register Case Type</v-list-subheader>
+                    <v-autocomplete
+                        variant="outlined"
+                        :items="register_case_type_data"
+                        item-title="description"
+                        item-value="id"
+                        v-model="payload.register_Case_Type"
+                        hide-details
+                        density="compact"
+                    ></v-autocomplete>
+                </v-col>
                 <v-list-subheader class="form-header">
                     {{ form_type === 'outpatient' ? 'OPD Case Date' : (form_type === 'emergency' ? 'ER Case Date' : 'IPD Case Date') }} <span style="color: red;" class="mdi mdi-check"></span>
                 </v-list-subheader>
@@ -155,6 +179,7 @@
                     hide-details
                 ></v-text-field>
             </v-col>
+
             <v-col cols="12" class="form-col">
                 <v-list-subheader :class="{'text-muted' : !payload.dead_on_arrival, 'form-header': true}">Type of Death</v-list-subheader>
                     <v-autocomplete
@@ -603,6 +628,30 @@ const getHospitalizationPlan = async () => {
     } 
 };
 
+const register_source_data = ref([]);
+const register_source_loading = ref(false);
+const registerSource = async () => {
+    register_source_loading.value = true;
+    const response = await useMethod("get", "get-admission-source", "", "");
+    if (response) {
+        register_source_data.value = response
+        console.log('Register Source', register_source_data);
+    }
+    register_source_loading.value = false;
+}
+
+const register_case_type_data = ref([]);
+const register_case_type_loading = ref(false);
+const registerCaseType = async () => {
+    register_case_type_loading.value = true;
+    const response = await useMethod("get", "get-case-type", "", "");
+    if (response) {
+        register_case_type_data.value = response
+        console.log('Case Type: ', register_case_type_data);
+    }
+    register_case_type_loading.value = false;
+}
+
 const price_group_data = ref([]);
 const price_group_loading = ref(false);
 const getPriceGroup = async () => {
@@ -669,6 +718,8 @@ onMounted(() => {
     getPatientBroughtBy();
     getNationality();
     getServiceType();
+    registerSource();
+    registerCaseType();
 });
 
 watch(() => props.payload.mscAccount_Type, (newVal, oldVal) => {
@@ -685,37 +736,37 @@ watch(() => enabled,(newValue) => {
 </script>
 
 <style scoped>
-.form-header {
-    color: #000;
-    margin: -12px 0px -12px 0px;
-    font-weight: 500;
-}
-.form-col {
-    padding: 3.25px 0px 3.25px 0px !important;
-    margin: 0px !important;
-}
-.fieldset-title {
-  font-weight: bold;
-  text-transform: uppercase;
-  border-bottom: 1px solid #ccc;
-  padding-bottom: 8px;
-  margin-bottom: 16px;
-}
-.truncate-text .v-input__control {
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}
+    .form-header {
+        color: #000;
+        margin: -12px 0px -12px 0px;
+        font-weight: 500;
+    }
+    .form-col {
+        padding: 3.25px 0px 3.25px 0px !important;
+        margin: 0px !important;
+    }
+    .fieldset-title {
+        font-weight: bold;
+        text-transform: uppercase;
+        border-bottom: 1px solid #ccc;
+        padding-bottom: 8px;
+        margin-bottom: 16px;
+    }
+    .truncate-text .v-input__control {
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
 
-.truncate-text .v-field__input {
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  max-height: 32px; /* Adjust this value as needed to ensure a consistent height */
-}
+    .truncate-text .v-field__input {
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        max-height: 32px; /* Adjust this value as needed to ensure a consistent height */
+    }
 
-.text-muted {
-    color: #6c757d; /* Muted text color */
-    opacity: 0.7;   /* Optional: Slightly reduces opacity */
-}
+    .text-muted {
+        color: #6c757d; /* Muted text color */
+        opacity: 0.7;   /* Optional: Slightly reduces opacity */
+    }
 </style>
