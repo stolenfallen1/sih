@@ -224,6 +224,7 @@ const onSubmit = async (user_details) => {
                     tab.value = "0";
                 } 
             } else {
+                console.log(payload.value);
                 const response = await useMethod("post", "register-outpatient", payload.value);   
                 if (response) {
                     useSnackbar(true, "green", response.message);

@@ -50,7 +50,6 @@
             :show-select="showSelect ? true : false"
             select-strategy="single"
             @update:modelValue="handleSelectedInput"
-            @click:row="handleSelectedRow"
             item-value="id"
             :hover="true"
             :prev-icon="prevIcon"
@@ -62,7 +61,7 @@
             >
                 <!-- Dynamically use slots based on column key -->
                 <slot :name="`column-${column.key}`" :item="props.item">
-                    {{ props.item[column.key] || "..." }}
+                    {{ props.item[column.key] }}
                 </slot>
             </template>
             <template v-slot:loading>
@@ -121,6 +120,14 @@ const props = defineProps({
         type: Boolean,
         default: false,
     },
+    // selectedRows: {
+    //     type: Array,
+    //     default: () => [],
+    // },
+    test: {
+        type: Array,
+        default: () => [],
+    },
     // showRadioButtons: {
     //     type: Boolean,
     //     default: false,
@@ -153,23 +160,20 @@ const handleSelectedInput = (selected) => {
     emits("selected-row", item);
 };
 
-const handleSelectedRow = (event, selectedRow) => {
-    
-    const index = selectedRows.value.indexOf(selectedRow?.item.id);
-    selectedRows.value = [];
-    let item = selectedRow.item;
-    if (index === -1) {
-        selectedRows.value.push(selectedRow?.item.id);
-    } else {
-        item = "";
-        selectedRows.value.splice(index, 1);
-    }
-    emits("selected-row", item);
-};
+// const handleSelectedRow = (event, selectedRow) => {
+//     const index = selectedRows.value.indexOf(selectedRow?.item.id);
+//     selectedRows.value = [];
+//     let item = selectedRow.item;
+//     if (index === -1) {
+//         selectedRows.value.push(selectedRow?.item.id);
+//     } else {
+//         item = "";
+//         selectedRows.value.splice(index, 1);
+//     }
+//     emits("selected-row", item);
+// };
 
 const handleActionClick = (action) => {
-    // Handle action button clicks (search, refresh)
-    // Emit events or perform actions as needed
     emits(`action-${action}`);
 };
 
@@ -191,6 +195,11 @@ const openFilterOptions = () => {
 onMounted(() => {
     // Additional initialization logic, if needed
 });
+onUpdated(() => {
+    if (props.test.length == [] || props.test.length == 0) {
+        selectedRows.value = [];
+    }
+})
 </script>
 
 <style scoped>

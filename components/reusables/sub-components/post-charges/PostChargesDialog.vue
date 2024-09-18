@@ -25,7 +25,7 @@
                                             readonly
                                         ></v-text-field>
                                     </v-col>
-                                    <v-col cols="12" class="form-col">
+                                    <v-col cols="12">
                                         <v-text-field 
                                             label="ID No."
                                             v-model="payload.patient_Id"
@@ -36,7 +36,7 @@
                                         ></v-text-field>
                                     </v-col>
                                 </v-row>
-                                <v-row class="form-col">
+                                <v-row>
                                     <v-col cols="6">
                                         <v-text-field 
                                             label="Civil Status"
@@ -58,8 +58,19 @@
                                         ></v-text-field>
                                     </v-col>
                                 </v-row>
-                                <v-row class="form-col">
-                                    <v-col cols="6">
+                                <v-row>
+                                    <v-col cols="4">
+                                        <v-text-field 
+                                            label="Age"
+                                            v-model="payload.age"
+                                            type="number"
+                                            variant="solo"
+                                            density="compact"
+                                            hide-details
+                                            readonly
+                                        ></v-text-field>
+                                    </v-col>
+                                    <v-col cols="4">
                                         <v-text-field 
                                             label="Birthdate"
                                             v-model="payload.birthdate"
@@ -70,11 +81,11 @@
                                             readonly
                                         ></v-text-field>
                                     </v-col>
-                                    <v-col cols="6">
+                                    <v-col cols="4">
                                         <v-text-field 
-                                            label="Age"
-                                            v-model="payload.age"
-                                            type="number"
+                                            label="Registry Case Date"
+                                            v-model="payload.registry_Date"
+                                            type="date"
                                             variant="solo"
                                             density="compact"
                                             hide-details
@@ -105,7 +116,7 @@
                                             readonly
                                         ></v-text-field>
                                     </v-col>
-                                    <v-col cols="3" class="form-col">
+                                    <v-col cols="3">
                                         <v-text-field
                                             label="ID"
                                             v-model="payload.attending_Doctor"
@@ -115,7 +126,7 @@
                                             readonly
                                         ></v-text-field>
                                     </v-col>
-                                    <v-col cols="9" class="form-col">
+                                    <v-col cols="9">
                                         <v-text-field
                                             label="Physician Name"
                                             v-model="payload.attending_Doctor_fullname"
@@ -125,7 +136,7 @@
                                             readonly
                                         ></v-text-field>
                                     </v-col>
-                                    <v-col cols="3" class="form-col">
+                                    <v-col cols="3">
                                         <v-text-field
                                             label="ID"
                                             v-model="payload.guarantor_Id"
@@ -135,7 +146,7 @@
                                             readonly
                                         ></v-text-field>
                                     </v-col>
-                                    <v-col cols="9" class="form-col">
+                                    <v-col cols="9">
                                         <v-text-field
                                             label="Guarantor Name"
                                             v-model="payload.guarantor_Name"
@@ -145,18 +156,17 @@
                                             readonly
                                         ></v-text-field>
                                     </v-col>
-                                    <v-col cols="6" class="form-col">
-                                        <v-text-field 
-                                            label="Registry Case Date"
-                                            v-model="payload.registry_Date"
-                                            type="date"
+                                    <v-col cols="6" v-if="payload.account == 'Company / Insurance'">
+                                        <v-text-field
+                                            label="Credit Limit"
+                                            v-model="payload.guarantor_Credit_Limit"
                                             variant="solo"
                                             density="compact"
                                             hide-details
                                             readonly
-                                        ></v-text-field>
+                                        />
                                     </v-col>
-                                    <v-col cols="6" class="form-col">
+                                    <v-col cols="6">
                                         <v-autocomplete
                                             bg-color="#C0C0C0"
                                             label="Charge To"
@@ -190,7 +200,7 @@
                                 <v-menu activator="parent">
                                     <v-list>
                                     <v-list-item
-                                        v-for="(item, index) in revenue_code_data"
+                                        v-for="(item, index) in revenue_code_data_display"
                                         :key="index"
                                         :value="index"
                                     >
@@ -239,6 +249,12 @@
                                         </tr>
                                     </template>
                                 </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <td colspan="6" class="text-right">Total Amount: </td>
+                                        <td>{{ usePeso(totalAmount) }}</td>
+                                    </tr>
+                                </tfoot>
                             </v-table>
                         </v-expansion-panel-text>
                     </v-expansion-panel>
@@ -267,6 +283,12 @@
                                         </tr>
                                     </template>
                                 </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <td colspan="3" class="text-right">Total Amount: </td>
+                                        <td>{{ usePeso(totalAmount) }}</td>
+                                    </tr>
+                                </tfoot>
                             </v-table>
                         </v-expansion-panel-text>
                     </v-expansion-panel>
@@ -300,15 +322,23 @@
                                                 <template v-for="item in charges_history_data">
                                                     <tr>
                                                         <td> <input type="checkbox" :checked="isCheckedCharges(item)" @change="toggleChargeSelection(item)" /></td>
-                                                        <td> <input readonly :value="item.refnum" /> </td>
-                                                        <td> <input readonly :value="item.revenue_id" /> </td>
-                                                        <td> <input readonly :value="item.item_id" /> </td>
+                                                        <td> <input readonly :value="item.refNum" /> </td>
+                                                        <td> <input readonly :value="item.revenueID" /> </td>
+                                                        <td> <input readonly :value="item.itemID" /> </td>
                                                         <td> <input readonly :value="item?.items?.exam_description" /> </td>
                                                         <td> <input readonly :value="parseInt(item.quantity)" /> </td>
                                                         <td> <input readonly :value="usePeso(item.net_amount)" /> </td>
                                                     </tr>
                                                 </template>
                                             </tbody>
+                                            <tfoot>
+                                                <tr>
+                                                    <td colspan="6" class="text-right">Total Amount: </td>
+                                                    <td>
+                                                        {{  usePeso(chargeAmountHistory) }}
+                                                    </td>
+                                                </tr>
+                                            </tfoot>
                                         </v-table>
                                     </template>
                                 </v-window-item>
@@ -346,6 +376,14 @@
                                                     </tr>
                                                 </template>
                                             </tbody>
+                                            <tfoot>
+                                                <tr>
+                                                    <td colspan="7" class="text-right">Total Amount: </td>
+                                                    <td>
+                                                        {{ usePeso(cashAmountHistory) }}
+                                                    </td>
+                                                </tr>
+                                            </tfoot>
                                         </v-table>
                                     </template>
                                 </v-window-item>
@@ -381,14 +419,22 @@
                                                 <template v-for="item in professional_fees_history">
                                                     <tr>
                                                         <td> <input type="checkbox" :checked="isCheckedCharges(item)" @change="toggleChargeSelection(item)" /></td>
-                                                        <td> <input readonly :value="item.refnum" /> </td>
-                                                        <td> <input readonly :value="item.revenue_id" /> </td>
-                                                        <td> <input readonly :value="item.item_id" /> </td>
+                                                        <td> <input readonly :value="item.refNum" /> </td>
+                                                        <td> <input readonly :value="item.revenueID" /> </td>
+                                                        <td> <input readonly :value="item.itemID" /> </td>
                                                         <td> <input readonly :value="item?.doctor_details?.doctor_name" /> </td>
                                                         <td> <input readonly :value="usePeso(item.net_amount)" /> </td>
                                                     </tr>
                                                 </template>
                                             </tbody>
+                                            <tfoot>
+                                                <tr>
+                                                    <td colspan="5" class="text-right">Total Amount: </td>
+                                                    <td>
+                                                        {{ usePeso(chargeProfFeeAmountHistory) }}
+                                                    </td>
+                                                </tr>
+                                            </tfoot>
                                         </v-table>
                                     </template>
                                 </v-window-item>
@@ -424,6 +470,14 @@
                                                     </tr>
                                                 </template>
                                             </tbody>
+                                            <tfoot>
+                                                <tr>
+                                                    <td colspan="6" class="text-right">Total Amount: </td>
+                                                    <td>
+                                                        {{ usePeso(cashProfFeeAmountHistory) }}
+                                                    </td>
+                                                </tr>
+                                            </tfoot>
                                         </v-table>
                                     </template>
                                 </v-window-item>
@@ -438,7 +492,7 @@
                 <v-btn class="text-white bg-error" @click="confirmRevoke">Revoke Charge</v-btn>
                 <v-btn class="text-white bg-info" @click="onPrint">Print</v-btn>
                 <v-spacer></v-spacer>
-                <v-btn :loading="isLoadingBtn" :disabled="isLoadingBtn" class="text-white bg-primary" @click="onSubmit">Charge and Print</v-btn>
+                <v-btn :loading="isLoadingBtn" :disabled="isLoadingBtn" class="text-white bg-primary" @click="confirmCharge">Charge and Print</v-btn>
 
             </v-card-actions>
         </v-card>
@@ -457,6 +511,13 @@
         :open_professionals_list="open_professionals_list"
         @handle-select="handleSelectedProfessionalFee"
         @close-dialog="closeProfessionalsList"
+    />
+
+    <Confirmation 
+        :show="chargeconfirmation"
+        :payload="payload"
+        @submit="onSubmit"
+        @close="closeConfirmCharge"
     />
 
     <Confirmation 
@@ -503,7 +564,9 @@ const charge_to = ref([
     { value: 1, text: "Self-Pay" },
     { value: 2, text: "Company / Insurance" }, 
 ]);
+const credit_limit = ref(null);
 
+const chargeconfirmation = ref(false);
 const revokeconfirmation = ref(false);
 
 const isCheckedCharges = (item) => {
@@ -546,22 +609,7 @@ watch(pf_history_tab, (newTab) => {
 });
 
 const chargecode = ref([]);
-const payload = ref({
-    patient_Name: "",
-    patient_id: null,
-    civil_status: "",
-    sex: "",
-    birthdate: null,
-    age: null,
-    case_no: null,
-    account: null,
-    charge_to: null,
-    registry_Date: null,
-    attending_doctor: null,
-    attending_doctor_fullname: "",
-    guarantor_id: null,
-    guarantor_name: "",
-});
+const payload = ref({});
 
 const Charges = ref([
     {
@@ -569,6 +617,8 @@ const Charges = ref([
         map_item_id: "",
         exam_description: "",
         charge_type: 1,
+        drcr: "",
+        lgrp: "",
         specimen: "",
         quantity: 1,
         price: null,
@@ -581,27 +631,62 @@ const DoctorCharges = ref([
         code: "MD",
         doctor_code: "",
         doctor_name: "",
+        drcr: "",
+        lgrp: "",
         amount: null,
         record_status: null,
     }
 ]);
 
 const revenue_code_data = ref([]);
+const revenue_code_data_display = ref([]);
 const getRevenueCode = async () => {
     const revenue_res = await useMethod("get", "get-transaction-codes", "", "");
     if (revenue_res) {
         const desiredCodes = useRevenueCode();
-        console.log(desiredCodes);
         if (desiredCodes && Array.isArray(desiredCodes)) {
-            revenue_code_data.value = revenue_res.filter(item => {
-                return desiredCodes.includes(item.id.toString()) && item.code !== "MD";
-            });
+            revenue_code_data.value = revenue_res.filter(item => desiredCodes.includes(item.id.toString()));
+            revenue_code_data_display.value = revenue_code_data.value.filter(item => item.code !== "MD");
         } 
     } else {
         useSnackbar(true, "error", "Failed to get revenue codes.");
     }
 };
 
+const totalChargesAmount = computed(() => {
+    return Charges.value.reduce((acc, item) => {
+        const cleanPrice = typeof item.price === 'string'
+            ? parseFloat(item.price.replace(/[^\d.-]/g, ''))
+            : parseFloat(item.price) || 0;
+        return acc + (cleanPrice || 0);
+    }, 0);
+});
+
+const totalDoctorChargesAmount = computed(() => {
+    return DoctorCharges.value.reduce((acc, item) => {
+        const cleanAmount = typeof item.amount === 'string'
+            ? parseFloat(item.amount.replace(/[^\d.-]/g, ''))
+            : parseFloat(item.amount) || 0;
+        return acc + (cleanAmount || 0);
+    }, 0);
+});
+
+const chargeAmountHistory = computed(() => {
+    return charges_history_data.value ? charges_history_data.value.reduce((acc, item) => acc + parseFloat(item.net_amount), 0) : 0;
+});
+const cashAmountHistory = computed(() => {
+    return cash_assessment_history.value ? cash_assessment_history.value.reduce((acc, item) => acc + parseFloat(item.amount), 0) : 0;
+});
+const chargeProfFeeAmountHistory = computed(() => {
+    return professional_fees_history.value ? professional_fees_history.value.reduce((acc, item) => acc + parseFloat(item.net_amount), 0) : 0;
+});
+const cashProfFeeAmountHistory = computed(() => {
+    return cash_prof_fee_history.value ? cash_prof_fee_history.value.reduce((acc, item) => acc + parseFloat(item.amount), 0) : 0;
+});
+
+const totalAmount = computed(() => totalChargesAmount.value + totalDoctorChargesAmount.value);
+const totalHistoryAmount = computed(() => chargeAmountHistory.value + cashAmountHistory.value + chargeProfFeeAmountHistory.value + cashProfFeeAmountHistory.value);
+const patientExcessAmount = computed(() => parseFloat((totalHistoryAmount.value ? totalAmount.value + totalHistoryAmount.value : totalAmount.value).toFixed(2)));
 
 const handleAddCharge = (item, index) => {
     item.code = item.code.toUpperCase();
@@ -609,9 +694,21 @@ const handleAddCharge = (item, index) => {
     if (!item.code) {
         return useSnackbar(true, "error", "Dept Code Should not be empty.");
     }
+    if (item.code === "MD") {
+        return useSnackbar(true, "error", "Invalid Dept Code, refer to help code.");
+    }
     const desiredCodes = revenue_code_data.value.map(item => item.code);
     if (desiredCodes.includes(item.code) === false) {
         return useSnackbar(true, "error", "Invalid Dept Code, refer to help code.");
+    }
+
+    const matchingRevenue = revenue_code_data.value.find(revenue => revenue.code === item.code);
+    if (matchingRevenue) {
+        item.drcr = matchingRevenue.drcr;
+        item.lgrp = matchingRevenue.lgrp;
+    } else {
+        item.drcr = "";
+        item.lgrp = "";
     }
 
     user_input_revenue_code.value = item.code;
@@ -699,6 +796,16 @@ const handleAddProfessionalFee = (item, index) => {
     if (item.code && !item.doctor_code && !item.doctor_name) {
         open_professionals_list.value = true;
     }
+
+    const matchingRevenue = revenue_code_data.value.find(revenue => revenue.code === item.code);
+    if (matchingRevenue) {
+        item.drcr = matchingRevenue.drcr;
+        item.lgrp = matchingRevenue.lgrp;
+    } else {
+        item.drcr = "";
+        item.lgrp = "";
+    }
+
     if (item.code && item.doctor_code && item.doctor_name) {
         DoctorCharges.value.push({
             code: "MD",
@@ -773,8 +880,7 @@ const printCashAssessment = (payload, charges) => {
     }
 }
 
-const onSubmit = async () => {
-    isLoadingBtn.value = true;
+const confirmCharge = () => {
     let charges = Charges.value.filter(obj => obj.code !== '');
     let doctorcharges = DoctorCharges.value.filter(obj => obj.doctor_code !== '');
     if (doctorcharges.map(item => item.amount).includes(null)) {
@@ -785,43 +891,79 @@ const onSubmit = async () => {
         isLoadingBtn.value = false;
         return useSnackbar(true, "error", "Please add charges or professional fees.");
     }
+    chargeconfirmation.value = true;
     payload.value.Charges = charges;
     payload.value.DoctorCharges = doctorcharges;
+}
 
-    if (payload.value.charge_to === "Company / Insurance") {
-        try {
-            payload.value.msc_price_scheme_id = 2;
-            let response = await useMethod("post", "post-his-charge", payload.value);
-            if (response) {
-                useSnackbar(true, "success", "Charges posted successfully.");
-                closeDialog();
-                printCharges(payload.value, response.data.charges);
-            } else {
-                return useSnackbar(true, "error", "Failed to post charges.");
+
+const onSubmit = async (user_details) => {
+    if (user_details.user_passcode === usePasscode()) {
+        isLoadingBtn.value = true;
+        if (payload.value.charge_to === "Company / Insurance") {
+            try {
+                credit_limit.value = payload.value.guarantor_Credit_Limit === 'OPEN' ? null : parseFloat(payload.value.guarantor_Credit_Limit.replace(/[^0-9.-]+/g, ''));
+                if (credit_limit.value != null && patientExcessAmount.value > credit_limit.value) {
+                    let excessAmount = patientExcessAmount.value - credit_limit.value;
+                    const confirmCharge = window.confirm(`Credit limit exceeded for a total of ${usePeso(excessAmount)}. Do you want to continue?`);
+                    if (!confirmCharge) {
+                        isLoadingBtn.value = false;
+                        closeConfirmCharge();
+                    } else {
+                        payload.value.msc_price_scheme_id = 2;
+                        let response = await useMethod("post", "post-his-charge", payload.value);
+                        if (response) {
+                            useSnackbar(true, "success", `Charges posted successfully but with excess amount of ${usePeso(excessAmount)}`);
+                            closeDialog();
+                            closeConfirmCharge();
+                            printCharges(payload.value, response.data.charges);
+                        } else {
+                            return useSnackbar(true, "error", "Failed to post charges.");
+                        }
+                    }
+                } else {
+                    payload.value.msc_price_scheme_id = 2;
+                    let response = await useMethod("post", "post-his-charge", payload.value);
+                    if (response) {
+                        useSnackbar(true, "success", "Charges posted successfully.");
+                        closeDialog();
+                        closeConfirmCharge();
+                        printCharges(payload.value, response.data.charges);
+                    } else {
+                        return useSnackbar(true, "error", "Failed to post charges.");
+                    }
+                }
+            } catch (error) {
+                return useSnackbar(true, "error", "CATCH ERROR: Call IT Department");
+            } finally {
+                isLoadingBtn.value = false;
             }
-        } catch (error) {
-            return useSnackbar(true, "error", "CATCH ERROR: Call IT Department");
-        } finally {
-            isLoadingBtn.value = false;
+        } else {
+            try {
+                payload.value.msc_price_scheme_id = 1;
+                let response = await useMethod("post", "post-cash-assessment", payload.value);
+                if (response) {
+                    useSnackbar(true, "success", "Charges posted successfully.");
+                    closeDialog();
+                    closeConfirmCharge();
+                    printCashAssessment(payload.value, response.data.charges);
+                } else {
+                    return useSnackbar(true, "error", "Failed to post charges.");
+                }
+            } catch (error) {
+                return useSnackbar(true, "error", "CATCH ERROR: Call IT Department");
+            } finally {
+                isLoadingBtn.value = false;
+            }
         }
     } else {
-        try {
-            payload.value.msc_price_scheme_id = 1;
-            let response = await useMethod("post", "post-cash-assessment", payload.value);
-            if (response) {
-                useSnackbar(true, "success", "Charges posted successfully.");
-                closeDialog();
-                printCashAssessment(payload.value, response.data.charges);
-            } else {
-                return useSnackbar(true, "error", "Failed to post charges.");
-            }
-        } catch (error) {
-            return useSnackbar(true, "error", "CATCH ERROR: Call IT Department");
-        } finally {
-            isLoadingBtn.value = false;
-        }
+        return useSnackbar(true, "error", "Password incorrect.");
     }
 };
+
+const closeConfirmCharge = () => {
+    chargeconfirmation.value = false;
+}
 
 const confirmRevoke = () => {
     if (selected_charges.value.length > 0 || selected_cash_assessment.value.length > 0) {
@@ -1026,6 +1168,9 @@ const closeDialog = () => {
     ];
     selected_charges.value = [];
     selected_cash_assessment.value = [];
+    totalAmount.value = null;
+    totalHistoryAmount.value = null;
+    credit_limit.value = null;
     payload.value.charge_to = payload.value.account;
 }
 
@@ -1058,13 +1203,18 @@ onUpdated(() => {
     payload.value.attending_Doctor_fullname = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0].attending_Doctor_fullname || 'N/A';
     payload.value.guarantor_Id = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0].guarantor_Id || payload.value.patient_Id;
     payload.value.guarantor_Name = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0].guarantor_Name || 'PERSONAL';
-    
+    payload.value.guarantor_Credit_Limit = selectedRowDetails.value.patient_registry 
+            && selectedRowDetails.value.patient_registry[0].guarantor_Credit_Limit !== null 
+            && selectedRowDetails.value.patient_registry[0].guarantor_Credit_Limit !== undefined
+            ? usePeso(selectedRowDetails.value.patient_registry[0].guarantor_Credit_Limit) 
+            : "OPEN";
+
     // Charges history
     if (payload.value.patient_Id && payload.value.case_No) {
         getChargesHistory();
         getProfFeeHistory();
         getCashAssessmentHistory();
-        getCashProfHistory();
+        getCashProfHistory(); 
     }
 })
 

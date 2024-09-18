@@ -6,17 +6,17 @@
                     <v-card elevation="4">
                         <v-card-text>
                             <p>
-                                <span style="font-weight: bold; font-style: italic;" >NOTE: </span>&nbsp;This action is irreversible. 
+                                <span style="font-weight: bolder; font-style: italic; color: red;">NOTE: </span>&nbsp;This action is <span style="text-decoration: underline; font-weight: bolder;">irreversible</span>. 
                                 Once the OR is cancelled, you cannot undo this action. And will need to re-issue a new OR.
                             </p>
                         </v-card-text>
                     </v-card>
                 </v-col>
                 <v-col cols="6">
+                    <v-list-subheader class="form-header">OR Number</v-list-subheader>
                     <v-text-field
                         variant="solo"
                         density="compact"
-                        label="OR Number"
                         @keyup.enter="searchORNumber"
                         v-model="payload.ORNumber"
                         required
@@ -24,21 +24,21 @@
                     ></v-text-field>
                 </v-col>
                 <v-col cols="6">
+                    <v-list-subheader class="form-header">TransDate</v-list-subheader>
                     <v-text-field
                         type="date"
                         variant="solo"
                         density="compact"
-                        label="TransDate"
                         v-model="payload.CancelDate"
                         required
                         hide-details
                     ></v-text-field>
                 </v-col>
                 <v-col cols="12">
+                    <v-list-subheader class="form-header">Reason for Cancellation</v-list-subheader>
                     <v-textarea
                         variant="solo"
                         density="compact"
-                        label="Reason for Cancellation"
                         v-model="payload.CancelledReason"
                         required
                         hide-details
@@ -47,7 +47,7 @@
             </v-row>
         </v-col>
         <v-col cols="8">
-            <v-table density="compact" height="25vh"  class="styled-table" :hover="true">
+            <v-table density="compact" height="35vh"  class="styled-table" :hover="true">
                 <thead>
                     <tr>
                         <th>Patient ID</th>
@@ -156,6 +156,11 @@ const onSubmit = async (user_details) => {
 </script>
 
 <style scoped>
+.form-header {
+    color: #000;
+    margin: -12px 0px -12px 0px;
+    font-weight: 500;
+}
 .styled-table th {
     max-width: 100%;
     padding: 8px;

@@ -77,6 +77,7 @@
       :itemsPerPage="itemsPerPage"
       :tableTitle="pageTitle"
       :current-tab="currentTab"
+      :test="test"
       @fetchPage="loadItems"
       @selected-row="selectedUser"
       @tab-change="handleTabChange"
@@ -85,6 +86,15 @@
       @open-filter="openFilterOptions"
     >
       <template v-for="column in columns" v-slot:[`column-${column.key}`]="{ item }">
+        <div v-if="column.key === 'SOA' && item.patient_registry && item.patient_registry[0].mscPrice_Schemes == 2" >
+          <v-tooltip text="Statement of Account">
+            <template v-slot:activator="{ props }">
+              <v-btn v-bind="props" density="compact" hide-details @click="openPatientSOA(item)">
+                <v-icon>mdi-clipboard-file-outline</v-icon>
+              </v-btn>
+            </template>
+          </v-tooltip>
+        </div>
         <div v-if="column.key === 'registry_Status'" :key="column.key" class="isActive">
           <span 
             :style="{ cursor: 'default', display: 'block', height: '26px', width: '9px', backgroundColor: item.patient_registry && item.patient_registry[0].mscPatient_Category == 2 ? 'blue' : 'green' }" 
@@ -93,8 +103,8 @@
         </div>
         <div v-if="column.key === 'isHMO'" :key="column.key" class="isHMO">
           <span 
-            :style="{ cursor: 'default', display: 'block', height: '26px', width: '9px', backgroundColor: item.patient_registry && item.patient_registry[0].guarantor_Id !== null ? 'yellow' : 'orange' }" 
-            :title="item.patient_registry && item.patient_registry[0].guarantor_Id !== null ? 'HMO ' : 'Self Pay'"
+            :style="{ cursor: 'default', display: 'block', height: '26px', width: '9px', backgroundColor: item.patient_registry && item.patient_registry[0].mscPrice_Schemes == 2 ? 'yellow' : 'orange' }" 
+            :title="item.patient_registry && item.patient_registry[0].mscPrice_Schemes == 2 ? 'HMO ' : 'Self Pay'" 
             />
         </div>
         <span v-if="column.key === 'case_No'" :key="column.key">
@@ -173,12 +183,13 @@
   <OutPatientRegistration :clicked_option="clicked_option" :form_dialog="form_dialog" @close-dialog="closeAddFormDialog" />
   <RevokeRegistrationForm :open_revoke_form="open_revoke_form" @close-dialog="closeRevokeUser" @refresh-data="loadItems" />
   <UnrevokeRegistrationForm :open_unrevoke_form="open_unrevoke_form" @close-dialog="closeUnrevokeUser" @refresh-data="loadItems" />
+  <SOADisplayForm :open_patient_soa="open_patient_soa" :patient="selectedPatient" @close-dialog="closePatientSOA" />
   
   <!-- Out-patients Sub components -->
   <PatientProfileDialog :show="PatientProfile" :form_payload="payload" @close-dialog="useSubComponents('PatientProfile', false)" />
   <SuspendDialog :show="Suspend" :form_type="form_type" @close-dialog="useSubComponents('Suspend', false)" />
-  <RequisitionsDialog :show="Requisitions" :form_type="form_type" @close-dialog="useSubComponents('Requisitions', false)" />
-  <PostChargesDialog :show="PostCharges" @close-dialog="useSubComponents('PostCharges', false)" />
+  <RequisitionsDialog :show="Requisitions" :form_type="form_type" @close-dialog="handleClose('Requisitions')" />
+  <PostChargesDialog :show="PostCharges" @close-dialog="handleClose('PostCharges')" />
   <PrintTransReceiptDialog :show="PrintTransactionReceipt" @close-dialog="useSubComponents('PrintTransactionReceipt', false)"/>
   <PostCorporatePackageDialog :show="PostCorporateMedicalPackage" @close-dialog="useSubComponents('PostCorporateMedicalPackage', false)"/>
   <PostDiagnosticPackageDialog :show="PostDiagnosticMedicalPackage" @close-dialog="useSubComponents('PostDiagnosticMedicalPackage', false)"/> 
@@ -260,6 +271,7 @@ const currentTab = ref(1);
 const showTabs = ref(true);
 const serverItems = ref([]);
 const columns = ref([]);
+const selectedRows = ref([]);
 const tableTabs = ref([
   {
     label: "Registered",
@@ -267,6 +279,12 @@ const tableTabs = ref([
     value: 1,
     endpoint: useApiUrl() + "/get-outpatient",
     columns: [
+              {
+                title: "",
+                align: "start",
+                sortable: false,
+                key: "SOA",
+              },
               {
                 title: "",
                 align: "start",
@@ -289,7 +307,7 @@ const tableTabs = ref([
                 title: "Case No.",
                 align: "start",
                 sortable: false,
-                key: "case_no",
+                key: "case_No",
               },
               {
                 title: "Last Name",
@@ -335,18 +353,6 @@ const tableTabs = ref([
     value: 2,
     endpoint: useApiUrl() + "/get-revoked-outpatient",
     columns: [
-              {
-                title: "",
-                align: "start",
-                sortable: false,
-                key: "registry_Status",
-              },
-              {
-                title: "",
-                align: "start",
-                sortable: false,
-                key: "isHMO",
-              },
               {
                 title: "Patient ID",
                 align: "start",
@@ -403,18 +409,6 @@ const tableTabs = ref([
     value: 3,
     endpoint: useApiUrl() + "/get-revoked-outpatient",
     columns: [
-              {
-                title: "",
-                align: "start",
-                sortable: false,
-                key: "registry_Status",
-              },
-              {
-                title: "",
-                align: "start",
-                sortable: false,
-                key: "isHMO",
-              },
               {
                 title: "Patient ID",
                 align: "start",
@@ -477,18 +471,6 @@ const tableTabs = ref([
     value: 4,
     endpoint: useApiUrl() + "/get-revoked-outpatient",
     columns: [
-              {
-                title: "",
-                align: "start",
-                sortable: false,
-                key: "registry_Status",
-              },
-              {
-                title: "",
-                align: "start",
-                sortable: false,
-                key: "isHMO",
-              },
               {
                 title: "Patient ID",
                 align: "start",
@@ -556,6 +538,7 @@ const payload = ref({});
 const selectedPatient = ref({});
 const open_revoke_form = ref(false);
 const open_unrevoke_form = ref(false);
+const open_patient_soa = ref(false);
 
 const totalItems = ref(0);
 const itemsPerPage = ref(50);
@@ -700,6 +683,14 @@ const closeViewSummary = () => {
   open_summary_modal.value = false;
 }
 
+const openPatientSOA = (patient) => {
+  selectedPatient.value = patient;
+  open_patient_soa.value = true;
+}
+const closePatientSOA = () => {
+  open_patient_soa.value = false;
+}
+
 const loadItems = async (options = null, searchkeyword = null) => {
   try {
     loading.value = true;
@@ -742,6 +733,15 @@ const updateTotalItems = (newTotalItems) => {
 const updateServerItems = (newServerItems) => {
   serverItems.value = newServerItems;
 };
+
+const test = ref(['test']);
+const handleClose = (dialogName) => {
+  selectedRowDetails.value = Object.assign({}, {});
+  selectedRows.value = [];
+  test.value = [];
+  isSelectedUser.value = true;
+  useSubComponents(dialogName, false);
+}
 
 handleTabChange(currentTab.value);
 </script>
