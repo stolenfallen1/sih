@@ -32,7 +32,7 @@
                 <v-col cols="6">
                     <v-list-subheader class="form-header" style="color: red; font-weight: bolder; cursor: pointer;">OR Number</v-list-subheader> 
                     <v-text-field
-                        variant="solo"
+                        variant="outlined"
                         density="compact"
                         v-model="payload.ORNumber"
                         @click="openCashierSettings"
@@ -45,7 +45,7 @@
                     <v-list-subheader class="form-header">Admission No</v-list-subheader>
                     <v-text-field
                         v-model="payload.case_No"
-                        variant="solo"
+                        variant="outlined"
                         density="compact"
                         hide-details
                         @keyup.enter="getPatientByCaseNo"
@@ -54,7 +54,7 @@
                 <v-col cols="12" >
                     <v-list-subheader class="form-header">Payment Code</v-list-subheader>
                     <v-autocomplete
-                        variant="solo"
+                        variant="outlined"
                         density="compact"
                         item-title="description"
                         item-value="id"
@@ -67,7 +67,7 @@
                 <v-col cols="6" v-if="payload.payment_code !== 6">
                     <v-list-subheader class="form-header">Charge Slip</v-list-subheader>
                     <v-text-field
-                        variant="solo"
+                        variant="outlined"
                         density="compact"
                         v-model="payload.refNum"
                         @keyup.enter="handleKeyEnter"
@@ -77,16 +77,17 @@
                 <v-col cols="6" v-if="payload.payment_code === 6">
                     <v-list-subheader class="form-header">Company Code</v-list-subheader>
                     <v-text-field
-                        variant="solo"
+                        variant="outlined"
                         density="compact"
                         v-model="payload.company_code"
+                        @keyup.enter="handleKeyEnter"
                         hide-details
                     ></v-text-field>
                 </v-col>
                 <v-col cols="6" >
                     <v-list-subheader class="form-header">Account No</v-list-subheader>
                     <v-text-field
-                        variant="solo"
+                        variant="outlined"
                         density="compact"
                         v-model="payload.accountnum"
                         hide-details
@@ -96,7 +97,7 @@
                 <v-col cols="12" >
                     <v-list-subheader class="form-header">Payors Name</v-list-subheader>
                     <v-text-field
-                        variant="solo"
+                        variant="outlined"
                         density="compact"
                         v-model="payload.payors_name"
                         hide-details
@@ -105,7 +106,7 @@
                 <v-col cols="6" >
                     <v-list-subheader class="form-header">Hospital Bills</v-list-subheader>
                     <v-text-field
-                        variant="solo"
+                        variant="outlined"
                         density="compact"
                         v-model="payload.hospital_bills"
                         hide-details
@@ -115,8 +116,7 @@
                 <v-col cols="6" >
                     <v-list-subheader class="form-header">Credit Limit</v-list-subheader>
                     <v-text-field
-                        :style="{ border: payload.hospital_bills > payload.guarantor_Credit_Limit ? '1px solid red' : '' }"
-                        variant="solo"
+                        variant="outlined"
                         density="compact"
                         v-model="payload.guarantor_Credit_Limit"
                         hide-details
@@ -131,7 +131,7 @@
                     <v-list-subheader class="form-header">Item Code / Qty</v-list-subheader>
                     <v-text-field
                         v-model="payload.itemID"
-                        variant="solo"
+                        variant="outlined"
                         density="compact"
                         hide-details
                         readonly
@@ -141,7 +141,7 @@
                     <v-list-subheader class="form-header">Transaction Code</v-list-subheader>
                     <v-text-field
                         v-model="payload.transaction_code"
-                        variant="solo"
+                        variant="outlined"
                         density="compact"
                         hide-details
                         readonly
@@ -151,7 +151,7 @@
                     <v-list-subheader class="form-header">Particulars</v-list-subheader>
                     <v-textarea
                         v-model="payload.particulars"
-                        variant="solo"
+                        variant="outlined"
                         density="compact"
                         hide-details
                         readonly
@@ -160,7 +160,7 @@
                 <v-col cols="8" >
                     <v-list-subheader class="form-header">Discount</v-list-subheader>
                     <v-autocomplete
-                        variant="solo"
+                        variant="outlined"
                         density="compact"
                         item-title="description"
                         item-value="id"
@@ -172,8 +172,9 @@
                 <v-col cols="4" >
                     <v-list-subheader class="form-header">Percent ( % )</v-list-subheader>
                     <v-text-field
-                        variant="solo"
+                        variant="outlined"
                         density="compact"
+                        @input="calculateDiscount"
                         v-model="payload.discount_percent"
                         hide-details
                     ></v-text-field>
@@ -186,7 +187,8 @@
                     <v-list-subheader class="form-header">Item Amount</v-list-subheader>
                     <v-text-field
                         v-model="payload.amount"
-                        variant="solo"
+                        @input="calculateDiscount"
+                        variant="outlined"
                         density="compact"
                         hide-details
                     ></v-text-field>
@@ -194,8 +196,7 @@
                 <v-col cols="12" >
                     <v-list-subheader class="form-header">Total Discount</v-list-subheader>
                     <v-text-field
-                        type="number"
-                        variant="solo"
+                        variant="outlined"
                         density="compact"
                         v-model="payload.total_discount"
                         hide-details
@@ -205,10 +206,9 @@
                 <v-col cols="12" >
                     <v-list-subheader class="form-header">Sub Total</v-list-subheader>
                     <v-text-field
-                        type="number"
-                        variant="solo"
+                        variant="outlined"
                         density="compact"
-                        v-model="payload.sub_total"
+                        v-model="payload.amount"
                         hide-details
                         readonly
                     ></v-text-field>
@@ -216,22 +216,21 @@
                 <v-col cols="12" >
                     <v-list-subheader class="form-header">Withholding Tax</v-list-subheader>
                     <v-text-field
-                        variant="solo"
+                        variant="outlined"
                         density="compact"
                         v-model="payload.withholding_tax"
                         hide-details
-                        readonly
                     ></v-text-field>
                 </v-col>
                 <v-col cols="12" >
                 <v-list-subheader class="form-header" style="color:red; font-weight: bolder;">Total Payment</v-list-subheader>
-                <v-text-field
-                    variant="outlined"
-                    v-model="payload.total_payment"
-                    hide-details
-                    readonly
-                ></v-text-field>
-            </v-col>
+                    <v-text-field
+                        variant="outlined"
+                        v-model="payload.amount"
+                        hide-details
+                        readonly
+                    ></v-text-field>
+                </v-col>
             </v-row>
         </v-col>
     </v-row>
@@ -242,7 +241,7 @@
             <v-col cols="12">
                 <v-list-subheader class="form-header">Cash Amount</v-list-subheader>
                 <v-text-field
-                    variant="solo"
+                    variant="outlined"
                     density="compact"
                     v-model="tempCashAmount"
                     @blur="updateCashAmount"
@@ -252,7 +251,7 @@
             <v-col cols="12">
                 <v-list-subheader class="form-header">Cash Tendered</v-list-subheader>
                 <v-text-field
-                    variant="solo"
+                    variant="outlined"
                     density="compact"
                     v-model="tempCashTendered"
                     @blur="updateCashTendered"
@@ -262,7 +261,7 @@
             <v-col cols="12">
                 <v-list-subheader class="form-header">Change</v-list-subheader>
                 <v-text-field
-                    variant="solo"
+                    variant="outlined"
                     density="compact"
                     v-model="formattedCashChange"
                     readonly
@@ -278,7 +277,7 @@
                     item-title="payment_description"
                     item-value="id"
                     v-model="payload.card_type_id"
-                    variant="solo"
+                    variant="outlined"
                     clearable
                     :items="card_types"
                     @update:model-value="handleCardItems"
@@ -292,7 +291,7 @@
                     item-title="description"
                     item-value="id"
                     v-model="payload.card_id"
-                    variant="solo"
+                    variant="outlined"
                     clearable
                     :readonly="!payload.card_type_id"
                     :items="card_data"
@@ -306,7 +305,7 @@
                         <v-list-subheader class="form-header">Expiry Date</v-list-subheader>
                         <v-text-field
                             type="date"
-                            variant="solo"
+                            variant="outlined"
                             v-model="payload.card_date"
                             density="compact"
                             hide-details
@@ -315,7 +314,7 @@
                     <v-col cols="5">
                         <v-list-subheader class="form-header">Approval #</v-list-subheader>
                         <v-text-field
-                            variant="solo"
+                            variant="outlined"
                             density="compact" 
                             v-model="payload.card_approval_number"
                             hide-details
@@ -326,7 +325,7 @@
             <v-col cols="12" class="mt-2">
                 <v-list-subheader class="form-header">Amount to Pay</v-list-subheader>
                 <v-text-field
-                    variant="solo"
+                    variant="outlined"
                     density="compact"
                     v-model="tempCardAmount"
                     @blur="updateCardAmount"
@@ -339,7 +338,7 @@
             <v-col cols="12" >
                 <v-list-subheader class="form-header">Drawee Bank</v-list-subheader>
                 <v-text-field
-                    variant="solo"
+                    variant="outlined"
                     density="compact"
                     v-model="payload.bank_check"
                     hide-details
@@ -348,7 +347,7 @@
             <v-col cols="12" >
                 <v-list-subheader class="form-header">Check No.</v-list-subheader>
                 <v-text-field
-                    variant="solo"
+                    variant="outlined"
                     density="compact"
                     v-model="payload.check_no"
                     hide-details
@@ -358,7 +357,7 @@
                 <v-list-subheader class="form-header">Check Date</v-list-subheader>
                 <v-text-field
                     type="date"
-                    variant="solo"
+                    variant="outlined"
                     density="compact"
                     v-model="payload.check_date"
                     hide-details
@@ -367,7 +366,7 @@
             <v-col cols="12" >
                 <v-list-subheader class="form-header">Amount to Pay</v-list-subheader>
                 <v-text-field
-                    variant="solo"
+                    variant="outlined"
                     density="compact"
                     v-model="tempCheckAmount"
                     @blur="updateCheckAmount"
@@ -388,8 +387,14 @@
         :payload="payload"
         :open_reciepts_form="open_reciepts_form"
         @close-dialog="closeRecieptsForm"
-        @submit="onParseReciept"
+        @submit="openConfirmDialog"
     /> 
+    <Confirmation 
+        :payload="payload"
+        :show="confirm_password"
+        @close="closeConfirmDialog"
+        @submit="onSubmit"
+    />
 </template>
 <script setup>
 import ORSequenceNumber from "./ORSequenceNumber.vue";
@@ -399,6 +404,7 @@ const emits = defineEmits(["close-dialog"]);
 const table_data = ref([]);
 const open_reciepts_form = ref(false);
 const open_cashier_settings = ref(false);
+const confirm_password = ref(false);
 const payload = ref({
     Items: [],
     collection_date: new Date().toISOString().substr(0, 10),
@@ -455,7 +461,7 @@ const searchChargeItem = async () => {
         const response = await useMethod("get", "get-charge-item?refNum=", "", payload.value.refNum);
         if (response && response.data && response.data.length > 0) {
             table_data.value = response.data; 
-            payload.value.patient_id = response.data[0].patient_id;
+            payload.value.patient_Id = response.data[0].patient_Id;
             payload.value.case_No = response.data[0].case_No;
             payload.value.transaction_code = response.data[0].revenueID;
             payload.value.itemID = response.data.map(item => item.itemID) ? response.data.map(item => item.itemID).join(" , ") : null;
@@ -476,15 +482,40 @@ const searchChargeItem = async () => {
 }
 
 const getPatientByCaseNo = async () => {
+    if (payload.value.payment_code == null || payload.value.payment_code == "") return useSnackbar(true, "error", "Please select payment code.");
+    if (payload.value.payment_code == 6 && payload.value.company_code == null || payload.value.company_code == "") return useSnackbar(true, "error", "Please enter company code first.");
     if (payload.value.case_No) {
         const response = await useMethod("get", "get-patient-by-caseno?case_No=", "", payload.value.case_No);
         if (response && response.data && response.data.length > 0) {
-            payload.value.patient_Id = response.data[0].patient_Id ? response.data[0].patient_Id : null;
+            payload.value.patient_Id = response.data[0].patient_Id;
             payload.value.guarantor_Credit_Limit = response.data[0].guarantor_Credit_Limit ? usePeso(response.data[0].guarantor_Credit_Limit) : "OPEN";
-            payload.value.accountnum = response.data[0].guarantor_Id ? response.data[0].guarantor_Id : null;
-            payload.value.payors_name = response.data[0].patient_details 
-                ? `${response.data[0].patient_details.lastname || ''}, ${response.data[0].patient_details.firstname || ''} ${response.data[0].patient_details.middlename || ''}`.trim()
-                : null;
+
+            switch (payload.value.payment_code) {
+                case 1:
+                    break;
+                case 5:
+                    payload.value.accountnum = response.data[0].guarantor_Id ? response.data[0].guarantor_Id : null;
+                    payload.value.payors_name = response.data[0].patient_details 
+                        ? `${response.data[0].patient_details.lastname || ''}, ${response.data[0].patient_details.firstname || ''} ${response.data[0].patient_details.middlename || ''}`.trim()
+                        : null;
+                    break;
+                case 6:
+                    if (payload.value.company_code != response.data[0].guarantor_Id) {
+                        payload.value.guarantor_Credit_Limit = null;
+                        payload.value.particulars = null;
+                        table_data.value = null;
+                        return useSnackbar(true, "error", "Company code does not match with the Patient's Company Code.");
+                    } else {
+                        getOPDBill();
+                        payload.value.particulars = response.data[0].patient_details
+                            ? `${response.data[0].patient_details.lastname || ''}, ${response.data[0].patient_details.firstname || ''} ${response.data[0].patient_details.middlename || ''}`.trim() + ` (${useDateMMDDYYY(response.data[0].registry_Date) || ''})`
+                            : null;
+                    }
+                    break;
+                default:
+                    break;
+            }
+
         } else {
             return useSnackbar(true, "error", "Patient not found.");
         }
@@ -510,79 +541,137 @@ const getOPDBill = async () => {
         const data = await response.json();
         
         if (data && data.data && data.data[0] && data.data[0]["Total Hospital Bill"]) {
-            payload.value.itemID = "PY";
             payload.value.hospital_bills = usePeso(data.data[0]["Total Hospital Bill"]);
             payload.value.amount = usePeso(data.data[0]["Total Hospital Bill"]);
-            payload.value.particulars = "Hospital Bill";
-            table_data.value = [{ revenueID: "HB", itemID: "PY", items: { exam_description: "Hospital Bill" }, amount: payload.value.hospital_bills }];
+
+            switch(payload.value.payment_code) {
+                case 1:
+                    break;
+                case 5:
+                    payload.value.itemID = "PY";
+                    payload.value.particulars = "Hospital Bill";
+                    table_data.value = [{ revenueID: "HB", itemID: "PY", items: { exam_description: "Hospital Bill" }, amount: payload.value.hospital_bills }];
+                    payload.value.Items = table_data.value;
+                    break;
+                case 6:
+                    payload.value.itemID = "CP";
+                    table_data.value = [{ revenueID: payload.value.case_No, itemID: "CP", items: { exam_description: payload.value.particulars }, amount: payload.value.hospital_bills }];
+                    payload.value.Items = table_data.value;
+                    break;
+                default:
+                    break;
+            }
         }
+    }
+}
+
+const getCompanyDetails = async () => {
+    if (payload.value.company_code == null || payload.value.company_code === "") return useSnackbar(true, "error", "Please enter company code.");
+    payload.value.company_code = payload.value.company_code.toUpperCase();
+    const response = await useMethod("get", "get-company-details?company_code=", "", payload.value.company_code);
+    if (response && response.data) {
+        payload.value.accountnum = response.data.guarantor_code;
+        payload.value.payors_name = response.data.guarantor_name;
     }
 }
 
 const handleKeyEnter = () => {
     if (payload.value.payment_code == null || payload.value.payment_code === "") return useSnackbar(true, "error", "Please select payment code.");
 
-    if (payload.value.payment_code === 1) {
-        searchChargeItem();
-    } else if (payload.value.payment_code === 5) {
-        if (!payload.value.case_No) return useSnackbar(true, "error", "Please enter admission number.");
+    switch(payload.value.payment_code) {
+        case 1:
+            searchChargeItem();
+            break;
+        case 5:
+            if (!payload.value.case_No) return useSnackbar(true, "error", "Please enter admission number.");
 
-        payload.value.refNum = payload.value.refNum.toUpperCase();
-        if (payload.value.refNum !== 'HB') {
-            return useSnackbar(true, "error", "Use 'HB' to Trigger Hospital Bill.");
-        } else {
-            getOPDBill();
-        }
-    } else {
-        alert("Wala pana na develop");
+            payload.value.refNum = payload.value.refNum.toUpperCase();
+            if (payload.value.refNum !== 'HB') {
+                return useSnackbar(true, "error", "Use 'HB' to Trigger Hospital Bill.");
+            } else {
+                getOPDBill();
+            }
+            break;
+        case 6:
+            getCompanyDetails();
+            break;
+        default:
+            break;
     }
 }
 
 const resetTransactionForm = () => {
+    // Reset table data
     table_data.value = [];
-    payload.value.patient_id = null;
-    payload.value.case_No = null;
-    payload.value.account_no = null;
-    payload.value.payors_name = null;
-    payload.value.refNum = null;
-    payload.value.hospital_bills = null;
-    payload.value.credit_limit = null;
-    payload.value.itemID = null;
-    payload.value.transaction_code = null;
-    payload.value.particulars = null;
-    payload.value.discount = null;
-    payload.value.discount_percent = null;
-    payload.value.amount = null;
-    payload.value.total_discount = null;
-    payload.value.sub_total = null;
-    payload.value.withholding_tax = null;
-    payload.value.total_payment = null;
-    payload.value.cash_amount = null;
-    payload.value.cash_tendered = null;
-    payload.value.cash_change = null;
-    payload.value.card = null;
-    payload.value.card_approval_number = null;
-    payload.value.card_date = null;
-    payload.value.card_amount = null;
-    payload.value.drawee_bank = null;
-    payload.value.check_no = null;
-    payload.value.check_date = null;
-    payload.value.check_amount = null;
+
+    // Reset payload values
+    payload.value = {
+        patient_Id: null,
+        case_No: null,
+        account_no: null,
+        payors_name: null,
+        refNum: null,
+        hospital_bills: null,
+        credit_limit: null,
+        itemID: null,
+        transaction_code: null,
+        particulars: null,
+        discount: null,
+        discount_percent: null,
+        amount: null,
+        total_discount: null,
+        sub_total: null,
+        withholding_tax: null,
+        total_payment: null,
+        cash_amount: null,
+        cash_tendered: null,
+        cash_change: null,
+        card: null,
+        card_approval_number: null,
+        card_date: null,
+        card_amount: null,
+        drawee_bank: null,
+        check_no: null,
+        check_date: null,
+        check_amount: null,
+    };
+
+    // Reset temporary variables for input fields
+    tempCashAmount.value = null;
+    tempCashTendered.value = null;
+    tempCardAmount.value = null;
+    tempCheckAmount.value = null;
 };
 
-const onParseReciept = (payload) => {
-    open_reciepts_form.value = false;
-    confirm_password.value = true;
-}
 
 const onSubmit = async (user_details) => {
     if (user_details.user_passcode === usePasscode()) {
-        const response = await useMethod("post", "save-payment", payload.value);
-        if (response) {
-            useSnackbar(true, "success", "Payment successfully saved.");
-            resetTransactionForm();
-            getLastORNumber();
-            closeConfirmDialog();
+        const response = '';
+        switch(payload.value.payment_code) {
+            case 1:
+                console.log("TEST 1");
+                break;
+            case 5:
+                response = await useMethod("post", "save-opbill", payload.value);
+                if (response) {
+                    useSnackbar(true, "success", "Payment successfully saved.");
+                    resetTransactionForm();
+                    closeRecieptsForm();
+                    closeConfirmDialog();
+                }
+                break;
+            case 6:
+                console.log(payload.value);
+                // response = await useMethod("post", "save-companybill", payload.value);
+                // if (response) {
+                //     useSnackbar(true, "success", "Payment successfully saved.");
+                //     resetTransactionForm();
+                //     closeRecieptsForm();
+                //     closeConfirmDialog();
+                // }
+                break;
+            default:
+                break;
         }
     } else {
         return useSnackbar(true, "error", "Password incorrect.");
@@ -592,6 +681,18 @@ const onSubmit = async (user_details) => {
 const formatNumber = (value) => {
     const number = parseFloat(value);
     return isNaN(number) ? '' : usePeso(number);
+}
+
+const calculateDiscount = () => {
+    const cleanedAmount = payload.value.amount.replace(/[₱,]/g, '');
+    const amount = parseFloat(cleanedAmount) || 0;
+    const discountPercent = parseFloat(payload.value.discount_percent) || 0;
+
+    if (amount && discountPercent) {
+        const discount = (amount * discountPercent) / 100;
+        payload.value.total_discount = usePeso(discount);
+        payload.value.amount = usePeso(amount - discount);
+    } 
 }
 
 const formattedCashChange = computed(() => formatNumber(payload.value.cash_change));
@@ -624,7 +725,7 @@ const updateCheckAmount = () => {
     tempCheckAmount.value = formatNumber(parsedValue);
 }
 
-watch(() => {
+watchEffect(() => {
     if (payload.value.cash_amount && payload.value.cash_tendered) {
         payload.value.cash_change = parseFloat(payload.value.cash_tendered) - parseFloat(payload.value.cash_amount);
     } else {
@@ -642,7 +743,7 @@ watch(() => {
     // if (payload.value.check_amount) {
     //     payload.value.total_payment = parseFloat(payload.value.sub_total) - parseFloat(payload.value.check_amount);
     // }
-}, { deep: true });
+});
 
 const cardPaymentMethod = async () => {
     const response = await useMethod("get", "get-payment-methods", "", "");
