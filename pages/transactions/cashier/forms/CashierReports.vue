@@ -85,6 +85,7 @@
                                 <v-text-field
                                     placeholder="Enter Encoder Name"
                                     variant="solo"
+                                    
                                     density="compact"
                                     hide-details
                                     readonly
