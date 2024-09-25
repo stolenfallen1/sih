@@ -30,36 +30,40 @@
         <v-col cols="4">
             <v-row>
                 <v-col cols="6">
-                    <v-list-subheader class="form-header" style="color: red; font-weight: bolder; cursor: pointer;">OR Number</v-list-subheader> 
+                    <v-list-subheader class="form-header" style="color: #107bac; font-weight: bolder; cursor: pointer;">OR Number</v-list-subheader> 
                     <v-text-field
                         variant="outlined"
                         density="compact"
                         v-model="payload.ORNumber"
+                        :class="{'error-input': formErrors.case_No}"
                         @click="openCashierSettings"
                         readonly
-                        required
                         hide-details
                     ></v-text-field>
                 </v-col>
-                <v-col cols="6" >
+                <v-col cols="6">
                     <v-list-subheader class="form-header">Admission No</v-list-subheader>
                     <v-text-field
+                        ref="caseNoRef"
                         v-model="payload.case_No"
+                        :class="{'error-input': formErrors.case_No}"
                         variant="outlined"
                         density="compact"
                         hide-details
-                        @keyup.enter="getPatientByCaseNo"
+                        @keyup.enter="handleFocus($event, caseNoRef)"
                     ></v-text-field>
                 </v-col>
-                <v-col cols="12" >
+                <v-col cols="12">
                     <v-list-subheader class="form-header">Payment Code</v-list-subheader>
                     <v-autocomplete
+                        ref="paymentCodeRef"
                         variant="outlined"
                         density="compact"
                         item-title="description"
                         item-value="id"
                         :items="payment_codes"
                         v-model="payload.payment_code"
+                        @keyup.enter="handleFocus($event, paymentCodeRef)"
                         clearable
                         hide-details
                     ></v-autocomplete>
@@ -67,20 +71,22 @@
                 <v-col cols="6" v-if="payload.payment_code !== 6">
                     <v-list-subheader class="form-header">Charge Slip</v-list-subheader>
                     <v-text-field
+                        ref="chargeSlipRef"
                         variant="outlined"
                         density="compact"
                         v-model="payload.refNum"
-                        @keyup.enter="handleKeyEnter"
+                        @keyup.enter="handleFocus($event, chargeSlipRef)"
                         hide-details
                     ></v-text-field>
                 </v-col>
                 <v-col cols="6" v-if="payload.payment_code === 6">
                     <v-list-subheader class="form-header">Company Code</v-list-subheader>
                     <v-text-field
+                        ref="companyCodeRef"
                         variant="outlined"
                         density="compact"
                         v-model="payload.company_code"
-                        @keyup.enter="handleKeyEnter"
+                        @keyup.enter="handleFocus($event, companyCodeRef)"
                         hide-details
                     ></v-text-field>
                 </v-col>
@@ -97,9 +103,11 @@
                 <v-col cols="12" >
                     <v-list-subheader class="form-header">Payors Name</v-list-subheader>
                     <v-text-field
+                        ref="payorsNameRef"
                         variant="outlined"
                         density="compact"
                         v-model="payload.payors_name"
+                        @keyup.enter="handleFocus($event, payorsNameRef)"
                         hide-details
                     ></v-text-field>
                 </v-col>
@@ -160,21 +168,26 @@
                 <v-col cols="8" >
                     <v-list-subheader class="form-header">Discount</v-list-subheader>
                     <v-autocomplete
+                        ref="discountRef"
                         variant="outlined"
                         density="compact"
                         item-title="description"
                         item-value="id"
                         v-model="payload.discount"
                         :items="discount_types"
+                        @keyup.enter="handleFocus($event, discountRef)"
                         hide-details
                     ></v-autocomplete>
                 </v-col>
                 <v-col cols="4" >
                     <v-list-subheader class="form-header">Percent ( % )</v-list-subheader>
                     <v-text-field
+                        ref="discountPercentRef"
                         variant="outlined"
+                        type="number"
                         density="compact"
-                        @input="calculateDiscount"
+                        @change="calculateTotals"
+                        @keyup.enter="handleFocus($event, discountPercentRef)"
                         v-model="payload.discount_percent"
                         hide-details
                     ></v-text-field>
@@ -186,8 +199,10 @@
                 <v-col cols="12" >
                     <v-list-subheader class="form-header">Item Amount</v-list-subheader>
                     <v-text-field
+                        ref="amountRef"
                         v-model="payload.amount"
-                        @input="calculateDiscount"
+                        @change="calculateTotals"
+                        @keyup.enter="handleFocus($event, amountRef)"
                         variant="outlined"
                         density="compact"
                         hide-details
@@ -208,25 +223,29 @@
                     <v-text-field
                         variant="outlined"
                         density="compact"
-                        v-model="payload.amount"
+                        v-model="payload.sub_total"
                         hide-details
                         readonly
                     ></v-text-field>
                 </v-col>
-                <v-col cols="12" >
+                <v-col cols="12">
                     <v-list-subheader class="form-header">Withholding Tax</v-list-subheader>
                     <v-text-field
+                        ref="withholdingTaxRef"
                         variant="outlined"
                         density="compact"
-                        v-model="payload.withholding_tax"
+                        v-model="tempWithholdingTax" 
+                        @change="calculateTotals"
+                        @blur="updateWithholdingTax"
+                        @keyup.enter="handleFocus($event, withholdingTaxRef)"
                         hide-details
                     ></v-text-field>
                 </v-col>
                 <v-col cols="12" >
-                <v-list-subheader class="form-header" style="color:red; font-weight: bolder;">Total Payment</v-list-subheader>
+                <v-list-subheader class="form-header" style="color: #107bac; font-weight: bolder;">Total Payment</v-list-subheader>
                     <v-text-field
                         variant="outlined"
-                        v-model="payload.amount"
+                        v-model="payload.total_payment"
                         hide-details
                         readonly
                     ></v-text-field>
@@ -234,41 +253,8 @@
             </v-row>
         </v-col>
     </v-row>
-    <p style="margin-top: 30px; margin-bottom: 10px; font-weight: bolder; color: red; border-top: 1px solid #E4E4E4;">Mode of Payment</p>
-    <v-row>
-        <v-col cols="4" >
-            <p style="font-size: 17px; font-weight: bolder; text-decoration: underline;">Cash</p>
-            <v-col cols="12">
-                <v-list-subheader class="form-header">Cash Amount</v-list-subheader>
-                <v-text-field
-                    variant="outlined"
-                    density="compact"
-                    v-model="tempCashAmount"
-                    @blur="updateCashAmount"
-                    hide-details
-                ></v-text-field>
-            </v-col>
-            <v-col cols="12">
-                <v-list-subheader class="form-header">Cash Tendered</v-list-subheader>
-                <v-text-field
-                    variant="outlined"
-                    density="compact"
-                    v-model="tempCashTendered"
-                    @blur="updateCashTendered"
-                    hide-details
-                ></v-text-field>
-            </v-col>
-            <v-col cols="12">
-                <v-list-subheader class="form-header">Change</v-list-subheader>
-                <v-text-field
-                    variant="outlined"
-                    density="compact"
-                    v-model="formattedCashChange"
-                    readonly
-                    hide-details
-                ></v-text-field>
-            </v-col>
-        </v-col>
+    <p style="margin-top: 30px; margin-bottom: 10px; font-weight: bolder; color: #107bac; border-top: 1px solid #E4E4E4;">Mode of Payment</p>
+    <v-row style="margin-bottom: 0px;">
         <v-col cols="4">
             <p style="font-size: 17px; font-weight: bolder; text-decoration: underline;">Card</p>
             <v-col cols="12" >
@@ -307,6 +293,7 @@
                             type="date"
                             variant="outlined"
                             v-model="payload.card_date"
+                            :class="{'error-input': formErrors.card_date}"
                             density="compact"
                             hide-details
                         ></v-text-field>
@@ -317,6 +304,7 @@
                             variant="outlined"
                             density="compact" 
                             v-model="payload.card_approval_number"
+                            :class="{'error-input': formErrors.card_approval_number}"
                             hide-details
                         ></v-text-field>
                     </v-col>
@@ -328,6 +316,7 @@
                     variant="outlined"
                     density="compact"
                     v-model="tempCardAmount"
+                    :class="{'error-input': formErrors.card_amount}"
                     @blur="updateCardAmount"
                     hide-details
                 ></v-text-field>
@@ -350,6 +339,7 @@
                     variant="outlined"
                     density="compact"
                     v-model="payload.check_no"
+                    :class="{'error-input': formErrors.check_no}"
                     hide-details
                 ></v-text-field>
             </v-col>
@@ -360,6 +350,7 @@
                     variant="outlined"
                     density="compact"
                     v-model="payload.check_date"
+                    :class="{'error-input': formErrors.check_date}"
                     hide-details
                 ></v-text-field>
             </v-col>
@@ -369,16 +360,54 @@
                     variant="outlined"
                     density="compact"
                     v-model="tempCheckAmount"
+                    :class="{'error-input': formErrors.check_amount}"
                     @blur="updateCheckAmount"
                     hide-details
                 ></v-text-field>
             </v-col>
         </v-col>
+        <v-col cols="4" >
+            <p style="font-size: 17px; font-weight: bolder; text-decoration: underline;">Cash</p>
+            <v-col cols="12">
+                <v-list-subheader class="form-header">Cash Amount</v-list-subheader>
+                <v-text-field
+                    variant="outlined"
+                    density="compact"
+                    v-model="tempCashAmount"
+                    :class="{'error-input': formErrors.cash_amount}"
+                    @blur="updateCashAmount"
+                    hide-details
+                ></v-text-field>
+            </v-col>
+            <v-col cols="12">
+                <v-list-subheader class="form-header">Cash Tendered</v-list-subheader>
+                <v-text-field
+                    variant="outlined"
+                    density="compact"
+                    v-model="tempCashTendered"
+                    :class="{'error-input': formErrors.cash_tendered}"
+                    @blur="updateCashTendered"
+                    hide-details
+                ></v-text-field>
+            </v-col>
+            <v-col cols="12">
+                <v-list-subheader class="form-header">Change</v-list-subheader>
+                <v-text-field
+                    variant="outlined"
+                    density="compact"
+                    v-model="formattedCashChange"
+                    readonly
+                    hide-details
+                ></v-text-field>
+            </v-col>
+            <v-col cols="12" style="margin-bottom: 5px;">
+                <v-btn class="bg-info text-white mr-2" @click="resetTransactionForm">Reset</v-btn>
+                <v-btn class="bg-primary text-white" @click="openRecieptsInfo">Save</v-btn>
+            </v-col>
+        </v-col>
     </v-row>
     <v-spacer></v-spacer>
-    <v-btn class="bg-info text-white mr-2" @click="resetTransactionForm">Reset</v-btn>
-    <v-btn class="bg-primary text-white" @click="openRecieptsInfo">Save</v-btn>
-    <ORSequenceNumber 
+    <ORSequenceNumber
         :open_cashier_settings="open_cashier_settings"
         @close-dialog="closeCashierSettings"
         @save-settings="handleCashierSettings"
@@ -420,21 +449,141 @@ const card_types = ref([]);
 const card_data = ref([]);
 const payment_codes = ref([]);
 const discount_types = ref([]);
+const formErrors = ref({});
 
 const tempCashAmount = ref(payload.value.cash_amount);
 const tempCashTendered = ref(payload.value.cash_tendered);
 const tempCardAmount = ref(payload.value.card_amount);
 const tempCheckAmount = ref(payload.value.check_amount);
+const tempWithholdingTax = ref(payload.value.withholding_tax);
+
+const paymentCodeRef = ref(null);
+const caseNoRef = ref(null);
+const chargeSlipRef = ref(null);
+const companyCodeRef = ref(null);
+const payorsNameRef = ref(null);
+const amountRef = ref(null);
+const discountRef = ref(null);
+const discountPercentRef = ref(null);
+const withholdingTaxRef = ref(null);
+
+const focusOrder = {
+    5: [paymentCodeRef, caseNoRef, chargeSlipRef, payorsNameRef, amountRef, discountRef, discountPercentRef, withholdingTaxRef],
+    6: [paymentCodeRef, companyCodeRef, caseNoRef, amountRef, discountRef, discountPercentRef, withholdingTaxRef],
+}
+
+const focusNextField = (currentField, paymentCode) => {
+    const formFields = focusOrder[paymentCode].map(ref => {
+        // console.log('Current Ref:', ref);
+        if (ref && ref.value) {
+            return ref.value;
+        } else {
+            console.warn(`Ref is undefined or does not have a value:`, ref);
+            return null; 
+        }
+    }).filter(Boolean);
+    // console.log('Current Field:', currentField);
+    // console.log('Form Fields:', formFields);
+    if (formFields.length === 0) {
+        console.warn('No fields to focus on for payment code:', paymentCode);
+        return; 
+    }
+    const currentFieldIndex = formFields.indexOf(currentField);
+    // console.log('Current Field Index:', currentFieldIndex);
+    if (currentFieldIndex !== -1 && currentFieldIndex < formFields.length - 1) {
+        nextTick(() => {
+            const nextField = formFields[currentFieldIndex + 1];
+            // console.log('Focusing next field:', nextField);
+            if (nextField && nextField.focus) {
+                nextField.focus();
+            } 
+            // else {
+            //     console.error('Next field is not valid or does not have focus method:', nextField);
+            // }
+        });
+    }
+};
+
+const handleFocus = async (event, currentField) => {
+    if (!payload.value.payment_code) return useSnackbar(true, "error", "Please select payment code.");
+
+    if (currentField === caseNoRef.value) {
+        const isValid = await getPatientByCaseNo();  
+        if (!isValid) {
+            currentField.focus(); 
+            return;  
+        }
+    }
+    if (currentField === chargeSlipRef.value || currentField === companyCodeRef.value) {
+        const isValid = await handleKeyEnter();  
+        if (!isValid) {
+            currentField.focus(); 
+            return;  
+        }
+    }
+    nextTick(() => {
+        focusNextField(currentField, payload.value.payment_code);  
+    });
+};
+
+const validateForm = () => {
+    let valid = ref(true);
+
+    if (!payload.value.ORNumber) {
+        formErrors.value.ORNumber = 'Required field';
+        valid = false;
+    }
+    if (!payload.value.case_No) {
+        formErrors.value.case_No = 'Required field';
+        valid = false;
+    }
+    if (payload.value.card_type_id == null && payload.value.bank_check == null && !payload.value.cash_amount) {
+        formErrors.value.cash_amount = 'Required field';
+        valid = false;
+    } 
+    if (payload.value.card_type_id == null && payload.value.bank_check == null && !payload.value.cash_tendered) {
+        formErrors.value.cash_tendered = 'Required field';
+        valid = false;
+    } 
+    if (payload.value.card_type_id != null && payload.value.card_id != null && !payload.value.card_date) {
+        formErrors.value.card_date = 'Required field';
+        valid = false;
+    }
+    if (payload.value.card_type_id != null && payload.value.card_id != null && !payload.value.card_approval_number) {
+        formErrors.value.card_approval_number = 'Required field';
+        valid = false;
+    }
+    if (payload.value.card_type_id != null && payload.value.card_id != null && !payload.value.card_amount) {
+        formErrors.value.card_amount = 'Required field';
+        valid = false;
+    }
+    if (payload.value.bank_check != null && !payload.value.check_no) {
+        formErrors.value.check_no = 'Required field';
+        valid = false;
+    }
+    if (payload.value.bank_check != null && !payload.value.check_date) {
+        formErrors.value.check_date = 'Required field';
+        valid = false;
+    }
+    if (payload.value.bank_check != null && !payload.value.check_amount) {
+        formErrors.value.check_amount = 'Required field';
+        valid = false;
+    }
+
+    return valid;
+};
 
 const openRecieptsInfo = () => {
-    open_reciepts_form.value = true;
+    // if (validateForm()) {
+        open_reciepts_form.value = true;
+    // }
 };
 
 const closeRecieptsForm = () => {
     open_reciepts_form.value = false;
 };
 
-const openConfirmDialog = () => {
+const openConfirmDialog = async () => {
     confirm_password.value = true;
 };
 
@@ -445,6 +594,7 @@ const closeConfirmDialog = () => {
 const openCashierSettings = () => {
     open_cashier_settings.value = true;
 };
+
 
 const handleCashierSettings = (settings) => {
     payload.value.ORNumber = "OR" + settings[0].LastORnumber + settings[0].ORSuffix;
@@ -482,8 +632,14 @@ const searchChargeItem = async () => {
 }
 
 const getPatientByCaseNo = async () => {
-    if (payload.value.payment_code == null || payload.value.payment_code == "") return useSnackbar(true, "error", "Please select payment code.");
-    if (payload.value.payment_code == 6 && payload.value.company_code == null || payload.value.company_code == "") return useSnackbar(true, "error", "Please enter company code first.");
+    if (payload.value.payment_code == null || payload.value.payment_code == "") {
+        useSnackbar(true, "error", "Please select payment code.");
+        return false;
+    } 
+    if (payload.value.payment_code == 6 && payload.value.company_code == null || payload.value.company_code == "") {
+        useSnackbar(true, "error", "Please enter company code first.");
+        return false;
+    } 
     if (payload.value.case_No) {
         const response = await useMethod("get", "get-patient-by-caseno?case_No=", "", payload.value.case_No);
         if (response && response.data && response.data.length > 0) {
@@ -504,7 +660,8 @@ const getPatientByCaseNo = async () => {
                         payload.value.guarantor_Credit_Limit = null;
                         payload.value.particulars = null;
                         table_data.value = null;
-                        return useSnackbar(true, "error", "Company code does not match with the Patient's Company Code.");
+                        useSnackbar(true, "error", "Company code does not match with the Patient's Company Code.");
+                        return false;
                     } else {
                         getOPDBill();
                         payload.value.particulars = response.data[0].patient_details
@@ -515,12 +672,15 @@ const getPatientByCaseNo = async () => {
                 default:
                     break;
             }
+            return true;
 
         } else {
-            return useSnackbar(true, "error", "Patient not found.");
+            useSnackbar(true, "error", "Patient not found.");
+            return false;
         }
     } else {
-        return useSnackbar(true, "error", "Please enter admission number.");
+        useSnackbar(true, "error", "Please enter admission number.");
+        return false;
     }
 }
 
@@ -561,42 +721,55 @@ const getOPDBill = async () => {
                 default:
                     break;
             }
+        } else {
+            return useSnackbar(true, "error", "Patient has no charges.");
         }
     }
 }
 
 const getCompanyDetails = async () => {
-    if (payload.value.company_code == null || payload.value.company_code === "") return useSnackbar(true, "error", "Please enter company code.");
+    if (!payload.value.company_code) {
+        useSnackbar(true, "error", "Please enter company code.");
+        return false;
+    }
+
     payload.value.company_code = payload.value.company_code.toUpperCase();
     const response = await useMethod("get", "get-company-details?company_code=", "", payload.value.company_code);
+    
     if (response && response.data) {
         payload.value.accountnum = response.data.guarantor_code;
         payload.value.payors_name = response.data.guarantor_name;
+        return true;
     }
+    return false; 
 }
 
-const handleKeyEnter = () => {
+const handleKeyEnter = async () => {
     if (payload.value.payment_code == null || payload.value.payment_code === "") return useSnackbar(true, "error", "Please select payment code.");
 
     switch(payload.value.payment_code) {
         case 1:
             searchChargeItem();
-            break;
+            return true;
         case 5:
-            if (!payload.value.case_No) return useSnackbar(true, "error", "Please enter admission number.");
+            if (!payload.value.case_No) {
+                useSnackbar(true, "error", "Please enter admission number.");
+                return false;
+            } 
 
-            payload.value.refNum = payload.value.refNum.toUpperCase();
-            if (payload.value.refNum !== 'HB') {
-                return useSnackbar(true, "error", "Use 'HB' to Trigger Hospital Bill.");
-            } else {
-                getOPDBill();
+            const refNum = payload.value.refNum?.toUpperCase();
+            if (!refNum || refNum !== 'HB') {
+                useSnackbar(true, "error", !refNum ? "Please enter charge slip." : "Use 'HB' to Trigger Hospital Bill.");
+                return false;
             }
-            break;
+
+            await getOPDBill();
+            return true;
         case 6:
-            getCompanyDetails();
-            break;
+            const isCompanyDetailsValid = await getCompanyDetails();
+            return isCompanyDetailsValid;
         default:
-            break;
+            return false;
     }
 }
 
@@ -641,19 +814,20 @@ const resetTransactionForm = () => {
     tempCashTendered.value = null;
     tempCardAmount.value = null;
     tempCheckAmount.value = null;
-};
 
+    // Reset form errors
+    formErrors.value = {};
+};
 
 const onSubmit = async (user_details) => {
     if (user_details.user_passcode === usePasscode()) {
-        const response = '';
         switch(payload.value.payment_code) {
             case 1:
                 console.log("TEST 1");
                 break;
             case 5:
-                response = await useMethod("post", "save-opbill", payload.value);
-                if (response) {
+                const opdbill_res = await useMethod("post", "save-opbill", payload.value);
+                if (opdbill_res) {
                     useSnackbar(true, "success", "Payment successfully saved.");
                     resetTransactionForm();
                     closeRecieptsForm();
@@ -661,14 +835,13 @@ const onSubmit = async (user_details) => {
                 }
                 break;
             case 6:
-                console.log(payload.value);
-                // response = await useMethod("post", "save-companybill", payload.value);
-                // if (response) {
-                //     useSnackbar(true, "success", "Payment successfully saved.");
-                //     resetTransactionForm();
-                //     closeRecieptsForm();
-                //     closeConfirmDialog();
-                // }
+                const companybill_res = await useMethod("post", "save-companybill", payload.value);
+                if (companybill_res) {
+                    useSnackbar(true, "success", "Payment successfully saved.");
+                    resetTransactionForm();
+                    closeRecieptsForm();
+                    closeConfirmDialog();
+                }
                 break;
             default:
                 break;
@@ -683,19 +856,36 @@ const formatNumber = (value) => {
     return isNaN(number) ? '' : usePeso(number);
 }
 
-const calculateDiscount = () => {
-    const cleanedAmount = payload.value.amount.replace(/[₱,]/g, '');
-    const amount = parseFloat(cleanedAmount) || 0;
-    const discountPercent = parseFloat(payload.value.discount_percent) || 0;
-
-    if (amount && discountPercent) {
-        const discount = (amount * discountPercent) / 100;
-        payload.value.total_discount = usePeso(discount);
-        payload.value.amount = usePeso(amount - discount);
-    } 
-}
-
 const formattedCashChange = computed(() => formatNumber(payload.value.cash_change));
+
+const calculateTotals = () => {
+    const cleanedAmount = parseCurrencyInput(payload.value.amount);
+    const discountPercent = parseFloat(payload.value.discount_percent) || 0;
+    const withholdingTax = parseFloat(tempWithholdingTax.value) || 0;
+
+    if (isNaN(cleanedAmount)) {
+        payload.value.sub_total = usePeso(0);
+        payload.value.total_payment = usePeso(0);
+        return;
+    }
+
+    const discount = (cleanedAmount * discountPercent) / 100;
+    payload.value.total_discount = usePeso(discount);
+
+    const subTotal = cleanedAmount - discount;
+    payload.value.sub_total = usePeso(subTotal > 0 ? subTotal : 0); 
+
+    const totalPayment = subTotal - withholdingTax;
+    payload.value.total_payment = usePeso(totalPayment > 0 ? totalPayment : 0); 
+};
+
+watch(() => payload.value.amount, () => {
+    const cleanedAmount = parseCurrencyInput(payload.value.amount);
+    payload.value.sub_total = usePeso(cleanedAmount);
+    payload.value.total_payment = usePeso(cleanedAmount);
+});
+
+
 
 const parseCurrencyInput = (value) => {
     return parseFloat(value.replace(/[₱,]/g, '')) || null;
@@ -725,24 +915,18 @@ const updateCheckAmount = () => {
     tempCheckAmount.value = formatNumber(parsedValue);
 }
 
+const updateWithholdingTax = () => {
+    const parsedValue = parseCurrencyInput(tempWithholdingTax.value);
+    payload.value.withholding_tax = parsedValue;
+    tempWithholdingTax.value = formatNumber(parsedValue);
+}
+
 watchEffect(() => {
     if (payload.value.cash_amount && payload.value.cash_tendered) {
         payload.value.cash_change = parseFloat(payload.value.cash_tendered) - parseFloat(payload.value.cash_amount);
     } else {
         payload.value.cash_change = null;
     }
-    // if (payload.value.amount && payload.value.total_discount) {
-    //     payload.value.sub_total = parseFloat(payload.value.amount) - parseFloat(payload.value.total_discount);
-    // }
-    // if (payload.value.sub_total && payload.value.withholding_tax) {
-    //     payload.value.total_payment = parseFloat(payload.value.sub_total) - parseFloat(payload.value.withholding_tax);
-    // }
-    // if (payload.value.card_amount) {
-    //     payload.value.total_payment = parseFloat(payload.value.sub_total) - parseFloat(payload.value.card_amount);
-    // }
-    // if (payload.value.check_amount) {
-    //     payload.value.total_payment = parseFloat(payload.value.sub_total) - parseFloat(payload.value.check_amount);
-    // }
 });
 
 const cardPaymentMethod = async () => {
@@ -782,9 +966,15 @@ const handleCardItems = async () => {
 }
 
 onMounted(() => {
-    cardPaymentMethod();
-    cashierPaymentCode();
-    discountMethod();
+    setTimeout(() => {
+        openCashierSettings();
+        cardPaymentMethod();
+        cashierPaymentCode();
+        discountMethod();
+    }, 1000);
+});
+onUnmounted(() => {
+    closeCashierSettings();
 });
 </script>
 
@@ -798,6 +988,10 @@ onMounted(() => {
     padding-left: 10px;
     padding-right: 10px;
     margin: 0;
+}
+.error-input {
+    border: 1px solid red;
+    border-radius: 8px;
 }
 .form-header {
     color: #000;
