@@ -191,19 +191,25 @@
                             {{ useDateMMDDYYY(item.transDate) }}
                         </template>
                         <template v-slot:item.refNum="{ item }">
-                            {{ item.item_description ? item.item_description?.transaction_code : "MB" }} - {{ item.refNum }}
+                            {{ 
+                                item.item_description 
+                                    ? item.item_description.transaction_code 
+                                    : (item.doctor_description && item.doctor_description.doctor_code != null ? "MB" : null) 
+                            }} 
+                            <span v-if="!item.item_description && !(item.doctor_description && item.doctor_description.doctor_code != null)">{{ item.refNum }}</span>
+                            <span v-else> - {{ item.refNum }}</span>
                         </template>
                         <template v-slot:item.particulars="{ item }">
-                            {{ item.item_description ? item.item_description.exam_description : (item.doctor_description ? item.doctor_description.doctor_name : 'Item has no particulars') }}
+                            {{ item.item_description ? item.item_description.exam_description : (item.doctor_description ? item.doctor_description.doctor_name : '') }}
                         </template>
                         <template v-slot:item.quantity="{ item }">
-                            {{ parseFloat(item.quantity) }}
+                            {{ item.quantity != 0 ? item.quantity : '' }}
                         </template>
                         <template v-slot:item.charge="{ item }">
                             {{ item.charge != 0 ? item.charge : '' }}
                         </template>
                         <template v-slot:item.credit="{ item }">
-                            {{ item.credit != 0 ? `- ${item.credit}` : '' }}
+                            {{ item.credit != 0 ? ` ${item.credit}` : '' }}
                         </template>
                         <template v-slot:item.balance="{ item }">
                             {{ item.balance != 0 ? item.balance : '' }}
@@ -284,7 +290,8 @@ const getPatientSOA = async () => {
     try {
         const response = await useMethod("get", `get-his-patient-soa?patient_Id=${payload.value.patient_Id}&case_No=${payload.value.case_No}`, "", "");
         if (response) {
-            serverItems.value = response.data;
+            // serverItems.value = response.data.sort((a, b) => new Date(b.transDate) - new Date(a.transDate));
+            serverItems.value = response.data
             totalItems.value = response.total;
             grandTotal.value = response.grand_total;
         }

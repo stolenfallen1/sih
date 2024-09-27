@@ -619,6 +619,7 @@ const Charges = ref([
         charge_type: 1,
         drcr: "",
         lgrp: "",
+        form: "",
         specimen: "",
         quantity: 1,
         price: null,
@@ -777,6 +778,7 @@ const handleSelectedChargeItem = async (selected_item) => {
     const lastRow = Charges.value[Charges.value.length - 1];
     lastRow.map_item_id = selected_item.map_item_id;
     lastRow.exam_description = selected_item.exam_description;
+    lastRow.form = selected_item.form;
     lastRow.price = selected_item.prices ? usePeso(selected_item.prices[0].price) : '0';
     lastRow.totalamount = selected_item.price;
     lastRow.barcode_prefix = selected_item?.sections?.barcodeid_prefix ? selected_item.sections.barcodeid_prefix : null;
