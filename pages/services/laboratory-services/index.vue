@@ -3,7 +3,7 @@
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn
-          @click="handleView('view')"
+          @click="handleView()"
           :disabled="isSelectedUser"
           prepend-icon="mdi-eye-outline"
           width="100"
@@ -13,7 +13,6 @@
           View
         </v-btn>
         <v-btn
-          @click="RevokeUser"
           prepend-icon="mdi-toggle-switch"
           :disabled="isSelectedUser"
           width="300"
@@ -33,6 +32,7 @@
       :tabs="tableTabs"
       :columns="columns"
       :showTabs="showTabs"
+      :test="test"
       :itemsPerPage="itemsPerPage"
       :tableTitle="pageTitle"
       :current-tab="currentTab"
@@ -43,46 +43,20 @@
       @action-refresh="handleRefresh"
     >
       <template v-for="column in columns" v-slot:[`column-${column.key}`]="{ item }">
-        <div v-if="column.key === 'SOA' && item.patient_registry && item.patient_registry[0].mscPrice_Schemes == 2" >
-          <v-tooltip text="Statement of Account">
-            <template v-slot:activator="{ props }">
-              <v-btn v-bind="props" density="compact" hide-details @click="openPatientSOA(item)">
-                <v-icon>mdi-clipboard-file-outline</v-icon>
-              </v-btn>
-            </template>
-          </v-tooltip>
-        </div>
-        <div v-if="column.key === 'registry_Status'" :key="column.key" class="isActive">
-          <span 
-            :style="{ cursor: 'default', display: 'block', height: '26px', width: '9px', backgroundColor: item.patient_registry && item.patient_registry[0].mscPatient_Category == 2 ? 'blue' : 'green' }" 
-            :title="item.patient_registry && item.patient_registry[0].mscPatient_Category == 2 ? 'New Patient' : 'Old Patient'"
-            />
-        </div>
-        <div v-if="column.key === 'isHMO'" :key="column.key" class="isHMO">
-          <span 
-            :style="{ cursor: 'default', display: 'block', height: '26px', width: '9px', backgroundColor: item.patient_registry && item.patient_registry[0].mscPrice_Schemes == 2 ? 'yellow' : 'orange' }" 
-            :title="item.patient_registry && item.patient_registry[0].mscPrice_Schemes == 2 ? 'HMO ' : 'Self Pay'" 
-            />
-        </div>
-        <span v-if="column.key === 'case_No'" :key="column.key">
-          {{ item.patient_registry ? item.patient_registry[0].case_No : "..." }}
+        <span v-if="column.key === 'patient_details.lastname'" :key="column.key">
+          {{ item.patient_details ? item.patient_details?.lastname + " , " + item.patient_details?.firstname + "  " + item.patient_details?.middlename : "" }}
         </span>
-        <span v-if="column.key === 'sex'" :key="column.key" style="display: flex;">
-          <v-icon v-if="item.sex && item.sex.sex_description === 'Male'" color="primary">mdi-gender-male</v-icon>
-          <v-icon v-else color="pink">mdi-gender-female</v-icon>
-          {{ item.sex ? item.sex.sex_description : "..." }}
+        <span v-if="column.key === 'patient_Age'" :key="column.key">
+          {{ item.patient_Age ? item.patient_Age : "" }}
         </span>
-        <span v-if="column.key === 'birthdate'" :key="column.key">
-          {{ item.birthdate ? useDateMMDDYYY(item.birthdate) : "..." }}
+        <span v-if="column.key === 'patient_details.birthdate'" :key="column.key">
+          {{ item.patient_details ? useDateMMDDYYY(item.patient_details.birthdate) : "" }}
         </span>
-        <span v-if="column.key === 'registry_date'" :key="column.key">
-          {{ item.patient_registry && item.patient_registry[0].registry_Date ? useDateMMDDYYY(item.patient_registry[0].registry_Date) : "..." }}
+        <span v-if="column.key === 'ornumber'" :key="column.key">
+          {{ item.billing_out ? item.billing_out[0].ornumber : "" }}
         </span>
-        <span v-if="column.key === 'discharged_date'" :key="column.key">
-          {{ item.patient_registry && item.patient_registry[0].discharged_Date ? useDateMMDDYYY(item.patient_registry[0].discharged_Date) : "..." }}
-        </span>
-        <span v-if="column.key === 'revoked_Date'" :key="column.key">
-          {{ item.patient_registry && item.patient_registry[0].revoked_Date ? useDateMMDDYYY(item.patient_registry[0].revoked_Date) : "..." }}
+        <span v-if="column.key === 'refNum'" :key="column.key">
+          {{ item.billing_out ? item.billing_out[0].refNum : "" }}
         </span>
       </template>
     </ReusableTable>
@@ -100,11 +74,14 @@
     <span v-if="isBlinking" class="floating-text">Discharge Notice</span>
   </div>
   <DischargeNoticeForm :open_discharge_notice="open_discharge_notice" @close-dialog="closeDischargeNotice" />
+  <PatientLabCharges :open_patient_info_and_charges="open_patient_info_and_charges" :items="items" @close-dialog="closePatientInfoAndCharges" />
+  <Snackbar />
 </template>
 
 <script setup>
 import ReusableTable from "~/components/reusables/ReusableTable.vue";
 import DischargeNoticeForm from "./forms/DischargeNoticeForm.vue";
+import PatientLabCharges from "./forms/PatientLabCharges.vue";
 
 definePageMeta({
   layout: "root-layout",
@@ -112,14 +89,17 @@ definePageMeta({
 
 const { selectedRowDetails, isrefresh } = storeToRefs(useSubcomponentSelectedRowDetailsStore());
 const payload = ref({});
+const items = ref({});
 const isSelectedUser = ref(true);
 const pageTitle = ref("Laboratory Services");
 const currentTab = ref(1);
 const showTabs = ref(true);
 const columns = ref([]);
+const test = ref(['test']);
 const newDischargedPatient = ref(false);
 const isBlinking = ref(false);
 const open_discharge_notice = ref(false);
+const open_patient_info_and_charges = ref(false);
 
 const totalItems = ref(0);
 const itemsPerPage = ref(15);
@@ -131,19 +111,13 @@ const tableTabs = ref([
     label: "Out-Patient",
     title: "Out-Patient's Record",
     value: 1,
-    endpoint: useApiUrl() + "/get-outpatient",
+    endpoint: useApiUrl() + "/get-opd-patients",
     columns: [
               {
-                title: "",
+                title: "Patient ID",
                 align: "start",
                 sortable: false,
-                key: "Rendered",
-              },
-              {
-                title: "",
-                align: "start",
-                sortable: false,
-                key: "Active",
+                key: "patient_Id",
               },
               {
                 title: "Case No.",
@@ -155,79 +129,25 @@ const tableTabs = ref([
                 title: "Patient Name",
                 align: "start",
                 sortable: false,
-                key: "lastname",
-              },
-              {
-                title: "OR No.",
-                align: "start",
-                sortable: false,
-                key: "ORNum",
+                key: "patient_details.lastname",
               },
               {
                 title: "Age",
                 align: "start",
                 sortable: false,
-                key: "age",
+                key: "patient_Age",
               },
               {
-                title: "Requisition No.",
+                title: "Birthdate",
                 align: "start",
                 sortable: false,
-                key: "requisition_no",
-              },
-              {
-                title: "Requisition DateTime",
-                align: "start",
-                sortable: false,
-                key: "requisition_datetime",
+                key: "patient_details.birthdate",
               },
               {
                 title: "Requesting Physician",
                 align: "start",
                 sortable: false,
-                key: "requesting_physician",
-              },
-              {
-                title: "Render DateTime",
-                align: "start",
-                sortable: false,
-                key: "render_datetime",
-              },
-              {
-                title: "Amount",
-                align: "start",
-                sortable: false,
-                key: "amount",
-              },
-              {
-                title: "Payment Amount",
-                align: "start",
-                sortable: false,
-                key: "payment_amount",
-              },
-              {
-                title: "Payer",
-                align: "start",
-                sortable: false,
-                key: "payer",
-              },
-              {
-                title: "Requested By",
-                align: "start",
-                sortable: false,
-                key: "requested_by",
-              },
-              {
-                title: "Rendered By",
-                align: "start",
-                sortable: false,
-                key: "rendered_by",
-              },
-              {
-                title: "Cancelled By",
-                align: "start",
-                sortable: false,
-                key: "cancelled_by",
+                key: "attending_Doctor_fullname",
               },
     ],
   },
@@ -235,19 +155,13 @@ const tableTabs = ref([
     label: "Emergency",
     title: "Emergency's Record",
     value: 2,
-    endpoint: useApiUrl() + "/get-outpatient",
+    endpoint: useApiUrl() + "/get-er-patients",
     columns: [
-            {
-                title: "",
-                align: "start",
-                sortable: false,
-                key: "Rendered",
-              },
               {
-                title: "",
+                title: "Patient ID",
                 align: "start",
                 sortable: false,
-                key: "Active",
+                key: "patient_Id",
               },
               {
                 title: "Case No.",
@@ -256,88 +170,34 @@ const tableTabs = ref([
                 key: "case_No",
               },
               {
+                title: "Bed No.",
+                align: "start",
+                sortable: false,
+                key: "er_Bedno",
+              },
+              {
                 title: "Patient Name",
                 align: "start",
                 sortable: false,
-                key: "lastname",
-              },
-              {
-                title: "OR No.",
-                align: "start",
-                sortable: false,
-                key: "ORNum",
+                key: "patient_details.lastname",
               },
               {
                 title: "Age",
                 align: "start",
                 sortable: false,
-                key: "age",
+                key: "patient_Age",
               },
               {
-                title: "Bed No.",
+                title: "Birthdate",
                 align: "start",
                 sortable: false,
-                key: "bed_no",
-              },
-              {
-                title: "Requisition No.",
-                align: "start",
-                sortable: false,
-                key: "requisition_no",
-              },
-              {
-                title: "Requisition DateTime",
-                align: "start",
-                sortable: false,
-                key: "requisition_datetime",
+                key: "patient_details.birthdate",
               },
               {
                 title: "Requesting Physician",
                 align: "start",
                 sortable: false,
-                key: "requesting_physician",
-              },
-              {
-                title: "Render DateTime",
-                align: "start",
-                sortable: false,
-                key: "render_datetime",
-              },
-              {
-                title: "Amount",
-                align: "start",
-                sortable: false,
-                key: "amount",
-              },
-              {
-                title: "Payment Amount",
-                align: "start",
-                sortable: false,
-                key: "payment_amount",
-              },
-              {
-                title: "Payer",
-                align: "start",
-                sortable: false,
-                key: "payer",
-              },
-              {
-                title: "Requested By",
-                align: "start",
-                sortable: false,
-                key: "requested_by",
-              },
-              {
-                title: "Rendered By",
-                align: "start",
-                sortable: false,
-                key: "rendered_by",
-              },
-              {
-                title: "Cancelled By",
-                align: "start",
-                sortable: false,
-                key: "cancelled_by",
+                key: "attending_Doctor_fullname",
               },
     ],
   },
@@ -345,121 +205,49 @@ const tableTabs = ref([
     label: "In-Patient",
     title: "In-Patient's Record",
     value: 3,
-    endpoint: useApiUrl() + "/get-outpatient",
+    endpoint: useApiUrl() + "/get-ipd-patients",
     columns: [
               {
-                title: "",
+                title: "Patient ID",
                 align: "start",
                 sortable: false,
-                key: "Rendered",
-              },
-              {
-                title: "",
-                align: "start",
-                sortable: false,
-                key: "Active",
+                key: "patient_Id",
               },
               {
                 title: "Case No.",
                 align: "start",
                 sortable: false,
                 key: "case_No",
+              },
+              {
+                title: "Bed No.",
+                align: "start",
+                sortable: false,
+                key: "room_Code",
               },
               {
                 title: "Patient Name",
                 align: "start",
                 sortable: false,
-                key: "lastname",
-              },
-              {
-                title: "OR No.",
-                align: "start",
-                sortable: false,
-                key: "ORNum",
+                key: "patient_details.lastname",
               },
               {
                 title: "Age",
                 align: "start",
                 sortable: false,
-                key: "age",
+                key: "patient_Age",
               },
               {
-                title: "Room No.",
+                title: "Birthdate",
                 align: "start",
                 sortable: false,
-                key: "room_no",
-              },
-              {
-                title: "Requisition No.",
-                align: "start",
-                sortable: false,
-                key: "requisition_no",
-              },
-              {
-                title: "Requisition DateTime",
-                align: "start",
-                sortable: false,
-                key: "requisition_datetime",
+                key: "patient_details.birthdate",
               },
               {
                 title: "Requesting Physician",
                 align: "start",
                 sortable: false,
-                key: "requesting_physician",
-              },
-              {
-                title: "Render DateTime",
-                align: "start",
-                sortable: false,
-                key: "render_datetime",
-              },
-              {
-                title: "Amount",
-                align: "start",
-                sortable: false,
-                key: "amount",
-              },
-              {
-                title: "Case No.",
-                align: "start",
-                sortable: false,
-                key: "case_No",
-              },
-              {
-                title: "OR No.",
-                align: "start",
-                sortable: false,
-                key: "ORNum",
-              },
-              {
-                title: "Payment Amount",
-                align: "start",
-                sortable: false,
-                key: "payment_amount",
-              },
-              {
-                title: "Payer",
-                align: "start",
-                sortable: false,
-                key: "payer",
-              },
-              {
-                title: "Requested By",
-                align: "start",
-                sortable: false,
-                key: "requested_by",
-              },
-              {
-                title: "Rendered By",
-                align: "start",
-                sortable: false,
-                key: "rendered_by",
-              },
-              {
-                title: "Cancelled By",
-                align: "start",
-                sortable: false,
-                key: "cancelled_by",
+                key: "attending_Doctor_fullname",
               },
     ],
   },
@@ -507,11 +295,28 @@ const closeDischargeNotice = () => {
   open_discharge_notice.value = false;
 }
 
+const closePatientInfoAndCharges = () => {
+  selectedRowDetails.value = Object.assign({}, {});
+  test.value = [];
+  isSelectedUser.value = true;
+  open_patient_info_and_charges.value = false;
+}
+
 const viewDischargedPatients = () => {
   open_discharge_notice.value = true;
   newDischargedPatient.value = false;
   isBlinking.value = false;
 };
+
+const handleView = async () => {
+  items.value = {
+    case_No: selectedRowDetails.value.case_No,
+    mscAccount_Trans_Types: selectedRowDetails.value.mscAccount_Trans_Types,
+  };
+  if (items.value !== null) {
+    open_patient_info_and_charges.value = true;
+  }
+}
 
 const loadItems = async (options = null, searchkeyword = null) => {
   try {
