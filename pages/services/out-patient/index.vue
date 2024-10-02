@@ -271,6 +271,7 @@ const currentTab = ref(1);
 const showTabs = ref(true);
 const serverItems = ref([]);
 const columns = ref([]);
+const test = ref(['test']);
 const selectedRows = ref([]);
 const tableTabs = ref([
   {
@@ -614,8 +615,6 @@ const openAddFormDialog = (type) => {
         closeCentralFormDialog();
     } else if (type === 'old') {  
         let currentDate = useDateMMDDYYY(new Date());
-        console.log('test', selectedPatient.value);
-        console.log('selectedPatient:', useDateMMDDYYY(selectedPatient.value.updated_at));
         if (useDateMMDDYYY(selectedPatient.value.updated_at) == currentDate) {
             return useSnackbar(true, "error", "Patient already registered today.");
         } else {
@@ -734,7 +733,6 @@ const updateServerItems = (newServerItems) => {
   serverItems.value = newServerItems;
 };
 
-const test = ref(['test']);
 const handleClose = (dialogName) => {
   selectedRowDetails.value = Object.assign({}, {});
   selectedRows.value = [];

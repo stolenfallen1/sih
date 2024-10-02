@@ -13,6 +13,7 @@
           View
         </v-btn>
         <v-btn
+          @click="handleCancellation()"
           prepend-icon="mdi-toggle-switch"
           :disabled="isSelectedUser"
           width="300"
@@ -75,6 +76,7 @@
   </div>
   <DischargeNoticeForm :open_discharge_notice="open_discharge_notice" @close-dialog="closeDischargeNotice" />
   <PatientLabCharges :open_patient_info_and_charges="open_patient_info_and_charges" :items="items" @close-dialog="closePatientInfoAndCharges" />
+  <RequestCancellation :open_request_cancellation="open_request_cancellation" :items="items" @close-dialog="closeRequestCancellation" />
   <Snackbar />
 </template>
 
@@ -82,6 +84,7 @@
 import ReusableTable from "~/components/reusables/ReusableTable.vue";
 import DischargeNoticeForm from "./forms/DischargeNoticeForm.vue";
 import PatientLabCharges from "./forms/PatientLabCharges.vue";
+import RequestCancellation from "./forms/RequestCancellation.vue";
 
 definePageMeta({
   layout: "root-layout",
@@ -100,6 +103,7 @@ const newDischargedPatient = ref(false);
 const isBlinking = ref(false);
 const open_discharge_notice = ref(false);
 const open_patient_info_and_charges = ref(false);
+const open_request_cancellation = ref(false);
 
 const totalItems = ref(0);
 const itemsPerPage = ref(15);
@@ -302,6 +306,13 @@ const closePatientInfoAndCharges = () => {
   open_patient_info_and_charges.value = false;
 }
 
+const closeRequestCancellation = () => {
+  selectedRowDetails.value = Object.assign({}, {});
+  test.value = [];
+  isSelectedUser.value = true;
+  open_request_cancellation.value = false;
+}
+
 const viewDischargedPatients = () => {
   open_discharge_notice.value = true;
   newDischargedPatient.value = false;
@@ -315,6 +326,16 @@ const handleView = async () => {
   };
   if (items.value !== null) {
     open_patient_info_and_charges.value = true;
+  }
+}
+
+const handleCancellation = () => {
+  items.value = {
+    case_No: selectedRowDetails.value.case_No,
+    mscAccount_Trans_Types: selectedRowDetails.value.mscAccount_Trans_Types,
+  };
+  if (items.value !== null) {
+    open_request_cancellation.value = true;
   }
 }
 

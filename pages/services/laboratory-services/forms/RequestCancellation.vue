@@ -1,8 +1,8 @@
 <template>
-    <v-dialog :model-value="open_patient_info_and_charges" rounded="lg" @update:model-value="closeDialog" max-width="1120px">
+    <v-dialog :model-value="open_request_cancellation" rounded="lg" @update:model-value="closeDialog" max-width="1120px">
         <v-card rounded="lg">
         <v-toolbar density="compact" color="#107bac" hide-details>
-            <v-toolbar-title>Patient Lab Charges</v-toolbar-title>
+            <v-toolbar-title>Request Cancellation</v-toolbar-title>
             <v-spacer></v-spacer>
             <v-btn color="white" @click="closeDialog">
             <v-icon>mdi-close</v-icon>
@@ -130,7 +130,7 @@
                         :items-length="totalItems"
                         :loading="data.loading"
                         :hover="true"
-                        item-value="uniqueKey"
+                        item-value="itemcharged"
                         @update:options="initialize"
                         fixed-header
                         density="compact"
@@ -150,17 +150,18 @@
                             {{ item.renderdate ? useDateMMDDYYY(item.renderdate) : "" }}
                         </template>
                         <template v-slot:item.requestStatus="{ item }">
-                            <v-chip color="orange" v-if="item.requestStatus == 'X' && item.cancelleddate == null">Pending</v-chip>
-                            <v-chip color="red" v-if="item.requestStatus == 'X' && item.cancelleddate != null && item.cancelledby != null">Cancelled</v-chip>
-                            <v-chip color="green" v-else-if="item.requestStatus == 'W' && item.cancelleddate != null">Done</v-chip>
+                            <v-chip color="orange" v-if="item.requestStatus == 'X'">Pending</v-chip>
+                            <v-chip color="green" v-else>Done</v-chip>
                         </template>
                         <template v-slot:item.resultStatus="{ item }">
-                            <v-chip color="orange" v-if="item.resultStatus == 'X' && item.cancelleddate == null">Pending</v-chip>
-                            <v-chip color="red" v-if="item.requestStatus == 'X' && item.cancelleddate != null && item.cancelledby != null">Cancelled</v-chip>
-                            <v-chip color="green" v-else-if="item.resultStatus == 'W' && item.cancelleddate != null">Done</v-chip>
+                            <v-chip color="orange" v-if="item.resultStatus == 'X'">Pending</v-chip>
+                            <v-chip color="green" v-else>Done</v-chip>
                         </template>
-                        <template v-slot:item.cancelleddate="{ item }">
-                            {{ item.cancelleddate ? useDateMMDDYYY(item.cancelleddate) : "" }}
+                        <template v-slot:item.archive="{ item }">
+                            <v-icon style="color: red; cursor: pointer;" @click="openRemarksForm(item.itemcharged)">mdi-archive-alert</v-icon>
+                        </template>
+                        <template v-slot:item.cancel="{ item }">
+                            <v-icon style="color: red; cursor: pointer;" @click="cancelLabItem">mdi-trash-can</v-icon>
                         </template>
                     </v-data-table-server>
                 </v-col>
@@ -173,11 +174,57 @@
         </v-card-actions>
         </v-card>
     </v-dialog>
+    <v-dialog
+        :model-value="open_cancellation_remarks"
+        @update:model-value="closeRemarksForm"
+        rounded="lg"
+        max-width="500px"
+    >
+        <form>
+            <v-card rounded="lg">
+                <v-toolbar density="compact" color="#107bac" hide-details>
+                    <v-toolbar-title>Clear Patient</v-toolbar-title>
+                    <v-spacer></v-spacer>
+                    <v-btn color="white" @click="closeRemarksForm">
+                        <v-icon>mdi-close</v-icon>
+                    </v-btn>
+                </v-toolbar>
+                <v-card-text>
+                    <v-row>
+                        <v-col cols="12">
+                            <v-textarea 
+                                label="Remarks"
+                                placeholder="Enter cancellation remarks here"
+                                v-model="payload.remarks"
+                                variant="outlined"
+                                density="compact"
+                                hide-details
+                                required
+                            ></v-textarea>
+                        </v-col>
+                    </v-row>
+                </v-card-text>
+                <v-divider></v-divider>
+                <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn class="bg-primary text-white" @click="confirmOnCancel">Save Remarks</v-btn>
+                    <v-btn color="blue-darken-1 border border-info" @click="closeRemarksForm">Close</v-btn>
+                </v-card-actions>
+            </v-card>
+        </form>
+    </v-dialog>
+
+    <Confirmation
+        :show="cancelconfirmation"
+        :payload="payload"
+        @submit="archiveLabItem"
+        @close="closeConfirmOnCancel"
+    />
 </template>
 
 <script setup>
 const props = defineProps({
-    open_patient_info_and_charges: {
+    open_request_cancellation: {
         type: Boolean,
         default: () => false,
         required: true,
@@ -192,6 +239,10 @@ const props = defineProps({
 const { selectedRowDetails, isrefresh } = storeToRefs(useSubcomponentSelectedRowDetailsStore());
 const payload = ref({});
 const emits = defineEmits(["close-dialog"]);
+const open_cancellation_remarks = ref(false);
+const cancelconfirmation = ref(false);
+const itemsToArchive = ref([]);
+const item_value = ref(null);
 
 const data = ref({
     title: "List of Patient Lab Charges",
@@ -212,8 +263,8 @@ const headers = [
     { title: "Rendered Date", key: "renderdate", align: "start", sortable: false },
     { title: "Request Status", key: "requestStatus", align: "start", sortable: false },
     { title: "Result Status", key: "resultStatus", align: "start", sortable: false },
-    { title: "Cancelled By", key: "cancelledby", align: "start", sortable: false },
-    { title: "Cancelled Date", key: "cancelleddate", align: "start", sortable: false },
+    { title: "", key: "archive", align: "start", sortable: false },
+    { title: "", key: "cancel", align: "start", sortable: false },
 ];
 
 const itemsPerPage = ref(20);
@@ -231,7 +282,7 @@ const loadItems = async (page = null, itemsPerPage = null) => {
     let params = `page=${pageno}&per_page=${itemPerpageno}`;
 
     try {
-        const response = await fetch(useApiUrl() + `/get-laboratory-exams?${params}`, {
+        const response = await fetch(useApiUrl() + `/get-lab-exams-uncancelled?${params}`, {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json',
@@ -244,10 +295,7 @@ const loadItems = async (page = null, itemsPerPage = null) => {
 
         if (response.ok) {
             const responseData = await response.json();
-            serverItems.value = responseData.data.map((item, index) => ({
-                ...item,
-                uniqueKey: `${item.patientid}-${item.caseno}-${index}`,
-            }));
+            serverItems.value = responseData.data;
             totalItems.value = responseData.total;
         } else {
             useSnackbar(true, "green", "Error fetching data");
@@ -258,6 +306,89 @@ const loadItems = async (page = null, itemsPerPage = null) => {
     } finally {
         data.value.loading = false;
     }
+};
+
+const openRemarksForm = (itemValue) => {
+    itemsToArchive.value = serverItems.value.filter(item => item.itemcharged === itemValue);
+    item_value.value = itemValue;
+    open_cancellation_remarks.value = true;
+}
+
+const closeRemarksForm = () => {
+    open_cancellation_remarks.value = false;
+}
+
+// Staff cancellation
+const archiveLabItem = async (user_details) => {
+    if (user_details.user_passcode === usePasscode()) {
+        const items = {
+            itemcharged: item_value.value,
+            case_No: payload.value.case_No,
+            remarks: payload.value.remarks,
+        };
+        if (itemsToArchive.value.length > 1) {
+            const confirmCancellation = window.confirm("This exam is a part of a package panel. By cancelling this exam, all exams under this package will be cancelled. Do you want to proceed?");
+            if (confirmCancellation) {
+                const response = await fetch(useApiUrl() + "/archive-lab-exam", {
+                method: "post",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + useToken()
+                },
+                    body: JSON.stringify({ items: items })
+                });
+                if (response) {
+                    closeConfirmOnCancel();
+                    closeRemarksForm();
+                    loadItems();
+                    return useSnackbar(true, "green", "Exam cancelled successfully");
+                } else {
+                    return useSnackbar(true, "error", "Cancellation failed");
+                }
+            } else {
+                closeConfirmOnCancel();
+                closeRemarksForm();
+                useSnackbar(true, "red", "Failed to cancel Exam");
+            }
+        } else {
+            const response = await fetch(useApiUrl() + "/archive-lab-exam", {
+            method: "post",
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + useToken()
+            },
+                body: JSON.stringify({ items: items })
+            });
+            if (response) {
+                closeConfirmOnCancel();
+                closeRemarksForm();
+                loadItems();
+                return useSnackbar(true, "green", "Exam cancelled successfully");
+            } else {
+                return useSnackbar(true, "error", "Cancellation failed");
+            }
+        } 
+    } else {
+        return useSnackbar(true, "red", "Invalid passcode");
+    }
+};
+
+const confirmOnCancel = () => {
+    if (payload.value.remarks == null || payload.value.remarks == "") {
+        return useSnackbar(true, "red", "Remarks is required");
+    } else {
+        cancelconfirmation.value = true;
+    }
+}
+
+const closeConfirmOnCancel = () => {
+    cancelconfirmation.value = false;
+}
+
+// Head Staff / Supervisor cancellation
+const cancelLabItem = () => {
+    // API ROUTE: cancel-lab-exam
+    useSnackbar(true, "green", "Cancel Lab Item");
 };
 
 const closeDialog = () => {
