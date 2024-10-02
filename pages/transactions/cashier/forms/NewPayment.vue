@@ -19,7 +19,7 @@
                             <td> {{ item?.revenueID }} </td>
                             <td> {{ item?.itemID }} </td>
                             <td> {{ item?.items?.exam_description ? item?.items?.exam_description : item?.doctor_details?.doctor_name  }} </td>
-                            <td> {{ item.amount }} </td>
+                            <td> {{ payload.payment_code === 1 ? usePeso(item.amount) : item.amount }} </td>
                         </tr>
                     </template>
                 </tbody>
@@ -234,9 +234,8 @@
                         ref="withholdingTaxRef"
                         variant="outlined"
                         density="compact"
-                        v-model="tempWithholdingTax" 
+                        v-model="payload.withholding_tax" 
                         @change="calculateTotals"
-                        @blur="updateWithholdingTax"
                         @keyup.enter="handleFocus($event, withholdingTaxRef)"
                         hide-details
                     ></v-text-field>
@@ -455,7 +454,6 @@ const tempCashAmount = ref(payload.value.cash_amount);
 const tempCashTendered = ref(payload.value.cash_tendered);
 const tempCardAmount = ref(payload.value.card_amount);
 const tempCheckAmount = ref(payload.value.check_amount);
-const tempWithholdingTax = ref(payload.value.withholding_tax);
 
 const paymentCodeRef = ref(null);
 const caseNoRef = ref(null);
@@ -468,6 +466,7 @@ const discountPercentRef = ref(null);
 const withholdingTaxRef = ref(null);
 
 const focusOrder = {
+    1: [paymentCodeRef, chargeSlipRef, payorsNameRef, amountRef, discountRef, discountPercentRef, withholdingTaxRef],
     5: [paymentCodeRef, caseNoRef, chargeSlipRef, payorsNameRef, amountRef, discountRef, discountPercentRef, withholdingTaxRef],
     6: [paymentCodeRef, companyCodeRef, caseNoRef, amountRef, discountRef, discountPercentRef, withholdingTaxRef],
 }
@@ -506,7 +505,6 @@ const focusNextField = (currentField, paymentCode) => {
 
 const handleFocus = async (event, currentField) => {
     if (!payload.value.payment_code) return useSnackbar(true, "error", "Please select payment code.");
-
     if (currentField === caseNoRef.value) {
         const isValid = await getPatientByCaseNo();  
         if (!isValid) {
@@ -526,57 +524,8 @@ const handleFocus = async (event, currentField) => {
     });
 };
 
-const validateForm = () => {
-    let valid = ref(true);
-
-    if (!payload.value.ORNumber) {
-        formErrors.value.ORNumber = 'Required field';
-        valid = false;
-    }
-    if (!payload.value.case_No) {
-        formErrors.value.case_No = 'Required field';
-        valid = false;
-    }
-    if (payload.value.card_type_id == null && payload.value.bank_check == null && !payload.value.cash_amount) {
-        formErrors.value.cash_amount = 'Required field';
-        valid = false;
-    } 
-    if (payload.value.card_type_id == null && payload.value.bank_check == null && !payload.value.cash_tendered) {
-        formErrors.value.cash_tendered = 'Required field';
-        valid = false;
-    } 
-    if (payload.value.card_type_id != null && payload.value.card_id != null && !payload.value.card_date) {
-        formErrors.value.card_date = 'Required field';
-        valid = false;
-    }
-    if (payload.value.card_type_id != null && payload.value.card_id != null && !payload.value.card_approval_number) {
-        formErrors.value.card_approval_number = 'Required field';
-        valid = false;
-    }
-    if (payload.value.card_type_id != null && payload.value.card_id != null && !payload.value.card_amount) {
-        formErrors.value.card_amount = 'Required field';
-        valid = false;
-    }
-    if (payload.value.bank_check != null && !payload.value.check_no) {
-        formErrors.value.check_no = 'Required field';
-        valid = false;
-    }
-    if (payload.value.bank_check != null && !payload.value.check_date) {
-        formErrors.value.check_date = 'Required field';
-        valid = false;
-    }
-    if (payload.value.bank_check != null && !payload.value.check_amount) {
-        formErrors.value.check_amount = 'Required field';
-        valid = false;
-    }
-
-    return valid;
-};
-
 const openRecieptsInfo = () => {
-    // if (validateForm()) {
-        open_reciepts_form.value = true;
-    // }
+    open_reciepts_form.value = true;
 };
 
 const closeRecieptsForm = () => {
@@ -610,24 +559,44 @@ const searchChargeItem = async () => {
     if (payload.value.refNum) {
         const response = await useMethod("get", "get-charge-item?refNum=", "", payload.value.refNum);
         if (response && response.data && response.data.length > 0) {
-            table_data.value = response.data; 
             payload.value.patient_Id = response.data[0].patient_Id;
             payload.value.case_No = response.data[0].case_No;
             payload.value.transaction_code = response.data[0].revenueID;
-            payload.value.itemID = response.data.map(item => item.itemID) ? response.data.map(item => item.itemID).join(" , ") : null;
+            payload.value.payors_name = response.data[0].patient_Name;
+            payload.value.guarantor_Credit_Limit = "SELF-PAY";
+            payload.value.accountnum = response.data[0].patient_Id;
+            payload.value.request_doctors_id = response.data[0].requestDoctorID;
 
             const exam_description = response.data.map(item => item.items?.exam_description).filter(Boolean).join(" , ");
             const doctor_names = response.data.map(item => item.doctor_details?.doctor_name).filter(Boolean).join(" , ");
             payload.value.particulars = exam_description || doctor_names;
-            payload.value.amount = response.data.map(item => parseFloat(item.amount)).filter(amount => !isNaN(amount)).reduce((a, b) => a + b, 0);
+
+            const paymentTotal = response.data.reduce((acc, item) => acc + (parseFloat(item.amount) || 0), 0).toString();
+            payload.value.amount = usePeso(paymentTotal);
+
+            table_data.value = response.data.map(item => ({
+                id: item.id,
+                form: item.form,
+                revenueID: item.revenueID,
+                itemID: item.itemID,
+                amount: item.amount,
+                charge_type: item.stat,
+                specimen: item.specimenId,
+                barcode: item.Barcode,
+                items: item.items,
+                doctor_details: item.doctor_details
+            }));
 
             payload.value.Items = table_data.value;
+            return true;
 
         } else if (response && response.data && response.data.length === 0) {
-            return useSnackbar(true, "error", "Charge slip not found.");
+            useSnackbar(true, "error", "Charge slip not found.");
+            return false;
         }
     } else {
-        return useSnackbar(true, "error", "Please enter charge slip.");
+        useSnackbar(true, "error", "Please enter charge slip.");
+        return false;
     }
 }
 
@@ -647,8 +616,6 @@ const getPatientByCaseNo = async () => {
             payload.value.guarantor_Credit_Limit = response.data[0].guarantor_Credit_Limit ? usePeso(response.data[0].guarantor_Credit_Limit) : "OPEN";
 
             switch (payload.value.payment_code) {
-                case 1:
-                    break;
                 case 5:
                     payload.value.accountnum = response.data[0].guarantor_Id ? response.data[0].guarantor_Id : null;
                     payload.value.payors_name = response.data[0].patient_details 
@@ -705,8 +672,6 @@ const getOPDBill = async () => {
             payload.value.amount = usePeso(data.data[0]["Total Hospital Bill"]);
 
             switch(payload.value.payment_code) {
-                case 1:
-                    break;
                 case 5:
                     payload.value.itemID = "PY";
                     payload.value.particulars = "Hospital Bill";
@@ -721,8 +686,10 @@ const getOPDBill = async () => {
                 default:
                     break;
             }
+            return true;
         } else {
-            return useSnackbar(true, "error", "Patient has no charges.");
+            useSnackbar(true, "error", "Patient has no charges.");
+            return false;
         }
     }
 }
@@ -749,8 +716,8 @@ const handleKeyEnter = async () => {
 
     switch(payload.value.payment_code) {
         case 1:
-            searchChargeItem();
-            return true;
+            const isSearchChargeItemValid = await searchChargeItem();
+            return isSearchChargeItemValid;
         case 5:
             if (!payload.value.case_No) {
                 useSnackbar(true, "error", "Please enter admission number.");
@@ -763,8 +730,8 @@ const handleKeyEnter = async () => {
                 return false;
             }
 
-            await getOPDBill();
-            return true;
+            const isGetOPDBillValid = await getOPDBill();
+            return isGetOPDBillValid;
         case 6:
             const isCompanyDetailsValid = await getCompanyDetails();
             return isCompanyDetailsValid;
@@ -823,7 +790,13 @@ const onSubmit = async (user_details) => {
     if (user_details.user_passcode === usePasscode()) {
         switch(payload.value.payment_code) {
             case 1:
-                console.log("TEST 1");
+                const cashtrans_res = await useMethod("post", "save-cash-transaction", payload.value);
+                if (cashtrans_res) {
+                    useSnackbar(true, "success", "Payment successfully saved.");
+                    resetTransactionForm();
+                    closeRecieptsForm();
+                    closeConfirmDialog();
+                }
                 break;
             case 5:
                 const opdbill_res = await useMethod("post", "save-opbill", payload.value);
@@ -861,7 +834,7 @@ const formattedCashChange = computed(() => formatNumber(payload.value.cash_chang
 const calculateTotals = () => {
     const cleanedAmount = parseCurrencyInput(payload.value.amount);
     const discountPercent = parseFloat(payload.value.discount_percent) || 0;
-    const withholdingTax = parseFloat(tempWithholdingTax.value) || 0;
+    const withholdingTax = parseFloat(payload.value.withholding_tax) || 0;
 
     if (isNaN(cleanedAmount)) {
         payload.value.sub_total = usePeso(0);
@@ -872,17 +845,25 @@ const calculateTotals = () => {
     const discount = (cleanedAmount * discountPercent) / 100;
     payload.value.total_discount = usePeso(discount);
 
+    payload.value.amount = usePeso(cleanedAmount);
+
     const subTotal = cleanedAmount - discount;
     payload.value.sub_total = usePeso(subTotal > 0 ? subTotal : 0); 
+
+    payload.value.withholding_tax = usePeso(withholdingTax);
 
     const totalPayment = subTotal - withholdingTax;
     payload.value.total_payment = usePeso(totalPayment > 0 ? totalPayment : 0); 
 };
 
 watch(() => payload.value.amount, () => {
-    const cleanedAmount = parseCurrencyInput(payload.value.amount);
-    payload.value.sub_total = usePeso(cleanedAmount);
-    payload.value.total_payment = usePeso(cleanedAmount);
+    try {
+        const cleanedAmount = parseCurrencyInput(payload.value.amount);
+        payload.value.sub_total = usePeso(cleanedAmount);
+        payload.value.total_payment = usePeso(cleanedAmount);
+    } catch (error) {
+        console.error('Error in watch amount:', error);
+    }
 });
 
 
@@ -913,12 +894,6 @@ const updateCheckAmount = () => {
     const parsedValue = parseCurrencyInput(tempCheckAmount.value);
     payload.value.check_amount = parsedValue;
     tempCheckAmount.value = formatNumber(parsedValue);
-}
-
-const updateWithholdingTax = () => {
-    const parsedValue = parseCurrencyInput(tempWithholdingTax.value);
-    payload.value.withholding_tax = parsedValue;
-    tempWithholdingTax.value = formatNumber(parsedValue);
 }
 
 watchEffect(() => {

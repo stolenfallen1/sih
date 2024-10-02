@@ -286,16 +286,16 @@ const emits = defineEmits(["close-dialog"]);
 const payload = ref({});
 const open_clear_patient = ref(false);
 const headers = [
-    {
-        title: "Code",
-        align: "start",
-        sortable: false,
-        key: "id",
-    },
-    { title: "Account Type", key: "acct_type", align: "start", sortable: false,width: "20%" },
-    { title: "Account Class", key: "Class", align: "start", sortable: false,width: "20%" },
-    { title: "Description", key: "Description", align: "start",sortable: false, width: "30%" },
-    { title: "", key: "actions", align: "start", width: "20%" },
+    // {
+    //     title: "Code",
+    //     align: "start",
+    //     sortable: false,
+    //     key: "id",
+    // },
+    // { title: "Account Type", key: "acct_type", align: "start", sortable: false,width: "20%" },
+    // { title: "Account Class", key: "Class", align: "start", sortable: false,width: "20%" },
+    // { title: "Description", key: "Description", align: "start",sortable: false, width: "30%" },
+    // { title: "", key: "actions", align: "start", width: "20%" },
 ];
 const data = ref({
     title: "List of Patients for Discharge Notice",
@@ -310,7 +310,8 @@ const itemsPerPage = ref(10);
 const totalItems = ref(0);
 const serverItems = ref([]);
 const initialize = ({ page, itemsPerPage, sortBy }) => {
-    loadItems(page, itemsPerPage, sortBy);
+    // loadItems(page, itemsPerPage, sortBy);
+    null;
 };
 const loadItems = async (page = null, itemsPerPage = null, sortBy = null) => {
     data.value.loading = true;

@@ -109,7 +109,7 @@ const closeConfirmDialog = () => {
 
 const searchORNumber = async () => {
     if (payload.value.ORNumber) {
-        const response = await useMethod("get", "get-ornumber?ORNumber=", "", payload.value.ORNumber);
+        const response = await useMethod("get", "get-or-for-cancellation?ORNumber=", "", payload.value.ORNumber);
         if (response && response.data) {
             if (response.data.length > 0) {
                 table_data.value = response.data;
