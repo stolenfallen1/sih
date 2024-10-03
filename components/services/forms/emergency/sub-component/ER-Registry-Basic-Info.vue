@@ -8,7 +8,7 @@
                     :items="register_source_data"
                     item-title="description"
                     item-value="id"
-                    v-model="payload.register_source"
+                    v-model="payload.register_Source"
                     hide-details
                     density="compact"
                 ></v-autocomplete>
@@ -87,7 +87,7 @@
                         :items="register_case_type_data"
                         item-title="description"
                         item-value="id"
-                        v-model="payload.register_Case_Type"
+                        v-model="payload.register_Casetype"
                         hide-details
                         density="compact"
                     ></v-autocomplete>
@@ -375,6 +375,7 @@ const open_referring_hci_code_table = ref(false);
 const open_referring_hci_address_form = ref(false);
 const open_diet_desc = ref(false);
 const enabled = ref(false)
+
 // if(enabled) {
 //     props.payload.append('payload.isreferredFrom', true)
 // } else {
@@ -394,11 +395,8 @@ const handleOpenAddressFormTo = () => {
     address_form_dialogTo.value = true;
 }
 
-
-
 const fullFromHCIAddress = ref("");
 const handleSubmitAddress = (referred_From_HCI_address) => {
-    console.log(referred_From_HCI_address);
     const { bldgstreet, region_name, province_name, municipality_name, barangay_name, country_name } = referred_From_HCI_address;
     const { region_id, province_id, municipality_id, barangay_id, country_id } = referred_From_HCI_address;
 
@@ -417,12 +415,8 @@ const handleSubmitAddress = (referred_From_HCI_address) => {
 };
 
 
-    console.log('Enabled', enabled.value);
-
-
 const fullToHCIAddress = ref("");
 const handleSubmitAddressTo = (referred_To_HCI_address) => {
-    console.log(referred_To_HCI_address);
     const { bldgstreet, region_name, province_name, municipality_name, barangay_name, country_name } = referred_To_HCI_address;
     const { region_id, province_id, municipality_id, barangay_id, country_id } = referred_To_HCI_address;
 
@@ -544,7 +538,6 @@ const getServiceType = async () => {
     const response = await useMethod("get", "service-type", "", "");
     if (response) {
        service_type_data.value = response;
-       console.log(service_type_data);
        service_type_loading.value = false;
     } 
 };
@@ -635,7 +628,6 @@ const registerSource = async () => {
     const response = await useMethod("get", "get-admission-source", "", "");
     if (response) {
         register_source_data.value = response
-        console.log('Register Source', register_source_data);
     }
     register_source_loading.value = false;
 }
@@ -647,7 +639,6 @@ const registerCaseType = async () => {
     const response = await useMethod("get", "get-case-type", "", "");
     if (response) {
         register_case_type_data.value = response
-        console.log('Case Type: ', register_case_type_data);
     }
     register_case_type_loading.value = false;
 }
@@ -658,7 +649,6 @@ const getPriceGroup = async () => {
     price_group_loading.value = true;
     const response = await useMethod("get", "list-price-groups", "", "");
     if (response) {
-        console.log('Hospitalization : ', props.payload.mscAccount_type)
         price_group_data.value = response;
         updatePriceGroup()
     }

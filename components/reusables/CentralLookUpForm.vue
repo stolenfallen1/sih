@@ -203,8 +203,11 @@ const handleSearch = () => {
 
 const handleSelectedInput = (selected) => {
     let seletedrow = props.search_results.find(item=>item.id === selected[0]);
+    // console.log('Seletected rororor', seletedrow)
+    // console.log(typeof(seletedrow))
     selectedRows.value = [];
     const index = selectedRows.value.indexOf(selected[0]);
+    // console.log('The index offf : ', selectedRows)
     selectedRows.value = [];
     let item = seletedrow;
     if (index === -1) {

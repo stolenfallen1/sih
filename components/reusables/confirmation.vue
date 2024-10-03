@@ -37,7 +37,7 @@
           <v-card-actions>
             <v-btn variant="outlined" color="info" @click="handleclose"> Close </v-btn>
             <v-spacer></v-spacer>
-            <v-btn :loading="loading" class="bg-primary text-white" type="submit">Submit</v-btn>
+            <v-btn :loading="loading" :disabled="loading" class="bg-primary text-white" type="submit">Submit</v-btn>
           </v-card-actions>
         </v-card>
       </form>
