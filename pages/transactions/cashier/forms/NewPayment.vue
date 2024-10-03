@@ -35,7 +35,6 @@
                         variant="outlined"
                         density="compact"
                         v-model="payload.ORNumber"
-                        :class="{'error-input': formErrors.case_No}"
                         @click="openCashierSettings"
                         readonly
                         hide-details
@@ -46,7 +45,6 @@
                     <v-text-field
                         ref="caseNoRef"
                         v-model="payload.case_No"
-                        :class="{'error-input': formErrors.case_No}"
                         variant="outlined"
                         density="compact"
                         hide-details
@@ -292,7 +290,6 @@
                             type="date"
                             variant="outlined"
                             v-model="payload.card_date"
-                            :class="{'error-input': formErrors.card_date}"
                             density="compact"
                             hide-details
                         ></v-text-field>
@@ -303,7 +300,6 @@
                             variant="outlined"
                             density="compact" 
                             v-model="payload.card_approval_number"
-                            :class="{'error-input': formErrors.card_approval_number}"
                             hide-details
                         ></v-text-field>
                     </v-col>
@@ -315,7 +311,6 @@
                     variant="outlined"
                     density="compact"
                     v-model="tempCardAmount"
-                    :class="{'error-input': formErrors.card_amount}"
                     @blur="updateCardAmount"
                     hide-details
                 ></v-text-field>
@@ -338,7 +333,6 @@
                     variant="outlined"
                     density="compact"
                     v-model="payload.check_no"
-                    :class="{'error-input': formErrors.check_no}"
                     hide-details
                 ></v-text-field>
             </v-col>
@@ -349,7 +343,6 @@
                     variant="outlined"
                     density="compact"
                     v-model="payload.check_date"
-                    :class="{'error-input': formErrors.check_date}"
                     hide-details
                 ></v-text-field>
             </v-col>
@@ -359,7 +352,6 @@
                     variant="outlined"
                     density="compact"
                     v-model="tempCheckAmount"
-                    :class="{'error-input': formErrors.check_amount}"
                     @blur="updateCheckAmount"
                     hide-details
                 ></v-text-field>
@@ -373,7 +365,6 @@
                     variant="outlined"
                     density="compact"
                     v-model="tempCashAmount"
-                    :class="{'error-input': formErrors.cash_amount}"
                     @blur="updateCashAmount"
                     hide-details
                 ></v-text-field>
@@ -384,7 +375,6 @@
                     variant="outlined"
                     density="compact"
                     v-model="tempCashTendered"
-                    :class="{'error-input': formErrors.cash_tendered}"
                     @blur="updateCashTendered"
                     hide-details
                 ></v-text-field>
@@ -420,6 +410,8 @@
     <Confirmation 
         :payload="payload"
         :show="confirm_password"
+        :loading="isLoadingBtn"
+        :error_msg="error_msg"
         @close="closeConfirmDialog"
         @submit="onSubmit"
     />
@@ -449,6 +441,9 @@ const card_data = ref([]);
 const payment_codes = ref([]);
 const discount_types = ref([]);
 const formErrors = ref({});
+const isLoadingBtn = ref(false);
+const user_attempts = ref(0);
+const error_msg = ref('');
 
 const tempCashAmount = ref(payload.value.cash_amount);
 const tempCashTendered = ref(payload.value.cash_tendered);
@@ -819,9 +814,18 @@ const onSubmit = async (user_details) => {
             default:
                 break;
         }
+    } else if (user_details.user_passcode !== usePasscode() && user_attempts.value == 5) {
+        error_msg.value = "Too many wrong attempts, Please try again after 20 seconds.";
+        isLoadingBtn.value = true;
+        setTimeout(() => {
+            isLoadingBtn.value = false;
+            user_attempts.value = 0;
+            error_msg.value = "";
+        }, 20000);
     } else {
+        user_attempts.value += 1;
         return useSnackbar(true, "error", "Password incorrect.");
-    }
+    } 
 };
 
 const formatNumber = (value) => {

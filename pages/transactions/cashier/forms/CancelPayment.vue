@@ -51,8 +51,9 @@
                 <thead>
                     <tr>
                         <th>Patient ID</th>
-                        <th>RefNum</th>
-                        <th>Charge Slip</th>
+                        <th>Case No.</th>
+                        <th>OR No.</th>
+                        <th>Ref No.</th>
                         <th>Revenue ID</th>
                         <th>Particulars</th>
                         <th>Quantity</th>
@@ -62,13 +63,14 @@
                 <tbody>
                     <template v-for="(item, index) in table_data" :key="index">
                         <tr>
-                            <td> {{ item.patient_id }} </td>
+                            <td> {{ item.patient_Id }} </td>
+                            <td> {{ item.case_No }} </td>
                             <td> {{ item.ORNumber }} </td>
-                            <td> {{ item.refNum }} </td>
+                            <td> {{ item.refNum }}</td>
                             <td> {{ item.revenueID }} </td>
                             <td> {{ item?.items?.exam_description ? item?.items?.exam_description : item?.doctor_details?.doctor_name }} </td>
                             <td> {{ item.quantity }} </td>
-                            <td> {{ parseFloat(item?.amount).toFixed(2) }} </td>
+                            <td> {{ usePeso(item.amount) }} </td>
                         </tr>
                     </template>
                 </tbody>
@@ -80,27 +82,28 @@
     <Confirmation 
         :show="confirmDialog"
         :payload="password_payload"
+        :loading="isLoadingBtn"
+        :error_msg="error_msg"
         @submit="onSubmit"
         @close="closeConfirmDialog"
     />
 </template>
 <script setup>
-
-const { selectedRowDetails } = storeToRefs(useSubcomponentSelectedRowDetailsStore());
 const payload = ref({});
 const table_data = ref([]);
 const emits = defineEmits(["close-dialog"]);
 const password_payload = ref({});
 const confirmDialog = ref(false);
+const isLoadingBtn = ref(false);
+const user_attempts = ref(0);
+const error_msg = ref('');
 
 const openConfirmDialog = () => {
     if (payload.value.CancelledReason == null || payload.value.CancelDate == null) {
         return useSnackbar(true, "error", "Cancel Date and Reason for Cancellation is required.");
-    } 
-    if (payload.value.CancelledReason.toLowerCase().includes("system")) {
-        return useSnackbar(true, "error", "System Error as Reason is invalid.");
+    } else {
+        confirmDialog.value = true;
     }
-    confirmDialog.value = true;
 };
 
 const closeConfirmDialog = () => {
@@ -113,6 +116,9 @@ const searchORNumber = async () => {
         if (response && response.data) {
             if (response.data.length > 0) {
                 table_data.value = response.data;
+                payload.value.patient_Id = response.data[0].patient_Id;
+                payload.value.case_No = response.data[0].case_No;
+                payload.value.refNum = response.data[0].refNum;
             } else {
                 return useSnackbar(true, "error", "OR Number not found.");
             }
@@ -142,17 +148,32 @@ const onSubmit = async (user_details) => {
             resetTransactionForm();
             closeConfirmDialog();
         }
+    } else if (user_details.user_passcode !== usePasscode() && user_attempts.value == 5) {
+        error_msg.value = "Too many wrong attempts, Please try again after 20 seconds.";
+        isLoadingBtn.value = true;
+        setTimeout(() => {
+            isLoadingBtn.value = false;
+            user_attempts.value = 0;
+            error_msg.value = "";
+        }, 20000);
     } else {
+        user_attempts.value += 1;
         return useSnackbar(true, "error", "Password incorrect.");
-    }
+    } 
 };
 
-// const cancelledStatus = await useStatus("Cancelled");
-// onUpdated(() => {
-//     if (cancelledStatus && cancelledStatus.length > 0) {
-//         payload.value.status = cancelledStatus[0].id;
-//     }
-// });
+const formatDate = (date) => {
+    const d = new Date(date);
+    const month = '' + (d.getMonth() + 1);
+    const day = '' + d.getDate();
+    const year = d.getFullYear();
+    
+    return [year, month.padStart(2, '0'), day.padStart(2, '0')].join('-');
+};
+
+onMounted(() => {
+    payload.value.CancelDate = formatDate(new Date());
+});
 </script>
 
 <style scoped>

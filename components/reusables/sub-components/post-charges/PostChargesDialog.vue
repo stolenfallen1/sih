@@ -516,6 +516,8 @@
     <Confirmation 
         :show="chargeconfirmation"
         :payload="payload"
+        :loading="isLoadingBtn"
+        :error_msg="error_msg"
         @submit="onSubmit"
         @close="closeConfirmCharge"
     />
@@ -523,6 +525,8 @@
     <Confirmation 
         :show="revokeconfirmation"
         :payload="payload"
+        :loading="isLoadingBtn"
+        :error_msg="error_msg"
         @submit="onRevoke"
         @close="closeConfirmRevoke"
     />
@@ -560,6 +564,8 @@ const professional_fees_history = ref([]);
 const cash_prof_fee_history = ref([]);
 const selected_charges = ref([]);
 const selected_cash_assessment = ref([]);
+const user_attempts = ref(0);
+const error_msg = ref('');
 const charge_to = ref([
     { value: 1, text: "Self-Pay" },
     { value: 2, text: "Company / Insurance" }, 
@@ -958,9 +964,18 @@ const onSubmit = async (user_details) => {
                 isLoadingBtn.value = false;
             }
         }
+    } else if (user_details.user_passcode !== usePasscode() && user_attempts.value == 5) {
+        error_msg.value = "Too many wrong attempts, Please try again after 20 seconds.";
+        isLoadingBtn.value = true;
+        setTimeout(() => {
+            isLoadingBtn.value = false;
+            user_attempts.value = 0;
+            error_msg.value = "";
+        }, 20000);
     } else {
+        user_attempts.value += 1;
         return useSnackbar(true, "error", "Password incorrect.");
-    }
+    } 
 };
 
 const closeConfirmCharge = () => {
@@ -976,7 +991,16 @@ const confirmRevoke = () => {
 }
 const onRevoke = async (user_details) => {
     if (user_details.user_passcode !== usePasscode()) {
+        user_attempts.value += 1;
         return useSnackbar(true, "error", "Password incorrect.");
+    } else if (user_details.user_passcode !== usePasscode() && user_attempts.value == 5) {
+        error_msg.value = "Too many wrong attempts, Please try again after 20 seconds.";
+        isLoadingBtn.value = true;
+        setTimeout(() => {
+            isLoadingBtn.value = false;
+            user_attempts.value = 0;
+            error_msg.value = "";
+        }, 20000);
     } else {
         switch(charge_history_tab.value || pf_history_tab.value) {
             case "0":
@@ -986,7 +1010,7 @@ const onRevoke = async (user_details) => {
                 revokeSelectedCashAssessment(selected_cash_assessment.value);
                 break;
         }
-    }
+    } 
 }
 
 const revokeSelectedCharges = async (charges) => {

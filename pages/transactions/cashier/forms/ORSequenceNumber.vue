@@ -37,7 +37,6 @@
                                 density="compact"
                                 label="OR Suffix"
                                 v-model="payload.ORSuffix"
-                                required
                                 hide-details
                             ></v-text-field>
                         </v-col>

@@ -13,6 +13,7 @@
           <v-card-text>
             <v-row>
               <v-col cols="12" class="pa-1">
+                <v-alert flat style="background-color: red; color: #FFF; margin-bottom: 10px;" class="mb-3 pa-2" v-if="error_msg" :text="error_msg"></v-alert>
                 <v-text-field
                   class="mt-3"
                   :type="!showPassword ? 'password' : 'text'"
@@ -27,7 +28,6 @@
                   @click:append="showPassword = !showPassword"
                   :append-icon="showPassword ? 'mdi-eye-outline ' : 'mdi-eye-off-outline'"
                 ></v-text-field>
-                <v-alert :closable="true" flat color="danger"  class="mt-3 pa-2" v-if="error_msg" :text="error_msg"></v-alert>
               </v-col>
             </v-row>
             <div class="mt-3">
