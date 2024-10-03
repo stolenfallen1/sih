@@ -150,47 +150,47 @@ const openConfirmDialog = async () => {
     let valid = ref(true);
 
     if (!payload.value.lastname) {
-        formErrors.value.lastname = "Lastname is required";
+        formErrors.value.lastname = "Required field";
         valid.value = false;
     }
     if (!payload.value.firstname) {
-        formErrors.value.firstname = "Firstname is required";
+        formErrors.value.firstname = "Required field";
         valid.value = false;
     }
     if (!payload.value.sex_id) {
-        formErrors.value.sex_id = "Sex is required";
+        formErrors.value.sex_id = "Required field";
         valid.value = false;
     }
     if (!payload.value.civilstatus_id) {
-        formErrors.value.civilstatus_id = "Civil Status is required";
+        formErrors.value.civilstatus_id = "Required field";
         valid.value = false;
     }
     if (!payload.value.birthdate) {
-        formErrors.value.birthdate = "Birthdate is required";
+        formErrors.value.birthdate = "Required field";
         valid.value = false;
     }
     if (!payload.value.register_Source) {
-        formErrors.value.register_Source = "Register Source is required";
+        formErrors.value.register_Source = "Required field";
         valid.value = false;
     }
     if (!payload.value.register_Casetype) {
-        formErrors.value.register_Casetype = "Register Casetype is required";
+        formErrors.value.register_Casetype = "Required field";
         valid.value = false;
     }
     if (!payload.value.mscAccount_Trans_Types) {
-        formErrors.value.mscAccount_Trans_Types = "Transaction type is required";
+        formErrors.value.mscAccount_Trans_Types = "Required field";
         valid.value = false;
     }
     if (!payload.value.mscAccount_type) {
-        formErrors.value.mscAccount_type = "Hospital  plan is required";
+        formErrors.value.mscAccount_type = "Required field";
         valid.value = false;
     }
     if (!payload.value.mscPrice_Groups) {
-        formErrors.value.mscPrice_Groups = "Price Group is required";
+        formErrors.value.mscPrice_Groups = "Required field";
         valid.value = false;
     }
     if (!payload.value.mscPrice_Schemes) {
-        formErrors.value.mscPrice_Schemes = "Price Scheme is required";
+        formErrors.value.mscPrice_Schemes = "Required field";
         valid.value = false;
     }
 
@@ -224,7 +224,6 @@ const onSubmit = async (user_details) => {
                     tab.value = "0";
                 } 
             } else {
-                console.log(payload.value);
                 const response = await useMethod("post", "register-outpatient", payload.value);   
                 if (response) {
                     useSnackbar(true, "green", response.message);
