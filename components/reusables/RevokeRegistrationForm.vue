@@ -81,11 +81,13 @@ const closeConfirmDialog = () => {
 
 const onSubmit = async (user_details) => {
     if (user_details.user_passcode === usePasscode()) {
+        let case_No = selectedRowDetails.value.patient_registry[0].case_No
         const data = {
-            patient_Id: selectedRowDetails.value.patient_Id,
+            // patient_Id: selectedRowDetails.value.patient_Id,
+            case_No: case_No,
             revoked_remarks: payload.value.revoked_remarks,
         };
-        const response = await useMethod("put", "revoke-patient", data, "", selectedRowDetails.value.patient_Id);
+        const response = await useMethod("put", "revoke-patient", data, "", case_No);
         if (response) {
             closeConfirmDialog();
             closeDialog();

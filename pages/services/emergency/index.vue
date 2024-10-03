@@ -102,8 +102,8 @@
         <span v-if="column.key === 'discharged_date'" :key="column.key">
           {{ item.patient_registry && item.patient_registry[0].discharged_Date ? useDateMMDDYYY(item.patient_registry[0].discharged_Date) : "..." }}
         </span>
-        <span v-if="column.key === 'revoked_date'" :key="column.key">
-          {{ item.patient_registry && item.patient_registry[0].revoked_date ? useDateMMDDYYY(item.patient_registry[0].revoked_date) : "..." }}
+        <span v-if="column.key === 'revoked_Date'" :key="column.key">
+          {{ item.patient_registry && item.patient_registry[0].revoked_Date ? useDateMMDDYYY(item.patient_registry[0].revoked_date) : "..." }}
         </span>
       </template>
     </ReusableTable>
@@ -345,13 +345,13 @@ const tableTabs = ref([
                 title: "Patient ID",
                 align: "start",
                 sortable: false,
-                key: "patient_id",
+                key: "patient_Id",
               },
               {
                 title: "Case No.",
                 align: "start",
                 sortable: false,
-                key: "case_no",
+                key: "case_No",
               },
               {
                 title: "Last Name",
@@ -385,7 +385,7 @@ const tableTabs = ref([
               },
               {
                 title: "Revoked Date",
-                key: "revoked_date",
+                key: "revoked_Date",
                 align: "start",
                 sortable: false,
               },
@@ -413,13 +413,13 @@ const tableTabs = ref([
                 title: "Patient ID",
                 align: "start",
                 sortable: false,
-                key: "patient_id",
+                key: "patient_Id",
               },
               {
                 title: "ER Case No.",
                 align: "start",
                 sortable: false,
-                key: "er_case_no",
+                key: "er_case_No",
               },
               {
                 title: "ER Bed No.",

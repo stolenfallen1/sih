@@ -51,7 +51,7 @@
                         <v-text-field
                             ref="lastname"
                             v-model="payload.lastname"
-                            :readonly="clicked_option === 'view' || (!!payload.lastname && parseInt(payload.civilstatus_id) !== 3)"
+                            :readonly="clicked_option === 'view'"
                             :type="enableConfidential ? 'password' : 'text'"
                             autofocus
                             hide-details
@@ -66,7 +66,7 @@
                             ref="firstname"
                             variant="outlined"
                             v-model="payload.firstname"
-                            :readonly="clicked_option === 'view' || !!payload.firstname"
+                            :readonly="clicked_option === 'view'"
                             autofocus
                             :type="enableConfidential ? 'password' : 'text'"
                             hide-details
@@ -122,7 +122,7 @@
                             ref="birthdate"
                             variant="outlined"
                             v-model="payload.birthdate"
-                            :readonly="clicked_option === 'view' || !!payload.birthdate"
+                            :readonly="clicked_option === 'view'"
                             type="date"
                             :error-messages="formErrors.birthdate ? [formErrors.birthdate] : []"
                             hide-details
@@ -233,7 +233,7 @@
                             <v-text-field
                                 variant="outlined"
                                 v-model="payload.motherLastname"
-                                :readonly="clicked_option === 'view' || !!payload.motherLastname"
+                                :readonly="clicked_option === 'view'"
                                 hide-details
                                 density="compact"
                             ></v-text-field>
@@ -243,7 +243,7 @@
                             <v-text-field
                                 variant="outlined"
                                 v-model="payload.motherFirstname"
-                                :readonly="clicked_option === 'view' || !!payload.motherFirstname"
+                                :readonly="clicked_option === 'view'"
                                 hide-details
                                 density="compact"
                             ></v-text-field>
@@ -253,7 +253,7 @@
                             <v-text-field
                                 variant="outlined"
                                 v-model="payload.motherMiddlename"
-                                :readonly="clicked_option === 'view' || !!payload.motherMiddlename"
+                                :readonly="clicked_option === 'view'"
                                 hide-details
                                 density="compact"
                             ></v-text-field>
@@ -275,11 +275,11 @@
                     </v-col>
                     <v-col cols="4">
                         <v-col cols="12" class="form-col">
-                            <v-list-subheader class="form-header">Birth Date <span style="color: red;" class="mdi mdi-check"></span></v-list-subheader>
+                            <v-list-subheader class="form-header">Birth Date </v-list-subheader>
                             <v-text-field
                                 variant="outlined"
                                 v-model="payload.motherBirthdate"
-                                :readonly="clicked_option === 'view' || !!payload.motherBirthdate"
+                                :readonly="clicked_option === 'view'"
                                 type="date"
                                 hide-details
                                 density="compact"
@@ -329,7 +329,7 @@
                             <v-text-field
                                 variant="outlined"
                                 v-model="payload.fatherLastname"
-                                :readonly="clicked_option === 'view' || !!payload.fatherLastname"
+                                :readonly="clicked_option === 'view'"
                                 hide-details
                                 density="compact"
                             ></v-text-field>
@@ -339,7 +339,7 @@
                             <v-text-field
                                 variant="outlined"
                                 v-model="payload.fatherFirstname"
-                                :readonly="clicked_option === 'view' || !!payload.fatherFirstname"
+                                :readonly="clicked_option === 'view'"
                                 hide-details
                                 density="compact"
                             ></v-text-field>
@@ -349,7 +349,7 @@
                             <v-text-field
                                 variant="outlined"
                                 v-model="payload.fatherMiddlename"
-                                :readonly="clicked_option === 'view' || !!payload.fatherMiddlename"
+                                :readonly="clicked_option === 'view'"
                                 hide-details
                                 density="compact"
                             ></v-text-field>
@@ -371,11 +371,11 @@
                     </v-col>
                     <v-col cols="4">
                         <v-col cols="12" class="form-col">
-                            <v-list-subheader class="form-header">Birth Date <span style="color: red;" class="mdi mdi-check"></span></v-list-subheader>
+                            <v-list-subheader class="form-header">Birth Date </v-list-subheader>
                             <v-text-field
                                 variant="outlined"
                                 v-model="payload.fatherBirthdate"
-                                :readonly="clicked_option === 'view' || !!payload.fatherBirthdate"
+                                :readonly="clicked_option === 'view'"
                                 type="date"
                                 hide-details
                                 density="compact"
@@ -431,7 +431,7 @@
                             <v-text-field
                                 variant="outlined"
                                 v-model="payload.spLastname"
-                                :readonly="clicked_option === 'view' || !!payload.spLastname"
+                                :readonly="clicked_option === 'view'"
                                 hide-details
                                 density="compact"
                             ></v-text-field>
@@ -441,7 +441,7 @@
                             <v-text-field
                                 variant="outlined"
                                 v-model="payload.spFirstname"
-                                :readonly="clicked_option === 'view' || payload.spFirstname"
+                                :readonly="clicked_option === 'view'"
                                 hide-details
                                 density="compact"
                             ></v-text-field>
@@ -451,7 +451,7 @@
                             <v-text-field
                                 variant="outlined"
                                 v-model="payload.spMiddlename"
-                                :readonly="clicked_option === 'view' || payload.spMiddlename"
+                                :readonly="clicked_option === 'view'"
                                 hide-details
                                 density="compact"
                             ></v-text-field>
@@ -468,7 +468,7 @@
                                 v-model="payload.spSuffix_id"
                                 :readonly="clicked_option === 'view'"
                                 hide-details
-                                :clearable="clicked_option === 'new' || clicked_option === 'edit'"
+                                :clearable="clicked_option === 'new'"
                                 density="compact"
                                 variant="outlined"
                             ></v-autocomplete>
