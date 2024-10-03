@@ -80,6 +80,16 @@
             />
         </v-form>
     </v-dialog>
+    <v-snackbar
+        v-model="showSnackbar"
+        :timeout="2000"
+        color="#D50000"
+        elevation="24"
+        location="top right"
+        multi-line="true"
+        >
+        <p><strong>ERROR! </strong>Incorrect password</p>
+    </v-snackbar>
 </template>
 
 <script setup>
@@ -96,6 +106,7 @@
             default: () => ''
         }
     });
+    const showSnackbar = ref(false);
     const showDialog = ref(false);
 
     let tab = ref("0");
@@ -249,7 +260,7 @@
                 useSnackbar(true, "red", error.message);
             }
         } else {
-            alert("Wrong Password");
+            showSnackbar.value = true;
         }
     }
 
