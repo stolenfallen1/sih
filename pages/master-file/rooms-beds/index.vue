@@ -165,7 +165,6 @@ definePageMeta({
   layout: "root-layout",
 });
 import nuxtStorage from "nuxt-storage";
-// let userdetails = JSON.parse(nuxtStorage.localStorage.getData("user_details"));
 const confirmationDialog = ref(false);
 const error_msg = ref('');
 const loading = ref(true);
@@ -178,6 +177,7 @@ const tableTabs = ref([]);
 const form_dialog = ref(false);
 const totalItems = ref(0);
 const itemsPerPage = ref(15);
+const userdetails = ref(null);
 const search = ref("");
 const filter = ref({});
 const open_filter_options = ref(false);
@@ -395,6 +395,10 @@ const updateTotalItems = (newTotalItems) => {
 const updateServerItems = (newServerItems) => {
   serverItems.value = newServerItems;
 };
+
+onMounted(() => {
+  userdetails.value = useGetData("user_details");
+})
 
 </script>
 

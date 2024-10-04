@@ -88,8 +88,6 @@
 <script setup>
 import PriceSchemesForm from "./sub-forms/PriceSchemesForm.vue";
 
-import nuxtStorage from "nuxt-storage";
-// const msc_price_group = JSON.parse(nuxtStorage.localStorage.getData("msc-price-group")) || [];
 const props = defineProps({
 show: {
     type: Boolean,
@@ -132,6 +130,7 @@ param_tab: 1,
 const itemsPerPage = ref(10);
 const totalItems = ref(0);
 const serverItems = ref([]);
+const msc_price_group = ref(null);
 const initialize =  ({ page, itemsPerPage, sortBy }) => {
 loadItems(page,itemsPerPage,sortBy)
 
@@ -215,6 +214,7 @@ const closeDialog = () => {
 emits('close-dialog')
 }
 onMounted(()=>{
+    msc_price_group.value = useGetData("msc-price-group");
 useMscPriceGroup();
 })
 </script>

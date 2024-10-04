@@ -204,7 +204,6 @@
 
 <script setup>
 
-import nuxtStorage from "nuxt-storage";
 const props = defineProps({
     item_supplies_form: {
         type: Boolean,
@@ -221,8 +220,8 @@ const props = defineProps({
 })
 
 const emits = defineEmits(['close-dialog', 'submit-form'])
-// const itemGroups = JSON.parse(nuxtStorage.localStorage.getData("services-items-group"))|| [];
-// const modality_list =JSON.parse(nuxtStorage.localStorage.getData("modalities"))|| [];
+const itemGroups = ref(null);
+const modality_list = ref(null);
 
 const category_list = ref([]);
 const section_list = ref([]);
@@ -265,6 +264,8 @@ const getSection = async ()=>{
 }
 
 onMounted(() => {
+    itemGroups.value = useGetData("services-items-group");
+    modality_list.value = useGetData("modalities");
     useServicesItemGroup();
     getcategory();  
     getSection();   
