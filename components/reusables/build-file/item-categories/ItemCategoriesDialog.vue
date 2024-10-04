@@ -159,7 +159,7 @@
 import ItemCategoriesForm from "./sub-form/ItemCategoriesForm.vue";
 
 import nuxtStorage from "nuxt-storage";
-const itemCategories = JSON.parse(nuxtStorage.localStorage.getData("items-group")) || [];
+// const itemCategories = JSON.parse(nuxtStorage.localStorage.getData("items-group")) || [];
 const props = defineProps({
   show: {
     type: Boolean,

@@ -165,7 +165,7 @@ definePageMeta({
   layout: "root-layout",
 });
 import nuxtStorage from "nuxt-storage";
-let userdetails = JSON.parse(nuxtStorage.localStorage.getData("user_details"));
+// let userdetails = JSON.parse(nuxtStorage.localStorage.getData("user_details"));
 const confirmationDialog = ref(false);
 const error_msg = ref('');
 const loading = ref(true);

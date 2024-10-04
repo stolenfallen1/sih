@@ -385,10 +385,11 @@ const checkUncheckAll = () => {
   console.log(grantAdminAccess.value);
 };
 
-const suffix = JSON.parse(nuxtStorage.localStorage.getData("suffix")) || [];
-const position = JSON.parse(nuxtStorage.localStorage.getData("position")) || [];
-const branch = JSON.parse(nuxtStorage.localStorage.getData("branches")) || [];
-const usergroup = JSON.parse(nuxtStorage.localStorage.getData("roles")) || [];
+// const suffix = JSON.parse(nuxtStorage.localStorage.getData("suffix")) || [];
+// const position = JSON.parse(nuxtStorage.localStorage.getData("position")) || [];
+// const branch = JSON.parse(nuxtStorage.localStorage.getData("branches")) || [];
+// const usergroup = JSON.parse(nuxtStorage.localStorage.getData("roles")) || [];
+// const systems = JSON.parse(nuxtStorage.localStorage.getData("systems")) || [];
 // const suffix = ref([]);
 // const position = ref([]);
 // const branch = ref([]);
@@ -400,7 +401,6 @@ const section = ref([
   { id: 3, name: "Section 3", value: 3 },
   { id: 4, name: "Section 4", value: 4 },
 ]);
-const systems = JSON.parse(nuxtStorage.localStorage.getData("systems")) || [];
 const selectedsystem = () => {
   const systemIds = system.value.map((system) => system);
   console.log(systemIds);

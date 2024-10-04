@@ -144,7 +144,7 @@ import ReusableTable from "~/components/reusables/ReusableTable.vue";
 import ModuleForm from "./modules/ModuleForm.vue";
 import { SystemsUserSubComponentsDialog } from "~/store/sub-components/settings-others/SystemsUserSubcomponentsDialog";
 const { selectedRowDetails, isrefresh } = storeToRefs(useSubcomponentSelectedRowDetailsStore()); // state id for subcomponents ?id=123
-let userdetails = JSON.parse(nuxtStorage.localStorage.getData("user_details"));
+// let userdetails = JSON.parse(nuxtStorage.localStorage.getData("user_details"));
 const  {subcomponents}  = storeToRefs(useNavigationMenuStore());
 definePageMeta({
   layout: "root-layout",

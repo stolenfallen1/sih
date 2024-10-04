@@ -603,14 +603,14 @@ const EWTTax = ref([
 ])
 
 const address_form_dialog = ref(false);
-const gender = JSON.parse(nuxtStorage.localStorage.getData("sex"));
-const suffix = JSON.parse(nuxtStorage.localStorage.getData("suffix"));
-const service_type = JSON.parse(nuxtStorage.localStorage.getData("services-type"));
-const doctor_category = JSON.parse(nuxtStorage.localStorage.getData("doctorscategory"));
-const civil_status = JSON.parse(nuxtStorage.localStorage.getData("civil-status"));
-const specializations = JSON.parse(
-  nuxtStorage.localStorage.getData("doctor-specialization")
-);
+// const gender = JSON.parse(nuxtStorage.localStorage.getData("sex"));
+// const suffix = JSON.parse(nuxtStorage.localStorage.getData("suffix"));
+// const service_type = JSON.parse(nuxtStorage.localStorage.getData("services-type"));
+// const doctor_category = JSON.parse(nuxtStorage.localStorage.getData("doctorscategory"));
+// const civil_status = JSON.parse(nuxtStorage.localStorage.getData("civil-status"));
+// const specializations = JSON.parse(
+//   nuxtStorage.localStorage.getData("doctor-specialization")
+// );
 const updatebirthdate = ()=>{
   props.payload.age = 0;
   if(props.payload.birthdate){
