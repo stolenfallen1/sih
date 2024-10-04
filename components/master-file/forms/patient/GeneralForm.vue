@@ -384,11 +384,11 @@ const props = defineProps({
 });
 const image = ref("");
 const imageUrl = ref("");
-const gender = JSON.parse(nuxtStorage.localStorage.getData("sex"));
-const suffix = JSON.parse(nuxtStorage.localStorage.getData("suffix"));
-const nationality = JSON.parse(nuxtStorage.localStorage.getData("nationality"));
-const religion = JSON.parse(nuxtStorage.localStorage.getData("religion"));
-const civil_status = JSON.parse(nuxtStorage.localStorage.getData("civil-status"));
+// const gender = JSON.parse(nuxtStorage.localStorage.getData("sex"));
+// const suffix = JSON.parse(nuxtStorage.localStorage.getData("suffix"));
+// const nationality = JSON.parse(nuxtStorage.localStorage.getData("nationality"));
+// const religion = JSON.parse(nuxtStorage.localStorage.getData("religion"));
+// const civil_status = JSON.parse(nuxtStorage.localStorage.getData("civil-status"));
 const industry = [
   "Healthcare",
   "Information Technology",

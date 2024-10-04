@@ -221,8 +221,8 @@ const props = defineProps({
 })
 
 const emits = defineEmits(['close-dialog', 'submit-form'])
-const itemGroups = JSON.parse(nuxtStorage.localStorage.getData("services-items-group"))|| [];
-const modality_list =JSON.parse(nuxtStorage.localStorage.getData("modalities"))|| [];
+// const itemGroups = JSON.parse(nuxtStorage.localStorage.getData("services-items-group"))|| [];
+// const modality_list =JSON.parse(nuxtStorage.localStorage.getData("modalities"))|| [];
 
 const category_list = ref([]);
 const section_list = ref([]);

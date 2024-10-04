@@ -68,8 +68,8 @@
 
 <script setup>
 import nuxtStorage from "nuxt-storage";
-const branch = JSON.parse(nuxtStorage.localStorage.getData("branches"));
-const buildings = JSON.parse(nuxtStorage.localStorage.getData("buildings"));
+// const branch = JSON.parse(nuxtStorage.localStorage.getData("branches"));
+// const buildings = JSON.parse(nuxtStorage.localStorage.getData("buildings"));
 const props = defineProps({
     open_form_dialog: {
         type: Boolean,

@@ -95,7 +95,7 @@
 import nuxtStorage from "nuxt-storage";
 import { storeToRefs } from "pinia";
 const { selectedRowDetails } = storeToRefs(useSubcomponentSelectedRowDetailsStore());
-let buildings = JSON.parse(nuxtStorage.localStorage.getData("buildings"));
+// let buildings = JSON.parse(nuxtStorage.localStorage.getData("buildings"));
 definePageMeta({
     layout: "root-layout",
 });

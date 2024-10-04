@@ -89,7 +89,7 @@
 import ItemPricingSchemeForm from "./sub-forms/ItemPricingSchemeForm.vue";
 
 import nuxtStorage from "nuxt-storage";
-const msc_price_group = JSON.parse(nuxtStorage.localStorage.getData("msc-price-group")) || [];
+// const msc_price_group = JSON.parse(nuxtStorage.localStorage.getData("msc-price-group")) || [];
 const props = defineProps({
     show: {
         type: Boolean,

@@ -203,13 +203,13 @@ const closeDialog = () => {
   emits("close-dialog");
 };
 
-const branch = JSON.parse(nuxtStorage.localStorage.getData("branches"));
-const buildings = JSON.parse(nuxtStorage.localStorage.getData("buildings"));
-const room_accomodation = JSON.parse(
-  nuxtStorage.localStorage.getData("room_accomodations")
-);
-const room_type = JSON.parse(nuxtStorage.localStorage.getData("room_class"));
-const room_status = JSON.parse(nuxtStorage.localStorage.getData("room_status"));
+// const branch = JSON.parse(nuxtStorage.localStorage.getData("branches"));
+// const buildings = JSON.parse(nuxtStorage.localStorage.getData("buildings"));
+// const room_accomodation = JSON.parse(
+//   nuxtStorage.localStorage.getData("room_accomodations")
+// );
+// const room_type = JSON.parse(nuxtStorage.localStorage.getData("room_class"));
+// const room_status = JSON.parse(nuxtStorage.localStorage.getData("room_status"));
 const floors = ref([]);
 const nursing_ward_stations = ref([]);
 

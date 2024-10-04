@@ -147,8 +147,8 @@
 import DepartmentWarehousesForm from './sub-forms/DepartmentWarehousesForm.vue';
 import SectionsDialog from './sub-forms/SectionsDialog.vue';
 import nuxtStorage from "nuxt-storage";
-const itemCategories = JSON.parse(nuxtStorage.localStorage.getData("items-group")) || [];
-const branch = JSON.parse(nuxtStorage.localStorage.getData("branches")) || [];
+// const itemCategories = JSON.parse(nuxtStorage.localStorage.getData("items-group")) || [];
+// const branch = JSON.parse(nuxtStorage.localStorage.getData("branches")) || [];
 const warehouse_group = ref([]);
 const props = defineProps({
   show: {

@@ -157,8 +157,8 @@ const props = defineProps({
     }
 });
 import nuxtStorage from "nuxt-storage";
-const region = JSON.parse(nuxtStorage.localStorage.getData("region"));
-const country = JSON.parse(nuxtStorage.localStorage.getData("country"));
+// const region = JSON.parse(nuxtStorage.localStorage.getData("region"));
+// const country = JSON.parse(nuxtStorage.localStorage.getData("country"));
 const province = ref([]);
 const municipality = ref([]);
 const barangay = ref([]);
