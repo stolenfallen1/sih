@@ -203,13 +203,12 @@ const closeDialog = () => {
   emits("close-dialog");
 };
 
-// const branch = JSON.parse(nuxtStorage.localStorage.getData("branches"));
-// const buildings = JSON.parse(nuxtStorage.localStorage.getData("buildings"));
-// const room_accomodation = JSON.parse(
-//   nuxtStorage.localStorage.getData("room_accomodations")
-// );
-// const room_type = JSON.parse(nuxtStorage.localStorage.getData("room_class"));
-// const room_status = JSON.parse(nuxtStorage.localStorage.getData("room_status"));
+const branch = ref(null);
+const buildings = ref(null);
+const room_accomodation = ref(null);
+const room_type = ref(null);
+const room_status = ref(null);
+
 const floors = ref([]);
 const nursing_ward_stations = ref([]);
 
@@ -320,6 +319,13 @@ onUpdated(()=>{
 
    console.log(props.form_payload.type)
 });
+onMounted(() => {
+  branch.value = useGetData("branches");
+  buildings.value = useGetData("buildings");
+  room_accomodation.value = useGetData("room_accomodations");
+  room_type.value = useGetData("room_class");
+  room_status.value = useGetData("room_status");
+})
 </script>
 
 <style scoped>

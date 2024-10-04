@@ -1,4 +1,4 @@
-import localStorage from './src/local-storage'
+import localStorage from "./src/local-storage"
 
 export default {
   localStorage

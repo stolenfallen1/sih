@@ -345,7 +345,6 @@
 </template>
 
 <script setup>
-import nuxtStorage from "nuxt-storage";
 const token = useCookie("token"); // useCookie new hook in nuxt 3
 const config = useRuntimeConfig();
 const emits = defineEmits(["register-user", "update-user", "close-dialog"]);
@@ -385,16 +384,13 @@ const checkUncheckAll = () => {
   console.log(grantAdminAccess.value);
 };
 
-// const suffix = JSON.parse(nuxtStorage.localStorage.getData("suffix")) || [];
-// const position = JSON.parse(nuxtStorage.localStorage.getData("position")) || [];
-// const branch = JSON.parse(nuxtStorage.localStorage.getData("branches")) || [];
-// const usergroup = JSON.parse(nuxtStorage.localStorage.getData("roles")) || [];
-// const systems = JSON.parse(nuxtStorage.localStorage.getData("systems")) || [];
-// const suffix = ref([]);
-// const position = ref([]);
-// const branch = ref([]);
-// const usergroup = ref([]);
-const department = ref([]);
+
+const suffix = ref(null);
+const position = ref(null);
+const branch = ref(null);
+const usergroup = ref(null);
+const systems = ref(null);
+const department = ref(null);
 const section = ref([
   { id: 1, name: "Section 1", value: 1 },
   { id: 2, name: "Section 2", value: 2 },
@@ -486,6 +482,11 @@ onUpdated(() => {
   tab.value = "one";
 });
 onMounted(async () => {
+  suffix.value = useGetData("suffix");
+  position.value = useGetData("position");
+  branch.value = useGetData("branches");
+  usergroup.value = useGetData("roles");
+  systems.value = useGetData("systems");
   if (payload.system_user_access) {
     const systemIds = payload.system_user_access.map((system) =>
       parseInt(system.subsystem_id)

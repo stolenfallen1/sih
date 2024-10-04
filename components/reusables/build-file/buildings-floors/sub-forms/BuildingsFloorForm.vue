@@ -67,9 +67,6 @@
 </template>
 
 <script setup>
-import nuxtStorage from "nuxt-storage";
-// const branch = JSON.parse(nuxtStorage.localStorage.getData("branches"));
-// const buildings = JSON.parse(nuxtStorage.localStorage.getData("buildings"));
 const props = defineProps({
     open_form_dialog: {
         type: Boolean,
@@ -80,6 +77,8 @@ const props = defineProps({
     form_title: String,
 });
 
+const branch = ref(null);
+const buildings = ref(null);
 const emits = defineEmits(['close-dialog' , 'handle-submit']);
 
 const handleSubmit = () => {
@@ -89,6 +88,11 @@ emits("handle-submit");
 const closeDialog = () => {
 emits("close-dialog");
 };
+
+onMounted(() => {
+    branch.value = useGetData("branches");
+    buildings.value = useGetData("buildings");
+})
 </script>
 
 <style scoped></style>
