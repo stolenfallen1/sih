@@ -898,8 +898,8 @@ const confirmCharge = () => {
 
 
 const onSubmit = async (user_details) => {
-    if (user_details.user_passcode === usePasscode()) {
-        isLoadingBtn.value = true;
+    // if (user_details.user_passcode === usePasscode()) {
+    //     isLoadingBtn.value = true;
         if (payload.value.charge_to === "Company / Insurance") {
             try {
                 credit_limit.value = payload.value.guarantor_Credit_Limit === 'OPEN' ? null : parseFloat(payload.value.guarantor_Credit_Limit.replace(/[^0-9.-]+/g, ''));
@@ -918,7 +918,12 @@ const onSubmit = async (user_details) => {
                             closeConfirmCharge();
                             printCharges(payload.value, response.data.charges);
                         } else {
-                            return useSnackbar(true, "error", "Failed to post charges.");
+                            if (error.response && error.response.status === 404) {
+                                useSnackbar(true, "error", 'Incorrect Username or Passcode');
+                                isLoading.value = false;
+                            } else {
+                                return useSnackbar(true, "error", "Failed to post charges.");
+                            }
                         }
                     }
                 } else {
@@ -930,11 +935,22 @@ const onSubmit = async (user_details) => {
                         closeConfirmCharge();
                         printCharges(payload.value, response.data.charges);
                     } else {
-                        return useSnackbar(true, "error", "Failed to post charges.");
+                        if (error.response && error.response.status === 404) {
+                            useSnackbar(true, "error", 'Incorrect Username or Passcode');
+                            isLoading.value = false;
+                        } else {
+                            return useSnackbar(true, "error", "Failed to post charges.");
+                        }
                     }
-                }
+                } 
             } catch (error) {
-                return useSnackbar(true, "error", "CATCH ERROR: Call IT Department");
+                if (error.response && error.response.status === 404) {
+                        useSnackbar(true, "error", 'Incorrect Username or Passcode');
+                        isLoading.value = false;
+                } else {
+                    return useSnackbar(true, "error", "CATCH ERROR: Call IT Department");
+                }
+
             } finally {
                 isLoadingBtn.value = false;
             }
@@ -948,17 +964,28 @@ const onSubmit = async (user_details) => {
                     closeConfirmCharge();
                     printCashAssessment(payload.value, response.data.charges);
                 } else {
-                    return useSnackbar(true, "error", "Failed to post charges.");
+                    if (error.response && error.response.status === 404) {
+                        useSnackbar(true, "error", 'Incorrect Username or Passcode');
+                        isLoading.value = false;
+                    } else {
+                        return useSnackbar(true, "error", "Failed to post charges.");
+                    }
                 }
             } catch (error) {
+                if (error.response && error.response.status === 404) {
+                        useSnackbar(true, "error", 'Incorrect Username or Passcode');
+                        isLoading.value = false;
+                } else {
+                    return useSnackbar(true, "error", "CATCH ERROR: Call IT Department");
+                }
                 return useSnackbar(true, "error", "CATCH ERROR: Call IT Department");
             } finally {
                 isLoadingBtn.value = false;
             }
         }
-    } else {
-        return useSnackbar(true, "error", "Password incorrect.");
-    }
+    // } else {
+    //     return useSnackbar(true, "error", "Password incorrect.");
+    // }
 };
 
 const closeConfirmCharge = () => {
@@ -1026,10 +1053,20 @@ const revokeSelectedCashAssessment = async (charges) => {
             getCashAssessmentHistory();
             getCashProfHistory();
         } else {
-            return useSnackbar(true, "error", "Failed to revoke charges.");
+            if (error.response && error.response.status === 404) {
+                useSnackbar(true, "error", 'Incorrect Username or Passcode');
+                isLoading.value = false;
+            } else {
+                return useSnackbar(true, "error", "Failed to revoke charges.");
+            }
         }
     } catch (error) {
-        return useSnackbar(true, "error", "Failed to revoke charges.");
+        if (error.response && error.response.status === 404) {
+                useSnackbar(true, "error", 'Incorrect Username or Passcode');
+                isLoading.value = false;
+            } else {
+                return useSnackbar(true, "error", "Failed to revoke charges.");
+            }
     }
 }
 
