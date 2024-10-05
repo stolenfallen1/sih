@@ -428,8 +428,9 @@
 </template>
 
 <script setup>
+import nuxtStorage from '~/nuxt-storage';
 
-import nuxtStorage from "nuxt-storage";
+
 const props = defineProps({
     item_supplies_form: {
         type: Boolean,
@@ -448,14 +449,14 @@ const props = defineProps({
 const emits = defineEmits(['close-dialog', 'submit-form'])
 const defaultValue = ref("");
 const payload = ref({});
-const itemGroups = JSON.parse(nuxtStorage.localStorage.getData("items-group"))|| [];
-const brand_list = JSON.parse(nuxtStorage.localStorage.getData("brands"))|| [];
-const drug_administration = JSON.parse(nuxtStorage.localStorage.getData("drug_administration"))|| [];
-const dosage_form = JSON.parse(nuxtStorage.localStorage.getData("dosage_forms"))|| [];
-const antibiotic_class = JSON.parse(nuxtStorage.localStorage.getData("antibiotics"))|| [];
-const generic_name_list = JSON.parse(nuxtStorage.localStorage.getData("generic-name")) || [];
-const therapeutic_class = JSON.parse(nuxtStorage.localStorage.getData("therapeutic-class")) || [];
-const unit_list = JSON.parse(nuxtStorage.localStorage.getData("units")) || [];
+const itemGroups = ref(null);
+const brand_list = ref(null);
+const drug_administration = ref(null);
+const dosage_form = ref(null);
+const antibiotic_class = ref(null);
+const generic_name_list = ref(null);
+const therapeutic_class = ref(null);
+const unit_list = ref(null);
 
 const category_list = ref([]);
 const sub_category_list = ref([]);
@@ -497,6 +498,15 @@ const getsubcategory = async ()=>{
 onMounted(() => {
     // setInitialValue(); 
     // category();  
+    itemGroups.value = useGetData("items-group");
+    brand_list.value = useGetData("brands");
+    drug_administration.value = useGetData("drug-administration");
+    dosage_form.value = useGetData("dosage-forms");
+    antibiotic_class.value = useGetData("antibiotics");
+    generic_name_list.value = useGetData("generic-name");
+    therapeutic_class.value = useGetData("therapeutic-class");
+    unit_list.value = useGetData("units");
+
     useItemGroup();
     getcategory();  
     getsubcategory();

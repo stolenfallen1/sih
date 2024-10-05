@@ -56,6 +56,47 @@
 				</v-card-actions>
 			</v-card>
       	</form>
+      <form @submit.prevent="handleSubmit(payload)">
+        <v-card rounded="lg">
+          <v-toolbar density="compact" color="#107bac" hide-details>
+              <v-toolbar-title>Enter your passcode</v-toolbar-title>
+              <v-btn color="white" @click="handleclose">
+                  <v-icon>mdi-close</v-icon>
+              </v-btn>
+            </v-toolbar>
+          <v-divider></v-divider>
+          <v-card-text>
+            <v-row>
+              <v-col cols="12" class="pa-1">
+                <v-alert flat style="background-color: red; color: #FFF; margin-bottom: 10px;" class="mb-3 pa-2" v-if="error_msg" :text="error_msg"></v-alert>
+                <v-text-field
+                  class="mt-3"
+                  :type="!showPassword ? 'password' : 'text'"
+                  v-model="payload.user_passcode"
+                  label="Enter Passcode"
+                  variant="outlined"
+                  density="compact"
+                  required
+                  focused
+                  hide-details
+                  autocomplete="off"
+                  @click:append="showPassword = !showPassword"
+                  :append-icon="showPassword ? 'mdi-eye-outline ' : 'mdi-eye-off-outline'"
+                ></v-text-field>
+              </v-col>
+            </v-row>
+            <div class="mt-3">
+              By entering your passcode, you confirm this transaction.
+            </div>
+          </v-card-text>
+          <v-divider></v-divider>
+          <v-card-actions>
+            <v-btn variant="outlined" color="info" @click="handleclose"> Close </v-btn>
+            <v-spacer></v-spacer>
+            <v-btn :loading="loading" :disabled="loading" class="bg-primary text-white" type="submit">Submit</v-btn>
+          </v-card-actions>
+        </v-card>
+      </form>
     </v-dialog>
   </div>
 </template>

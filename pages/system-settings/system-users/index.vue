@@ -144,7 +144,6 @@ import ReusableTable from "~/components/reusables/ReusableTable.vue";
 import ModuleForm from "./modules/ModuleForm.vue";
 import { SystemsUserSubComponentsDialog } from "~/store/sub-components/settings-others/SystemsUserSubcomponentsDialog";
 const { selectedRowDetails, isrefresh } = storeToRefs(useSubcomponentSelectedRowDetailsStore()); // state id for subcomponents ?id=123
-let userdetails = JSON.parse(nuxtStorage.localStorage.getData("user_details"));
 const  {subcomponents}  = storeToRefs(useNavigationMenuStore());
 definePageMeta({
   layout: "root-layout",
@@ -212,6 +211,7 @@ const usergroup_payload = ref({});
 const isSelectedUser = ref(true);
 const confirmationDialog = ref(false);
 const updateconfirmationDialog = ref(false);
+const userdetails = ref(null);
 const error_msg = ref("");
 const isShowSnackBar = ref(false);
 const text = ref("");
@@ -515,6 +515,7 @@ handleTabChange(currentTab.value);
 onMounted(async () => {
   selectedRowDetails.value.id = "";
   selectedRowDetails.value.role_id = "";
+  userdetails.value = useGetData("userdetails");
 });
 onUpdated(() => {
   // selectedRowDetails.value.id = '';

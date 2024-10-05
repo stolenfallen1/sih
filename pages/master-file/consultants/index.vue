@@ -175,7 +175,6 @@ import CentralLookUpForm from "~/components/reusables/CentralLookUpForm.vue";
 import ConsultantForm from "./Form.vue";
 import nuxtStorage from "nuxt-storage";
 import { PQConsultantsDialog } from "~/store/processing-queries/master-file/PQConsultantsDialog";
-let userdetails = JSON.parse(nuxtStorage.localStorage.getData("user_details"));
 // import { storeToRefs } from "pinia";
 // import { useSnackBarStore } from "~/store/SnackBar";
 // const { setSnackbar } = useSnackBarStore();
@@ -210,6 +209,7 @@ const itemsPerPage = ref(40);
 const search = ref({});
 const params = ref("");
 const loading = ref(true);
+const userdetails = ref(null);
 
 const search_payload = ref({
   isloading:false
@@ -540,7 +540,9 @@ const submitDoctorsForm = async (details) => {
   }
 };
 
-onMounted(() => {});
+onMounted(() => {
+  userdetails.value = useGetData("user_details");
+});
 </script>
 
 <style>

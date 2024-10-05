@@ -603,14 +603,13 @@ const EWTTax = ref([
 ])
 
 const address_form_dialog = ref(false);
-const gender = JSON.parse(nuxtStorage.localStorage.getData("sex"));
-const suffix = JSON.parse(nuxtStorage.localStorage.getData("suffix"));
-const service_type = JSON.parse(nuxtStorage.localStorage.getData("services-type"));
-const doctor_category = JSON.parse(nuxtStorage.localStorage.getData("doctorscategory"));
-const civil_status = JSON.parse(nuxtStorage.localStorage.getData("civil-status"));
-const specializations = JSON.parse(
-  nuxtStorage.localStorage.getData("doctor-specialization")
-);
+const gender = ref(null);
+const suffix = ref(null);
+const service_type = ref(null);
+const doctor_category = ref(null);
+const civil_status = ref(null);
+const specializations = ref(null);
+
 const updatebirthdate = ()=>{
   props.payload.age = 0;
   if(props.payload.birthdate){
@@ -690,6 +689,15 @@ const handleAddressSubmission = (payload) => {
   address_form_dialog.value = false;
   console.log(payload)
 };
+
+onMounted(() => {
+  gender.value = useGetData("sex");
+  suffix.value = useGetData("suffix");
+  service_type.value = useGetData("services-type");
+  doctor_category.value = useGetData("doctorscategory");
+  civil_status.value = useGetData("civil-status");
+  specializations.value = useGetData("doctor-specialization");
+})
 
 const tab = ref(null);
 </script>

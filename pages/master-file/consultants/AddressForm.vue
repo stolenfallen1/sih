@@ -157,12 +157,12 @@ const props = defineProps({
     }
 });
 import nuxtStorage from "nuxt-storage";
-const region = JSON.parse(nuxtStorage.localStorage.getData("region"));
-const country = JSON.parse(nuxtStorage.localStorage.getData("country"));
 const province = ref([]);
 const municipality = ref([]);
 const barangay = ref([]);
 const zipcode = ref([]);
+const region = ref(null);
+const country = ref(null);
 const address = ref("");
 const address_payload = ref({});
 const building = ()=>{
@@ -237,6 +237,11 @@ const handleSubmit = () => {
 const closeDialog = () => {
     emits("close-dialog");
 };
+
+onMounted(() => {
+    region.value = useGetData("region");
+    country.value = useGetData("country");
+})
 
 </script>
 

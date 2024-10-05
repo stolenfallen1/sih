@@ -88,8 +88,6 @@
 <script setup>
 import ItemPricingSchemeForm from "./sub-forms/ItemPricingSchemeForm.vue";
 
-import nuxtStorage from "nuxt-storage";
-const msc_price_group = JSON.parse(nuxtStorage.localStorage.getData("msc-price-group")) || [];
 const props = defineProps({
     show: {
         type: Boolean,
@@ -103,6 +101,7 @@ const confirmation = ref(false);
 const payload = ref({});
 const isloading = ref(false);
 const open_item_pricing_schemes_form = ref(false)
+const msc_price_group = ref(null);
 const headers = [
     {
         title: 'code',
@@ -215,6 +214,7 @@ const closeDialog = () => {
     emits('close-dialog')
 }
 onMounted(()=>{
+    msc_price_group.value = useGetData("msc-price-group");
   useMscPriceGroup();
 })
 </script>

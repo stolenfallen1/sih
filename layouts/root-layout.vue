@@ -290,13 +290,15 @@ const displayRightOptions = (item) => {
   processing_and_queries.value = item.processing_and_queries;
 };
 
+let userdetails = ref(null);
 const can_browse = (item) => {
-  let userdetails = JSON.parse(nuxtStorage.localStorage.getData("user_details"));
-  // return true;
-  if (userdetails) {
-    return userdetails.role.permissions.some((permission) => permission.key == item);
-  }
+  const permissions = userdetails.value?.role && Array.isArray(userdetails.value?.role?.permissions)
+    ? userdetails.value.role.permissions
+    : [];
+
+  return permissions.some((permission) => permission.key === item);
 };
+
 
 onUpdated(() => {
   if (route.path !== "/dashboard") {
@@ -305,6 +307,15 @@ onUpdated(() => {
 });
 
 onMounted(async () => {
+  if (import.meta.client) {
+    try {
+      const data = nuxtStorage.localStorage.getData("user_details");
+      userdetails.value = data ? JSON.parse(data) : {};
+    } catch (error) {
+      console.error("Failed to parse user details:", error);
+      userdetails.value = {};
+    }
+  }
   updateDateTime();
   // Update the time every second
   const intervalId = setInterval(updateDateTime, 1000);

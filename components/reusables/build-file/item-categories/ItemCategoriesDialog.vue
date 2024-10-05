@@ -158,8 +158,6 @@
 <script setup>
 import ItemCategoriesForm from "./sub-form/ItemCategoriesForm.vue";
 
-import nuxtStorage from "nuxt-storage";
-const itemCategories = JSON.parse(nuxtStorage.localStorage.getData("items-group")) || [];
 const props = defineProps({
   show: {
     type: Boolean,
@@ -172,6 +170,7 @@ const confirmation = ref(false);
 const payload = ref({});
 const isloading = ref(false);
 const open_form_dialog = ref(false);
+const itemCategories = ref(null);
 const headers = [
   {
     title: "code",
@@ -361,6 +360,9 @@ const closeDialog = () => {
 //     expenses: "",
 //   }
 // // ];
+onMounted(() => {
+  itemCategories.value = useGetData("items-group");
+});
 </script>
 
 <style scoped></style>

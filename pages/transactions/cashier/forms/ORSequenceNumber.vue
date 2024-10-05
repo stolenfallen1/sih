@@ -26,7 +26,7 @@
                                 variant="solo"
                                 density="compact"
                                 label="OR Number"
-                                v-model="payload.LastORnumber"
+                                v-model="ORSequence.LastORnumber"
                                 required
                                 hide-details
                             ></v-text-field>
@@ -37,7 +37,6 @@
                                 density="compact"
                                 label="OR Suffix"
                                 v-model="payload.ORSuffix"
-                                required
                                 hide-details
                             ></v-text-field>
                         </v-col>
@@ -111,14 +110,19 @@
     </v-dialog>
 </template>
 <script setup>
+import { useLastORnumber } from '~/store/lastORNumber';
+
+const ORSequence = useLastORnumber();
+
 const props = defineProps({
     open_cashier_settings: {
         type: Boolean,
-        required: true,
+        required: false,
     },
 });
 
 const payload = ref({
+    LastORnumber: null,
     collection_date: new Date().toISOString().substr(0, 10),
     shift_id: null,
 });
@@ -133,6 +137,7 @@ const closeDialog = () => {
 };
 
 const onSubmit = async () => {
+    ORSequence.LastORnumber ? payload.value.LastORnumber = ORSequence.LastORnumber : null;
     const response = await useMethod("post", "cashier-settings", payload.value);
     if (response) {
         useSnackbar(true, "green", "Cashier settings updated successfully.");
@@ -158,6 +163,18 @@ const getShiftSchedule = async () => {
     } 
 };
 
+const getORSequence = async () => {
+    const response = await useMethod("get", "get-or-sequence", "", "");
+    if (response && response.data.length > 0) {
+        let ORNumber = parseInt(response.data[0].LastORnumber, 10);
+        
+        if (ORNumber) {
+            ORSequence.setLastORnumber(ORNumber + 1);
+        } else {
+            console.error("Failed to convert LastORnumber to a number");
+        }
+    }
+};
 
 onUpdated(() => {
     getShiftSchedule();
@@ -171,6 +188,10 @@ onUpdated(() => {
             console.error('Error parsing user details from localStorage:', error);
         }
     }
+});
+
+onMounted(async() => {
+    getORSequence();
 });
 </script>
 

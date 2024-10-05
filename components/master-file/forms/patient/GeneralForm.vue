@@ -375,7 +375,6 @@
 </template>
 
 <script setup>
-import nuxtStorage from "nuxt-storage";
 const props = defineProps({
   form_payload: {
     type: Object,
@@ -384,11 +383,11 @@ const props = defineProps({
 });
 const image = ref("");
 const imageUrl = ref("");
-const gender = JSON.parse(nuxtStorage.localStorage.getData("sex"));
-const suffix = JSON.parse(nuxtStorage.localStorage.getData("suffix"));
-const nationality = JSON.parse(nuxtStorage.localStorage.getData("nationality"));
-const religion = JSON.parse(nuxtStorage.localStorage.getData("religion"));
-const civil_status = JSON.parse(nuxtStorage.localStorage.getData("civil-status"));
+const gender = ref(null);
+const suffix = ref(null);
+const nationality = ref(null);
+const religion = ref(null);
+const civil_status = ref(null);
 const industry = [
   "Healthcare",
   "Information Technology",
@@ -427,6 +426,13 @@ const checkfile = () => {
     imageUrl.value = "";
   }
 };
+onMounted(() => {
+  gender.value = useGetData("sex");
+  suffix.value = useGetData("suffix");
+  nationality.value = useGetData("nationality");
+  religion.value = useGetData("religion");
+  civil_status.value = useGetData("civil-status");
+})
 </script>
 
 <style scoped></style>

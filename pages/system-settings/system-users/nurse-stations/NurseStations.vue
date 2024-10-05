@@ -95,7 +95,6 @@
 import nuxtStorage from "nuxt-storage";
 import { storeToRefs } from "pinia";
 const { selectedRowDetails } = storeToRefs(useSubcomponentSelectedRowDetailsStore());
-let buildings = JSON.parse(nuxtStorage.localStorage.getData("buildings"));
 definePageMeta({
     layout: "root-layout",
 });
@@ -117,6 +116,7 @@ const panel = ref([0,1,2,3,4,5,6]);
 const assign_station = ref([]);
 const router = useRouter()
 const route = useRoute()
+const buildings = ref(null);
 
 const selectedNurseStation = ref([]);
 const removeNurseStation = ref([]);
@@ -228,6 +228,10 @@ const submit = async (payload) => {
         },1000);
     }
 };
+
+onMounted(() => {
+    buildings.value = useGetData("buildings");
+})
 
 const checkAssignedStation = (id) => {
   if(id) {

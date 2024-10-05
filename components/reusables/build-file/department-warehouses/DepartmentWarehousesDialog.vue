@@ -146,9 +146,6 @@
 <script setup>
 import DepartmentWarehousesForm from './sub-forms/DepartmentWarehousesForm.vue';
 import SectionsDialog from './sub-forms/SectionsDialog.vue';
-import nuxtStorage from "nuxt-storage";
-const itemCategories = JSON.parse(nuxtStorage.localStorage.getData("items-group")) || [];
-const branch = JSON.parse(nuxtStorage.localStorage.getData("branches")) || [];
 const warehouse_group = ref([]);
 const props = defineProps({
   show: {
@@ -163,6 +160,8 @@ const confirmation = ref(false);
 const payload = ref({});
 const isloading = ref(false);
 const open_form_dialog = ref(false);
+const branch = ref(null);
+const itemCategories = ref(null);
 const headers = [
   {
     title: "code",
@@ -311,6 +310,11 @@ const closeSectionsDialog = () => {
 const confirmDelete = () => {
   confirmationDialog.value = false;
 }
+
+onMounted(() => {
+  branch.value = useGetData("branches");
+  itemCategories.value = useGetData("items-group");
+});
 
 </script>
 

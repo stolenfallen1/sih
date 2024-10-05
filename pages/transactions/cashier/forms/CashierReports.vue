@@ -3,14 +3,12 @@
         <v-col cols="6">
             <v-row>
                 <v-col cols="12">
-                    <p style="font-weight: bolder; color: red; font-size: larger; padding-bottom: 10px;">Detailed Reports</p>
+                    <p style="font-weight: bolder; color: #107bac; font-size: larger; padding-bottom: 10px;">Detailed Reports</p>
                     <v-list-subheader class="form-header">Report Date</v-list-subheader>
                     <v-text-field
                         variant="solo"
                         density="compact"
                         type="date"
-                        @keyup.enter="searchORNumber"
-                        v-model="payload.ORNumber"
                         required
                         hide-details
                     ></v-text-field>
@@ -61,14 +59,12 @@
         <v-col cols="6">
             <v-row>
                 <v-col cols="12">
-                    <p style="font-weight: bolder; color: red; font-size: larger; padding-bottom: 10px;">Summary Reports</p>
+                    <p style="font-weight: bolder; color: #107bac; font-size: larger; padding-bottom: 10px;">Summary Reports</p>
                     <v-list-subheader class="form-header">Report Date</v-list-subheader>
                     <v-text-field
                         variant="solo"
                         density="compact"
                         type="date"
-                        @keyup.enter="searchORNumber"
-                        v-model="payload.ORNumber"
                         required
                         hide-details
                     ></v-text-field>
@@ -85,6 +81,7 @@
                                 <v-text-field
                                     placeholder="Enter Encoder Name"
                                     variant="solo"
+                                    
                                     density="compact"
                                     hide-details
                                     readonly
@@ -117,74 +114,8 @@
             </v-row>
         </v-col>
     </v-row>
-    <Confirmation 
-        :show="confirmDialog"
-        :payload="password_payload"
-        @submit="onSubmit"
-        @close="closeConfirmDialog"
-    />
 </template>
 <script setup>
-
-const payload = ref({});
-const table_data = ref([]);
-const emits = defineEmits(["close-dialog"]);
-const password_payload = ref({});
-const confirmDialog = ref(false);
-
-const openConfirmDialog = () => {
-    if (payload.value.CancelledReason == null || payload.value.CancelDate == null) {
-        return useSnackbar(true, "error", "Cancel Date and Reason for Cancellation is required.");
-    } 
-    if (payload.value.CancelledReason.toLowerCase().includes("system")) {
-        return useSnackbar(true, "error", "System Error as Reason is invalid.");
-    }
-    confirmDialog.value = true;
-};
-
-const closeConfirmDialog = () => {
-    confirmDialog.value = false;
-};
-
-const searchORNumber = async () => {
-    if (payload.value.ORNumber) {
-        const response = await useMethod("get", "get-ornumber?ORNumber=", "", payload.value.ORNumber);
-        if (response && response.data) {
-            if (response.data.length > 0) {
-                table_data.value = response.data;
-            } else {
-                return useSnackbar(true, "error", "OR Number not found.");
-            }
-        }
-    } else {
-        return useSnackbar(true, "error", "Please enter OR Number.");
-    }
-}
-
-const resetTransactionForm = () => {
-    payload.value = {};
-    table_data.value = [];
-};
-
-const onSubmit = async (user_details) => {
-    if (user_details.user_passcode === usePasscode()) {
-        const response = await fetch(useApiUrl() + "/cancel-ornumber", {
-            method: "put",
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + useToken()
-            },
-            body: JSON.stringify({ items: payload.value })
-        });
-        if (response) {
-            useSnackbar(true, "success", "OR Number cancelled successfully.");
-            resetTransactionForm();
-            closeConfirmDialog();
-        }
-    } else {
-        return useSnackbar(true, "error", "Password incorrect.");
-    }
-};
 </script>
 
 <style scoped>

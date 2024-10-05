@@ -4,6 +4,7 @@
     fullscreen
     hide-overlay
     scrollable
+    persistent
     >
       <v-card>
         <v-toolbar density="compact" color="#FFF">
@@ -31,7 +32,7 @@
               <v-divider vertical color="#2a73c5"></v-divider>
               <v-window v-model="tab">
                   <v-window-item class="pa-1" value="0">
-                    <NewPayment />
+                      <NewPayment />
                   </v-window-item>
                   <v-window-item class="pa-1" value="1">
                     <CancelPayment />

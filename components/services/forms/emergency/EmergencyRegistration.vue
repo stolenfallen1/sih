@@ -435,6 +435,10 @@
 // });
 
 
+
+    onMounted(() => {
+        console.log("TEST PASSCODE: ", usePasscode());
+    })
 </script>
 
 <style scoped>

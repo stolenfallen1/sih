@@ -516,6 +516,8 @@
     <Confirmation 
         :show="chargeconfirmation"
         :payload="payload"
+        :loading="isLoadingBtn"
+        :error_msg="error_msg"
         @submit="onSubmit"
         @close="closeConfirmCharge"
     />
@@ -523,6 +525,8 @@
     <Confirmation 
         :show="revokeconfirmation"
         :payload="payload"
+        :loading="isLoadingBtn"
+        :error_msg="error_msg"
         @submit="onRevoke"
         @close="closeConfirmRevoke"
     />
@@ -560,6 +564,8 @@ const professional_fees_history = ref([]);
 const cash_prof_fee_history = ref([]);
 const selected_charges = ref([]);
 const selected_cash_assessment = ref([]);
+const user_attempts = ref(0);
+const error_msg = ref('');
 const charge_to = ref([
     { value: 1, text: "Self-Pay" },
     { value: 2, text: "Company / Insurance" }, 
@@ -619,6 +625,7 @@ const Charges = ref([
         charge_type: 1,
         drcr: "",
         lgrp: "",
+        form: "",
         specimen: "",
         quantity: 1,
         price: null,
@@ -777,6 +784,7 @@ const handleSelectedChargeItem = async (selected_item) => {
     const lastRow = Charges.value[Charges.value.length - 1];
     lastRow.map_item_id = selected_item.map_item_id;
     lastRow.exam_description = selected_item.exam_description;
+    lastRow.form = selected_item.form;
     lastRow.price = selected_item.prices ? usePeso(selected_item.prices[0].price) : '0';
     lastRow.totalamount = selected_item.price;
     lastRow.barcode_prefix = selected_item?.sections?.barcodeid_prefix ? selected_item.sections.barcodeid_prefix : null;
@@ -898,8 +906,8 @@ const confirmCharge = () => {
 
 
 const onSubmit = async (user_details) => {
-    // if (user_details.user_passcode === usePasscode()) {
-    //     isLoadingBtn.value = true;
+    if (user_attempts !== 5) {
+        isLoadingBtn.value = true;
         if (payload.value.charge_to === "Company / Insurance") {
             try {
                 credit_limit.value = payload.value.guarantor_Credit_Limit === 'OPEN' ? null : parseFloat(payload.value.guarantor_Credit_Limit.replace(/[^0-9.-]+/g, ''));
@@ -938,6 +946,7 @@ const onSubmit = async (user_details) => {
                         if (error.response && error.response.status === 404) {
                             useSnackbar(true, "error", 'Incorrect Username or Passcode');
                             isLoading.value = false;
+                            user_attempts.value += 1;
                         } else {
                             return useSnackbar(true, "error", "Failed to post charges.");
                         }
@@ -983,9 +992,16 @@ const onSubmit = async (user_details) => {
                 isLoadingBtn.value = false;
             }
         }
-    // } else {
-    //     return useSnackbar(true, "error", "Password incorrect.");
-    // }
+    } else {
+        error_msg.value = "Too many wrong attempts, Please try again after 20 seconds.";
+        isLoadingBtn.value = true;
+        setTimeout(() => {
+            isLoadingBtn.value = false;
+            user_attempts.value = 0;
+            error_msg.value = "";
+        }, 20000);
+        return useSnackbar(true, "error", "Password incorrect.");
+    }
 };
 
 const closeConfirmCharge = () => {
@@ -1001,7 +1017,16 @@ const confirmRevoke = () => {
 }
 const onRevoke = async (user_details) => {
     if (user_details.user_passcode !== usePasscode()) {
+        user_attempts.value += 1;
         return useSnackbar(true, "error", "Password incorrect.");
+    } else if (user_details.user_passcode !== usePasscode() && user_attempts.value == 5) {
+        error_msg.value = "Too many wrong attempts, Please try again after 20 seconds.";
+        isLoadingBtn.value = true;
+        setTimeout(() => {
+            isLoadingBtn.value = false;
+            user_attempts.value = 0;
+            error_msg.value = "";
+        }, 20000);
     } else {
         switch(charge_history_tab.value || pf_history_tab.value) {
             case "0":
@@ -1011,7 +1036,7 @@ const onRevoke = async (user_details) => {
                 revokeSelectedCashAssessment(selected_cash_assessment.value);
                 break;
         }
-    }
+    } 
 }
 
 const revokeSelectedCharges = async (charges) => {
