@@ -605,8 +605,6 @@ const getNationality = async () => {
     }
 }
 
-
-
 const hospitalization_plan_data = ref([]);
 const hospitalization_plan_loading = ref(false);
 const getHospitalizationPlan = async () => {
@@ -628,6 +626,7 @@ const registerSource = async () => {
     const response = await useMethod("get", "get-admission-source", "", "");
     if (response) {
         register_source_data.value = response
+        console.log(register_source_data);
     }
     register_source_loading.value = false;
 }
