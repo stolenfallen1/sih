@@ -522,14 +522,14 @@
         @close="closeConfirmCharge"
     />
 
-    <Confirmation 
+    <!-- <Confirmation 
         :show="revokeconfirmation"
         :payload="payload"
         :loading="isLoadingBtn"
         :error_msg="error_msg"
         @submit="onRevoke"
         @close="closeConfirmRevoke"
-    />
+    /> -->
 </template>
 
 <script setup>
