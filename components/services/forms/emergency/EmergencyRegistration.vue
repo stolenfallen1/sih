@@ -123,12 +123,12 @@
             case "sex_id": return "0";
             case "civilstatus_id": return "0";
             case "birthdate": return "0";
-            case "mscAccount_Trans_Types": return "5";
+            case "mscAccount_Trans_Types": return "1";
             case "registry_Date": return "0";
             case "mscAccount_Type": return "1";
             case "mscPrice_Groups": return "1";
             case "mscPrice_Schemes": return "1";
-            case "chief_Complaint_Description": return "0";
+            case "chief_Complaint_Description": return "2";
             default: return "0";
         }
     }
@@ -234,7 +234,6 @@
                 isLoading.value = true;
 
                 if (payload.value.id) {
-                    console.log('Test')
                     response = await useMethod("put", "update-emergency", payload.value, "", payload.value.patient_Id);
                     if (response) {
                         useSnackbar(true, "green", response.message);
@@ -283,59 +282,59 @@
 
     onUpdated(() => {
         if (selectedRowDetails.value && selectedRowDetails.value.id) {
-            console.log('Row Selected : ', selectedRowDetails)
-            payload.value                           = Object.assign({}, selectedRowDetails.value);
-            payload.value.middlename                = selectedRowDetails.value.middlename ? selectedRowDetails.value.middlename : '';
-            payload.value.telephone_number          = selectedRowDetails.value.telephone_number ? selectedRowDetails.value.telephone_number : '';
-            payload.value.mobile_number             = selectedRowDetails.value.mobile_number ? selectedRowDetails.value.mobile_number : '';
-            payload.value.email_address             = selectedRowDetails.value.email_address ? selectedRowDetails.value.email_address : '';
-            payload.value.sex_id                    = parseInt(selectedRowDetails.value.sex_id) ? parseInt(selectedRowDetails.value.sex_id) : '';
-            payload.value.suffix_id                 = parseInt(selectedRowDetails.value.suffix_id) ? parseInt(selectedRowDetails.value.suffix_id) : '';
-            payload.value.civilstatus_id            = parseInt(selectedRowDetails.value.civilstatus_id) ? parseInt(selectedRowDetails.value.civilstatus_id) : '';
-            payload.value.birthdate                 = useDateMMDDYYY(selectedRowDetails.value.birthdate) ? useDateMMDDYYY(selectedRowDetails.value.birthdate) : '';
+            payload.value                               = Object.assign({}, selectedRowDetails.value);
+            payload.value.middlename                    = selectedRowDetails.value.middlename ? selectedRowDetails.value.middlename : '';
+            payload.value.telephone_number              = selectedRowDetails.value.telephone_number ? selectedRowDetails.value.telephone_number : '';
+            payload.value.mobile_number                 = selectedRowDetails.value.mobile_number ? selectedRowDetails.value.mobile_number : '';
+            payload.value.email_address                 = selectedRowDetails.value.email_address ? selectedRowDetails.value.email_address : '';
+            payload.value.sex_id                        = parseInt(selectedRowDetails.value.sex_id) ? parseInt(selectedRowDetails.value.sex_id) : '';
+            payload.value.suffix_id                     = parseInt(selectedRowDetails.value.suffix_id) ? parseInt(selectedRowDetails.value.suffix_id) : '';
+            payload.value.civilstatus_id                = parseInt(selectedRowDetails.value.civilstatus_id) ? parseInt(selectedRowDetails.value.civilstatus_id) : '';
+            payload.value.birthdate                     = useDateMMDDYYY(selectedRowDetails.value.birthdate) ? useDateMMDDYYY(selectedRowDetails.value.birthdate) : '';
             //Parent or Guardias on Record
-            payload.value.motherLastname            = selectedRowDetails.value.motherLastname ? selectedRowDetails.value.motherLastname : '';
-            payload.value.motherFirstname           = selectedRowDetails.value.motherFirstname ? selectedRowDetails.value.motherFirstname : '';
-            payload.value.motherMiddlename          = selectedRowDetails.value.motherMiddlename ? selectedRowDetails.value.motherMiddlename : '';
-            payload.value.motherSuffix_id           = selectedRowDetails.value.motherSuffix_id ? selectedRowDetails.value.motherSuffix_id : '';
-            payload.value.motherBirthdate           = selectedRowDetails.value.motherBirthdate ? useDateMMDDYYY(selectedRowDetails.value.motherBirthdate) : '';
-            payload.value.mothertelephone_number    = selectedRowDetails.value.mothertelephone_number ? selectedRowDetails.value.mothertelephone_number : '';
-            payload.value.mothermobile_number       = selectedRowDetails.value.mothermobile_number ? selectedRowDetails.value.mothermobile_number : '';
+            payload.value.motherLastname                = selectedRowDetails.value.motherLastname ? selectedRowDetails.value.motherLastname : '';
+            payload.value.motherFirstname               = selectedRowDetails.value.motherFirstname ? selectedRowDetails.value.motherFirstname : '';
+            payload.value.motherMiddlename              = selectedRowDetails.value.motherMiddlename ? selectedRowDetails.value.motherMiddlename : '';
+            payload.value.motherSuffix_id               = selectedRowDetails.value.motherSuffix_id ? selectedRowDetails.value.motherSuffix_id : '';
+            payload.value.motherBirthdate               = selectedRowDetails.value.motherBirthdate ? useDateMMDDYYY(selectedRowDetails.value.motherBirthdate) : '';
+            payload.value.mothertelephone_number        = selectedRowDetails.value.mothertelephone_number ? selectedRowDetails.value.mothertelephone_number : '';
+            payload.value.mothermobile_number           = selectedRowDetails.value.mothermobile_number ? selectedRowDetails.value.mothermobile_number : '';
             
-            payload.value.fatherLastname            = selectedRowDetails.value.fatherLastname ? selectedRowDetails.value.fatherLastname : '';
-            payload.value.fatherFirstname           = selectedRowDetails.value.fatherFirstname ? selectedRowDetails.value.fatherFirstname : '';
-            payload.value.fatherMiddlename          = selectedRowDetails.value.fatherMiddlename ? selectedRowDetails.value.fatherMiddlename : '';
-            payload.value.fatherSuffix_id           = selectedRowDetails.value.fatherSuffix_id ? selectedRowDetails.value.fatherSuffix_id : '';
-            payload.value.fatherBirthdate           = selectedRowDetails.value.fatherBirthdate ? useDateMMDDYYY(selectedRowDetails.value.fatherBirthdate) : '';
-            payload.value.fathertelephone_number    = selectedRowDetails.value.fathertelephone_number ? selectedRowDetails.value.fathertelephone_number : '';
-            payload.value.fathermobile_number       = selectedRowDetails.value.fathermobile_number ? selectedRowDetails.value.fathermobile_number : '';
+            payload.value.fatherLastname                = selectedRowDetails.value.fatherLastname ? selectedRowDetails.value.fatherLastname : '';
+            payload.value.fatherFirstname               = selectedRowDetails.value.fatherFirstname ? selectedRowDetails.value.fatherFirstname : '';
+            payload.value.fatherMiddlename              = selectedRowDetails.value.fatherMiddlename ? selectedRowDetails.value.fatherMiddlename : '';
+            payload.value.fatherSuffix_id               = selectedRowDetails.value.fatherSuffix_id ? selectedRowDetails.value.fatherSuffix_id : '';
+            payload.value.fatherBirthdate               = selectedRowDetails.value.fatherBirthdate ? useDateMMDDYYY(selectedRowDetails.value.fatherBirthdate) : '';
+            payload.value.fathertelephone_number        = selectedRowDetails.value.fathertelephone_number ? selectedRowDetails.value.fathertelephone_number : '';
+            payload.value.fathermobile_number           = selectedRowDetails.value.fathermobile_number ? selectedRowDetails.value.fathermobile_number : '';
 
-            payload.value.spLastname                = selectedRowDetails.value.spLastname ? selectedRowDetails.value.spLastname : '';
-            payload.value.spFirstname               = selectedRowDetails.value.spFirstname ? selectedRowDetails.value.spFirstname : '';
-            payload.value.spMiddlename              = selectedRowDetails.value.spMiddlename ? selectedRowDetails.value.spMiddlename : '';
-            payload.value.spSuffix_id               = selectedRowDetails.value.spSuffix_id ? selectedRowDetails.value.spSuffix_id : '';
-            payload.value.spBirthdate               = selectedRowDetails.value.spBirthdate ? useDateMMDDYYY(selectedRowDetails.value.spBirthdate) : '';
-            payload.value.sptelephone_number        = selectedRowDetails.value.sptelephone_number ? selectedRowDetails.value.sptelephone_number : '';
-            payload.value.spmobile_number           = selectedRowDetails.value.spmobile_number ? selectedRowDetails.value.spmobile_number : '';
+            payload.value.spLastname                    = selectedRowDetails.value.spLastname ? selectedRowDetails.value.spLastname : '';
+            payload.value.spFirstname                   = selectedRowDetails.value.spFirstname ? selectedRowDetails.value.spFirstname : '';
+            payload.value.spMiddlename                  = selectedRowDetails.value.spMiddlename ? selectedRowDetails.value.spMiddlename : '';
+            payload.value.spSuffix_id                   = selectedRowDetails.value.spSuffix_id ? selectedRowDetails.value.spSuffix_id : '';
+            payload.value.spBirthdate                   = selectedRowDetails.value.spBirthdate ? useDateMMDDYYY(selectedRowDetails.value.spBirthdate) : '';
+            payload.value.sptelephone_number            = selectedRowDetails.value.sptelephone_number ? selectedRowDetails.value.sptelephone_number : '';
+            payload.value.spmobile_number               = selectedRowDetails.value.spmobile_number ? selectedRowDetails.value.spmobile_number : '';
 
-            payload.value.case_No                   = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0].case_No ? selectedRowDetails.value.patient_registry[0].case_No : '';
-            payload.value.registry_Date             = useDateMMDDYYY(selectedRowDetails.value.registry_Date) ? useDateMMDDYYY(selectedRowDetails.value.registry_Date) : '';
-            payload.value.mscAccount_Type           = selectedRowDetails.value.patient_registry && parseInt(selectedRowDetails.value.patient_registry[0].mscAccount_Type) ? parseInt(selectedRowDetails.value.patient_registry.mscAccount_Type) : '';
-            payload.value.mscPrice_Groups           = selectedRowDetails.value.patient_registry && parseInt(selectedRowDetails.value.patient_registry[0].mscPrice_Groups) ? parseInt(selectedRowDetails.value.patient_registry.mscPrice_Groups) : '';
-            payload.value.mscPrice_Schemes          = selectedRowDetails.value.patient_registry && parseInt(selectedRowDetails.value.patient_registry[0].mscPrice_Schemes) ? parseInt(selectedRowDetails.value.patient_registry.mscPrice_Schemes) : '';
-            payload.value.religion_id               = parseInt(selectedRowDetails.value.religion_id) ? parseInt(selectedRowDetails.value.religion_id) : '';
-            payload.value.nationality_id            = parseInt(selectedRowDetails.value.nationality_id) ? parseInt(selectedRowDetails.value.nationality_id) : '';
-            payload.value.telephone_number          = selectedRowDetails.value.telephone_number ? selectedRowDetails.value.telephone_number : ''; 
-            payload.value.mobile_number             = selectedRowDetails.value.mobile_number ? selectedRowDetails.value.mobile_number : '';
+            payload.value.case_No                       = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0].case_No ? selectedRowDetails.value.patient_registry[0].case_No : '';
+            payload.value.er_Case_No                    = selectedRowDetails.value.patient_registry && parseInt(selectedRowDetails.value.patient_registry[0].er_Case_No) ? parseInt(selectedRowDetails.value.patient_registry[0].er_Case_No) : '';
+            payload.value.registry_Date                 = useDateMMDDYYY(selectedRowDetails.value.registry_Date) ? useDateMMDDYYY(selectedRowDetails.value.registry_Date) : '';
+            payload.value.mscAccount_Type               = selectedRowDetails.value.patient_registry && parseInt(selectedRowDetails.value.patient_registry[0].mscAccount_Type) ? parseInt(selectedRowDetails.value.patient_registry.mscAccount_Type) : '';
+            payload.value.mscPrice_Groups               = selectedRowDetails.value.patient_registry && parseInt(selectedRowDetails.value.patient_registry[0].mscPrice_Groups) ? parseInt(selectedRowDetails.value.patient_registry.mscPrice_Groups) : '';
+            payload.value.mscPrice_Schemes              = selectedRowDetails.value.patient_registry && parseInt(selectedRowDetails.value.patient_registry[0].mscPrice_Schemes) ? parseInt(selectedRowDetails.value.patient_registry.mscPrice_Schemes) : '';
+            payload.value.religion_id                   = parseInt(selectedRowDetails.value.religion_id) ? parseInt(selectedRowDetails.value.religion_id) : '';
+            payload.value.nationality_id                = parseInt(selectedRowDetails.value.nationality_id) ? parseInt(selectedRowDetails.value.nationality_id) : '';
+            payload.value.telephone_number              = selectedRowDetails.value.telephone_number ? selectedRowDetails.value.telephone_number : ''; 
+            payload.value.mobile_number                 = selectedRowDetails.value.mobile_number ? selectedRowDetails.value.mobile_number : '';
             // ADDRESS      
             const Address = ref({});
-            Address.value.bldgstreet                = selectedRowDetails.value.bldgstreet ? selectedRowDetails.value.bldgstreet : '';
-            Address.value.region_id                 = parseInt(selectedRowDetails.value.region_id) ? parseInt(selectedRowDetails.value.region_id) : '';
-            Address.value.province_id               = parseInt(selectedRowDetails.value.province_id) ? parseInt(selectedRowDetails.value.province_id) : '';
-            Address.value.municipality_id           = parseInt(selectedRowDetails.value.municipality_id) ? parseInt(selectedRowDetails.value.municipality_id) : '';
-            Address.value.barangay_id               = parseInt(selectedRowDetails.value.barangay_id) ? parseInt(selectedRowDetails.value.barangay_id) : '';
-            Address.value.country_id                = parseInt(selectedRowDetails.value.country_id) ? parseInt(selectedRowDetails.value.country_id) : '';
-            payload.value.address                   = Address.value;
+            Address.value.bldgstreet                    = selectedRowDetails.value.bldgstreet ? selectedRowDetails.value.bldgstreet : '';
+            Address.value.region_id                     = parseInt(selectedRowDetails.value.region_id) ? parseInt(selectedRowDetails.value.region_id) : '';
+            Address.value.province_id                   = parseInt(selectedRowDetails.value.province_id) ? parseInt(selectedRowDetails.value.province_id) : '';
+            Address.value.municipality_id               = parseInt(selectedRowDetails.value.municipality_id) ? parseInt(selectedRowDetails.value.municipality_id) : '';
+            Address.value.barangay_id                   = parseInt(selectedRowDetails.value.barangay_id) ? parseInt(selectedRowDetails.value.barangay_id) : '';
+            Address.value.country_id                    = parseInt(selectedRowDetails.value.country_id) ? parseInt(selectedRowDetails.value.country_id) : '';
+            payload.value.address                       = Address.value;
 
             // REGISTRY
             payload.value.mscAccount_Type               = selectedRowDetails.value.patient_registry && parseInt(selectedRowDetails.value.patient_registry[0].mscAccount_Type) ? parseInt(selectedRowDetails.value.patient_registry[0].mscAccount_Type) : '';
@@ -352,6 +351,7 @@
             payload.value.referred_To_HCI_address       = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0].referred_To_HCI_address ? selectedRowDetails.value.patient_registry[0].referred_To_HCI_address : '';
             payload.value.referring_Doctor              = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0].referring_Doctor ? selectedRowDetails.value.patient_registry[0].referring_Doctor : '';
             payload.value.referral_Reason               = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0].referral_Reason ? selectedRowDetails.value.patient_registry[0].referral_Reason : '';
+            
             // OTHER DETAILS
             payload.value.chief_Complaint_Description   = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0].chief_Complaint_Description ? selectedRowDetails.value.patient_registry[0].chief_Complaint_Description : '';
             payload.value.bloodPressureSystolic         = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0].bloodPressureSystolic ? selectedRowDetails.value.patient_registry[0].bloodPressureSystolic : '';
@@ -371,6 +371,7 @@
                 let guarantor_Approval_date = useDateMMDDYYY(selectedRowDetails.value.patient_registry[0].guarantor_Approval_date) ? useDateMMDDYYY(selectedRowDetails.value.patient_registry[0].guarantor_Approval_date) : '';
                 let guarantor_Validity_date = useDateMMDDYYY(selectedRowDetails.value.patient_registry[0].guarantor_Validity_date) ? useDateMMDDYYY(selectedRowDetails.value.patient_registry[0].guarantor_Validity_date) : '';
                 let guarantor_Credit_Limit = selectedRowDetails.value.patient_registry[0].guarantor_Credit_Limit ? selectedRowDetails.value.patient_registry[0].guarantor_Credit_Limit : '';
+                
                 Guarantor.value.push({
                     guarantor_Id,
                     guarantor_name,
@@ -380,6 +381,7 @@
                     guarantor_Validity_date,
                     guarantor_Credit_Limit
                 });
+
             }
             payload.value.selectedGuarantor = Guarantor.value;
 
@@ -388,12 +390,12 @@
             if (selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0].attending_Doctor != null) {
                 let attending_Doctor = selectedRowDetails.value.patient_registry[0].attending_Doctor.trim() ? selectedRowDetails.value.patient_registry[0].attending_Doctor.trim() : '';
                 let attending_Doctor_fullname = selectedRowDetails.value.patient_registry[0].attending_Doctor_fullname.trim() ? selectedRowDetails.value.patient_registry[0].attending_Doctor_fullname.trim() : '';
+                
                 Consultant.value.push({
                     attending_Doctor,
                     attending_Doctor_fullname
                 });
             }
-            console.log('Tan awa sa daan ang Consultant : ', Consultant);
             payload.value.selectedConsultant = Consultant.value;
 
             payload.value.registry_Remarks = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0].registry_Remarks ? selectedRowDetails.value.patient_registry[0].registry_Remarks : '';
