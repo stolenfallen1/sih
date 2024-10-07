@@ -71,6 +71,7 @@
                     </v-btn>
                 </v-card-actions>
             </v-card>
+
             <Confirmation 
                 :show="showDialog"
                 :payload="payload"
@@ -78,6 +79,7 @@
                 @submit="onSubmit"
                 @close="closeConfirmDialog"
             />
+
         </v-form>
     </v-dialog>
     <v-snackbar
@@ -281,6 +283,7 @@
 
     onUpdated(() => {
         if (selectedRowDetails.value && selectedRowDetails.value.id) {
+            console.log('Row Selected : ', selectedRowDetails)
             payload.value                           = Object.assign({}, selectedRowDetails.value);
             payload.value.middlename                = selectedRowDetails.value.middlename ? selectedRowDetails.value.middlename : '';
             payload.value.telephone_number          = selectedRowDetails.value.telephone_number ? selectedRowDetails.value.telephone_number : '';
@@ -317,8 +320,9 @@
 
             payload.value.case_No                   = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0].case_No ? selectedRowDetails.value.patient_registry[0].case_No : '';
             payload.value.registry_Date             = useDateMMDDYYY(selectedRowDetails.value.registry_Date) ? useDateMMDDYYY(selectedRowDetails.value.registry_Date) : '';
-            payload.value.mscPrice_Groups           = selectedRowDetails.value.patient_registry && parseInt(selectedRowDetails.value.patient_registry.mscPrice_Groups) ? parseInt(selectedRowDetails.value.patient_registry.mscPrice_Groups) : '';
-            payload.value.mscPrice_Schemes          = selectedRowDetails.value.patient_registry && parseInt(selectedRowDetails.value.patient_registry.mscPrice_Schemes) ? parseInt(selectedRowDetails.value.patient_registry.mscPrice_Schemes) : '';
+            payload.value.mscAccount_Type           = selectedRowDetails.value.patient_registry && parseInt(selectedRowDetails.value.patient_registry[0].mscAccount_Type) ? parseInt(selectedRowDetails.value.patient_registry.mscAccount_Type) : '';
+            payload.value.mscPrice_Groups           = selectedRowDetails.value.patient_registry && parseInt(selectedRowDetails.value.patient_registry[0].mscPrice_Groups) ? parseInt(selectedRowDetails.value.patient_registry.mscPrice_Groups) : '';
+            payload.value.mscPrice_Schemes          = selectedRowDetails.value.patient_registry && parseInt(selectedRowDetails.value.patient_registry[0].mscPrice_Schemes) ? parseInt(selectedRowDetails.value.patient_registry.mscPrice_Schemes) : '';
             payload.value.religion_id               = parseInt(selectedRowDetails.value.religion_id) ? parseInt(selectedRowDetails.value.religion_id) : '';
             payload.value.nationality_id            = parseInt(selectedRowDetails.value.nationality_id) ? parseInt(selectedRowDetails.value.nationality_id) : '';
             payload.value.telephone_number          = selectedRowDetails.value.telephone_number ? selectedRowDetails.value.telephone_number : ''; 
@@ -332,9 +336,14 @@
             Address.value.barangay_id               = parseInt(selectedRowDetails.value.barangay_id) ? parseInt(selectedRowDetails.value.barangay_id) : '';
             Address.value.country_id                = parseInt(selectedRowDetails.value.country_id) ? parseInt(selectedRowDetails.value.country_id) : '';
             payload.value.address                   = Address.value;
+
             // REGISTRY
-            payload.value.mscAccount_Type               = selectedRowDetails.value.patient_registry && parseInt(selectedRowDetails.value.patient_registry.mscAccount_Type) ? parseInt(selectedRowDetails.value.patient_registry.mscAccount_Type) : '';
-            payload.value.mscBroughtBy_Relationship_Id  = selectedRowDetails.value.patient_registry && parseInt(selectedRowDetails.value.patient_registry.mscBroughtBy_Relationship_Id) ? parseInt(selectedRowDetails.value.patient_registry.mscBroughtBy_Relationship_Id) : '';
+            payload.value.mscAccount_Type               = selectedRowDetails.value.patient_registry && parseInt(selectedRowDetails.value.patient_registry[0].mscAccount_Type) ? parseInt(selectedRowDetails.value.patient_registry[0].mscAccount_Type) : '';
+            payload.value.register_Source               = selectedRowDetails.value.patient_registry && parseInt(selectedRowDetails.value.patient_registry[0].register_Source) ? parseInt(selectedRowDetails.value.patient_registry[0].register_Source) : '';
+            payload.value.register_Casetype             = selectedRowDetails.value.patient_registry && parseInt(selectedRowDetails.value.patient_registry[0].register_Casetype) ? parseInt(selectedRowDetails.value.patient_registry[0].register_Casetype) : '';
+            payload.value.mscBroughtBy_Relationship_Id  = selectedRowDetails.value.patient_registry && parseInt(selectedRowDetails.value.patient_registry[0].mscBroughtBy_Relationship_Id) ? parseInt(selectedRowDetails.value.patient_registry[0].mscBroughtBy_Relationship_Id) : '';
+            payload.value.mscService_Type               = selectedRowDetails.value.patient_registry && parseInt(selectedRowDetails.value.patient_registry[0].mscService_Type) ? parseInt(selectedRowDetails.value.patient_registry[0].mscService_Type) : '';
+            payload.value.er_Bedno                      = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0].er_Bedno ? selectedRowDetails.value.patient_registry[0].er_Bedno : '';
             payload.value.referred_From_HCI             = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0].referred_From_HCI ? selectedRowDetails.value.patient_registry[0].referred_From_HCI : '';
             payload.value.referred_From_HCI_code        = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0].referred_From_HCI_code ? selectedRowDetails.value.patient_registry[0].referred_From_HCI_code : '';
             payload.value.referred_To_HCI               = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0].referred_To_HCI ? selectedRowDetails.value.patient_registry[0].referred_To_HCI : '';
@@ -351,22 +360,43 @@
             payload.value.pulseRate                     = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0].pulseRate ? selectedRowDetails.value.patient_registry[0].pulseRate : '';
             payload.value.respiratoryRate               = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0].respiratoryRate ? selectedRowDetails.value.patient_registry[0].respiratoryRate : '';
             payload.value.oxygenSaturation              = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0].oxygenSaturation ? selectedRowDetails.value.patient_registry[0].oxygenSaturation : '';
+           
             // For HMO GUARANTORS
             const Guarantor = ref([]);
-            if (selectedRowDetails.value.patient_registry) {
-                selectedRowDetails.value.patient_registry.guarantor_Approval_date = useDateMMDDYYY(selectedRowDetails.value.patient_registry.guarantor_Approval_date);
-                selectedRowDetails.value.patient_registry.guarantor_Validity_date = useDateMMDDYYY(selectedRowDetails.value.patient_registry.guarantor_Validity_date);
-                Guarantor.value.push(selectedRowDetails.value.patient_registry)
+            if (selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0].guarantor_Id != null) {
+                let guarantor_Id = selectedRowDetails.value.patient_registry[0].guarantor_Id ? selectedRowDetails.value.patient_registry[0].guarantor_Id : '';
+                let guarantor_name = selectedRowDetails.value.patient_registry[0].guarantor_Name.trim() ? selectedRowDetails.value.patient_registry[0].guarantor_Name.trim() : '';
+                let guarantor_Approval_code = selectedRowDetails.value.patient_registry[0].guarantor_Approval_code ? selectedRowDetails.value.patient_registry[0].guarantor_Approval_code : '';
+                let guarantor_Approval_no = selectedRowDetails.value.patient_registry[0].guarantor_Approval_no ? selectedRowDetails.value.patient_registry[0].guarantor_Approval_no : '';
+                let guarantor_Approval_date = useDateMMDDYYY(selectedRowDetails.value.patient_registry[0].guarantor_Approval_date) ? useDateMMDDYYY(selectedRowDetails.value.patient_registry[0].guarantor_Approval_date) : '';
+                let guarantor_Validity_date = useDateMMDDYYY(selectedRowDetails.value.patient_registry[0].guarantor_Validity_date) ? useDateMMDDYYY(selectedRowDetails.value.patient_registry[0].guarantor_Validity_date) : '';
+                let guarantor_Credit_Limit = selectedRowDetails.value.patient_registry[0].guarantor_Credit_Limit ? selectedRowDetails.value.patient_registry[0].guarantor_Credit_Limit : '';
+                Guarantor.value.push({
+                    guarantor_Id,
+                    guarantor_name,
+                    guarantor_Approval_code,
+                    guarantor_Approval_no,
+                    guarantor_Approval_date,
+                    guarantor_Validity_date,
+                    guarantor_Credit_Limit
+                });
             }
             payload.value.selectedGuarantor = Guarantor.value;
 
             // For CONSULTANTS
             const Consultant = ref([]);
-            if (selectedRowDetails.value.patient_registry) {
-                Consultant.value.push(selectedRowDetails.value.patient_registry)
+            if (selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0].attending_Doctor != null) {
+                let attending_Doctor = selectedRowDetails.value.patient_registry[0].attending_Doctor.trim() ? selectedRowDetails.value.patient_registry[0].attending_Doctor.trim() : '';
+                let attending_Doctor_fullname = selectedRowDetails.value.patient_registry[0].attending_Doctor_fullname.trim() ? selectedRowDetails.value.patient_registry[0].attending_Doctor_fullname.trim() : '';
+                Consultant.value.push({
+                    attending_Doctor,
+                    attending_Doctor_fullname
+                });
             }
-            payload.value.selectedConsultant    = Consultant.value;
-            payload.value.registry_Remarks      = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry.registry_Remarks ? selectedRowDetails.value.patient_registry.registry_Remarks : '';
+            console.log('Tan awa sa daan ang Consultant : ', Consultant);
+            payload.value.selectedConsultant = Consultant.value;
+
+            payload.value.registry_Remarks = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0].registry_Remarks ? selectedRowDetails.value.patient_registry[0].registry_Remarks : '';
         } else {
             if (patientStore.selectedPatient && patientStore.selectedPatient.id) { 
                 payload.value                   = Object.assign({}, patientStore.selectedPatient);
@@ -395,17 +425,17 @@
                 if (patientStore.selectedPatient.patient_registry_details) {
                     Consultant.value.push(patientStore.selectedPatient.patient_registry_details)
                 }
-                payload.value.selectedConsultant = Consultant.value;
-                payload.value.registry_remarks = patientStore.selectedPatient.patient_registry_details && patientStore.selectedPatient.patient_registry_details.registry_remarks ? patientStore.selectedPatient.patient_registry_details.registry_remarks : '';
+                payload.value.selectedConsultant    = Consultant.value;
+                payload.value.registry_remarks      = patientStore.selectedPatient.patient_registry_details && patientStore.selectedPatient.patient_registry_details.registry_remarks ? patientStore.selectedPatient.patient_registry_details.registry_remarks : '';
             }
         }
     });
 
     const dateFormatter = (fullDate) => {
-        fullDate = new Date("1981-04-07 00:00:00.000");
-        const year = fullDate.getFullYear();
-        const month = String(fullDate.getMonth() + 1).padStart(2, '0'); // months are 0-based
-        const day = String(fullDate.getDate()).padStart(2, '0');
+        fullDate        = new Date("1981-04-07 00:00:00.000");
+        const year      = fullDate.getFullYear();
+        const month     = String(fullDate.getMonth() + 1).padStart(2, '0'); 
+        const day       = String(fullDate.getDate()).padStart(2, '0');
         return `${year}-${month}-${day}`;
 
     }
@@ -442,8 +472,8 @@
 </script>
 
 <style scoped>
-.scrollable-content {
-    overflow-y: auto;
-    max-height: calc(100vh - 200px); 
-}
+    .scrollable-content {
+        overflow-y: auto;
+        max-height: calc(100vh - 200px); 
+    }
 </style>

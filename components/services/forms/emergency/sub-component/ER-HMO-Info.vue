@@ -17,11 +17,11 @@
                     <tbody>
                         <tr v-for="(item, index) in payload.selectedGuarantor" :key="index">
                             <td style="margin: 0; padding: 1px;" width="100%"> <input v-model="item.guarantor_name" class="hmo-input" readonly/> </td>
-                            <td style="margin: 0; padding: 1px;" width="100%"> <input v-model="item.guarantor_approval_code" class="hmo-input fillable"/> </td>
-                            <td style="margin: 0; padding: 1px;" width="100%"> <input v-model="item.guarantor_approval_no" class="hmo-input fillable"/> </td>
-                            <td style="margin: 0; padding: 1px;" width="100%"> <input v-model="item.guarantor_approval_date" type="date" class="hmo-input fillable"/> </td>
-                            <td style="margin: 0; padding: 1px;" width="100%"> <input v-model="item.guarantor_validity_date" type="date" class="hmo-input fillable"/> </td>
-                            <td style="margin: 0; padding: 1px;" width="100%"> <input v-model="item.guarantor_credit_Limit" class="hmo-input fillable"/> </td>
+                            <td style="margin: 0; padding: 1px;" width="100%"> <input v-model="item.guarantor_Approval_code" class="hmo-input fillable"/> </td>
+                            <td style="margin: 0; padding: 1px;" width="100%"> <input v-model="item.guarantor_Approval_no" class="hmo-input fillable"/> </td>
+                            <td style="margin: 0; padding: 1px;" width="100%"> <input v-model="item.guarantor_Approval_date" type="date" class="hmo-input fillable"/> </td>
+                            <td style="margin: 0; padding: 1px;" width="100%"> <input v-model="item.guarantor_Validity_date" type="date" class="hmo-input fillable"/> </td>
+                            <td style="margin: 0; padding: 1px;" width="100%"> <input v-model="item.guarantor_Credit_Limit" class="hmo-input fillable"/> </td>
                             <td><v-icon color="red" @click="removeGuarantor(index)">mdi-delete</v-icon></td>
                         </tr>
                     </tbody>
