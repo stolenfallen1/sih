@@ -612,6 +612,7 @@ const getHospitalizationPlan = async () => {
     const response = await useMethod("get", "get-hospital-plan", "", "");
     if (response) {
         hospitalization_plan_data.value = response;
+        console.log('Hospitalization Data : ', hospitalization_plan_data);
         if (!props.payload.mscAccount_Type && hospitalization_plan_data.value.length > 0) {
             props.payload.mscAccount_Type = hospitalization_plan_data.value[0].id;
         }
@@ -625,7 +626,8 @@ const registerSource = async () => {
     register_source_loading.value = true;
     const response = await useMethod("get", "get-admission-source", "", "");
     if (response) {
-        register_source_data.value = response
+        // register_source_data.value = response
+        register_source_data.value = response.filter(source => source.description === 'Emergency Room');
         console.log(register_source_data);
     }
     register_source_loading.value = false;
@@ -637,13 +639,15 @@ const registerCaseType = async () => {
     register_case_type_loading.value = true;
     const response = await useMethod("get", "get-case-type", "", "");
     if (response) {
-        register_case_type_data.value = response
+        // register_case_type_data.value = response
+        register_case_type_data.value = response.filter(source => source.description === 'Emergency Patient');
     }
     register_case_type_loading.value = false;
 }
 
 const price_group_data = ref([]);
 const price_group_loading = ref(false);
+
 const getPriceGroup = async () => {
     price_group_loading.value = true;
     const response = await useMethod("get", "list-price-groups", "", "");
@@ -653,6 +657,7 @@ const getPriceGroup = async () => {
     }
     price_group_loading.value = false;
 };
+
 const price_scheme_data = ref([]);
 const price_scheme_loading = ref(false);
 const getPriceScheme = async () => {
