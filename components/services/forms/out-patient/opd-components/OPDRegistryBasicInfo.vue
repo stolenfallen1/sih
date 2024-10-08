@@ -387,6 +387,19 @@ onMounted(() => {
     getCaseIndicator();
     getIdTypes();
 });
+
+onUnmounted(() => {
+    register_source_data.value = [];
+    transaction_type_data.value = [];
+    register_casetype_data.value = [];
+    hospitalization_plan_data.value = [];
+    price_group_data.value = [];
+    price_scheme_data.value = [];
+    service_type_data.value = [];
+    patient_brought_by.value = [];
+    case_indicator_data.value = [];
+    id_types_data.value = [];
+});
 </script>
 
 <style scoped>

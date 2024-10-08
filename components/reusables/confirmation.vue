@@ -1,10 +1,10 @@
 <template>
   <div>
     <v-dialog :model-value="show" rounded="lg" @update:model-value="handleclose"  scrollable max-width="350px">
-      	<form @submit.prevent="handleSubmit(payload)">
+		<form @submit.prevent="handleSubmit(payload)">
 			<v-card rounded="lg">
 				<v-toolbar density="compact" color="#107bac" hide-details>
-					<v-toolbar-title>Enter your user ID and passcode</v-toolbar-title>
+					<v-toolbar-title>User Validation</v-toolbar-title>
 					<v-btn color="white" @click="handleclose">
 						<v-icon>mdi-close</v-icon>
 					</v-btn>
@@ -12,7 +12,7 @@
 				<v-divider></v-divider>
 				<v-card-text>
 					<v-row>
-						<v-col v-if="roleID === '27'" cols="12" class="pa-1">
+						<v-col v-if="roleID == '27'" cols="12" class="pa-1">
 							<v-text-field
 								class="mt-3"
 								:type="text"
@@ -55,33 +55,33 @@
 					<v-btn :loading="loading" :disabled="loading" class="bg-primary text-white" type="submit">Submit</v-btn>
 				</v-card-actions>
 			</v-card>
-      	</form>
+		</form>
     </v-dialog>
   </div>
 </template>
 <script setup>
 import nuxtStorage from 'nuxt-storage'; 
 const props = defineProps({
-  show: {
-    type: Boolean,
-    default: () => false,
-    required: false,
-  },
-  loading: {
-    type: Boolean,
-    default: () => false,
-    required: false,
-  },
-  payload: {
-    type: Object,
-    default: () => {},
-    required: false,
-  },
-  error_msg:{
-    type: String,
-    default: () => '',
-    required: false,
-  }
+	show: {
+		type: Boolean,
+		default: () => false,
+		required: false,
+	},
+	loading: {
+		type: Boolean,
+		default: () => false,
+		required: false,
+	},
+	payload: {
+		type: Object,
+		default: () => {},
+		required: false,
+	},
+	error_msg:{
+		type: String,
+		default: () => '',
+		required: false,
+	}
 });
 const emits = defineEmits(["close", "submit"]);
 const showPassword = ref(false);
@@ -89,12 +89,12 @@ const user_detail = ref({});
 const roleID = ref('');
 
 const handleclose = () => {
-  emits("close");
+	emits("close");
 };
 
 
 const handleSubmit = (payload) => {
-  emits("submit", payload);
+	emits("submit", payload);
 };
 
 onMounted(() => {

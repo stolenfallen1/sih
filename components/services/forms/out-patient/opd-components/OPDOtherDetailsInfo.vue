@@ -417,6 +417,12 @@ onMounted(() => {
     getNationality();
     getDeathTypes();
 });
+
+onUnmounted(() => {
+    religion_data.value = [];
+    nationality_data.value  = [];
+    death_types_data.value = [];
+})
 </script>
 
 <style scoped>
