@@ -79,6 +79,7 @@
     <Confirmation 
         :show="confirmDialog"
         :payload="payload"
+        :loading="isLoading"
         @submit="onSubmit"
         @close="closeConfirmDialog"
     />
@@ -111,7 +112,7 @@ const payload = ref({
 const confirmDialog = ref(false);
 const isLoading = ref(false);
 
-const emits = defineEmits(['close-dialog']);
+const emits = defineEmits(['close-dialog', 'patient-registered']);
 
 const closeDialog = () => {
     emits('close-dialog');
@@ -219,9 +220,11 @@ const onSubmit = async (user_details) => {
                     useSnackbar(true, "green", response.message);
                     isLoading.value = false;
                     payload.value = Object.assign({});
+                    tab.value = "0";
+                    const patientDetail = payload.value.lastname;
+                    emits('patient-registered', patientDetail);
                     closeDialog();
                     closeConfirmDialog();
-                    tab.value = "0";
                 } 
             } else {
                 const response = await useMethod("post", "register-outpatient", payload.value);   
@@ -229,9 +232,11 @@ const onSubmit = async (user_details) => {
                     useSnackbar(true, "green", response.message);
                     isLoading.value = false;
                     payload.value = Object.assign({});
+                    tab.value = "0";
+                    const patientDetail = payload.value.lastname;
+                    emits('patient-registered', patientDetail);
                     closeDialog();
                     closeConfirmDialog();
-                    tab.value = "0";
                 }
             }
         } catch (error) {
@@ -243,12 +248,17 @@ const onSubmit = async (user_details) => {
     }
 }
 
-onUpdated(() => {
+watchEffect(() => {
     if (selectedRowDetails.value && selectedRowDetails.value.id) {
-        payload.value = Object.assign({}, selectedRowDetails.value);
         // Personal Information
+        console.log(selectedRowDetails.value);
+        payload.value = Object.assign({}, selectedRowDetails.value);
+        payload.value.id = selectedRowDetails.value.id ? selectedRowDetails.value.id : '';
         payload.value.patient_id = selectedRowDetails.value.patient_Id ? selectedRowDetails.value.patient_Id : '';
         payload.value.register_id_no = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0].case_No ? selectedRowDetails.value.patient_registry[0].case_No : '';
+        payload.value.lastname = selectedRowDetails.value.lastname ? selectedRowDetails.value.lastname : '';
+        payload.value.firstname = selectedRowDetails.value.firstname ? selectedRowDetails.value.firstname : '';
+        payload.value.middlename = selectedRowDetails.value.middlename ? selectedRowDetails.value.middlename : '';
         payload.value.sex_id = parseInt(selectedRowDetails.value.sex_id) ? parseInt(selectedRowDetails.value.sex_id) : '';
         payload.value.suffix_id = parseInt(selectedRowDetails.value.suffix_id) ? parseInt(selectedRowDetails.value.suffix_id) : '';
         payload.value.civilstatus_id = parseInt(selectedRowDetails.value.civilstatus_id) ? parseInt(selectedRowDetails.value.civilstatus_id) : '';
@@ -295,7 +305,7 @@ onUpdated(() => {
 
         // For HMO GUARANTORS
         const Guarantor = ref([]);
-        if (selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0].guarantor_Id != null) {
+        if (selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0].guarantor_Id != null && selectedRowDetails.value.patient_registry[0].guarantor_Id == 'PERSONAL') {
             let guarantor_Id = selectedRowDetails.value.patient_registry[0].guarantor_Id ? selectedRowDetails.value.patient_registry[0].guarantor_Id : '';
             let guarantor_name = selectedRowDetails.value.patient_registry[0].guarantor_Name ? selectedRowDetails.value.patient_registry[0].guarantor_Name : '';
             let guarantor_Approval_code = selectedRowDetails.value.patient_registry[0].guarantor_Approval_code ? selectedRowDetails.value.patient_registry[0].guarantor_Approval_code : '';
@@ -329,21 +339,25 @@ onUpdated(() => {
 
         payload.value.registry_Remarks = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0].registry_Remarks ? selectedRowDetails.value.patient_registry[0].registry_Remarks : '';
     } else {
-        if (patientStore.selectedPatient && patientStore.selectedPatient.id) {  
+        if (patientStore.selectedPatient != null && patientStore.selectedPatient.id != null && patientStore.selectedPatient.patient_Id != null) {  
+            console.log(patientStore.selectedPatient);
             payload.value = Object.assign({}, patientStore.selectedPatient);
-            payload.value.patient_id = patientStore.selectedPatient.patient_Id ? patientStore.selectedPatient.patient_Id : '';
-            payload.value.sex_id = parseInt(patientStore.selectedPatient.sex_id) ? parseInt(patientStore.selectedPatient.sex_id) : '';
-            payload.value.suffix_id = parseInt(patientStore.selectedPatient.suffix_id) ? parseInt(patientStore.selectedPatient.suffix_id) : '';
-            payload.value.civilstatus_id = parseInt(patientStore.selectedPatient.civilstatus_id) ? parseInt(patientStore.selectedPatient.civilstatus_id) : '';
+            payload.value.patient_id = patientStore.selectedPatient.patient_Id;
+            payload.value.lastname = patientStore.selectedPatient.lastname ? patientStore.selectedPatient.lastname : '';
+            payload.value.firstname = patientStore.selectedPatient.firstname ? patientStore.selectedPatient.firstname : '';
+            payload.value.middlename = patientStore.selectedPatient.middlename ? patientStore.selectedPatient.middlename : null;
             payload.value.birthdate = useDateMMDDYYY(patientStore.selectedPatient.birthdate) ? useDateMMDDYYY(patientStore.selectedPatient.birthdate) : '';
-            payload.value.register_id_no = patientStore.selectedPatient.patient_registry_details && patientStore.selectedPatient.patient_registry_details.case_No ? patientStore.selectedPatient.patient_registry_details.case_No : '';
-            payload.value.mscPrice_Groups = patientStore.selectedPatient.patient_registry_details && parseInt(patientStore.selectedPatient.patient_registry_details.mscPrice_Groups) ? parseInt(patientStore.selectedPatient.patient_registry_details.mscPrice_Groups) : '';
-            payload.value.mscPrice_Schemes = patientStore.selectedPatient.patient_registry_details && parseInt(patientStore.selectedPatient.patient_registry_details.mscPrice_Schemes) ? parseInt(patientStore.selectedPatient.patient_registry_details.mscPrice_Schemes) : '';
-            payload.value.religion_id = parseInt(patientStore.selectedPatient.religion_id) ? parseInt(patientStore.selectedPatient.religion_id) : '';
-            payload.value.nationality_id = parseInt(patientStore.selectedPatient.nationality_id) ? parseInt(patientStore.selectedPatient.nationality_id) : '';
+        } else {
+            return;
         }
     }
 });
+
+onUnmounted(() => {
+    payload.value = Object.assign({}, {});
+    selectedRowDetails.value = {};
+    closeConfirmDialog();
+})
 </script>
 
 <style scoped>

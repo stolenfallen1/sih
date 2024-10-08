@@ -180,7 +180,7 @@
     </v-card>
   </v-menu>
 
-  <OutPatientRegistration :clicked_option="clicked_option" :form_dialog="form_dialog" @close-dialog="closeAddFormDialog" />
+  <OutPatientRegistration :clicked_option="clicked_option" :form_dialog="form_dialog" @patient-registered="loadPatient" @close-dialog="closeAddFormDialog" />
   <RevokeRegistrationForm :open_revoke_form="open_revoke_form" @close-dialog="closeRevokeUser" @refresh-data="loadItems" />
   <UnrevokeRegistrationForm :open_unrevoke_form="open_unrevoke_form" @close-dialog="closeUnrevokeUser" @refresh-data="loadItems" />
   <SOADisplayForm :open_patient_soa="open_patient_soa" :patient="selectedPatient" @close-dialog="closePatientSOA" />
@@ -563,6 +563,10 @@ const handleRefresh = () => {
 const handleSearch = (keyword) => {
   loadItems(null, keyword);
 };
+const loadPatient = (patientDetails) =>{
+  const keyword = patientDetails;
+  loadItems(null, keyword);
+}
 const openFilterOptions = () => {
   setTimeout(() => {
     open_filter_options.value = true;
@@ -591,12 +595,12 @@ const selectedUser = (item) => {
   }
 };
 const handleView = (clickedOption) => {
-  form_dialog.value = true;
   clicked_option.value = clickedOption;
+  form_dialog.value = true;
 };
 const handleEdit = (clickedOption) => {
-  form_dialog.value = true;
   clicked_option.value = clickedOption;
+  form_dialog.value = true;
 };
 const handleNew = (clickedOption) => {
   central_form_dialog.value = true;
@@ -610,14 +614,10 @@ const closeCentralFormDialog = () => {
 };
 
 const openAddFormDialog = (type) => {
-    if (type === 'new') {
+  if (type === 'new') {
         form_dialog.value = true;
         closeCentralFormDialog();
     } else if (type === 'old') {  
-        let currentDate = useDateMMDDYYY(new Date());
-        if (useDateMMDDYYY(selectedPatient.value.updated_at) == currentDate) {
-            return useSnackbar(true, "error", "Patient already registered today.");
-        } else {
           patientStore.setSelectedPatient(selectedPatient.value);
           if (patientStore.selectedPatient && patientStore.selectedPatient.id) {  
               form_dialog.value = true;
@@ -625,13 +625,14 @@ const openAddFormDialog = (type) => {
           } else {
               return useSnackbar(true, "error", "No item selected.");
           }
-        }
     } 
 };
+
 const closeAddFormDialog = () => {
   form_dialog.value = false;
   search_payload.value = {};
   search_results.value = [];
+  test.value = [];
 };
 
 const SearchOutPatient = async (payload) => {
@@ -687,6 +688,7 @@ const openPatientSOA = (patient) => {
   open_patient_soa.value = true;
 }
 const closePatientSOA = () => {
+  selectedPatient.value = {};
   open_patient_soa.value = false;
 }
 
@@ -721,7 +723,7 @@ const handleTabChange = (tabValue) => {
   payload.value = Object.assign({}, {});
   currentTab.value = tabValue;
   columns.value = tableTabs.value.find((tab) => tab.value === tabValue).columns;
-  const currentTabInfo = tableTabs.value.find((tab) => tab.value === tabValue);
+  const currentTabInfo = tableTabs.value.find((tab) => tab.value === tabValue); 
   pageTitle.value = currentTabInfo.title || "";
   loadItems();
 }

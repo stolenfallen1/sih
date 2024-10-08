@@ -299,6 +299,12 @@ onMounted(() => {
     getCivilStatus();
     getSuffix();
 });
+
+onUnmounted(() => {
+    sex_data.value = [];
+    civil_status_data.value = [];
+    suffix_data.value = [];
+});
 </script>
 
 <style scoped>
