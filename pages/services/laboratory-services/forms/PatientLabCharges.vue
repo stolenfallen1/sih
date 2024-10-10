@@ -249,9 +249,7 @@ const loadItems = async (page = null, itemsPerPage = null) => {
                 uniqueKey: `${item.patientid}-${item.caseno}-${index}`,
             }));
             totalItems.value = responseData.total;
-        } else {
-            useSnackbar(true, "green", "Error fetching data");
-        }
+        } 
     } catch (error) {
         useSnackbar(true, "green", "Error fetching data");
         console.error(error);

@@ -14,7 +14,11 @@
                         <tr v-for="(item, index) in payload.selectedConsultant" :key="index">
                             <td> <input v-model="item.attending_Doctor" readonly/> </td>
                             <td> <p> {{ item.attending_Doctor_fullname }} </p> </td>
-                            <td><v-icon color="red" @click="removeConsultant(index)">mdi-delete</v-icon></td>
+                            <td>
+                                <v-icon v-if="clicked_option !== 'view'" color="red" class="cursor-pointer" @click="removeConsultant(index)">
+                                    mdi-delete
+                                </v-icon> 
+                            </td>
                         </tr>
                     </tbody>
                     <v-divider></v-divider>

@@ -297,9 +297,7 @@ const loadItems = async (page = null, itemsPerPage = null) => {
             const responseData = await response.json();
             serverItems.value = responseData.data;
             totalItems.value = responseData.total;
-        } else {
-            useSnackbar(true, "green", "Error fetching data");
-        }
+        } 
     } catch (error) {
         useSnackbar(true, "green", "Error fetching data");
         console.error(error);
