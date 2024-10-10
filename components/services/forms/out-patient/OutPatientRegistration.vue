@@ -108,6 +108,7 @@ const payload = ref({
     address: {},
     selectedGuarantor: [],
     selectedConsultant: [],
+    selectedAllergy: [],
 });
 const confirmDialog = ref(false);
 const isLoading = ref(false);
@@ -242,6 +243,8 @@ const onSubmit = async (user_details) => {
         } catch (error) {
             isLoading.value = false;
             useSnackbar(true, "red", error.message);
+        } finally {
+            isLoading.value = false;
         }
     } else {
         return useSnackbar(true, "error", "Password incorrect.");
@@ -336,6 +339,35 @@ watchEffect(() => {
             });
         }
         payload.value.selectedConsultant = Consultant.value;
+
+        const Allergy = ref([]);
+
+        if (selectedRowDetails.value.patient_registry && Array.isArray(selectedRowDetails.value.patient_registry)) {
+            selectedRowDetails.value.patient_registry.forEach(reg => {
+                if (reg.allergies && Array.isArray(reg.allergies)) {
+                    reg.allergies.forEach(allergy => {
+                        const allergy_id = allergy.allergy_type_id || '';
+                        const allergy_name = allergy.allergy_description || ''; 
+                        const symptoms = allergy.symptoms_allergy.map(symptom => ({
+                            description: symptom.symptom_Description  
+                        })) || []; 
+                        const cause = allergy.cause_of_allergy.map(cause => cause.description).join(', ') || '';
+                        const drugUsed = allergy.drug_used_for_allergy.map(drug => drug.drug_Description).join(', ') || ''; 
+
+                        Allergy.value.push({
+                            allergy_id,
+                            allergy_name,
+                            symptoms,
+                            cause,
+                            drugUsed
+                        });
+                    });
+                }
+            });
+        }
+
+        payload.value.selectedAllergy = Allergy.value;
+
 
         payload.value.registry_Remarks = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0].registry_Remarks ? selectedRowDetails.value.patient_registry[0].registry_Remarks : '';
     } else {

@@ -8,6 +8,7 @@
                             <th>Allergy Type</th>
                             <th>Cause</th>
                             <th>Symptoms</th>
+                            <th>Drug / Medication</th>
                             <th width="4"></th>
                         </tr>
                     </thead>
@@ -15,8 +16,24 @@
                         <tr v-for="(item, index) in payload.selectedAllergy" :key="index">
                             <td> <input v-model="item.allergy_name" readonly /> </td>
                             <td> <p> {{ item.cause }} </p> </td>
-                            <td> <p> {{ item.symptoms }} </p> </td>
-                            <td> <v-icon color="red" class="cursor-pointer" @click="deleteRow(index)">mdi-delete</v-icon> </td>
+                            <td> 
+                                <p v-if="item.symptoms && item.symptoms.length > 0">
+                                    {{ item.symptoms.map(symptom => symptom.description).join(', ') }}
+                                </p>
+                                <p v-else>
+                                    No symptoms recorded
+                                </p>
+                            </td>
+                            <td>
+                                <p>
+                                    {{ item.drugUsed }}
+                                </p>
+                            </td>
+                            <td> 
+                                <v-icon v-if="clicked_option !== 'view'" color="red" class="cursor-pointer" @click="deleteRow(index)">
+                                    mdi-delete
+                                </v-icon> 
+                            </td>
                         </tr>
                     </tbody>
                     <v-divider></v-divider>
@@ -25,9 +42,14 @@
         </v-row>
         <v-divider></v-divider>
         <v-card-actions>
-            <v-btn color="blue-darken-1 border border-info" @click="openHmoList" :disabled="clicked_option === 'view'">
+            <v-btn color="blue-darken-1 border border-info" @click="openAllergyList" :disabled="clicked_option === 'view'">
                 <v-icon class="mr-2">mdi-account-multiple-plus-outline</v-icon>
                 Add Allergies
+            </v-btn>
+            <v-spacer></v-spacer>
+            <v-btn color="blue-darken-1 border border-info" :disabled="clicked_option === 'view'" @click="getPatientAllergyHistory">
+                <v-icon class="mr-2">mdi-folder-multiple-outline</v-icon>
+                Look Allergy History
             </v-btn>
         </v-card-actions>
     </v-card>
@@ -48,21 +70,55 @@ const props = defineProps({
 })
 
 const open_allergy_list = ref(false);
+const selectedAllergy = ref([]);
+const drugUsed = ref('');
+const selectedSymptoms = ref([]);
 
 const handleSelectedAllergy = (allergy) => {
+    selectedAllergy.value = allergy[0];
+    selectedSymptoms.value = allergy.symptoms;
+    drugUsed.value = allergy.drugUsed;
+
+    if (!props.payload) {
+        props.payload = {}; 
+    }
     if (!props.payload.selectedAllergy) {
         props.payload.selectedAllergy = [];
-    } 
-    if (Array.isArray(allergy)) {
-        props.payload.selectedAllergy.push(...allergy);
-    } 
+    }
+
+    props.payload.selectedAllergy.push({
+        allergy_id: selectedAllergy.value.id,
+        allergy_name: selectedAllergy.value.allergy_name,
+        cause: selectedAllergy.value.cause,
+        symptoms: selectedSymptoms.value,
+        drugUsed: drugUsed.value
+    });
+};
+
+const getPatientAllergyHistory = async () => {
+    const items = {
+        patient_Id: props.payload.patient_id
+    };
+    const response = await fetch(useApiUrl() + "/get-patient-allergy-history", {
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + useToken()
+        },
+        body: JSON.stringify({ items })
+    });
+    if (response.ok) {
+        console.log(response);
+    } else {
+        alert("ERROR");
+    }
 }
 
 const deleteRow = (index) => {
     props.payload.selectedAllergy.splice(index, 1);
 }
 
-const openHmoList = () => {
+const openAllergyList = () => {
     open_allergy_list.value = true;
 }
 

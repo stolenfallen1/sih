@@ -630,6 +630,8 @@ const openAddFormDialog = (type) => {
 
 const closeAddFormDialog = () => {
   form_dialog.value = false;
+  selectedRowDetails.value = Object.assign({}, {});
+  isSelectedUser.value = true;
   search_payload.value = {};
   search_results.value = [];
   test.value = [];
