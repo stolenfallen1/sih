@@ -1,194 +1,282 @@
 <template>
-  <v-card class="mb-2" elevation="4">
-    <v-card-actions>
-      <v-spacer></v-spacer>
-      <v-btn
-        @click="handleView('view')"
-        :disabled="isSelectedUser"
-        prepend-icon="mdi-eye-outline"
-        width="100"
-        color="primary"
-        class="bg-info text-white"
-      >
-        View
-      </v-btn>
-      <v-btn
-        @click="handleNew('new')"
-        :disabled="!isSelectedUser"
-        prepend-icon="mdi-plus-outline"
-        width="100"
-        color="primary"
-        class="bg-primary text-white"
-      >
-        New
-      </v-btn>
-      <v-btn
-        @click="handleEdit('edit')"
-        prepend-icon="mdi-pencil"
-        :disabled="isSelectedUser"
-        width="100"
-        color="primary"
-        class="bg-success text-white"
-      >
-        Edit
-      </v-btn>
-      <v-btn
-        @click="RevokeUser"
-        prepend-icon="mdi-toggle-switch"
-        :disabled="isSelectedUser"
-        width="150"
-        color="primary"
-        class="bg-error text-white"
-      >
-        Revoke</v-btn
-      >
-      <v-btn
-        @click="ViewSummary"
-        prepend-icon="mdi-information-box-outline"
-        width="150"
-        color="primary"
-        class="bg-warning text-white"
-      >
-        Summary</v-btn
-      >
-    </v-card-actions>
-  </v-card>
-  <v-card class="mb-2" elevation="4">
-    <ReusableTable
-      :items-per-page="50"
-      :serverItems="serverItems"
-      :totalItems="totalItems"
-      :loading="loading"
-      :tabs="tableTabs"
-      :columns="columns"
-      :showTabs="showTabs"
-      :itemsPerPage="itemsPerPage"
-      :tableTitle="pageTitle"
-      :current-tab="currentTab"
-      @fetchPage="loadItems"
-      @selected-row="selectedUser"
-      @tab-change="handleTabChange"
-      @action-search="handleSearch"
-      @action-refresh="handleRefresh"
-      @open-filter="openFilterOptions"
-    >
-      <template v-for="column in columns" v-slot:[`column-${column.key}`]="{ item }">
-        <div v-if="column.key === 'registry_status'" :key="column.key" class="isActive">
-          <span 
-            :style="{ cursor: 'default', display: 'block', height: '26px', width: '9px', backgroundColor: item.patient_registry && item.patient_registry[0].mscPatient_Category == 2 ? 'blue' : 'green' }" 
-            :title="item.patient_registry && item.patient_registry[0].mscPatient_Category == 2 ? 'New Patient' : 'Old Patient'"
-            />
-        </div>
-        <div v-if="column.key === 'isHMO'" :key="column.key" class="isHMO">
-          <span 
-            :style="{ cursor: 'default', display: 'block', height: '26px', width: '9px', backgroundColor: item.patient_registry && item.patient_registry[0].guarantor_Id !== null ? 'yellow' : 'orange' }" 
-            :title="item.patient_registry && item.patient_registry[0].guarantor_Id !== null ? 'HMO ' : 'Self Pay'"
-            />
-        </div>
-        <span v-if="column.key === 'case_No'" :key="column.key">
-          {{ item.patient_registry ? item.patient_registry[0].case_No : "..." }}
-        </span>
-        <span v-if="column.key === 'sex'" :key="column.key" style="display: flex;">
-          <v-icon v-if="item.sex && item.sex.sex_description === 'Male'" color="primary">mdi-gender-male</v-icon>
-          <v-icon v-else color="pink">mdi-gender-female</v-icon>
-          {{ item.sex ? item.sex.sex_description : "..." }}
-        </span>
-        <span v-if="column.key === 'birthdate'" :key="column.key">
-          {{ item.birthdate ? useDateMMDDYYY(item.birthdate) : "..." }}
-        </span>
-        <span v-if="column.key === 'registry_date'" :key="column.key">
-          {{ item.patient_registry && item.patient_registry[0].registry_Date ? useDateMMDDYYY(item.patient_registry[0].registry_Date) : "..." }}
-        </span>
-        <span v-if="column.key === 'discharged_date'" :key="column.key">
-          {{ item.patient_registry && item.patient_registry[0].discharged_Date ? useDateMMDDYYY(item.patient_registry[0].discharged_Date) : "..." }}
-        </span>
-        <span v-if="column.key === 'revoked_Date'" :key="column.key">
-          {{ item.patient_registry && item.patient_registry[0].revoked_Date ? useDateMMDDYYY(item.patient_registry[0].revoked_date) : "..." }}
-        </span>
-      </template>
-    </ReusableTable>
-  </v-card>
+	<v-card class="mb-2" elevation="4">
+		<v-card-actions>
+			<v-spacer></v-spacer>
+			<v-btn
+				@click="handleView('view')"
+				:disabled="isSelectedUser"
+				prepend-icon="mdi-eye-outline"
+				width="100"
+				color="primary"
+				class="bg-info text-white"
+			>
+				View
+			</v-btn>
+			<v-btn
+				@click="handleNew('new')"
+				:disabled="!isSelectedUser"
+				prepend-icon="mdi-plus-outline"
+				width="100"
+				color="primary"
+				class="bg-primary text-white"
+			>
+				New
+			</v-btn>
+			<v-btn
+				@click="handleEdit('edit')"
+				prepend-icon="mdi-pencil"
+				:disabled="isSelectedUser"
+				width="100"
+				color="primary"
+				class="bg-success text-white"
+			>
+				Edit
+			</v-btn>
+			<v-btn
+				@click="RevokeUser"
+				prepend-icon="mdi-toggle-switch"
+				:disabled="isSelectedUser"
+				width="150"
+				color="primary"
+				class="bg-error text-white"
+			>
+				Revoke
+			</v-btn>
 
-  <CentralLookUpForm 
-    :central_form_dialog="central_form_dialog"
-    @close-dialog="closeCentralFormDialog"
-    @search="SearchEmergencyPatient"
-    @selected-row="selectedEmergencyPatient"
-    :search_results="search_results"
-    :search_payload="search_payload"
-    @open-form="openAddFormDialog"
-  />
+			<v-btn
+				@click="ViewSummary"
+				prepend-icon="mdi-information-box-outline"
+				width="150"
+				color="primary"
+				class="bg-warning text-white"
+			>
+				Summary</v-btn
+			>
+		</v-card-actions>
+	</v-card>
+	<v-card class="mb-2" elevation="4">
+		<ReusableTable
+		:items-per-page="50"
+		:serverItems="serverItems"
+		:totalItems="totalItems"
+		:loading="loading"
+		:tabs="tableTabs"
+		:columns="columns"
+		:showTabs="showTabs"
+		:itemsPerPage="itemsPerPage"
+		:tableTitle="pageTitle"
+		:current-tab="currentTab"
+		@fetchPage="loadItems"
+		@selected-row="selectedUser"
+		@tab-change="handleTabChange"
+		@action-search="handleSearch"
+		@action-refresh="handleRefresh"
+		@open-filter="openFilterOptions"
+		>
+			<template v-for="column in columns" v-slot:[`column-${column.key}`]="{ item }">
+				<div v-if="column.key === 'registry_status'" :key="column.key" class="isActive">
+					<span 
+						:style="{ 
+							cursor: 'default', 
+							display: 'block', 
+							height: '26px', 
+							width: '9px', 
+							backgroundColor: 
+								item.patient_registry && 
+								item.patient_registry[0].mscPatient_Category == 2 
+								? 'blue' 
+								: 'green' 
+						}" 
+						:title="
+							item.patient_registry && 
+							item.patient_registry[0].mscPatient_Category == 2 
+							? 'New Patient' 
+							: 'Old Patient'
+						"
+					/>
+				</div>
+				<div v-if="column.key === 'isHMO'" :key="column.key" class="isHMO">
+					<span 
+						:style="{ 
+							cursor: 'default', 
+							display: 'block', 
+							height: '26px', 
+							width: '9px', 
+							backgroundColor: 
+								item.patient_registry && 
+								item.patient_registry[0].guarantor_Id !== null 
+								? 'yellow' 
+								: 'orange' 
+						}" 
+						:title="
+							item.patient_registry && 
+							item.patient_registry[0].guarantor_Id !== null 
+							? 'HMO ' 
+							: 'Self Pay'
+						"
+					/>
+				</div>
 
-  <SummaryModal 
-    :show="open_summary_modal"
-    :summary_header="'Emergency'"
-    :data="erPatient_test_data"
-    @close-dialog="closeViewSummary"
-  />
-  <v-menu
-    v-model="open_filter_options"
-    :close-on-content-click="false"
-    offset-y
-    activator="#filter-button"
-  >
-    <template v-slot:activator="{ on, attrs }">
-      <div></div>
-    </template>
-    <v-card width="450px" rounded="lg">
-      <v-toolbar density="compact">
-        <v-toolbar-title>Filter Options</v-toolbar-title>
-        <v-spacer></v-spacer>
-        <v-btn icon @click="closeFilterOptions">
-          <v-icon>mdi-close</v-icon>
-        </v-btn>
-      </v-toolbar>
-      <v-divider></v-divider>
-      <v-card-text>
-        <v-row> 
-          <!-- <v-col cols="12" md="6">
-            <v-select label="Status" variant="outlined" density="compact" v-model="filter.status"></v-select>
-          </v-col> -->
-          <!-- Add filter options as needed -->
-        </v-row>
-      </v-card-text>
-      <v-card-actions>
-        <v-spacer></v-spacer>
-        <v-btn class="bg-primary text-white" @click="applyFilters">Apply Filters</v-btn>
-      </v-card-actions>
-    </v-card>
-  </v-menu>
+				<span 
+					v-if="column.key === 'case_No'" 
+					:key="column.key">
+					{{ 
+						item.patient_registry 
+						? item.patient_registry[0].case_No 
+						: "..." 
+					}}
+				</span>
 
-  <EmergencyRegistration :clicked_option="clicked_option" :form_dialog="form_dialog" @close-dialog="closeAddFormDialog" />
+				<span 
+					v-if="column.key === 'sex'" 
+					:key="column.key" style="display: flex;">
+
+					<v-icon 
+						v-if="item.sex && 
+						item.sex.sex_description === 'Male'" 
+						color="primary">
+						mdi-gender-male
+					</v-icon>
+
+					<v-icon 
+						v-else 
+						color="pink">
+						mdi-gender-female
+					</v-icon>
+
+					{{ 
+						item.sex 
+						? item.sex.sex_description 
+						: "..." 
+					}}
+				</span>
+
+				<span 
+					v-if="column.key === 'birthdate'" 
+					:key="column.key">
+					{{ 
+						item.birthdate 
+						? useDateMMDDYYY(item.birthdate) 
+						: "..." 
+					}}
+				</span>
+
+				<span 
+					v-if="column.key === 'registry_date'" 
+					:key="column.key">
+					{{ 
+						item.patient_registry && 
+						item.patient_registry[0].registry_Date 
+						? useDateMMDDYYY(item.patient_registry[0].registry_Date) 
+						: "..." 
+					}}
+				</span>
+
+				<span 
+					v-if="column.key === 'discharged_date'" 
+					:key="column.key">
+					{{ 
+						item.patient_registry && 
+						item.patient_registry[0].discharged_Date 
+						? useDateMMDDYYY(item.patient_registry[0].discharged_Date) 
+						: "..." 
+					}}
+				</span>
+
+				<span 
+					v-if="column.key === 'revoked_Date'" 
+					:key="column.key">
+					{{ 
+						item.patient_registry && 
+						item.patient_registry[0].revoked_Date 
+						? useDateMMDDYYY(item.patient_registry[0].revoked_date) 
+						: "..." 
+					}}
+				</span>
+			</template>
+		</ReusableTable>
+	</v-card>
+
+	<CentralLookUpForm 
+		:central_form_dialog="central_form_dialog"
+		@close-dialog="closeCentralFormDialog"
+		@search="SearchEmergencyPatient"
+		@selected-row="selectedEmergencyPatient"
+		:search_results="search_results"
+		:search_payload="search_payload"
+		@open-form="openAddFormDialog"
+	/>
+
+	<SummaryModal 
+		:show="open_summary_modal"
+		:summary_header="'Emergency'"
+		:data="erPatient_test_data"
+		@close-dialog="closeViewSummary"
+	/>
+	<v-menu
+		v-model="open_filter_options"
+		:close-on-content-click="false"
+		offset-y
+		activator="#filter-button"
+	>
+		<template v-slot:activator="{ on, attrs }">
+		<div></div>
+		</template>
+		<v-card width="450px" rounded="lg">
+		<v-toolbar density="compact">
+			<v-toolbar-title>Filter Options</v-toolbar-title>
+			<v-spacer></v-spacer>
+			<v-btn icon @click="closeFilterOptions">
+			<v-icon>mdi-close</v-icon>
+			</v-btn>
+		</v-toolbar>
+		<v-divider></v-divider>
+		<v-card-text>
+			<v-row> 
+			<!-- <v-col cols="12" md="6">
+				<v-select label="Status" variant="outlined" density="compact" v-model="filter.status"></v-select>
+			</v-col> -->
+			<!-- Add filter options as needed -->
+			</v-row>
+		</v-card-text>
+		<v-card-actions>
+			<v-spacer></v-spacer>
+			<v-btn class="bg-primary text-white" @click="applyFilters">Apply Filters</v-btn>
+		</v-card-actions>
+		</v-card>
+	</v-menu>
+
+  	<EmergencyRegistration :clicked_option="clicked_option" :form_dialog="form_dialog" @close-dialog="closeAddFormDialog" />
   
-  <!-- Emergency Sub components -->
-  <PatientProfileDialog :show="PatientProfile" :form_payload="payload" @close-dialog="useSubComponents('PatientProfile', false)" />
-  <SuspendDialog :show="Suspend" :form_type="form_type" @close-dialog="useSubComponents('Suspend', false)" />
-  <RequisitionsDialog :show="Requisitions" :form_type="form_type" @close-dialog="useSubComponents('Requisitions', false)" />
-  <PostChargesDialog :show="PostCharges" @close-dialog="useSubComponents('PostCharges', false)" />
-  <PostCorporatePackageDialog :show="PostCorporateMedicalPackage" @close-dialog="useSubComponents('PostCorporateMedicalPackage', false)"/>
-  <PostDiagnosticPackageDialog :show="PostDiagnosticMedicalPackage" @close-dialog="useSubComponents('PostDiagnosticMedicalPackage', false)"/> 
-  <PostAdjustmentDialog :show="PostAdjustments" @close-dialog="useSubComponents('PostAdjustments', false)" />
-  <PostProfessionalFeesDialog :show="PostProfessionalFees" @close-dialog="useSubComponents('PostProfessionalFees', false)" />
-  <PostDiscountsDialog :show="PostDiscounts" @close-dialog="useSubComponents('PostDiscounts', false)" />
-  <PostArTransferDialog :show="PostArTransfer" :form_type="form_type" @close-dialog="useSubComponents('PostArTransfer', false)" />
-  <ViewExamUpshotDialog :show="ViewExaminationUpshot" @close-dialog="useSubComponents('ViewExaminationUpshot', false)" />
-  <ApplyPromissoryNoteDialog :show="ApplyPromissoryNote" @close-dialog="useSubComponents('ApplyPromissoryNote', false)" />
-  <ApplyMedicalPackageDialog :show="ApplyMedicalPackage" @close-dialog="useSubComponents('ApplyMedicalPackage', false)" />
-  <TagAsMghDialog :show="TagAsMgh" :form_type="form_type" @close-dialog="useSubComponents('TagAsMgh', false)" />
-  <UntagAsMghDialog :show="UntagAsMgh" @close-dialog="useSubComponents('UntagAsMgh', false)" />
-  <DischargeDialog :show="Discharge" :form_type="form_type" @close-dialog="useSubComponents('Discharge', false)" />
-  <DischargeInstructionDialog :show="DischargeInstruction" @close-dialog="useSubComponents('DischargeInstruction', false)" />
-  <PostFinalDiagnosisDialog :show="PostFinalDiagnosis" @close-dialog="useSubComponents('PostFinalDiagnosis', false)" />
-  <SoaBillingDialog :show="SoaBillingStatement" @close-dialog="useSubComponents('SoaBillingStatement', false)" />
-  <ViewPrintReportsDialog :show="ViewPrintReports" @close-dialog="useSubComponents('ViewPrintReports', false)" />
-  <AdmitPatientDialog :show="AdmitPatient" :form_type="form_type" @close-dialog="useSubComponents('AdmitPatient', false)" />
-  <PrintClaimFormsDialog :show="PrintClaimForms" @close-dialog="useSubComponents('PrintClaimForms', false)" />
-  <ClaimForm4ProcessingDialog :show="ClaimForm4Processing" @close-dialog="useSubComponents('ClaimForm4Processing', false)" />
+	<!-- Emergency Sub components -->
+	<PatientProfileDialog :show="PatientProfile" :form_payload="payload" @close-dialog="useSubComponents('PatientProfile', false)" />
+	<SuspendDialog :show="Suspend" :form_type="form_type" @close-dialog="useSubComponents('Suspend', false)" />
+	<RequisitionsDialog :show="Requisitions" :form_type="form_type" @close-dialog="useSubComponents('Requisitions', false)" />
+	<PostChargesDialog :show="PostCharges" @close-dialog="useSubComponents('PostCharges', false)" />
+	<PostCorporatePackageDialog :show="PostCorporateMedicalPackage" @close-dialog="useSubComponents('PostCorporateMedicalPackage', false)"/>
+	<PostDiagnosticPackageDialog :show="PostDiagnosticMedicalPackage" @close-dialog="useSubComponents('PostDiagnosticMedicalPackage', false)"/> 
+	<PostAdjustmentDialog :show="PostAdjustments" @close-dialog="useSubComponents('PostAdjustments', false)" />
+	<PostProfessionalFeesDialog :show="PostProfessionalFees" @close-dialog="useSubComponents('PostProfessionalFees', false)" />
+	<PostDiscountsDialog :show="PostDiscounts" @close-dialog="useSubComponents('PostDiscounts', false)" />
+	<PostArTransferDialog :show="PostArTransfer" :form_type="form_type" @close-dialog="useSubComponents('PostArTransfer', false)" />
+	<ViewExamUpshotDialog :show="ViewExaminationUpshot" @close-dialog="useSubComponents('ViewExaminationUpshot', false)" />
+	<ApplyPromissoryNoteDialog :show="ApplyPromissoryNote" @close-dialog="useSubComponents('ApplyPromissoryNote', false)" />
+	<ApplyMedicalPackageDialog :show="ApplyMedicalPackage" @close-dialog="useSubComponents('ApplyMedicalPackage', false)" />
+	<TagAsMghDialog :show="TagAsMgh" :form_type="form_type" @close-dialog="useSubComponents('TagAsMgh', false)" />
+	<UntagAsMghDialog :show="UntagAsMgh" @close-dialog="useSubComponents('UntagAsMgh', false)" />
+	<DischargeDialog :show="Discharge" :form_type="form_type" @close-dialog="useSubComponents('Discharge', false)" />
+	<DischargeInstructionDialog :show="DischargeInstruction" @close-dialog="useSubComponents('DischargeInstruction', false)" />
+	<PostFinalDiagnosisDialog :show="PostFinalDiagnosis" @close-dialog="useSubComponents('PostFinalDiagnosis', false)" />
+	<SoaBillingDialog :show="SoaBillingStatement" @close-dialog="useSubComponents('SoaBillingStatement', false)" />
+	<ViewPrintReportsDialog :show="ViewPrintReports" @close-dialog="useSubComponents('ViewPrintReports', false)" />
+	<AdmitPatientDialog :show="AdmitPatient" :form_type="form_type" @close-dialog="useSubComponents('AdmitPatient', false)" />
+	<PrintClaimFormsDialog :show="PrintClaimForms" @close-dialog="useSubComponents('PrintClaimForms', false)" />
+	<ClaimForm4ProcessingDialog :show="ClaimForm4Processing" @close-dialog="useSubComponents('ClaimForm4Processing', false)" />
 
-  <!-- Emergency Processing Queries -->
-  <MayGoHomePatientListDialog :show="MayGoHomePatientList" @close-dialog="useProcessingQueries('MayGoHomePatientList', false)" />
-  <RevokeRegistrationForm :open_revoke_form="open_revoke_form" @close-dialog="closeRevokeUser" @refresh-data="loadItems" />
-  <Cf4DischargedPatientsDialog :show="Cf4ForDischargedPatients" :form_type="form_type" @close-dialog="useProcessingQueries('Cf4ForDischargedPatients', false)" />
+	<!-- Emergency Processing Queries -->
+	<MayGoHomePatientListDialog :show="MayGoHomePatientList" @close-dialog="useProcessingQueries('MayGoHomePatientList', false)" />
+	<RevokeRegistrationForm :open_revoke_form="open_revoke_form" @close-dialog="closeRevokeUser" @refresh-data="loadItems" />
+	<Cf4DischargedPatientsDialog :show="Cf4ForDischargedPatients" :form_type="form_type" @close-dialog="useProcessingQueries('Cf4ForDischargedPatients', false)" />
 </template>
 
 <script setup>

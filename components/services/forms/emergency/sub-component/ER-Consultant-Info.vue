@@ -12,7 +12,6 @@
                     </thead>
                     <tbody>
                         <tr v-for="(item, index) in props.payload.selectedConsultant" :key="index">
-                            {{ console.log('Consulatant daw be : ',props.payload.selectedConsultant ) }}
                             <td> <input v-model="item.attending_Doctor" readonly/> </td>
                             <td> <p> {{ item.attending_Doctor_fullname }} </p> </td>
                             <td><v-icon color="red" @click="removeConsultant(index)">mdi-delete</v-icon></td>
@@ -54,7 +53,6 @@ const openConsultantsList = () => {
 
 const handleSelectConsultants = (selected_item) => {
     props.payload.selectedConsultant = selected_item;
-    console.log(props.payload.selectedConsultant);
 }
 
 const removeConsultant = (index) => {
