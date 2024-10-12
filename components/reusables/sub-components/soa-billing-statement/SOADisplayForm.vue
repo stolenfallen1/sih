@@ -305,6 +305,7 @@ const getPatientSOA = async () => {
 onUpdated(() => {
     if (props.patient != null) {
         payload.value = Object.assign({}, props.patient);
+        payload.value.patient_Id = props.patient.patient_Id ? props.patient.patient_Id : '';
         payload.value.patient_Name = props.patient.lastname + ", " + props.patient.firstname + " " + props.patient.middlename;
         payload.value.case_No = props.patient.patient_registry ? props.patient.patient_registry[0]?.case_No : "";
         payload.value.birthdate = useDateMMDDYYY(props.patient.birthdate) ? useDateMMDDYYY(props.patient.birthdate) : '';
@@ -319,7 +320,16 @@ onUpdated(() => {
         payload.value.account = props.patient.patient_registry && props.patient.patient_registry[0].mscPrice_Schemes == 1 ? "Self-Pay" : "Company / Insurance";
 
         getPatientSOA();
+    } else {
+        return;
     }
+})
+
+onUnmounted(() => {
+    payload.value = {};
+    serverItems.value = [];
+    totalItems.value = 0;
+    grandTotal.value = 0;
 })
 </script>
 

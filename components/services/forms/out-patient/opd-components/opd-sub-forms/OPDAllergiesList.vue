@@ -119,7 +119,7 @@
             <v-divider></v-divider>
             <v-card-text>
                 <v-row>
-                    <v-col cols="12">
+                    <v-col cols="12" class="pa-1">
                         <v-list-subheader class="form-header">Cause</v-list-subheader>
                         <v-textarea
                             class="cursor-pointer"
@@ -127,19 +127,30 @@
                             v-model="payload[0].cause"
                             density="compact"
                             variant="outlined"
+                            required
                         ></v-textarea>
                     </v-col>
-                    <v-col cols="12">
+                    <v-col cols="12" class="pa-1">
                         <v-list-subheader class="form-header">Symptoms</v-list-subheader>
                         <v-textarea
                             class="cursor-pointer"
                             hint="Please select symptoms by clicking the plus icon."
-                            v-model="payload[0].symptoms"
+                            v-model="payload.descriptionDisplay"
                             readonly
                             density="compact"
                             variant="outlined"
                             prepend-icon="mdi-plus-box"
                             @click:prepend="openSymptomsDialog"
+                        ></v-textarea>
+                    </v-col>
+                    <v-col cols="12" class="pa-1">
+                        <v-list-subheader class="form-header">Drug / Medicine Used</v-list-subheader>
+                        <v-textarea
+                            class="cursor-pointer"
+                            hint="Drugs / Medicines used for the allergy"
+                            v-model="payload.drugUsed"
+                            density="compact"
+                            variant="outlined"
                         ></v-textarea>
                     </v-col>
                 </v-row>
@@ -323,19 +334,6 @@ const closeSymptomsDialog = () => {
     selectedSymptoms.value = [];
 }
 
-const selectedSymptomsData = () => {
-    payload.value.symptoms = selectedSymptoms.value.map(symptom => ({
-        id: symptom.id,
-        description: symptom.description,
-    }));
-
-    const symptomDescriptions = payload.value.symptoms.map(symptom => symptom.description).join(", ");
-    payload.value[0].symptoms = symptomDescriptions;
-
-    closeSymptomsDialog();
-};
-
-
 const symptoms_data = ref([]);
 const symptoms_data_loading = ref(false);
 const getSymptoms = async () => {
@@ -395,6 +393,19 @@ const handleConfirmPassword = async (passcodeData) => {
         isloading.value = false;
     }
 }
+
+const selectedSymptomsData = () => {
+    const symptoms = selectedSymptoms.value.map(symptom => ({
+        id: symptom.id,
+        description: symptom.description,
+    }));
+
+    payload.value.symptoms = symptoms; 
+    payload.value.descriptionDisplay = symptoms.map(symptom => symptom.description).join(", ");
+
+    closeSymptomsDialog();
+};
+
 
 const onSubmit = () => {
     emits('handle-select', payload.value);
