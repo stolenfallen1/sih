@@ -228,11 +228,9 @@
 
 
     const onSubmit = async (user_details) => {
-   
             try {
                 let response;
                 isLoading.value = true;
-
                 if (payload.value.id) {
                     response = await useMethod("put", "update-emergency", payload.value, "", payload.value.patient_Id);
                     if (response) {

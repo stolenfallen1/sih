@@ -1,6 +1,6 @@
 <template>
     <v-dialog :model-value="show" rounded="lg" scrollable @update:model-value="closeDialog" max-width="750px">
-        <form @submit.prevent="onSubmit">
+        <form @submit.prevent="openConfirmDialog">
             <v-card rounded="lg">
                 <v-toolbar density="compact" color="#107bac" hide-details>
                     <v-toolbar-title>Discharge Registry Account {{ selectedRowDetails.id }}</v-toolbar-title>
@@ -19,7 +19,7 @@
                                 <v-col cols="6">
                                     <v-text-field 
                                         label="Patient Name"
-                                        v-model="payload.find(item => item.patient_name).patient_name"
+                                        v-model="payload.name"
                                         variant="outlined" 
                                         density="compact" 
                                         hide-details 
@@ -29,7 +29,7 @@
                                 <v-col cols="6">
                                     <v-text-field 
                                         :label="form_type === 'outpatient' ? 'Outpatient Case No.' : (form_type === 'emergency' ? 'ER Case No.' : 'Admission No.')" 
-                                        v-model="payload.find(item => item.case_no).case_no"
+                                        v-model="payload.case_No"
                                         variant="outlined" 
                                         density="compact" 
                                         hide-details 
@@ -40,7 +40,7 @@
                                     <v-text-field 
                                         type="date"
                                         :label="form_type === 'outpatient' ? 'Outpatient Case Date' : (form_type === 'emergency' ? 'ER Case Date' : 'Admission Date')" 
-                                        v-model="payload.find(item => item.case_date).case_date"
+                                        v-model="payload.registry_Date"
                                         variant="outlined" 
                                         density="compact" 
                                         hide-details 
@@ -51,14 +51,14 @@
                                     <v-text-field 
                                         type="date"
                                         label="Discharge Date Time" 
-                                        v-model="payload.find(item => item.discharge_date).discharge_date"
+                                        v-model="payload.mgh_Datetime"
                                         variant="outlined" 
                                         density="compact" 
                                         hide-details 
                                         readonly
                                     ></v-text-field>
                                 </v-col>
-                                <v-col cols="4" class="form-col">
+                                <!-- <v-col cols="4" class="form-col">
                                     <v-text-field 
                                         label="Debit" 
                                         variant="outlined" 
@@ -87,7 +87,7 @@
                                         hide-details 
                                         readonly
                                     ></v-text-field>
-                                </v-col>
+                                </v-col> -->
                             </v-row>
                         </v-card-text>
                     </v-card>
@@ -100,7 +100,7 @@
                                 <v-col cols="12">
                                     <v-textarea
                                         label="Discharge Diagnosis"
-                                        v-model="payload.discharge_diagnosis"
+                                        v-model="payload.discharge_Diagnosis"
                                         variant="outlined" 
                                         density="compact" 
                                         hide-details
@@ -118,7 +118,7 @@
                                 <v-col cols="12">
                                     <v-textarea
                                         label="Secondary Discharge Diagnosis"
-                                        v-model="payload.secondary_discharge_diagnosis"
+                                        v-model="payload.secondary_discharge_Diagnosis"
                                         variant="outlined" 
                                         density="compact" 
                                         hide-details
@@ -155,6 +155,15 @@
             </v-card>
         </form>
     </v-dialog>
+
+    <Confirmation 
+        :show="showDialog"
+        :payload="payload"
+        :loading="isLoading"
+        @submit="onSubmit"
+        @close="closeConfirmDialog"
+    />
+
 </template>
 
 <script setup>
@@ -170,42 +179,62 @@ const props = defineProps({
     },
 });
 
-const { selectedRowDetails } = storeToRefs(useSubcomponentSelectedRowDetailsStore()); 
+    const { selectedRowDetails } = storeToRefs(useSubcomponentSelectedRowDetailsStore()); 
 
-const payload = ref([
-    {
-        patient_name: 'John Doe',
-    },
-    {
-        case_no: '123',
-    },
-    {
-        case_date: '2024-04-15',
-    },
-    {
-        discharge_date: '2024-04-20',
-    },
-    {
-        debit: '00.00',
-    },
-    {
-        credit: '00.00',
-    },
-    {
-        account_balance: '00.00',
-    },
-]);
+    const payload = ref([
+    ]);
 
-const onSubmit = () => {
-    alert("Test!");
-    emits('closeDialog');
-};
+const showDialog = ref(false);
+const isLoading = ref(false);
+
+const openConfirmDialog = async () => {
+    showDialog.value = true;
+}
+
+const closeConfirmDialog = () => {
+        showDialog.value = false;
+    }
 
 const emits = defineEmits(['close-dialog'])
 
 const closeDialog = () => {
     emits('close-dialog');
 }
+
+const onSubmit = async () => {
+    isLoading.value = true;
+    let response
+    try{
+        response = await useMethod("put", "discharge-patient", payload.value, "", payload.value.case_No);
+        if(response) {
+            useSnackbar(true, "green", response.message);
+            isLoading.value = false;
+            closeConfirmDialog();
+        }
+    } catch(error) {    
+        useSnackbar(true, "red", response.message || 'Tagged Failed');
+    }
+}
+
+onUpdated(() => {
+    if (selectedRowDetails.value && selectedRowDetails.value.id) {
+        if (payload.value.id !== selectedRowDetails.value.id) { 
+        
+            payload.value       = Object.assign({}, selectedRowDetails.value);
+            payload.value.name  = selectedRowDetails.value.lastname && selectedRowDetails.value.firstname 
+                ? `${selectedRowDetails.value.lastname}, ${selectedRowDetails.value.firstname} ${selectedRowDetails.value.middlename || ''}` 
+                : '';
+
+            payload.value.patient_Id    = selectedRowDetails.value.patient_Id || '';
+            payload.value.suffix_id     = parseInt(selectedRowDetails.value.suffix_id) || '';
+            payload.value.case_No       = selectedRowDetails.value.patient_registry?.[0]?.case_No || '';
+            payload.value.er_Case_No    = parseInt(selectedRowDetails.value.patient_registry?.[0]?.er_Case_No) || '';
+            payload.value.registry_Date = useDateMMDDYYY(selectedRowDetails.value.registry_Date) || '';
+            payload.value.mgh_Datetime  = useDateMMDDYYY(selectedRowDetails.value.mgh_Datetime) || '';
+        }
+    }
+});
+
 </script>
 
 <style scoped>
