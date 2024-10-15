@@ -257,108 +257,108 @@
 </template>
 
 <script setup>
-const props = defineProps({
-    show: {
-        type: Boolean,
-        default: () => false,
-        required: true,
-    },
-    form_type: {
-        type: String,
-        default: () => '',
-    },
-});
+    const props = defineProps({
+        show: {
+            type: Boolean,
+            default: () => false,
+            required: true,
+        },
+        form_type: {
+            type: String,
+            default: () => '',
+        },
+    });
 
-const showDialog = ref(false);
-const isLoading = ref(false);
+    const showDialog = ref(false);
+    const isLoading = ref(false);
 
-const openConfirmDialog = async () => {
-    showDialog.value = true;
-}
-const closeConfirmDialog = () => {
+    const openConfirmDialog = async () => {
+        showDialog.value = true;
+    }
+    const closeConfirmDialog = () => {
         showDialog.value = false;
     }
 
 
-const disposition_data = ref([]);
-const disposition_loading = ref(false);
-const getDisposition = async () => {
-    disposition_loading.value = true;
-    const response = await useMethod("get", "disposition", "", "");
-    if (response) {
-        disposition_data.value = response;
-        disposition_loading.value = false;
-    } 
-};
+    const disposition_data = ref([]);
+    const disposition_loading = ref(false);
+    const getDisposition = async () => {
+        disposition_loading.value = true;
+        const response = await useMethod("get", "disposition", "", "");
+        if (response) {
+            disposition_data.value = response;
+            disposition_loading.value = false;
+        } 
+    };
 
-const erResult_data = ref([]);
-const erResult_loading = ref(false);
-const getErResult = async () => {
-    erResult_loading.value = true;
-    try {
-        const response = await useMethod("get", "get-er-result", "", "");
-        if(response) {
-            erResult_data.value = response;
-            erResult_loading.value = false;
+    const erResult_data = ref([]);
+    const erResult_loading = ref(false);
+    const getErResult = async () => {
+        erResult_loading.value = true;
+        try {
+            const response = await useMethod("get", "get-er-result", "", "");
+            if(response) {
+                erResult_data.value = response;
+                erResult_loading.value = false;
+            }
+
+        } catch(error) {
+            useSnackbar(true, "red", response.message || 'Failed to fetch er result');
+            erResult_loading.value.false;
         }
-
-    } catch(error) {
-        useSnackbar(true, "red", response.message || 'Failed to fetch er result');
-        erResult_loading.value.false;
     }
-}
 
-const emits = defineEmits(['close-dialog']);
-const { selectedRowDetails } = storeToRefs(useSubcomponentSelectedRowDetailsStore()); 
+    const emits = defineEmits(['close-dialog']);
+    const { selectedRowDetails } = storeToRefs(useSubcomponentSelectedRowDetailsStore()); 
 
-const payload = ref([
-    {
-        mgh_queue_no: 0,
+    const payload = ref([
+        {
+            mgh_queue_no: 0,
+        }
+    ]);
+
+    const closeDialog = () => {
+        emits('close-dialog');
     }
-]);
 
-const closeDialog = () => {
-    emits('close-dialog');
-}
-
-const onSubmit = async () => {
-    let response;
-    isLoading.value = true;
-    try{
-        response = await useMethod("put", "tag-patient-maygohome", payload.value, "", payload.value.case_No);
-        if(response) {
-            useSnackbar(true, "green", response.message);
-            isLoading.value = false;
+    const onSubmit = async () => {
+        let response;
+        isLoading.value = true;
+        try{
+            response = await useMethod("put", "tag-patient-maygohome", payload.value, "", payload.value.case_No);
+            if(response) {
+                useSnackbar(true, "green", response.message);
+                isLoading.value = false;
+                closeConfirmDialog();
+            }
+        } catch(error) {    
+            useSnackbar(true, "red", response.message || 'Tagged Failed');
             closeConfirmDialog();
         }
-    } catch(error) {    
-        useSnackbar(true, "red", response.message || 'Tagged Failed');
-        closeConfirmDialog();
     }
-}
 
-onMounted(() => {
-    getDisposition();
-    getErResult();
-})
+    onMounted(() => {
+        getDisposition();
+        getErResult();
+    })
 
-onUpdated(() => {
-    if (selectedRowDetails.value && selectedRowDetails.value.id) {
-        if (payload.value.id !== selectedRowDetails.value.id) { 
-            payload.value                 = Object.assign({}, selectedRowDetails.value);
-            payload.value.name            = (selectedRowDetails.value.lastname &&
-                                                selectedRowDetails.value.firstname
-                                            ) ? selectedRowDetails.value.lastname + ', ' + selectedRowDetails.value.firstname + ' ' + selectedRowDetails.value.middlename : '';
-
-            payload.value.patient_Id      = selectedRowDetails.value.patient_Id ? selectedRowDetails.value.patient_Id : '';
-            payload.value.suffix_id       = parseInt(selectedRowDetails.value.suffix_id) ? parseInt(selectedRowDetails.value.suffix_id) : '';
-            payload.value.case_No         = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0].case_No ? selectedRowDetails.value.patient_registry[0].case_No : '';
-            payload.value.er_Case_No      = selectedRowDetails.value.patient_registry && parseInt(selectedRowDetails.value.patient_registry[0].er_Case_No) ? parseInt(selectedRowDetails.value.patient_registry[0].er_Case_No) : '';
-            payload.value.registry_Date   = useDateMMDDYYY(selectedRowDetails.value.registry_Date) ? useDateMMDDYYY(selectedRowDetails.value.registry_Date) : '';
-        }
-    } 
-})
-
+    onUpdated(() => {
+        if (selectedRowDetails.value && selectedRowDetails.value.id) {
+            if (payload.value.id !== selectedRowDetails.value.id) { 
+                payload.value                   = Object.assign({}, selectedRowDetails.value);
+                payload.value.name              = (selectedRowDetails.value.lastname &&
+                                                    selectedRowDetails.value.firstname
+                                                ) 
+                                                ? selectedRowDetails.value.lastname + ', ' + selectedRowDetails.value.firstname + ' ' + selectedRowDetails.value.middlename 
+                                                : '';
+                payload.value.patient_Id        = selectedRowDetails.value.patient_Id ? selectedRowDetails.value.patient_Id : '';
+                payload.value.suffix_id         = parseInt(selectedRowDetails.value.suffix_id) ? parseInt(selectedRowDetails.value.suffix_id) : '';
+                payload.value.case_No           = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0].case_No ? selectedRowDetails.value.patient_registry[0].case_No : '';
+                payload.value.er_Case_No        = selectedRowDetails.value.patient_registry && parseInt(selectedRowDetails.value.patient_registry[0].er_Case_No) ? parseInt(selectedRowDetails.value.patient_registry[0].er_Case_No) : '';
+                payload.value.registry_Date     = useDateMMDDYYY(selectedRowDetails.value.registry_Date) ? useDateMMDDYYY(selectedRowDetails.value.registry_Date) : '';
+            }
+        } 
+    })
 
 </script>
 
