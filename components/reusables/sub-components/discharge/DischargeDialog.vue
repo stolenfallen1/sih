@@ -167,83 +167,83 @@
 </template>
 
 <script setup>
-const props = defineProps({
-    show: {
-        type: Boolean,
-        default: () => false,
-        required: true,
-    },
-    form_type: {
-        type: String,
-        default: () => '',
-    },
-});
+    const props = defineProps({
+        show: {
+            type: Boolean,
+            default: () => false,
+            required: true,
+        },
+        form_type: {
+            type: String,
+            default: () => '',
+        },
+    });
 
-    const { selectedRowDetails } = storeToRefs(useSubcomponentSelectedRowDetailsStore()); 
+        const { selectedRowDetails } = storeToRefs(useSubcomponentSelectedRowDetailsStore()); 
 
-    const payload = ref([
-    ]);
+        const payload = ref([
+        ]);
 
-const showDialog = ref(false);
-const isLoading = ref(false);
+    const showDialog = ref(false);
+    const isLoading = ref(false);
 
-const openConfirmDialog = async () => {
-    showDialog.value = true;
-}
-
-const closeConfirmDialog = () => {
-        showDialog.value = false;
+    const openConfirmDialog = async () => {
+        showDialog.value = true;
     }
 
-const emits = defineEmits(['close-dialog'])
-
-const closeDialog = () => {
-    emits('close-dialog');
-}
-
-const onSubmit = async () => {
-    isLoading.value = true;
-    let response
-    try{
-        response = await useMethod("put", "discharge-patient", payload.value, "", payload.value.case_No);
-        if(response) {
-            useSnackbar(true, "green", response.message);
-            isLoading.value = false;
-            closeConfirmDialog();
+    const closeConfirmDialog = () => {
+            showDialog.value = false;
         }
-    } catch(error) {    
-        useSnackbar(true, "red", response.message || 'Tagged Failed');
+
+    const emits = defineEmits(['close-dialog'])
+
+    const closeDialog = () => {
+        emits('close-dialog');
     }
-}
 
-onUpdated(() => {
-    if (selectedRowDetails.value && selectedRowDetails.value.id) {
-        if (payload.value.id !== selectedRowDetails.value.id) { 
-        
-            payload.value       = Object.assign({}, selectedRowDetails.value);
-            payload.value.name  = selectedRowDetails.value.lastname && selectedRowDetails.value.firstname 
-                ? `${selectedRowDetails.value.lastname}, ${selectedRowDetails.value.firstname} ${selectedRowDetails.value.middlename || ''}` 
-                : '';
-
-            payload.value.patient_Id    = selectedRowDetails.value.patient_Id || '';
-            payload.value.suffix_id     = parseInt(selectedRowDetails.value.suffix_id) || '';
-            payload.value.case_No       = selectedRowDetails.value.patient_registry?.[0]?.case_No || '';
-            payload.value.er_Case_No    = parseInt(selectedRowDetails.value.patient_registry?.[0]?.er_Case_No) || '';
-            payload.value.registry_Date = useDateMMDDYYY(selectedRowDetails.value.registry_Date) || '';
-            payload.value.mgh_Datetime  = useDateMMDDYYY(selectedRowDetails.value.mgh_Datetime) || '';
+    const onSubmit = async () => {
+        isLoading.value = true;
+        let response
+        try{
+            response = await useMethod("put", "discharge-patient", payload.value, "", payload.value.case_No);
+            if(response) {
+                useSnackbar(true, "green", response.message);
+                isLoading.value = false;
+                closeConfirmDialog();
+            }
+        } catch(error) {    
+            useSnackbar(true, "red", response.message || 'Tagged Failed');
         }
     }
-});
+
+    onUpdated(() => {
+        if (selectedRowDetails.value && selectedRowDetails.value.id) {
+            if (payload.value.id !== selectedRowDetails.value.id) { 
+
+                payload.value       = Object.assign({}, selectedRowDetails.value);
+                payload.value.name  = selectedRowDetails.value.lastname && selectedRowDetails.value.firstname 
+                    ? `${selectedRowDetails.value.lastname}, ${selectedRowDetails.value.firstname} ${selectedRowDetails.value.middlename || ''}` 
+                    : '';
+
+                payload.value.patient_Id    = selectedRowDetails.value.patient_Id || '';
+                payload.value.case_No       = selectedRowDetails.value.patient_registry?.[0]?.case_No || '';
+                payload.value.suffix_id     = parseInt(selectedRowDetails.value.suffix_id) || '';
+                payload.value.er_Case_No    = parseInt(selectedRowDetails.value.patient_registry?.[0]?.er_Case_No) || '';
+                payload.value.registry_Date = useDateMMDDYYY(selectedRowDetails.value.registry_Date) || '';
+                payload.value.mgh_Datetime  = useDateMMDDYYY(selectedRowDetails.value.mgh_Datetime) || '';
+            }
+        }
+    });
 
 </script>
 
 <style scoped>
-.toolbar-title {
-    font-size: 16px; 
-    font-style: italic; 
-    text-align: center;
-}
-.form-col {
-    margin-top: -16px !important;
-}
+    .toolbar-title {
+        font-size: 16px; 
+        font-style: italic; 
+        text-align: center;
+    }
+    .form-col {
+        margin-top: -16px !important;
+    }
 </style>

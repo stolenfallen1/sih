@@ -228,55 +228,55 @@
 
 
     const onSubmit = async (user_details) => {
-        console.log('Payload : ', payload.value);
-            try {
-                let response;
-                isLoading.value = true;
-                if (payload.value.id) {
-                    response = await useMethod("put", "update-emergency", payload.value, "", payload.value.patient_Id);
-                    if (response) {
-                        useSnackbar(true, "green", response.message);
+        try {
+            
+            let response;
+            isLoading.value = true;
+
+            if (payload.value.id) {
+                response = await useMethod("put", "update-emergency", payload.value, "", payload.value.patient_Id);
+                if (response) {
+                    useSnackbar(true, "green", response.message);
+                    isLoading.value = false;
+                    payload.value   = Object.assign({});
+                    tab.value       = "0";
+                    closeDialog();
+                    closeConfirmDialog();
+                } else {
+                    if (error.response && error.response.status === 404) {
+                        useSnackbar(true, "red", 'Incorrect Username or Passcode');
                         isLoading.value = false;
-                        payload.value   = Object.assign({});
-                        tab.value       = "0";
-                        closeDialog();
-                        closeConfirmDialog();
                     } else {
-                        if (error.response && error.response.status === 404) {
-                            useSnackbar(true, "red", 'Incorrect Username or Passcode');
-                            isLoading.value = false;
-                        } else {
-                            useSnackbar(true, "red", response.message || 'Update failed');
-                        }
+                        useSnackbar(true, "red", response.message || 'Update failed');
                     }
-                } else {
-                    response = await useMethod("post", "register-emergency", payload.value);
-                    if (response) {
-                        useSnackbar(true, "green", response.message);
-                        isLoading.value = false;
-                        payload.value   = Object.assign({});
-                        tab.value       = "0";
-                        closeDialog();
-                        closeConfirmDialog();
-                    }  else {
-                        if (error.response && error.response.status === 404) {
-                            useSnackbar(true, "red", 'Incorrect Username or Passcode');
-                            isLoading.value = false;
-                        } else {
-                            useSnackbar(true, "red", response.message || 'Update failed');
-                        }
-                    }
-                    console.log(payload.value)
                 }
-            } catch (error) {
-                if (error.response && error.response.status === 404) {
-                    useSnackbar(true, "red", 'Incorrect Username or Passcode');
+            } else {
+                response = await useMethod("post", "register-emergency", payload.value);
+                if (response) {
+                    useSnackbar(true, "green", response.message);
                     isLoading.value = false;
-                } else {
-                    useSnackbar(true, "red", error.message || 'An error occurred');
-                    isLoading.value = false;
+                    payload.value   = Object.assign({});
+                    tab.value       = "0";
+                    closeDialog();
+                    closeConfirmDialog();
+                }  else {
+                    if (error.response && error.response.status === 404) {
+                        useSnackbar(true, "red", 'Incorrect Username or Passcode');
+                        isLoading.value = false;
+                    } else {
+                        useSnackbar(true, "red", response.message || 'Update failed');
+                    }
                 }
             }
+        } catch (error) {
+            if (error.response && error.response.status === 404) {
+                useSnackbar(true, "red", 'Incorrect Username or Passcode');
+                isLoading.value = false;
+            } else {
+                useSnackbar(true, "red", error.message || 'An error occurred');
+                isLoading.value = false;
+            }
+        }
     }
 
     onUpdated(() => {
@@ -363,13 +363,13 @@
             // For HMO GUARANTORS
             const Guarantor = ref([]);
             if (selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0].guarantor_Id != null) {
-                let guarantor_Id = selectedRowDetails.value.patient_registry[0].guarantor_Id ? selectedRowDetails.value.patient_registry[0].guarantor_Id : '';
-                let guarantor_name = selectedRowDetails.value.patient_registry[0].guarantor_Name.trim() ? selectedRowDetails.value.patient_registry[0].guarantor_Name.trim() : '';
-                let guarantor_Approval_code = selectedRowDetails.value.patient_registry[0].guarantor_Approval_code ? selectedRowDetails.value.patient_registry[0].guarantor_Approval_code : '';
-                let guarantor_Approval_no = selectedRowDetails.value.patient_registry[0].guarantor_Approval_no ? selectedRowDetails.value.patient_registry[0].guarantor_Approval_no : '';
-                let guarantor_Approval_date = useDateMMDDYYY(selectedRowDetails.value.patient_registry[0].guarantor_Approval_date) ? useDateMMDDYYY(selectedRowDetails.value.patient_registry[0].guarantor_Approval_date) : '';
-                let guarantor_Validity_date = useDateMMDDYYY(selectedRowDetails.value.patient_registry[0].guarantor_Validity_date) ? useDateMMDDYYY(selectedRowDetails.value.patient_registry[0].guarantor_Validity_date) : '';
-                let guarantor_Credit_Limit = selectedRowDetails.value.patient_registry[0].guarantor_Credit_Limit ? selectedRowDetails.value.patient_registry[0].guarantor_Credit_Limit : '';
+                let guarantor_Id                        = selectedRowDetails.value.patient_registry[0].guarantor_Id ? selectedRowDetails.value.patient_registry[0].guarantor_Id : '';
+                let guarantor_name                      = selectedRowDetails.value.patient_registry[0].guarantor_Name.trim() ? selectedRowDetails.value.patient_registry[0].guarantor_Name.trim() : '';
+                let guarantor_Approval_code             = selectedRowDetails.value.patient_registry[0].guarantor_Approval_code ? selectedRowDetails.value.patient_registry[0].guarantor_Approval_code : '';
+                let guarantor_Approval_no               = selectedRowDetails.value.patient_registry[0].guarantor_Approval_no ? selectedRowDetails.value.patient_registry[0].guarantor_Approval_no : '';
+                let guarantor_Approval_date             = useDateMMDDYYY(selectedRowDetails.value.patient_registry[0].guarantor_Approval_date) ? useDateMMDDYYY(selectedRowDetails.value.patient_registry[0].guarantor_Approval_date) : '';
+                let guarantor_Validity_date             = useDateMMDDYYY(selectedRowDetails.value.patient_registry[0].guarantor_Validity_date) ? useDateMMDDYYY(selectedRowDetails.value.patient_registry[0].guarantor_Validity_date) : '';
+                let guarantor_Credit_Limit              = selectedRowDetails.value.patient_registry[0].guarantor_Credit_Limit ? selectedRowDetails.value.patient_registry[0].guarantor_Credit_Limit : '';
                 
                 Guarantor.value.push({
                     guarantor_Id,
@@ -401,31 +401,40 @@
 
             if (selectedRowDetails.value.patient_registry && Array.isArray(selectedRowDetails.value.patient_registry)) {
                 selectedRowDetails.value.patient_registry.forEach(reg => {
-                    if (reg.allergies && Array.isArray(reg.allergies)) {
-                        reg.allergies.forEach(allergy => {
-                            const allergy_id = allergy.allergy_type_id || '';
-                            const allergy_name = allergy.allergy_description || ''; 
-                            const symptoms = allergy.symptoms_allergy.map(symptom => ({
-                                description: symptom.symptom_Description  
-                            })) || []; 
-                            const cause = allergy.cause_of_allergy.map(cause => cause.description).join(', ') || '';
-                            const drugUsed = allergy.drug_used_for_allergy.map(drug => drug.drug_Description).join(', ') || ''; 
+                    if (reg.allergies) {
 
-                            Allergy.value.push({
-                                allergy_id,
-                                allergy_name,
-                                symptoms,
-                                cause,
-                                drugUsed
-                            });
+                        const allergy_id = reg.allergies.allergy_type_id || '';
+                        const allergy_name = reg.allergies.allergy_description || '';
+
+                        const symptoms = Array.isArray(reg.allergies.symptoms_allergy) 
+                            ?   reg.allergies.symptoms_allergy.map(symptom => ({
+                                    id: symptom.symptom_id || '',
+                                    description: symptom.symptom_Description || ''
+                                }))
+                            : [];
+                        
+                        const cause = Array.isArray(reg.allergies.cause_of_allergy) 
+                            ? reg.allergies.cause_of_allergy.map(cause => cause.description || '').join(', ') 
+                            : '';
+                        
+                        const drugUsed = Array.isArray(reg.allergies.drug_used_for_allergy) 
+                            ? reg.allergies.drug_used_for_allergy.map(drug => drug.drug_Description || '').join(', ') 
+                            : '';
+
+                        Allergy.value.push({
+                            allergy_id,
+                            allergy_name,
+                            symptoms,
+                            cause,
+                            drugUsed
                         });
                     }
                 });
             }
 
             payload.value.selectedAllergy = Allergy.value;
-
             payload.value.registry_Remarks = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0].registry_Remarks ? selectedRowDetails.value.patient_registry[0].registry_Remarks : '';
+        
         } else {
             if (patientStore.selectedPatient && patientStore.selectedPatient.id) { 
                 payload.value                   = Object.assign({}, patientStore.selectedPatient);
@@ -460,44 +469,6 @@
         }
     });
 
-    const dateFormatter = (fullDate) => {
-        fullDate        = new Date("1981-04-07 00:00:00.000");
-        const year      = fullDate.getFullYear();
-        const month     = String(fullDate.getMonth() + 1).padStart(2, '0'); 
-        const day       = String(fullDate.getDate()).padStart(2, '0');
-        return `${year}-${month}-${day}`;
-
-    }
-
-//     onMounted(() => {
-//     let userDetails = nuxtStorage.localStorage.getData('user_details');
-//     console.log('Raw User Details from Storage:', userDetails);
-
-//     // If userDetails is a string, parse it
-//     if (typeof userDetails === 'string') {
-//         try {
-//             userDetails = JSON.parse(userDetails); // Parse the string to an object
-//         } catch (error) {
-//             console.error('Error parsing user details:', error);
-//         }
-//     }
-
-//     user_detail.value = userDetails;
-    
-//     // Check if user_details has role_id
-//     if (user_detail.value && user_detail.value.role_id) {
-//         const roleId = user_detail.value.role_id;
-//         console.log('Role ID: ', roleId);
-//     } else {
-//         console.log('Role ID not found or undefined.');
-//     }
-// });
-
-
-
-    onMounted(() => {
-        console.log("TEST PASSCODE: ", usePasscode());
-    })
 </script>
 
 <style scoped>
