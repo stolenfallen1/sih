@@ -331,9 +331,9 @@
                 isLoading.value = false;
                 closeConfirmDialog();
             }
-        } catch(error) {    
+        } catch(error) { 
+            isLoading.value = false;   
             useSnackbar(true, "red", response.message || 'Tagged Failed');
-            closeConfirmDialog();
         }
     }
 
