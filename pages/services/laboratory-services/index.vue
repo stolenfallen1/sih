@@ -321,6 +321,7 @@ const viewDischargedPatients = () => {
 
 const handleView = async () => {
   items.value = {
+    patient_Id: selectedRowDetails.value.patient_Id,
     case_No: selectedRowDetails.value.case_No,
     mscAccount_Trans_Types: selectedRowDetails.value.mscAccount_Trans_Types,
   };
@@ -331,6 +332,7 @@ const handleView = async () => {
 
 const handleCancellation = () => {
   items.value = {
+    patient_Id: selectedRowDetails.value.patient_Id,
     case_No: selectedRowDetails.value.case_No,
     mscAccount_Trans_Types: selectedRowDetails.value.mscAccount_Trans_Types,
   };

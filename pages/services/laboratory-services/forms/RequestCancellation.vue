@@ -158,7 +158,7 @@
                             <v-chip color="green" v-else>Done</v-chip>
                         </template>
                         <template v-slot:item.archive="{ item }">
-                            <v-icon style="color: red; cursor: pointer;" @click="openRemarksForm(item.itemcharged)">mdi-archive-alert</v-icon>
+                            <v-icon style="color: red; cursor: pointer;" @click="openRemarksForm(item.itemcharged, item.refNum)">mdi-archive-alert</v-icon>
                         </template>
                         <template v-slot:item.cancel="{ item }">
                             <v-icon style="color: red; cursor: pointer;" @click="cancelLabItem">mdi-trash-can</v-icon>
@@ -183,7 +183,7 @@
         <form>
             <v-card rounded="lg">
                 <v-toolbar density="compact" color="#107bac" hide-details>
-                    <v-toolbar-title>Clear Patient</v-toolbar-title>
+                    <v-toolbar-title>Cancel Lab Charge</v-toolbar-title>
                     <v-spacer></v-spacer>
                     <v-btn color="white" @click="closeRemarksForm">
                         <v-icon>mdi-close</v-icon>
@@ -243,6 +243,7 @@ const open_cancellation_remarks = ref(false);
 const cancelconfirmation = ref(false);
 const itemsToArchive = ref([]);
 const item_value = ref(null);
+const refNum_value = ref(null);
 
 const data = ref({
     title: "List of Patient Lab Charges",
@@ -306,9 +307,12 @@ const loadItems = async (page = null, itemsPerPage = null) => {
     }
 };
 
-const openRemarksForm = (itemValue) => {
-    itemsToArchive.value = serverItems.value.filter(item => item.itemcharged === itemValue);
+const openRemarksForm = (itemValue, refNumValue) => {
+    itemsToArchive.value = serverItems.value.filter(item => 
+        item.itemcharged === itemValue && item.refNum === refNumValue
+    );
     item_value.value = itemValue;
+    refNum_value.value = refNumValue;
     open_cancellation_remarks.value = true;
 }
 
@@ -320,8 +324,10 @@ const closeRemarksForm = () => {
 const archiveLabItem = async (user_details) => {
     if (user_details.user_passcode === usePasscode()) {
         const items = {
+            patient_Id: payload.value.patient_Id,
             itemcharged: item_value.value,
             case_No: payload.value.case_No,
+            refNum: refNum_value.value,
             remarks: payload.value.remarks,
         };
         if (itemsToArchive.value.length > 1) {
