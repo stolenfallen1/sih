@@ -651,6 +651,7 @@ const getRevenueCode = async () => {
     const revenue_res = await useMethod("get", "get-transaction-codes", "", "");
     if (revenue_res) {
         const desiredCodes = useRevenueCode();
+        console.log("TEST", desiredCodes);
         if (desiredCodes && Array.isArray(desiredCodes)) {
             revenue_code_data.value = revenue_res.filter(item => desiredCodes.includes(item.id.toString()));
             revenue_code_data_display.value = revenue_code_data.value.filter(item => item.code !== "MD");
