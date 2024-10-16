@@ -655,6 +655,8 @@ const getRevenueCode = async () => {
         if (desiredCodes && Array.isArray(desiredCodes)) {
             revenue_code_data.value = revenue_res.filter(item => desiredCodes.includes(item.id.toString()));
             revenue_code_data_display.value = revenue_code_data.value.filter(item => item.code !== "MD");
+            console.log("revenue_code_data_display", revenue_code_data_display.value);
+            console.log("revenue_code_data", revenue_code_data.value);
         } 
     } else {
         useSnackbar(true, "error", "Failed to get revenue codes.");
