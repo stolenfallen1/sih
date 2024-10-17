@@ -210,6 +210,7 @@
                 useSnackbar(true, "green", response.message);
                 isLoading.value = false;
                 closeConfirmDialog();
+                useSubComponents('Discharge', false)
             }
         } catch(error) {    
             useSnackbar(true, "red", response.message || 'Tagged Failed');
@@ -224,7 +225,6 @@
                 payload.value.name  = selectedRowDetails.value.lastname && selectedRowDetails.value.firstname 
                     ? `${selectedRowDetails.value.lastname}, ${selectedRowDetails.value.firstname} ${selectedRowDetails.value.middlename || ''}` 
                     : '';
-
                 payload.value.patient_Id    = selectedRowDetails.value.patient_Id || '';
                 payload.value.case_No       = selectedRowDetails.value.patient_registry?.[0]?.case_No || '';
                 payload.value.suffix_id     = parseInt(selectedRowDetails.value.suffix_id) || '';

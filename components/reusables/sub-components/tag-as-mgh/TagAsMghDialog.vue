@@ -1,5 +1,5 @@
 <template>
-    <v-dialog :model-value="show" rounded="lg" scrollable @update:model-value="closeDialog" max-width="800px">
+    <v-dialog :model-value="show" rounded="lg" scrollable @update:model-value="closeDialog" max-width="800px" v-if="show">
         <form @submit.prevent="openConfirmDialog">
             <v-card rounded="lg">
                 <v-toolbar density="compact" color="#107bac" hide-details>
@@ -275,6 +275,7 @@
     const openConfirmDialog = async () => {
         showDialog.value = true;
     }
+
     const closeConfirmDialog = () => {
         showDialog.value = false;
     }
@@ -330,6 +331,7 @@
                 useSnackbar(true, "green", response.message);
                 isLoading.value = false;
                 closeConfirmDialog();
+                useSubComponents('TagAsMgh', false)
             }
         } catch(error) { 
             isLoading.value = false;   
@@ -363,7 +365,7 @@
 </script>
 
 <style scoped>
-.form-col {
-    margin-top: -16px !important;
-}
+    .form-col {
+        margin-top: -16px !important;
+    }
 </style>
