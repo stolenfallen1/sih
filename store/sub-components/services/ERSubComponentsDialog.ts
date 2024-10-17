@@ -4,6 +4,7 @@ export const ERSubComponentsDialog = defineStore('ERSubComponentsDialog',{
         Suspend: false, 
         Requisitions: false,
         PostCharges: false,
+        ERPostMedicineSupplies: false,
         PostCorporateMedicalPackage: false, 
         PostDiagnosticMedicalPackage: false, 
         PostAdjustments: false, 

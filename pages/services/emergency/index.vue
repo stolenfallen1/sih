@@ -253,6 +253,7 @@
 	<SuspendDialog :show="Suspend" :form_type="form_type" @close-dialog="useSubComponents('Suspend', false)" />
 	<RequisitionsDialog :show="Requisitions" :form_type="form_type" @close-dialog="useSubComponents('Requisitions', false)" />
 	<PostChargesDialog :show="PostCharges" @close-dialog="useSubComponents('PostCharges', false)" />
+  <ERPostMedicineSuppliesDialog :show="ERPostMedicineSupplies" @close-dialog="useSubComponents('ERPostMedicineSupplies', false)" />
 	<PostCorporatePackageDialog :show="PostCorporateMedicalPackage" @close-dialog="useSubComponents('PostCorporateMedicalPackage', false)"/>
 	<PostDiagnosticPackageDialog :show="PostDiagnosticMedicalPackage" @close-dialog="useSubComponents('PostDiagnosticMedicalPackage', false)"/> 
 	<PostAdjustmentDialog :show="PostAdjustments" @close-dialog="useSubComponents('PostAdjustments', false)" />
@@ -281,6 +282,7 @@
 
 <script setup>
 import PatientProfileDialog from "../../../components/master-file/forms/patient/FormContainer.vue";
+import ERPostMedicineSuppliesDialog from "./components/ERPostMedicineSuppliesDialog.vue";
 
 import { usePatientStore } from '@/store/selectedPatient';
 
@@ -293,6 +295,7 @@ const {
   Suspend, 
   Requisitions,
   PostCharges,
+  ERPostMedicineSupplies,
   PostCorporateMedicalPackage, 
   PostDiagnosticMedicalPackage, 
   PostAdjustments, 

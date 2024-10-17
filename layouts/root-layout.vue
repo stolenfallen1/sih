@@ -111,7 +111,7 @@
       >
         <v-list-group value="group1" :fluid="true" group>
           <template v-slot:activator="{ props }">
-            <v-list-item v-bind="props" :title="'Sub Components' + selectedRowDetails.id"></v-list-item>
+            <v-list-item v-bind="props" :title="'Sub Components'"></v-list-item>
           </template>
           <v-list-item
             class="mt-1"

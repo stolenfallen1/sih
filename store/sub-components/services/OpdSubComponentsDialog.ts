@@ -4,6 +4,7 @@ export const OpdSubComponentsDialog = defineStore('OpdSubComponentsDialog',{
         Suspend: false,
         Requisitions: false,
         PostCharges: false,
+        OPDPostMedicineSupplies: false,
         PrintTransactionReceipt: false,
         PostCorporateMedicalPackage: false,
         PostDiagnosticMedicalPackage: false,
