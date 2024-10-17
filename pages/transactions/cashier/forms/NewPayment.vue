@@ -347,7 +347,7 @@
                 ></v-text-field>
             </v-col>
             <v-col cols="12" >
-                <v-list-subheader class="form-header">Amount to Pay</v-list-subheader>
+                <v-list-subheader class="form-header">Check Amount</v-list-subheader>
                 <v-text-field
                     variant="outlined"
                     density="compact"
@@ -581,6 +581,7 @@ const searchChargeItem = async () => {
                 items: item.items,
                 doctor_details: item.doctor_details
             }));
+            console.log(response.data);
 
             payload.value.Items = table_data.value;
             return true;
