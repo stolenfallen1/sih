@@ -58,11 +58,11 @@
                                         readonly
                                     ></v-text-field>
                                 </v-col>
-                                <!-- <v-col cols="4" class="form-col">
+                                <v-col cols="4" class="form-col">
                                     <v-text-field 
                                         label="Debit" 
                                         variant="outlined" 
-                                        v-model="payload.find(item => item.debit).debit"
+                                        v-model="charges"
                                         density="compact" 
                                         hide-details 
                                         readonly
@@ -72,7 +72,7 @@
                                     <v-text-field 
                                         label="Credit" 
                                         variant="outlined" 
-                                        v-model="payload.find(item => item.credit).credit"
+                                        v-model="credit"
                                         density="compact" 
                                         hide-details 
                                         readonly
@@ -82,12 +82,12 @@
                                     <v-text-field 
                                         label="Balance" 
                                         variant="outlined" 
-                                        v-model="payload.find(item => item.account_balance).account_balance"
+                                        v-model="balance"
                                         density="compact" 
                                         hide-details 
                                         readonly
                                     ></v-text-field>
-                                </v-col> -->
+                                </v-col>
                             </v-row>
                         </v-card-text>
                     </v-card>
@@ -181,9 +181,6 @@
 
         const { selectedRowDetails } = storeToRefs(useSubcomponentSelectedRowDetailsStore()); 
 
-        const payload = ref([
-        ]);
-
     const showDialog = ref(false);
     const isLoading = ref(false);
 
@@ -201,6 +198,29 @@
         emits('close-dialog');
     }
 
+    const balance = ref([]);
+    const credit = ref([]);
+    const charges = ref([])
+    const balance_loading = ref(false);
+    const getPatientBalance = async () => {
+        balance_loading.value = true;
+        let case_No = selectedRowDetails.value.patient_registry?.[0]?.case_No;
+        try {
+        
+            const response = await useMethod("get", `patient-balance/${case_No}`, "", "", "");
+            if(response) {
+                balance.value = response.Total_Charges;
+                credit.value = response.Credit;
+                charges.value = response.Charges;
+            }
+        } catch (error) {
+      
+            useSnackbar(true, "red", error.message || 'Failed to fetch result');
+        } finally {
+            balance_loading.value = false; // Ensure loading state is reset
+        }
+    };
+
     const onSubmit = async () => {
         isLoading.value = true;
         let response
@@ -217,6 +237,14 @@
         }
     }
 
+    const payload = ref([
+            {
+                balance: balance.value,
+                credit: credit.value,
+                charges: charges.value
+            }
+        ]);
+
     onUpdated(() => {
         if (selectedRowDetails.value && selectedRowDetails.value.id) {
             if (payload.value.id !== selectedRowDetails.value.id) { 
@@ -231,6 +259,8 @@
                 payload.value.er_Case_No    = parseInt(selectedRowDetails.value.patient_registry?.[0]?.er_Case_No) || '';
                 payload.value.registry_Date = useDateMMDDYYY(selectedRowDetails.value.registry_Date) || '';
                 payload.value.mgh_Datetime  = useDateMMDDYYY(selectedRowDetails.value.mgh_Datetime) || '';
+
+                getPatientBalance();
             }
         }
     });
