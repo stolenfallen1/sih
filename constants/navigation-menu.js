@@ -1639,335 +1639,344 @@ export default [
                 processing_and_queries: [],
                 table_and_template: []
             },
+            // {
+            //     label: "Nursing Services",
+            //     icon: "mdi-medical-bag",
+            //     path: "/services/nursing-services",
+            //     rule: "browse_nursingservices",
+            //     subcomponents: [
+            //         {
+            //             label: "Patient Profile",
+            //             icon: "mdi-file-document-edit",
+            //             form: "PatientProfile",
+            //             rule: "",
+            //         },
+            //         {
+            //             label: "Requisitions",
+            //             icon: "mdi-file-document-edit",
+            //             form: "Requisitions",
+            //             rule: "",
+            //         },
+            //         {
+            //             label: "Post Charges",
+            //             icon: "mdi-file-document-edit",
+            //             form: "PostCharges",
+            //             rule: "",
+            //         },
+            //         {
+            //             label: "Apply Credit Note",
+            //             icon: "mdi-file-document-edit",
+            //             form: "ApplyCreditNote",
+            //             rule: "",
+            //         },
+            //         {
+            //             label: "View Examination Upshots",
+            //             icon: "mdi-file-document-edit",
+            //             form: "ViewExaminationUpshot",
+            //             rule: "",
+            //         },
+            //         {
+            //             label: "Tag as MGH",
+            //             icon: "mdi-file-document-edit",
+            //             form: "TagAsMgh",
+            //             rule: "",
+            //         },
+            //         {
+            //             label: "Untag as MGH",
+            //             icon: "mdi-file-document-edit",
+            //             form: "UntagAsMgh",
+            //             rule: "",
+            //         },
+            //         {
+            //             label: "Discharge",
+            //             icon: "mdi-file-document-edit",
+            //             form: "Discharge",
+            //             rule: "",
+            //         },
+            //         {
+            //             label: "Discharge Instruction",
+            //             icon: "mdi-file-document-edit",
+            //             form: "DischargeInstruction",
+            //             rule: "",
+            //         },
+            //         {
+            //             label: "Relocate Patient",
+            //             icon: "mdi-file-document-edit",
+            //             form: "RelocatePatient",
+            //             rule: "",
+            //         },
+            //         {
+            //             label: "Nursing Endorsement Sheet",
+            //             icon: "mdi-file-document-edit",
+            //             form: "NurseEndorsementForm",
+            //             rule: "",
+            //         },
+            //         {
+            //             label: "View Patient Diet History",
+            //             icon: "mdi-file-document-edit",
+            //             form: "ViewPatientDietHistory",
+            //             rule: "",
+            //         },
+            //         {
+            //             label: "View Drugs and Medicines",
+            //             icon: "mdi-file-document-edit",
+            //             form: "ViewDrugsAndMedicines",
+            //             rule: "",
+            //         },
+            //         {
+            //             label: "View Statement of Account",
+            //             icon: "mdi-file-document-edit",
+            //             form: "ViewStatementOfAccount",
+            //             rule: "",
+            //         },
+            //         {
+            //             label: "Claim Form 4 Processing",
+            //             icon: "mdi-file-document-edit",
+            //             form: "ClaimForm4Processing",
+            //             rule: "",
+            //         },
+            //     ],
+            //     processing_and_queries: [
+            //         {
+            //             label: "Dietary Transactions",
+            //             icon: "mdi-file-document-edit",
+            //             form: "DietaryTransactions",
+            //             rule: "",
+            //         },
+            //         {
+            //             label: "May-Go-Home Patient List",
+            //             icon: "mdi-file-document-edit",
+            //             form: "MayGoHomePatientList",
+            //             rule: "",
+            //         },
+            //         {
+            //             label: "Room Status Availability",
+            //             icon: "mdi-file-document-edit",
+            //             form: "RoomStatusAvailability",
+            //             rule: "",
+            //         },
+            //     ],
+            //     table_and_template: [
+            //         {
+            //             label: "Admission Result",
+            //             icon: "mdi-file-document-edit",
+            //             form: "AdmissionResult",
+            //             rule: "",
+            //         },
+            //         {
+            //             label: "Caesarian Case Indicators",
+            //             icon: "mdi-file-document-edit",
+            //             form: "CsCaseIndicators",
+            //             rule: "",
+            //         },
+            //         {
+            //             label: "Death Types",
+            //             icon: "mdi-file-document-edit",
+            //             form: "DeathType",
+            //             rule: "",
+            //         },
+            //         {
+            //             label: "Nursing Endorsement Categories",
+            //             icon: "mdi-file-document-edit",
+            //             form: "NursingEndorsement",
+            //             rule: "",
+            //         },
+            //         {
+            //             label: "Referral Causes",
+            //             icon: "mdi-file-document-edit",
+            //             form: "ReferralCauses",
+            //             rule: "",
+            //         },
+            //     ]
+            // },
+            // {
+            //     label: "Dietary Services",
+            //     icon: "mdi-food-fork-drink",
+            //     path: "/services/dietary-services",
+            //     rule: "browse_dietaryservices",
+            //     subcomponents: [
+            //         {
+            //             label: "Inpatient Details",
+            //             icon: "mdi-file-document-edit",
+            //             rule: "",
+            //         },
+            //         {
+            //             label: "Acknowledge Posted Diet",
+            //             icon: "mdi-file-document-edit",
+            //             form: "AcknowledgePostedDiet",
+            //             rule: "",
+            //         },
+            //         {
+            //             label: "Post Diet Meal as Served",
+            //             icon: "mdi-file-document-edit",
+            //             form: "PostDietMealasServed",
+            //             rule: "",
+            //         },
+            //         {
+            //             label: "View .Print Diet Card",
+            //             icon: "mdi-file-document-edit",
+            //             form: "ViewPrintDietCard",
+            //             rule: "",
+            //         },
+            //         {
+            //             label: "View Patient Diet History",
+            //             icon: "mdi-file-document-edit",
+            //             form: "ViewPatientDietHistory",
+            //             rule: "",
+            //         },
+            //     ],
+            //     processing_and_queries: [
+            //         {
+            //             label: "View Patients with Changed Diet",
+            //             icon: "mdi-file-document-edit",
+            //             form: "ViewPatientsWithChangedDiet",
+            //             rule: "",
+            //         },
+            //     ],
+            //     table_and_template: [
+            //         {
+            //             label: "Diet Meals",
+            //             icon: "mdi-file-document-edit",
+            //             form: "DietList",
+            //             rule: "",
+            //         },
+            //         {
+            //             label: "Diet Meal Types",
+            //             icon: "mdi-file-document-edit",
+            //             form: "DietMealType",
+            //             rule: "",
+            //         },
+            //         {
+            //             label: "Diet Types",
+            //             icon: "mdi-file-document-edit",
+            //             form: "DietType",
+            //             rule: "",
+            //         },
+            //         {
+            //             label: "Diet Sub Types",
+            //             icon: "mdi-file-document-edit",
+            //             form: "DietSubTypes",
+            //             rule: "",
+            //         },
+            //     ]
+            // },
+            // {
+            //     label: "Ancillary Services",
+            //     icon: "mdi-medication",
+            //     path: "/services/ancillary-services",
+            //     rule: "browse_ancillaryservices",
+            //     subcomponents: [
+            //         {
+            //             label: "Patient Profile",
+            //             icon: "mdi-file-document-edit",
+            //             form: "PatientProfile",
+            //             rule: "",
+            //         },
+            //         {
+            //             label: "Transaction Details",
+            //             icon: "mdi-file-document-edit",
+            //             rule: "",
+            //         },
+            //         {
+            //             label: "Direct Render",
+            //             icon: "mdi-file-document-edit",
+            //             form: "DirectRender",
+            //             rule: "",
+            //         },
+            //         {
+            //             label: "Render Requisition",
+            //             icon: "mdi-file-document-edit",
+            //             rule: "",
+            //         },
+            //         {
+            //             label: "Drug Administration",
+            //             icon: "mdi-file-document-edit",
+            //             form: "DrugAdministration",
+            //             rule: "",
+            //         },
+            //         {
+            //             label: "Apply Credit Note",
+            //             icon: "mdi-file-document-edit",
+            //             form: "ApplyCreditNote",
+            //             rule: "",
+            //         },
+            //         {
+            //             label: "Print Cash / Charge / CN Slip",
+            //             icon: "mdi-file-document-edit",
+            //             rule: "",
+            //         },
+            //         {
+            //             label: "Cash Transaction",
+            //             icon: "mdi-file-document-edit",
+            //             rule: "",
+            //         },
+            //         {
+            //             label: "Print Requisition Slip",
+            //             icon: "mdi-file-document-edit",
+            //             rule: "",
+            //         },
+            //         {
+            //             label: "Void Discount",
+            //             icon: "mdi-file-document-edit",
+            //             rule: "",
+            //         },
+            //         {
+            //             label: "Centralized Credit Note",
+            //             icon: "mdi-file-document-edit",
+            //             form: "CentralizedCreditNote",
+            //             rule: "",
+            //         },
+            //     ],
+            //     processing_and_queries: [
+            //         {
+            //             label: "Print Pending Requisition",
+            //             icon: "mdi-file-document-edit",
+            //             form: "PrintPendingRequisition",
+            //             rule: "",
+            //         },
+            //     ],
+            //     table_and_template: [
+            //         {
+            //             label: "Discount Schemes",
+            //             icon: "mdi-file-document-edit",
+            //             form: "DiscountSchemes",
+            //             rule: "",
+            //         },
+            //         {
+            //             label: "Price Schemes",
+            //             icon: "mdi-file-document-edit",
+            //             form: "PriceSchemes",
+            //             rule: "",
+            //         },
+            //     ]
+            // },
             {
-                label: "Nursing Services",
-                icon: "mdi-medical-bag",
-                path: "/services/nursing-services",
-                rule: "browse_nursingservices",
-                subcomponents: [
-                    {
-                        label: "Patient Profile",
-                        icon: "mdi-file-document-edit",
-                        form: "PatientProfile",
-                        rule: "",
-                    },
-                    {
-                        label: "Requisitions",
-                        icon: "mdi-file-document-edit",
-                        form: "Requisitions",
-                        rule: "",
-                    },
-                    {
-                        label: "Post Charges",
-                        icon: "mdi-file-document-edit",
-                        form: "PostCharges",
-                        rule: "",
-                    },
-                    {
-                        label: "Apply Credit Note",
-                        icon: "mdi-file-document-edit",
-                        form: "ApplyCreditNote",
-                        rule: "",
-                    },
-                    {
-                        label: "View Examination Upshots",
-                        icon: "mdi-file-document-edit",
-                        form: "ViewExaminationUpshot",
-                        rule: "",
-                    },
-                    {
-                        label: "Tag as MGH",
-                        icon: "mdi-file-document-edit",
-                        form: "TagAsMgh",
-                        rule: "",
-                    },
-                    {
-                        label: "Untag as MGH",
-                        icon: "mdi-file-document-edit",
-                        form: "UntagAsMgh",
-                        rule: "",
-                    },
-                    {
-                        label: "Discharge",
-                        icon: "mdi-file-document-edit",
-                        form: "Discharge",
-                        rule: "",
-                    },
-                    {
-                        label: "Discharge Instruction",
-                        icon: "mdi-file-document-edit",
-                        form: "DischargeInstruction",
-                        rule: "",
-                    },
-                    {
-                        label: "Relocate Patient",
-                        icon: "mdi-file-document-edit",
-                        form: "RelocatePatient",
-                        rule: "",
-                    },
-                    {
-                        label: "Nursing Endorsement Sheet",
-                        icon: "mdi-file-document-edit",
-                        form: "NurseEndorsementForm",
-                        rule: "",
-                    },
-                    {
-                        label: "View Patient Diet History",
-                        icon: "mdi-file-document-edit",
-                        form: "ViewPatientDietHistory",
-                        rule: "",
-                    },
-                    {
-                        label: "View Drugs and Medicines",
-                        icon: "mdi-file-document-edit",
-                        form: "ViewDrugsAndMedicines",
-                        rule: "",
-                    },
-                    {
-                        label: "View Statement of Account",
-                        icon: "mdi-file-document-edit",
-                        form: "ViewStatementOfAccount",
-                        rule: "",
-                    },
-                    {
-                        label: "Claim Form 4 Processing",
-                        icon: "mdi-file-document-edit",
-                        form: "ClaimForm4Processing",
-                        rule: "",
-                    },
-                ],
-                processing_and_queries: [
-                    {
-                        label: "Dietary Transactions",
-                        icon: "mdi-file-document-edit",
-                        form: "DietaryTransactions",
-                        rule: "",
-                    },
-                    {
-                        label: "May-Go-Home Patient List",
-                        icon: "mdi-file-document-edit",
-                        form: "MayGoHomePatientList",
-                        rule: "",
-                    },
-                    {
-                        label: "Room Status Availability",
-                        icon: "mdi-file-document-edit",
-                        form: "RoomStatusAvailability",
-                        rule: "",
-                    },
-                ],
-                table_and_template: [
-                    {
-                        label: "Admission Result",
-                        icon: "mdi-file-document-edit",
-                        form: "AdmissionResult",
-                        rule: "",
-                    },
-                    {
-                        label: "Caesarian Case Indicators",
-                        icon: "mdi-file-document-edit",
-                        form: "CsCaseIndicators",
-                        rule: "",
-                    },
-                    {
-                        label: "Death Types",
-                        icon: "mdi-file-document-edit",
-                        form: "DeathType",
-                        rule: "",
-                    },
-                    {
-                        label: "Nursing Endorsement Categories",
-                        icon: "mdi-file-document-edit",
-                        form: "NursingEndorsement",
-                        rule: "",
-                    },
-                    {
-                        label: "Referral Causes",
-                        icon: "mdi-file-document-edit",
-                        form: "ReferralCauses",
-                        rule: "",
-                    },
-                ]
-            },
-            {
-                label: "Dietary Services",
-                icon: "mdi-food-fork-drink",
-                path: "/services/dietary-services",
-                rule: "browse_dietaryservices",
-                subcomponents: [
-                    {
-                        label: "Inpatient Details",
-                        icon: "mdi-file-document-edit",
-                        rule: "",
-                    },
-                    {
-                        label: "Acknowledge Posted Diet",
-                        icon: "mdi-file-document-edit",
-                        form: "AcknowledgePostedDiet",
-                        rule: "",
-                    },
-                    {
-                        label: "Post Diet Meal as Served",
-                        icon: "mdi-file-document-edit",
-                        form: "PostDietMealasServed",
-                        rule: "",
-                    },
-                    {
-                        label: "View .Print Diet Card",
-                        icon: "mdi-file-document-edit",
-                        form: "ViewPrintDietCard",
-                        rule: "",
-                    },
-                    {
-                        label: "View Patient Diet History",
-                        icon: "mdi-file-document-edit",
-                        form: "ViewPatientDietHistory",
-                        rule: "",
-                    },
-                ],
-                processing_and_queries: [
-                    {
-                        label: "View Patients with Changed Diet",
-                        icon: "mdi-file-document-edit",
-                        form: "ViewPatientsWithChangedDiet",
-                        rule: "",
-                    },
-                ],
-                table_and_template: [
-                    {
-                        label: "Diet Meals",
-                        icon: "mdi-file-document-edit",
-                        form: "DietList",
-                        rule: "",
-                    },
-                    {
-                        label: "Diet Meal Types",
-                        icon: "mdi-file-document-edit",
-                        form: "DietMealType",
-                        rule: "",
-                    },
-                    {
-                        label: "Diet Types",
-                        icon: "mdi-file-document-edit",
-                        form: "DietType",
-                        rule: "",
-                    },
-                    {
-                        label: "Diet Sub Types",
-                        icon: "mdi-file-document-edit",
-                        form: "DietSubTypes",
-                        rule: "",
-                    },
-                ]
-            },
-            {
-                label: "Ancillary Services",
-                icon: "mdi-medication",
-                path: "/services/ancillary-services",
-                rule: "browse_ancillaryservices",
-                subcomponents: [
-                    {
-                        label: "Patient Profile",
-                        icon: "mdi-file-document-edit",
-                        form: "PatientProfile",
-                        rule: "",
-                    },
-                    {
-                        label: "Transaction Details",
-                        icon: "mdi-file-document-edit",
-                        rule: "",
-                    },
-                    {
-                        label: "Direct Render",
-                        icon: "mdi-file-document-edit",
-                        form: "DirectRender",
-                        rule: "",
-                    },
-                    {
-                        label: "Render Requisition",
-                        icon: "mdi-file-document-edit",
-                        rule: "",
-                    },
-                    {
-                        label: "Drug Administration",
-                        icon: "mdi-file-document-edit",
-                        form: "DrugAdministration",
-                        rule: "",
-                    },
-                    {
-                        label: "Apply Credit Note",
-                        icon: "mdi-file-document-edit",
-                        form: "ApplyCreditNote",
-                        rule: "",
-                    },
-                    {
-                        label: "Print Cash / Charge / CN Slip",
-                        icon: "mdi-file-document-edit",
-                        rule: "",
-                    },
-                    {
-                        label: "Cash Transaction",
-                        icon: "mdi-file-document-edit",
-                        rule: "",
-                    },
-                    {
-                        label: "Print Requisition Slip",
-                        icon: "mdi-file-document-edit",
-                        rule: "",
-                    },
-                    {
-                        label: "Void Discount",
-                        icon: "mdi-file-document-edit",
-                        rule: "",
-                    },
-                    {
-                        label: "Centralized Credit Note",
-                        icon: "mdi-file-document-edit",
-                        form: "CentralizedCreditNote",
-                        rule: "",
-                    },
-                ],
-                processing_and_queries: [
-                    {
-                        label: "Print Pending Requisition",
-                        icon: "mdi-file-document-edit",
-                        form: "PrintPendingRequisition",
-                        rule: "",
-                    },
-                ],
-                table_and_template: [
-                    {
-                        label: "Discount Schemes",
-                        icon: "mdi-file-document-edit",
-                        form: "DiscountSchemes",
-                        rule: "",
-                    },
-                    {
-                        label: "Price Schemes",
-                        icon: "mdi-file-document-edit",
-                        form: "PriceSchemes",
-                        rule: "",
-                    },
-                ]
+                label: "Pharmacy Services",
+                icon: "mdi-pill",
+                path: "/services/pharmacy-services",
+                rule: "browse_pharmacyservices",
+                subcomponents: [],
+                processing_and_queries: [],
+                table_and_template: []
             },
             {
                 label: "Laboratory Services",
                 icon: "mdi-needle",
                 path: "/services/laboratory-services",
-                rule: "browse_laboratorservices",
+                rule: "browse_laboratoryservices",
                 subcomponents: [],
                 processing_and_queries: [],
                 table_and_template: []
             },
-            {
-                label: "Radiology Services",
-                icon: "mdi-skull-scan-outline",
-                path: "/services/radiology-services",
-                rule: "browse_radiologyservices",
-                subcomponents: [],
-                processing_and_queries: [],
-                table_and_template: []
-            },
+            // {
+            //     label: "Radiology Services",
+            //     icon: "mdi-skull-scan-outline",
+            //     path: "/services/radiology-services",
+            //     rule: "browse_radiologyservices",
+            //     subcomponents: [],
+            //     processing_and_queries: [],
+            //     table_and_template: []
+            // },
         ],
     },
     {
