@@ -217,7 +217,8 @@
                                         <th>Code</th>
                                         <th>Item Description</th>
                                         <th>Frequency</th>
-                                        <th>Quantity</th> 
+                                        <th>On Hand Quantity</th> 
+                                        <th>Request Quantity</th> 
                                         <th>Amount</th> 
                                         <th>Remarks</th>
                                         <th>STAT</th>
@@ -229,6 +230,7 @@
                                             <td> <input class="input medicine-focus" v-model="item.code" @keyup.enter="handleAddMedicine(item, index)" :readonly="item.isReadonly" /> </td>
                                             <td> <input class="input medicine-focus" v-model="item.item_name" @keyup.enter="handleAddMedicine(item, index)" readonly /> </td>
                                             <td> <input class="input medicine-focus" v-model="item.frequency_description" @keyup.enter="openFrequencyList" readonly /> </td>
+                                            <td> <input class="input medicine-focus" v-model="item.item_OnHand" @keyup.enter="handleAddMedicine(item, index)" readonly /> </td>
                                             <td> <input class="input medicine-focus" v-model="item.quantity" /> </td>
                                             <td> <input class="input medicine-focus" v-model="item.price" readonly /> </td>
                                             <td> <input class="input medicine-focus" v-model="item.remarks" /> </td>
@@ -278,7 +280,8 @@
                                     <tr>
                                         <th>Code</th>
                                         <th>Item Description</th>
-                                        <th>Quantity</th> 
+                                        <th>On Hand Quantity</th> 
+                                        <th>Request Quantity</th> 
                                         <th>Amount</th> 
                                         <th>Remarks</th>
                                         <th>STAT</th>
@@ -289,6 +292,7 @@
                                         <tr>
                                             <td> <input class="input supplies-focus" v-model="item.code" @keyup.enter="handleAddSupplies(item, index)" :readonly="item.isReadonly" /> </td>
                                             <td> <input class="input supplies-focus" v-model="item.item_name" @keyup.enter="handleAddSupplies(item, index)" readonly /> </td>
+                                            <td> <input class="input supplies-focus" v-model="item.item_OnHand" @keyup.enter="handleAddSupplies(item, index)" readonly /> </td>
                                             <td> <input class="input supplies-focus" v-model="item.quantity" /> </td>
                                             <td> <input class="input supplies-focus" v-model="item.price" readonly /> </td>
                                             <td> <input class="input supplies-focus" v-model="item.remarks" /> </td>
@@ -312,6 +316,40 @@
                             </v-table>
                         </v-expansion-panel-text>
                     </v-expansion-panel>
+                    <v-expansion-panel>
+                        <v-expansion-panel-title color="#107bac">
+                            Pending Requests
+                        </v-expansion-panel-title>
+                        <v-expansion-panel-text>
+                            <v-table density="compact" height="40vh" class="styled-table">
+                                <thead>
+                                    <tr>
+                                        <th width="4"></th>
+                                        <th width="4"></th>
+                                        <th>Code</th>
+                                        <th>Item Description</th>
+                                        <th>Frequency</th>
+                                        <th>Quantity</th> 
+                                        <th>Amount</th> 
+                                        <th>Remarks</th>
+                                        <th>STAT</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td> <input type="checkbox" /></td>
+                                        <td> </td>
+                                        <td> </td>
+                                        <td> </td>
+                                        <td> </td>
+                                        <td> </td>
+                                        <td> </td>
+                                        <td> </td>
+                                    </tr>
+                                </tbody>
+                            </v-table>
+                        </v-expansion-panel-text>
+                    </v-expansion-panel>
                 </v-expansion-panels>
             </v-card-text>
             <v-card-actions>
@@ -321,6 +359,7 @@
             </v-card-actions>
         </v-card>
     </v-dialog>
+    <snackbar />
 
     <list-of-items 
     :open_items_list="open_items_list_for_medicines" 
@@ -330,18 +369,17 @@
     :chargecode="chargecode"
     @handle-select="(selected_item) => handleSelectedItem(selected_item, 'medicines')" 
     @close-dialog="closeItemsDialogForMedicines" 
-/>
+    />
 
-<list-of-items 
-    :open_items_list="open_items_list_for_supplies" 
-    :patienttype="payload.charge_to === 'Self-Pay' ? 1 : 2"
-    :user_input_revenue_code="user_input_revenue_code"
-    :warehouse_id="selectedWarehouseID"
-    :chargecode="chargecode"
-    @handle-select="(selected_item) => handleSelectedItem(selected_item, 'supplies')" 
-    @close-dialog="closeItemsDialogForSupplies" 
-/>
-
+    <list-of-items 
+        :open_items_list="open_items_list_for_supplies" 
+        :patienttype="payload.charge_to === 'Self-Pay' ? 1 : 2"
+        :user_input_revenue_code="user_input_revenue_code"
+        :warehouse_id="selectedWarehouseID"
+        :chargecode="chargecode"
+        @handle-select="(selected_item) => handleSelectedItem(selected_item, 'supplies')" 
+        @close-dialog="closeItemsDialogForSupplies" 
+    />
 
     <list-of-frequency 
         :open_frequency_list="open_frequency_list"
@@ -380,8 +418,9 @@ const Medicines = ref([
         code: "",
         item_name: "",
         frequency: "",
+        item_OnHand: "",
         quantity: "",
-        amount: "",
+        price: "",
         remarks: "",
         stat: "",
     }
@@ -390,8 +429,9 @@ const Supplies = ref([
     {
         code: "",
         item_name: "",
-        frequency: "",
-        amount: "",
+        item_OnHand: "",
+        quantity: "",
+        price: "",
         remarks: "",
         stat: "",
     }
@@ -439,7 +479,7 @@ const getRevenueCode = async () => {
 
 const focusNextMedicine = (index) => {
     const inputs = document.querySelectorAll('.medicine-focus');
-    const transactionCodeInput = inputs[(index + 1) * 7];
+    const transactionCodeInput = inputs[(index + 1) * 8];
     if (transactionCodeInput) {
         transactionCodeInput.focus();
     }
@@ -447,7 +487,7 @@ const focusNextMedicine = (index) => {
 
 const focusNextSupplies = (index) => {
     const inputs = document.querySelectorAll('.supplies-focus');
-    const transactionCodeInput = inputs[(index + 1) * 6];
+    const transactionCodeInput = inputs[(index + 1) * 7];
     if (transactionCodeInput) {
         transactionCodeInput.focus();
     }
@@ -489,6 +529,7 @@ const handleAddMedicine = (item, index) => {
                     code: "",
                     item_name: "",
                     frequency: "",
+                    item_OnHand: "",
                     quantity: "",
                     amount: "",
                     remarks: "",
@@ -537,6 +578,7 @@ const handleAddSupplies = (item, index) => {
                 Supplies.value.push({
                     code: "",
                     item_name: "",
+                    item_OnHand: "",
                     quantity: "",
                     amount: "",
                     remarks: "",
@@ -556,15 +598,18 @@ const handleAddSupplies = (item, index) => {
 
 const handleSelectedItem = (selected_item, listType) => {
     if (listType === 'medicines') {
+        console.log(selected_item);
         const lastRow = Medicines.value[Medicines.value.length - 1];
         lastRow.map_item_id = selected_item.map_item_id;
         lastRow.item_name = selected_item.item_name + ' ' + selected_item.item_Description;
         lastRow.price = selected_item.ware_house_items ? usePeso(selected_item.ware_house_items[0].price) : '0';
+        lastRow.item_OnHand = selected_item.ware_house_items ? parseInt(selected_item.ware_house_items[0].item_OnHand) : 'N/A';
     } else if (listType === 'supplies') {
         const lastRow = Supplies.value[Supplies.value.length - 1];
         lastRow.map_item_id = selected_item.map_item_id;
         lastRow.item_name = selected_item.item_name + ' ' + selected_item.item_Description;
         lastRow.price = selected_item.ware_house_items ? usePeso(selected_item.ware_house_items[0].price) : '0';
+        lastRow.item_OnHand = selected_item.ware_house_items ? parseInt(selected_item.ware_house_items[0].item_OnHand) : 'N/A';
     }
 };
 
@@ -595,13 +640,26 @@ const closeFrequencyList = () => {
     open_frequency_list.value = false;
 }
 
+const validateQuantities = (items) => {
+    for (let i = 0; i < items.length; i++) {
+        const item = items[i];
+        if (parseInt(item.quantity) > parseInt(item.item_OnHand)) {
+            return useSnackbar(true, "error", `Request Quantity can't be higher than Stocks On Hand`);
+        }
+    }
+};
+
 const onSubmit = () => {
     let medicines = Medicines.value.filter(obj => obj.code !== '');
     let supplies = Supplies.value.filter(obj => obj.code !== '');
     payload.value.Medicines = medicines;
     payload.value.Supplies = supplies;
+
+    if (validateQuantities(medicines) || validateQuantities(supplies)) return;
+
     console.log(payload.value);
-}
+};
+
 
 const closeDialog = () => {
     emits('close-dialog');
@@ -611,12 +669,24 @@ const closeDialog = () => {
             code: "",
             item_name: "",
             frequency: "",
+            item_OnHand: "",
             quantity: "",
-            amount: "",
+            price: "",
             remarks: "",
             stat: "",
         }
     ];
+    Supplies.value = [
+        {
+            code: "",
+            item_name: "",
+            item_OnHand: "",
+            quantity: "",
+            price: "",
+            remarks: "",
+            stat: "",
+        }
+    ]
 }
 
 watchEffect(() => {

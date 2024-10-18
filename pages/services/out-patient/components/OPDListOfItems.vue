@@ -86,6 +86,7 @@
             </v-card-actions>
         </v-card>
     </v-dialog>
+    <Snackbar />
 </template>
 
 <script setup>
@@ -187,9 +188,15 @@ const handleSelectedRow = (selectedRows) => {
     console.log("SELECTED ITEM", selected_item.value);
 };
 const onSelect = () => {
+    const wareHouseItems = selected_item.value?.ware_house_items[0];
+    if (selected_item.value && wareHouseItems?.item_OnHand == 0) {
+        useSnackbar(true, "error", "Item On Hand is Zero, Please select another item.");
+        return;
+    }
     emits('handle-select', selected_item.value);
     closeDialog();
-}
+};
+
 const search = () => {
     loadItems();
 };
