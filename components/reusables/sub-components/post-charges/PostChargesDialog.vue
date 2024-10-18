@@ -653,7 +653,10 @@ const getRevenueCode = async () => {
         const desiredCodes = useRevenueCode();
         if (desiredCodes && Array.isArray(desiredCodes)) {
             revenue_code_data.value = revenue_res.filter(item => {
-                return item.id && desiredCodes.map(code => code.toString()).includes(item.id.toString());
+                return item.id 
+                    && item.isMedicine != "1"
+                    && item.isSupplies != "1"
+                    && desiredCodes.map(code => code.toString()).includes(item.id.toString());
             });
             revenue_code_data_display.value = revenue_code_data.value.filter(item => item.code !== "MD");
         } 
