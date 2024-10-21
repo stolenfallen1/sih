@@ -1,12 +1,12 @@
 <template>
     <v-card class="mb-2" elevation="4">
       <v-card-actions>
+        <p style="font-weight: bolder; color: #228B22; font-size: larger; margin-right: 10px;">Laboratory Services</p>
         <v-spacer></v-spacer>
         <v-btn
           @click="handleView()"
           :disabled="isSelectedUser"
           prepend-icon="mdi-eye-outline"
-          width="100"
           color="primary"
           class="bg-info text-white"
         >
@@ -16,7 +16,6 @@
           @click="handleCancellation()"
           prepend-icon="mdi-toggle-switch"
           :disabled="isSelectedUser"
-          width="300"
           color="primary"
           class="bg-error text-white"
         >
@@ -94,8 +93,8 @@ const { selectedRowDetails, isrefresh } = storeToRefs(useSubcomponentSelectedRow
 const payload = ref({});
 const items = ref({});
 const isSelectedUser = ref(true);
-const pageTitle = ref("Laboratory Services");
 const currentTab = ref(1);
+const pageTitle = ref("");
 const showTabs = ref(true);
 const columns = ref([]);
 const test = ref(['test']);

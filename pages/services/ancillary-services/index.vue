@@ -1,109 +1,67 @@
 <template>
   <v-card class="mb-2" elevation="4">
     <v-card-actions>
+      <p style="font-weight: bolder; color: #228B22; font-size: larger; margin-right: 10px;">Ancillary Services</p>
       <v-spacer></v-spacer>
       <v-btn
-        @click="handleView"
         :disabled="isSelectedUser"
         prepend-icon="mdi-eye-outline"
-        width="100"
         color="primary"
         class="bg-info text-white"
       >
         View
       </v-btn>
       <v-btn
-        @click="handleNew"
-        disabled
-        prepend-icon="mdi-plus-outline"
-        width="100"
-        color="primary"
-        class="bg-primary text-white"
-      >
-        New
-      </v-btn>
-      <v-btn
-        @click="handleEdit"
-        prepend-icon="mdi-pencil"
-        disabled
-        width="100"
-        color="primary"
-        class="bg-success text-white"
-      >
-        Edit
-      </v-btn>
-      <v-btn
-        @click="DeactiveUser"
         prepend-icon="mdi-toggle-switch"
-        disabled
-        width="150"
+        :disabled="isSelectedUser"
         color="primary"
         class="bg-error text-white"
       >
-        Deactive</v-btn
-      >
-      <v-btn
-        @click="ViewSummary"
-        prepend-icon="mdi-information-box-outline"
-        width="150"
-        color="primary"
-        class="bg-warning text-white"
-      >
-        Summary</v-btn
+        Request Cancellation</v-btn
       >
     </v-card-actions>
   </v-card>
   <v-card class="mb-2" elevation="4">
     <ReusableTable
-      :items-per-page="10"
+      :items-per-page="50"
       :serverItems="serverItems"
       :totalItems="totalItems"
       :loading="loading"
       :tabs="tableTabs"
-      :columns="headers"
+      :columns="columns"
       :showTabs="showTabs"
+      :test="test"
       :itemsPerPage="itemsPerPage"
       :tableTitle="pageTitle"
       :current-tab="currentTab"
+      :use-filter="true"
       @fetchPage="loadItems"
       @selected-row="selectedUser"
+      @tab-change="handleTabChange"
       @action-search="handleSearch"
       @action-refresh="handleRefresh"
       @open-filter="openFilterOptions"
     >
-      <!-- Custom templates for each column -->
-      <template v-for="column in headers" v-slot:[`column-${column.key}`]="{ item }">
-        <!-- customize rendering for each column here -->
-        <span v-if="column.key ==='building'" :key="column.key">{{
-          item.stations.floors ? item.stations.floors.building.description : ""
-        }}</span>
-        <span v-if="column.key === 'floor'" :key="column.key">{{
-          item.stations.floors ?  item.stations.floors.description : ""
-        }}</span>
-
-        <span v-if="column.key === 'roomstatus'" :key="column.key">
-          {{ item.room_status ? item.room_status.room_description : "" }}</span
-        >
-        <span v-if="column.key === 'roomClass'" :key="column.key">
-          {{ item.room_class ? item.room_class.room_class_description : "" }}</span
-        >
-        <span v-if="column.key === 'station'" :key="column.key">
-          {{ item.stations ? item.stations.station_description : "" }}</span
-        >
-        <span v-if="column.key === 'isactive'" :key="column.key">
-          {{ item.isactive == 1 ? "Active" : "In Active" }}</span
-        >
-
-        <!-- Add more custom logic for other columns -->
+      <template v-for="column in columns" v-slot:[`column-${column.key}`]="{ item }">
+        <span v-if="column.key === 'patient_details.lastname'" :key="column.key">
+          {{ item.patient_details ? item.patient_details?.lastname + " , " + item.patient_details?.firstname + "  " + item.patient_details?.middlename : "" }}
+        </span>
+        <span v-if="column.key === 'patient_Age'" :key="column.key">
+          {{ item.patient_Age ? item.patient_Age : "" }}
+        </span>
+        <span v-if="column.key === 'patient_details.birthdate'" :key="column.key">
+          {{ item.patient_details ? useDateMMDDYYY(item.patient_details.birthdate) : "" }}
+        </span>
+        <span v-if="column.key === 'ornumber'" :key="column.key">
+          {{ item.billing_out ? item.billing_out[0].ornumber : "" }}
+        </span>
+        <span v-if="column.key === 'refNum'" :key="column.key">
+          {{ item.billing_out ? item.billing_out[0].refNum : "" }}
+        </span>
       </template>
     </ReusableTable>
   </v-card>
-  <SummaryModal 
-    :show="open_summary_modal"
-    :summary_header="'Ancillary Services'"
-    :data="ancillary_services_test_data"
-    @close-dialog="closeViewSummary"
-  />
+
   <v-menu
     v-model="open_filter_options"
     :close-on-content-click="false"
@@ -113,7 +71,7 @@
     <template v-slot:activator="{ on, attrs }">
       <div></div>
     </template>
-    <v-card width="450px" rounded="lg">
+    <v-card width="425px" rounded="lg">
       <v-toolbar density="compact">
         <v-toolbar-title>Filter Options</v-toolbar-title>
         <v-spacer></v-spacer>
@@ -124,10 +82,30 @@
       <v-divider></v-divider>
       <v-card-text>
         <v-row>
-          <!-- <v-col cols="12" md="6">
-            <v-select label="Status" variant="outlined" density="compact" v-model="filter.status"></v-select>
+          <v-col cols="12">
+            <p>Department</p>
+            <v-autocomplete
+              item-value="id"
+              item-title="warehouse_description"
+              v-model="selectedDepartment"
+              :items="department_list"
+              density="compact"
+              variant="outlined"
+              hide-details
+            ></v-autocomplete>
+          </v-col>
+          <!-- <v-col cols="12" style="margin-top: -10px;">
+            <p>By Transaction Status</p>
+            <v-autocomplete
+              item-value="id"
+              item-title="status_description"
+              v-model="selectedStatus"
+              :items="status_list"
+              density="compact"
+              variant="outlined"
+              hide-details
+            ></v-autocomplete>
           </v-col> -->
-          <!-- Add filter options as needed -->
         </v-row>
       </v-card-text>
       <v-card-actions>
@@ -137,18 +115,19 @@
     </v-card>
   </v-menu>
 
+  <Snackbar />
+
   <!-- Ancillary Services Sub components -->
-  <PatientProfileDialog :show="PatientProfile" :form_payload="form_payload" @close-dialog="useSubComponents('PatientProfile', false)" />
+  <!-- <PatientProfileDialog :show="PatientProfile" :form_payload="form_payload" @close-dialog="useSubComponents('PatientProfile', false)" />
   <DirectRenderDialog :show="DirectRender" @close-dialog="useSubComponents('DirectRender', false)" />
   <DrugAdministrationDialog :show="DrugAdministration" @close-dialog="useSubComponents('DrugAdministration', false)" />
   <ApplyCreditNoteDialog :show="ApplyCreditNote" @close-dialog="useSubComponents('ApplyCreditNote', false)" />
-  <CentralizedCreditNoteDialog :show="CentralizedCreditNote" @close-dialog="useSubComponents('CentralizedCreditNote', false)" />
+  <CentralizedCreditNoteDialog :show="CentralizedCreditNote" @close-dialog="useSubComponents('CentralizedCreditNote', false)" /> -->
 </template>
 
 <script setup>
-import PatientProfileDialog from "../../../components/master-file/forms/patient/FormContainer.vue";
-
 import ReusableTable from "~/components/reusables/ReusableTable.vue";
+
 const {
   PatientProfile,
   DirectRender,
@@ -162,99 +141,180 @@ const {
 } = storeToRefs(PQAncillaryServicesDialog());
 
 definePageMeta({
-  layout: "root-layout",
+layout: "root-layout",
 });
 
 const { selectedRowDetails, isrefresh } = storeToRefs(useSubcomponentSelectedRowDetailsStore());
+const payload = ref({});
+const items = ref({});
 const isSelectedUser = ref(true);
-const pageTitle = ref("Ancillary Services");
-const currentTab = ref(false);
-const showTabs = ref(false);
-const tableTabs = ref([]);
-const form_payload = ref({});
+const currentTab = ref(1);
+const pageTitle = ref("");
+const showTabs = ref(true);
+const columns = ref([]);
+const test = ref(['test']);
 
 const totalItems = ref(0);
 const itemsPerPage = ref(15);
 const search = ref("");
 const filter = ref({});
+const selectedDepartment = ref(null);
+const selectedStatus = ref(null);
 const open_filter_options = ref(false);
 const params = ref("");
 const loading = ref(true);
-const open_summary_modal = ref(false);
-const ancillary_services_test_data = ref([
-  { label: "For Rendering", value: "1" },
-  { label: "Fully Rendered", value: "2" },
-  { label: "Partially Rendered", value: "3" },
-  { label: "Cancelled", value: "4" },
-  { label: "Credit Notes", value: "5" },
-  { label: "Package Deals", value: "6" },
-]); 
-
-const headers = [
-  {
-    title: "ID",
-    align: "start",
-    sortable: true,
-    key: "id",
-    width: "5%",
-  },
-  {
-    title: "Code",
-    align: "start",
-    sortable: true,
-    key: "doctor_code",
-    width: "5%",
-  },
-  {
-    title: "Category",
-    key: "category",
-    align: "start",
-    width: "5%",
-    sortable: false,
-  },
-  {
-    title: "Specialization",
-    key: "specialization_id",
-    align: "start",
-    width: "5%",
-    sortable: false,
-  },
-  {
-    title: "Consultant Name",
-    key: "doctor_name",
-    align: "start",
-    width: "40%",
-    sortable: false,
-  },
-  {
-    title: "PHIC No.",
-    key: "philhealth_accreditation_no",
-    align: "start",
-    width: "10%",
-    sortable: false,
-  },
-  {
-    title: "Email",
-    key: "email",
-    align: "start",
-    width: "30%",
-    sortable: false,
-  },
-  {
-    title: "Status",
-    key: "isactive",
-    align: "start",
-    width: "30%",
-    sortable: false,
-  },
-];
+const tableTabs = ref([
+{
+  label: "Out-Patient",
+  title: "Out-Patient's Record",
+  value: 1,
+  endpoint: useApiUrl() + "/get-opd-patients",
+  columns: [
+            {
+              title: "Patient ID",
+              align: "start",
+              sortable: false,
+              key: "patient_Id",
+            },
+            {
+              title: "Case No.",
+              align: "start",
+              sortable: false,
+              key: "case_No",
+            },
+            {
+              title: "Patient Name",
+              align: "start",
+              sortable: false,
+              key: "patient_details.lastname",
+            },
+            {
+              title: "Age",
+              align: "start",
+              sortable: false,
+              key: "patient_Age",
+            },
+            {
+              title: "Birthdate",
+              align: "start",
+              sortable: false,
+              key: "patient_details.birthdate",
+            },
+            {
+              title: "Requesting Physician",
+              align: "start",
+              sortable: false,
+              key: "attending_Doctor_fullname",
+            },
+  ],
+},
+{
+  label: "Emergency",
+  title: "Emergency's Record",
+  value: 2,
+  endpoint: useApiUrl() + "/get-er-patients",
+  columns: [
+            {
+              title: "Patient ID",
+              align: "start",
+              sortable: false,
+              key: "patient_Id",
+            },
+            {
+              title: "Case No.",
+              align: "start",
+              sortable: false,
+              key: "case_No",
+            },
+            {
+              title: "Bed No.",
+              align: "start",
+              sortable: false,
+              key: "er_Bedno",
+            },
+            {
+              title: "Patient Name",
+              align: "start",
+              sortable: false,
+              key: "patient_details.lastname",
+            },
+            {
+              title: "Age",
+              align: "start",
+              sortable: false,
+              key: "patient_Age",
+            },
+            {
+              title: "Birthdate",
+              align: "start",
+              sortable: false,
+              key: "patient_details.birthdate",
+            },
+            {
+              title: "Requesting Physician",
+              align: "start",
+              sortable: false,
+              key: "attending_Doctor_fullname",
+            },
+  ],
+},
+{
+  label: "In-Patient",
+  title: "In-Patient's Record",
+  value: 3,
+  endpoint: useApiUrl() + "/get-ipd-patients",
+  columns: [
+            {
+              title: "Patient ID",
+              align: "start",
+              sortable: false,
+              key: "patient_Id",
+            },
+            {
+              title: "Case No.",
+              align: "start",
+              sortable: false,
+              key: "case_No",
+            },
+            {
+              title: "Bed No.",
+              align: "start",
+              sortable: false,
+              key: "room_Code",
+            },
+            {
+              title: "Patient Name",
+              align: "start",
+              sortable: false,
+              key: "patient_details.lastname",
+            },
+            {
+              title: "Age",
+              align: "start",
+              sortable: false,
+              key: "patient_Age",
+            },
+            {
+              title: "Birthdate",
+              align: "start",
+              sortable: false,
+              key: "patient_details.birthdate",
+            },
+            {
+              title: "Requesting Physician",
+              align: "start",
+              sortable: false,
+              key: "attending_Doctor_fullname",
+            },
+  ],
+},
+]);
 const serverItems = ref([]);
 const handleRefresh = () => {
-   loadItems();
+  loadItems();
 };
 const handleSearch = (keyword) => {
-  // Handle search action
-   loadItems(null, keyword);
+  loadItems(null, keyword);
 };
 const openFilterOptions = () => {
   setTimeout(() => {
@@ -263,10 +323,16 @@ const openFilterOptions = () => {
 };
 const closeFilterOptions = () => {
   open_filter_options.value = false;
+  selectedDepartment.value = null;
 };
 const applyFilters = () => {
-  console.log('Filters applied:', filter.value);
+  console.log("Filter Options", {
+    selectedDepartment: selectedDepartment.value,
+    // selectedStatus: selectedStatus.value,
+  }); 
+  closeFilterOptions(); 
 };
+
 const selectedUser = (item) => {
   isSelectedUser.value = true;
   isrefresh.value = false;
@@ -282,25 +348,6 @@ const selectedUser = (item) => {
     isSelectedUser.value = true;
   }
 };
-const handleView = () => {
-  
-};
-const handleEdit = () => {
-  
-};
-const handleNew = () => {
-  
-};
-const DeactiveUser = () => {
-  
-};
-
-const ViewSummary = () => {
-  open_summary_modal.value = true;
-}
-const closeViewSummary = () => {
-  open_summary_modal.value = false;
-}
 
 const loadItems = async (options = null, searchkeyword = null) => {
   try {
@@ -308,8 +355,10 @@ const loadItems = async (options = null, searchkeyword = null) => {
 
     let keyword = searchkeyword || "";
       params.value = options  ? "page=" + options.page + "&per_page=" + options.itemsPerPage + "&keyword=" + options.keyword
-    : "page=1&per_page=10&keyword=" + keyword;
-    const response = await fetch(useApiUrl()+'/doctors'+ "?" + params.value || "", {
+    : "page=1&per_page=50&keyword=" + keyword;
+
+    const currentTabInfo = tableTabs.value.find((tab) => tab.value === currentTab.value);
+    const response = await fetch(currentTabInfo?.endpoint + "?" + params.value || "", {
       headers: {
         Authorization: `Bearer `+ useToken(),
       },
@@ -318,7 +367,6 @@ const loadItems = async (options = null, searchkeyword = null) => {
     updateTotalItems(data.total);
     updateServerItems(data.data);
     loading.value = false;
-    // tableColumns.value = currentTabInfo?.columns || [];
   } catch (error) {
     console.error("Error fetching data:", error);
     loading.value = false;
@@ -326,18 +374,52 @@ const loadItems = async (options = null, searchkeyword = null) => {
     loading.value = false;
   }
 };
+
+const handleTabChange = (tabValue) => {
+  selectedRowDetails.value.id = "";
+  payload.value = Object.assign({}, {});
+  currentTab.value = tabValue;
+  columns.value = tableTabs.value.find((tab) => tab.value === tabValue).columns;
+  const currentTabInfo = tableTabs.value.find((tab) => tab.value === tabValue);
+  pageTitle.value = currentTabInfo.title || "";
+  loadItems();
+}
+
+const department_list = ref([]);
+const department_list_loading = ref(false);
+const getDepartment = async () => {
+    department_list_loading.value = true;
+    const response = await fetch(useApiUrl() + "/get-departments-list", {
+      headers: {
+        Authorization: `Bearer `+ useToken(),
+      },
+    });
+    if (response) {
+      const data = await response.json();
+      department_list.value = data;
+      department_list_loading.value = false;
+    }
+};
+const status_list = ref([
+  { id: 1, status_description: 'For Rendering' },
+  { id: 2, status_description: 'Rendered' },
+  { id: 3, status_description: 'Cancelled' },
+]);
+
 const updateTotalItems = (newTotalItems) => {
-  totalItems.value = newTotalItems;
+totalItems.value = newTotalItems;
 };
 
 const updateServerItems = (newServerItems) => {
-  serverItems.value = newServerItems;
+serverItems.value = newServerItems;
 };
 
+handleTabChange(currentTab.value);
+
+watchEffect(() => {
+  getDepartment();
+})
 </script>
 
 <style>
-.v-data-table {
-  overflow-x: auto;
-}
 </style>

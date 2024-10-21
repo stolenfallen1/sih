@@ -32,7 +32,7 @@
                     prepend-inner-icon="mdi-magnify"
                 >
             </v-text-field>
-            <v-btn id="filter-button" class="text-white bg-primary" @click="openFilterOptions">Filter&nbsp;<v-icon>mdi-filter-outline</v-icon></v-btn>
+            <v-btn v-if="useFilter" id="filter-button" class="text-white bg-primary" @click="openFilterOptions">Filter&nbsp;<v-icon>mdi-filter-outline</v-icon></v-btn>
         </v-toolbar>
         <v-divider></v-divider>
         <v-data-table-server
@@ -117,6 +117,10 @@ const props = defineProps({
         default: true,
     },
     showTabs: {
+        type: Boolean,
+        default: false,
+    },
+    useFilter: {
         type: Boolean,
         default: false,
     },

@@ -1,7 +1,7 @@
 <template>
     <v-card class="mb-2 pt-2" elevation="4">
+        <p style="font-weight: bolder; color: #228B22; font-size: larger; margin-bottom: 10px; text-align: center;">Pharmacy Services</p>
         <div style="display: flex; justify-content: center; align-items: center;">
-            <p style="font-weight: bolder; color: #228B22; font-size: larger; margin-right: 10px;">Pending Requests</p>
             <v-btn style="border: 1px solid #000; margin-right: 5px;" @click="handleOutPatientRequest()">Out-Patient</v-btn>
             <v-btn style="border: 1px solid #000; margin-right: 5px;" @click="handleEmergencyRequest()">Emergency</v-btn>
             <v-btn style="border: 1px solid #000;" @click="handleInPatientRequest()">In-Patient</v-btn>
@@ -113,7 +113,6 @@ const open_returned_medicines = ref(false);
 const patient_type = ref(0);
 const menuCodes = ref([
     { id: 1, description: "OPD - Out-Patient", code: 2 }, // Codes here are msc_Account_Trans_Types
-    { id: 2, description: "ER - Emergency", code: 5 }, // Codes here are msc_Account_Trans_Types
     { id: 3, description: "IPD - In-Patient", code: 6 }, // Codes here are msc_Account_Trans_Types
 ]); 
 
