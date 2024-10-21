@@ -187,8 +187,8 @@
   
   <!-- Out-patients Sub components -->
   <!-- <PatientProfileDialog :show="PatientProfile" :form_payload="payload" @close-dialog="useSubComponents('PatientProfile', false)" />
-  <SuspendDialog :show="Suspend" :form_type="form_type" @close-dialog="useSubComponents('Suspend', false)" />
-  <RequisitionsDialog :show="Requisitions" :form_type="form_type" @close-dialog="handleClose('Requisitions')" /> -->
+  <SuspendDialog :show="Suspend" :form_type="form_type" @close-dialog="useSubComponents('Suspend', false)" /> -->
+  <RequisitionsDialog :show="Requisitions" :form_type="form_type" @close-dialog="handleClose('Requisitions')" />
   <PostChargesDialog :show="PostCharges" @close-dialog="handleClose('PostCharges')" />
   <OPDPostMedicineSuppliesDialog :show="OPDPostMedicineSupplies" @close-dialog="handleClose('OPDPostMedicineSupplies')" />
   <!-- <PrintTransReceiptDialog :show="PrintTransactionReceipt" @close-dialog="useSubComponents('PrintTransactionReceipt', false)"/>
