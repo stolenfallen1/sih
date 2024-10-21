@@ -238,12 +238,6 @@ const getRegisterSource = async () => {
         register_source_data.value = response.filter(item => !opd_filter.includes(item.description));
         let register_source = response.find(item => item.description === "Outpatient");
         props.payload.register_Source = parseInt(register_source.id);
-    } else if (props.form_type === "emergency") {
-        let register_source = response.find(item => item.description === "Emergency Room");
-        props.payload.register_Source = parseInt(register_source.id);
-    } else if (props.form_type === "inpatient") {
-        let register_source = response.find(item => item.description === "Inpatient");
-        props.payload.register_Source = parseInt(register_source.id);
     } else {
         props.payload.register_Source = [];
     }
@@ -263,12 +257,6 @@ const getTransactionType = async () => {
         transaction_type_data.value = response.filter(item => !opd_filter.includes(item.description));
         let transaction_type = response.find(item => item.description === "Outpatient Consultation");
         props.payload.mscAccount_Trans_Types = parseInt(transaction_type.id);
-    } else if (props.form_type === "emergency") {
-        let transaction_type = response.find(item => item.description === "Emergency Case");
-        props.payload.mscAccount_Trans_Types = parseInt(transaction_type.id);
-    } else if (props.form_type === "inpatient") {
-        let transaction_type = response.find(item => item.description === "Inpatient Case");
-        props.payload.mscAccount_Trans_Types = parseInt(transaction_type.id);
     } else {
         props.payload.mscAccount_Trans_Types = [];
     }
@@ -287,12 +275,6 @@ const getRegisteryCaseType = async () => {
         let opd_filter = ["Emergency Patient", "Inpatient", "Ambulatory Patient"];
         register_casetype_data.value = response.filter(item => !opd_filter.includes(item.description));
         let register_casetype = response.find(item => item.description === "Outpatient");
-        props.payload.register_Casetype = parseInt(register_casetype.id);
-    } else if (props.form_type === "emergency") {
-        let register_casetype = response.find(item => item.description === "Emergency Patient");
-        props.payload.register_Casetype = parseInt(register_casetype.id);
-    } else if (props.form_type === "inpatient") {
-        let register_casetype = response.find(item => item.description === "Inpatient");
         props.payload.register_Casetype = parseInt(register_casetype.id);
     } else {
         props.payload.register_Casetype = [];
@@ -319,6 +301,14 @@ const getPriceGroup = async () => {
         price_group_data.value = response;
         price_group_loading.value = false;
     } 
+    if (props.form_type === "outpatient") {
+        let opd_filter = ["Emergency Patient", "Inpatient", "Ambulatory Patient"];
+        price_group_data.value = response.filter(item => !opd_filter.includes(item.description));
+        let price_group = response.find(item => item.description === "Standard");
+        props.payload.mscPrice_Groups = parseInt(price_group.id);
+    } else {
+        props.payload.mscPrice_Groups = [];
+    }
 };
 const price_scheme_data = ref([]);
 const price_scheme_loading = ref(false);
