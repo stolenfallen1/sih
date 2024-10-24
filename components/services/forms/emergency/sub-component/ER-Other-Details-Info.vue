@@ -1,199 +1,223 @@
 <template>
     <v-row class="py-2">
         <v-col cols="3">
-            <v-col cols="12" class="form-col">
-                <v-list-subheader class="form-header">Birth Place</v-list-subheader>
-                <v-text-field
-                    variant="outlined"
-                    v-model="payload.birthplace"
-                    :readonly="clicked_option === 'view'"
-                    hide-details
-                    density="compact"
-                ></v-text-field>
-            </v-col>
-            <v-col cols="12" class="form-col">
-                <v-list-subheader class="form-header">Religion</v-list-subheader>
-                <v-autocomplete
-                    item-title="religion_name"
-                    item-value="id"
-                    v-model="payload.religion_id"
-                    :readonly="clicked_option === 'view'"
-                    hide-details
-                    :clearable="clicked_option === 'new' || clicked_option === 'edit'"
-                    :items="religion_data"
-                    density="compact"
-                    variant="outlined"
-                ></v-autocomplete>
-            </v-col>
-            <v-col cols="12" class="form-col">
-                <v-list-subheader class="form-header">Nationality</v-list-subheader>
-                <v-autocomplete
-                    item-title="nationality"
-                    item-value="id"
-                    v-model="payload.nationality_id"
-                    :readonly="clicked_option === 'view'"
-                    hide-details
-                    :clearable="clicked_option === 'new' || clicked_option === 'edit'"
-                    :items="nationality_data"
-                    density="compact"
-                    variant="outlined"
-                ></v-autocomplete>
-            </v-col>
+            <fieldset class="pa-2 rounded-fieldset">
+                <legend class="pa-2">Other Details</legend>
+                    <v-col cols="12" class="form-col">
+
+                        <v-list-subheader class="form-header">Birth Place</v-list-subheader>
+    
+                        <v-text-field
+                            variant="outlined"
+                            v-model="payload.birthplace"
+                            :readonly="clicked_option === 'view'"
+                            hide-details
+                            density="compact"
+                        ></v-text-field>
+                    </v-col>
+                    <v-col cols="12" class="form-col">
+
+                        <v-list-subheader class="form-header">Religion</v-list-subheader>
+
+                        <v-autocomplete
+                            item-title="religion_name"
+                            item-value="id"
+                            v-model="payload.religion_id"
+                            :readonly="clicked_option === 'view'"
+                            hide-details
+                            :clearable="clicked_option === 'new' || clicked_option === 'edit'"
+                            :items="religion_data"
+                            density="compact"
+                            variant="outlined"
+                        ></v-autocomplete>
+                    </v-col>
+              
+                    <v-col cols="12" class="form-col">
+
+                        <v-list-subheader class="form-header">Nationality</v-list-subheader>
+         
+                        <v-autocomplete
+                            item-title="nationality"
+                            item-value="id"
+                            v-model="payload.nationality_id"
+                            :readonly="clicked_option === 'view'"
+                            hide-details
+                            :clearable="clicked_option === 'new' || clicked_option === 'edit'"
+                            :items="nationality_data"
+                            density="compact"
+                            variant="outlined"
+                        ></v-autocomplete>
+                    </v-col>
+            </fieldset>
         </v-col>
         <v-col cols="3">
-            <v-col cols="12" class="form-col">
-                <v-list-subheader class="form-header">ID Presented </v-list-subheader>
-                <v-autocomplete
-                    item-title="id_description"
-                    item-value="id"
-                    v-model="payload.id_presented"
-                    :readonly="clicked_option === 'view'"
-                    :clearable="clicked_option === 'new' || clicked_option === 'edit'"
-                    hide-details
-                    :items="id_types_data"
-                    density="compact"
-                    variant="outlined"
-                ></v-autocomplete>
-            </v-col>
-            <v-col cols="12" class="form-col">
-                <v-list-subheader class="form-header">ID Number </v-list-subheader>
-                <v-text-field
-                    variant="outlined"
-                    type="number"
-                    v-model="payload.id_number"
-                    :readonly="clicked_option === 'view'"
-                    hide-details
-                    density="compact"
-                ></v-text-field>
-            </v-col>
-            <v-col cols="12" class="form-col">
-                <v-list-subheader class="form-header">OSCA ID No. </v-list-subheader>
-                <v-text-field
-                    variant="outlined"
-                    type="number"
-                    v-model="payload.osca_id_no"
-                    :readonly="clicked_option === 'view'"
-                    hide-details
-                    density="compact"
-                ></v-text-field>
-            </v-col>
-        </v-col>
-        <v-col cols="3">
-            <v-col cols="12" class="form-col">
-                <v-list-subheader class="form-header">Weight (kg)</v-list-subheader>
-                <v-text-field
-                    variant="outlined"
-                    type="number"
-                    v-model="payload.weight"
-                    :readonly="clicked_option === 'view'"
-                    @update:model-value="calculateBmi"
-                    hide-details
-                    density="compact"
-                ></v-text-field>
-            </v-col>
-            <v-col cols="12" class="form-col">
-                <v-list-subheader class="form-header">Height (cm)</v-list-subheader>
-                <v-text-field
-                    variant="outlined"
-                    type="number"
-                    v-model="payload.height"
-                    :readonly="clicked_option === 'view'"
-                    @update:model-value="calculateBmi"
-                    hide-details
-                    density="compact"
-                ></v-text-field>
-            </v-col>
-            <v-col cols="12" class="form-col">
-                <v-list-subheader class="form-header">BMI</v-list-subheader>
-                <v-text-field
-                    variant="outlined"
-                    v-model="payload.bmi"
-                    placeholder="Auto Generated"
-                    readonly
-                    hide-details
-                    density="compact"
-                ></v-text-field>
-            </v-col>
-        </v-col>
-        <v-col cols="3">
-            <v-row>
-                <v-col cols="6">
-                    <v-list-subheader class="form-header">BP Sys</v-list-subheader>
+            <fieldset class="pa-2 rounded-fieldset">
+                <legend class="pa-2">Patient ID</legend>
+                <v-col cols="12" class="form-col">
+
+                    <v-list-subheader class="form-header">ID Presented </v-list-subheader>
+        
+                    <v-autocomplete
+                        item-title="id_description"
+                        item-value="id"
+                        v-model="payload.id_presented"
+                        :readonly="clicked_option === 'view'"
+                        :clearable="clicked_option === 'new' || clicked_option === 'edit'"
+                        hide-details
+                        :items="id_types_data"
+                        density="compact"
+                        variant="outlined"
+                    ></v-autocomplete>
+                </v-col>
+                
+                <v-col cols="12" class="form-col">
+                    <v-list-subheader class="form-header">ID Number </v-list-subheader>
                     <v-text-field
                         variant="outlined"
-                        v-model="payload.bloodPressureSystolic"
+                        type="number"
+                        v-model="payload.id_number"
                         :readonly="clicked_option === 'view'"
                         hide-details
                         density="compact"
                     ></v-text-field>
                 </v-col>
-                <v-col cols="6">
-                    <v-list-subheader class="form-header">BP Dias</v-list-subheader>
+                <v-col cols="12" class="form-col">
+                    <v-list-subheader class="form-header">OSCA ID No. </v-list-subheader>
                     <v-text-field
                         variant="outlined"
-                        v-model="payload.bloodPressureDiastolic"
+                        type="number"
+                        v-model="payload.osca_id_no"
                         :readonly="clicked_option === 'view'"
                         hide-details
                         density="compact"
                     ></v-text-field>
                 </v-col>
-            </v-row>
-            <v-col cols="12" class="form-col">
-                <v-list-subheader class="form-header">Temperature</v-list-subheader>
-                <v-text-field
-                    variant="outlined"
-                    v-model="payload.temperature"
-                    :readonly="clicked_option === 'view'"
-                    hide-details
-                    density="compact"
-                ></v-text-field>
-            </v-col>
-            <v-col cols="12" class="form-col">
-                <v-list-subheader class="form-header">Pulse Rate</v-list-subheader>
-                <v-text-field
-                    variant="outlined"
-                    v-model="payload.pulseRate"
-                    :readonly="clicked_option === 'view'"
-                    hide-details
-                    density="compact"
-                ></v-text-field>
-            </v-col>
-            <v-col cols="12" class="form-col">
-                <v-list-subheader class="form-header">Respitory Rate</v-list-subheader>
-                <v-text-field
-                    variant="outlined"
-                    v-model="payload.respiratoryRate"
-                    :readonly="clicked_option === 'view'"
-                    hide-details
-                    density="compact"
-                ></v-text-field>
-            </v-col>
-            <v-col cols="12" class="form-col">
-                <v-list-subheader class="form-header">Oxygen Saturation</v-list-subheader>
-                <v-text-field
-                    variant="outlined"
-                    v-model="payload.oxygenSaturation"
-                    :readonly="clicked_option === 'view'"
-                    hide-details
-                    density="compact"
-                ></v-text-field>
-            </v-col>
+            </fieldset>
+        </v-col>
+        <v-col cols="3">
+            <fieldset class="pa-2 rounded-fieldset">
+                <legend class="pa-2">Body Measures</legend>
+                <v-col cols="12" class="form-col">
+                    <v-list-subheader class="form-header">Weight (kg)</v-list-subheader>
+                    <v-text-field
+                        variant="outlined"
+                        type="number"
+                        v-model="payload.weight"
+                        :readonly="clicked_option === 'view'"
+                        @update:model-value="calculateBmi"
+                        hide-details
+                        density="compact"
+                    ></v-text-field>
+                </v-col>
+                <v-col cols="12" class="form-col">
+                    <v-list-subheader class="form-header">Height (cm)</v-list-subheader>
+                    <v-text-field
+                        variant="outlined"
+                        type="number"
+                        v-model="payload.height"
+                        :readonly="clicked_option === 'view'"
+                        @update:model-value="calculateBmi"
+                        hide-details
+                        density="compact"
+                    ></v-text-field>
+                </v-col>
+                <v-col cols="12" class="form-col">
+                    <v-list-subheader class="form-header">BMI</v-list-subheader>
+                    <v-text-field
+                        variant="outlined"
+                        v-model="payload.bmi"
+                        placeholder="Auto Generated"
+                        readonly
+                        hide-details
+                        density="compact"
+                    ></v-text-field>
+                </v-col>
+            </fieldset>
+        </v-col>
+        <v-col cols="3">
+            <fieldset class="pa-2 rounded-fieldset">
+                <legend class="pa-2">Vital Signs</legend>
+                <v-row>
+                    <v-col cols="6">
+                        <v-list-subheader class="form-header">BP Sys</v-list-subheader>
+                        <v-text-field
+                            variant="outlined"
+                            v-model="payload.bloodPressureSystolic"
+                            :readonly="clicked_option === 'view'"
+                            hide-details
+                            density="compact"
+                        ></v-text-field>
+                    </v-col>
+                    <v-col cols="6">
+                        <v-list-subheader class="form-header">BP Dias</v-list-subheader>
+                        <v-text-field
+                            variant="outlined"
+                            v-model="payload.bloodPressureDiastolic"
+                            :readonly="clicked_option === 'view'"
+                            hide-details
+                            density="compact"
+                        ></v-text-field>
+                    </v-col>
+                </v-row>
+                <v-col cols="12" class="form-col">
+            
+                    <v-list-subheader class="form-header">Temperature</v-list-subheader>
+                     
+                        <v-text-field
+                            variant="outlined"
+                            v-model="payload.temperature"
+                            :readonly="clicked_option === 'view'"
+                            hide-details
+                            density="compact"
+                        ></v-text-field>
+                </v-col>
+                <v-col cols="12" class="form-col">
+                    <v-list-subheader class="form-header">Pulse Rate</v-list-subheader>
+                    <v-text-field
+                        variant="outlined"
+                        v-model="payload.pulseRate"
+                        :readonly="clicked_option === 'view'"
+                        hide-details
+                        density="compact"
+                    ></v-text-field>
+                </v-col>
+                <v-col cols="12" class="form-col">
+                    <v-list-subheader class="form-header">Respitory Rate</v-list-subheader>
+                    <v-text-field
+                        variant="outlined"
+                        v-model="payload.respiratoryRate"
+                        :readonly="clicked_option === 'view'"
+                        hide-details
+                        density="compact"
+                    ></v-text-field>
+                </v-col>
+                <v-col cols="12" class="form-col">
+                    <v-list-subheader class="form-header">Oxygen Saturation</v-list-subheader>
+                    <v-text-field
+                        variant="outlined"
+                        v-model="payload.oxygenSaturation"
+                        :readonly="clicked_option === 'view'"
+                        hide-details
+                        density="compact"
+                    ></v-text-field>
+                </v-col>
+            </fieldset>
         </v-col>
     </v-row>
     <v-divider class="py-2"></v-divider>
     <v-row>
         <v-col cols="12">
             <v-col cols="12" class="form-col">
-                    <v-list-subheader class="form-header mt-1">Chief Complaints <span v-if="form_type === 'emergency'" style="color: red;" class="mdi mdi-check"></span></v-list-subheader>
-                    <v-textarea 
-                        ref="chief_Complaint_Description"
-                        density="compact" 
-                        variant="outlined" 
-                        v-model="payload.chief_Complaint_Description"
-                        :readonly="clicked_option === 'view'"
-                        :required="form_type === 'emergency'"
-                        :error-messages="formErrors.chief_Complaint_Description ? [formErrors.chief_Complaint_Description] : []"
-                    ></v-textarea>
+                <v-list-subheader class="form-header mt-1">Chief Complaints <span style="color: red;" class="mdi mdi-check"></span></v-list-subheader>
+                <v-textarea 
+                    ref="chief_Complaint_Description"
+                    density="compact" 
+                    variant="outlined" 
+                    v-model="payload.chief_Complaint_Description"
+                    :readonly="clicked_option === 'view'"
+                    :required="form_type === 'emergency'"
+                    :error-messages="formErrors.chief_Complaint_Description ? [formErrors.chief_Complaint_Description] : []"
+                ></v-textarea>
             </v-col>
         </v-col>
     </v-row>
@@ -315,40 +339,53 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.form-header {
-    color: #000;
-    margin: -12px 0px -12px 0px;
-    font-weight: 500;
-}
-.form-col {
-    padding: 3.25px 0px 3.25px 0px !important;
-    margin: 0px !important;
-}
-.v-input--density-compact {
-    --v-input-control-height: 20px !important;
-}
+    .form-header {
+        color: #000;
+        margin: -12px 04px -12px 0px;
+        padding-left: 10px;
+        font-weight: 500;
+    }
+    .form-col {
+        padding: 3.25px 0px 3.25px 0px !important;
+        margin: 0px !important;
+    }
+    .v-input--density-compact {
+        --v-input-control-height: 20px !important;
+    }
 
-.bottom-aligned-textarea textarea {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end; /* Align text at the bottom */
-  height: 150px; /* Adjust height as needed */
-  padding-bottom: 10px; /* Add padding if needed */
-  box-sizing: border-box; /* Ensure padding is included in the height */
-}
-.truncate-text .v-input__control {
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}
+    .bottom-aligned-textarea textarea {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end; /* Align text at the bottom */
+        height: 150px; /* Adjust height as needed */
+        padding-bottom: 10px; /* Add padding if needed */
+        box-sizing: border-box; /* Ensure padding is included in the height */
+    }
+    .truncate-text .v-input__control {
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
 
-.truncate-text .v-field__input {
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  max-height: 32px; /* Adjust this value as needed to ensure a consistent height */
-}
-.field-group-label {
-    color: #2196F3; 
-}
+    .truncate-text .v-field__input {
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        max-height: 32px; /* Adjust this value as needed to ensure a consistent height */
+    }
+    .field-group-label {
+        color: #2196F3; 
+    }
+    .rounded-fieldset {
+        padding: 16px;
+        border-radius: 8px;
+        border: 1px solid #c0c0c0;
+    }
+
+    legend {
+        padding-left: 10px;
+        padding-right: 2px;
+        font-size: 1.1rem;
+    }
+
 </style>
