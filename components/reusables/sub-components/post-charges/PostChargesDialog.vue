@@ -912,7 +912,7 @@ const confirmCharge = () => {
 
 
 const onSubmit = async (user_details) => {
-    if (user_attempts !== 5) {
+    if (user_details.user_passcode === usePasscode()) {
         isLoadingBtn.value = true;
         if (payload.value.charge_to === "Company / Insurance") {
             try {
@@ -999,19 +999,23 @@ const onSubmit = async (user_details) => {
             }
         }
     } else {
-        error_msg.value = "Too many wrong attempts, Please try again after 20 seconds.";
-        isLoadingBtn.value = true;
-        setTimeout(() => {
-            isLoadingBtn.value = false;
-            user_attempts.value = 0;
-            error_msg.value = "";
-        }, 20000);
-        return useSnackbar(true, "error", "Password incorrect.");
+        user_attempts.value += 1;
+        useSnackbar(true, "error", "Password incorrect.");
+        if (user_attempts.value == 5) {
+            error_msg.value = "Too many wrong attempts, Please try again after 20 seconds.";
+            isLoadingBtn.value = true;
+            setTimeout(() => {
+                isLoadingBtn.value = false;
+                user_attempts.value = 0;
+                error_msg.value = "";
+            }, 20000);
+        }
     }
 };
 
 const closeConfirmCharge = () => {
     chargeconfirmation.value = false;
+    user_attempts.value = 0;
 }
 
 const confirmRevoke = () => {
@@ -1022,9 +1026,9 @@ const confirmRevoke = () => {
     }
 }
 const onRevoke = async (user_details) => {
-    if (user_details.user_passcode !== usePasscode()) {
+    if (user_details.user_passcode !== usePasscode() && user_attempts.value < 5) {
         user_attempts.value += 1;
-        return useSnackbar(true, "error", "Password incorrect.");
+        useSnackbar(true, "error", "Password incorrect.");
     } else if (user_details.user_passcode !== usePasscode() && user_attempts.value == 5) {
         error_msg.value = "Too many wrong attempts, Please try again after 20 seconds.";
         isLoadingBtn.value = true;
@@ -1105,6 +1109,7 @@ const closeConfirmRevoke = () => {
     revokeconfirmation.value = false;
     selected_charges.value = [];
     selected_cash_assessment.value = [];
+    user_attempts.value = 0;
 }
 
 
@@ -1239,6 +1244,7 @@ const closeDialog = () => {
     totalAmount.value = null;
     totalHistoryAmount.value = null;
     credit_limit.value = null;
+    user_attempts.value = 0;
     payload.value.charge_to = payload.value.account;
 }
 

@@ -24,7 +24,7 @@
 								focused
 								hide-details
 							></v-text-field>
-							<v-alert :closable="true" flat color="danger"  class="mt-3 pa-2" v-if="error_msg" :text="error_msg"></v-alert>
+							<!-- <v-alert :closable="true" flat color="danger"  class="mt-3 pa-2" v-if="error_msg" :text="error_msg"></v-alert> --> <!-- Removed: Only use one validation here or add condition -->
 						</v-col>
 						
 						<v-col cols="12" class="pa-1">
@@ -41,11 +41,11 @@
 								@click:append="showPassword = !showPassword"
 								:append-icon="showPassword ? 'mdi-eye-outline ' : 'mdi-eye-off-outline'"
 							></v-text-field>
-							<v-alert :closable="true" flat color="danger"  class="mt-3 pa-2" v-if="error_msg" :text="error_msg"></v-alert>
+							<v-alert :closable="true" flat style="color: #FFF; background-color: red;"  class="mt-3 pa-2" v-if="error_msg" :text="error_msg"></v-alert>
 						</v-col>
 					</v-row>
 					<div class="mt-3">
-					By entering your passcode, you confirm this transaction.
+						By entering your passcode, you confirm this transaction.
 					</div>
 				</v-card-text>
 				<v-divider></v-divider>

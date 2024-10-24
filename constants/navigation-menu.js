@@ -1634,7 +1634,6 @@ export default [
                 label: "Ancillary Services",
                 icon: "mdi-radar",
                 path: "/services/ancillary-services",
-                // rule: "browse_ancillaryservices", no rule like this yet
                 subcomponents: [],
                 processing_and_queries: [],
                 table_and_template: []
@@ -1860,96 +1859,96 @@ export default [
             //         },
             //     ]
             // },
-            // {
-            //     label: "Ancillary Services",
-            //     icon: "mdi-medication",
-            //     path: "/services/ancillary-services",
-            //     rule: "browse_ancillaryservices",
-            //     subcomponents: [
-            //         {
-            //             label: "Patient Profile",
-            //             icon: "mdi-file-document-edit",
-            //             form: "PatientProfile",
-            //             rule: "",
-            //         },
-            //         {
-            //             label: "Transaction Details",
-            //             icon: "mdi-file-document-edit",
-            //             rule: "",
-            //         },
-            //         {
-            //             label: "Direct Render",
-            //             icon: "mdi-file-document-edit",
-            //             form: "DirectRender",
-            //             rule: "",
-            //         },
-            //         {
-            //             label: "Render Requisition",
-            //             icon: "mdi-file-document-edit",
-            //             rule: "",
-            //         },
-            //         {
-            //             label: "Drug Administration",
-            //             icon: "mdi-file-document-edit",
-            //             form: "DrugAdministration",
-            //             rule: "",
-            //         },
-            //         {
-            //             label: "Apply Credit Note",
-            //             icon: "mdi-file-document-edit",
-            //             form: "ApplyCreditNote",
-            //             rule: "",
-            //         },
-            //         {
-            //             label: "Print Cash / Charge / CN Slip",
-            //             icon: "mdi-file-document-edit",
-            //             rule: "",
-            //         },
-            //         {
-            //             label: "Cash Transaction",
-            //             icon: "mdi-file-document-edit",
-            //             rule: "",
-            //         },
-            //         {
-            //             label: "Print Requisition Slip",
-            //             icon: "mdi-file-document-edit",
-            //             rule: "",
-            //         },
-            //         {
-            //             label: "Void Discount",
-            //             icon: "mdi-file-document-edit",
-            //             rule: "",
-            //         },
-            //         {
-            //             label: "Centralized Credit Note",
-            //             icon: "mdi-file-document-edit",
-            //             form: "CentralizedCreditNote",
-            //             rule: "",
-            //         },
-            //     ],
-            //     processing_and_queries: [
-            //         {
-            //             label: "Print Pending Requisition",
-            //             icon: "mdi-file-document-edit",
-            //             form: "PrintPendingRequisition",
-            //             rule: "",
-            //         },
-            //     ],
-            //     table_and_template: [
-            //         {
-            //             label: "Discount Schemes",
-            //             icon: "mdi-file-document-edit",
-            //             form: "DiscountSchemes",
-            //             rule: "",
-            //         },
-            //         {
-            //             label: "Price Schemes",
-            //             icon: "mdi-file-document-edit",
-            //             form: "PriceSchemes",
-            //             rule: "",
-            //         },
-            //     ]
-            // },
+            {
+                label: "Ancillary Services",
+                icon: "mdi-medication",
+                path: "/services/ancillary-services",
+                rule: "browse_ancillaryservices",
+                subcomponents: [
+                    // {
+                    //     label: "Patient Profile",
+                    //     icon: "mdi-file-document-edit",
+                    //     form: "PatientProfile",
+                    //     rule: "",
+                    // },
+                    // {
+                    //     label: "Transaction Details",
+                    //     icon: "mdi-file-document-edit",
+                    //     rule: "",
+                    // },
+                    // {
+                    //     label: "Direct Render",
+                    //     icon: "mdi-file-document-edit",
+                    //     form: "DirectRender",
+                    //     rule: "",
+                    // },
+                    {
+                        label: "Render Requisition",
+                        icon: "mdi-file-document-edit",
+                        rule: "",
+                    },
+                    // {
+                    //     label: "Drug Administration",
+                    //     icon: "mdi-file-document-edit",
+                    //     form: "DrugAdministration",
+                    //     rule: "",
+                    // },
+                    {
+                        label: "Apply Credit Note",
+                        icon: "mdi-file-document-edit",
+                        form: "ApplyCreditNote",
+                        rule: "",
+                    },
+                    // {
+                    //     label: "Print Cash / Charge / CN Slip",
+                    //     icon: "mdi-file-document-edit",
+                    //     rule: "",
+                    // },
+                    // {
+                    //     label: "Cash Transaction",
+                    //     icon: "mdi-file-document-edit",
+                    //     rule: "",
+                    // },
+                    {
+                        label: "Print Requisition Slip",
+                        icon: "mdi-file-document-edit",
+                        rule: "",
+                    },
+                    {
+                        label: "Void Discount",
+                        icon: "mdi-file-document-edit",
+                        rule: "",
+                    },
+                    {
+                        label: "Centralized Credit Note",
+                        icon: "mdi-file-document-edit",
+                        form: "CentralizedCreditNote",
+                        rule: "",
+                    },
+                ],
+                processing_and_queries: [
+                    // {
+                    //     label: "Print Pending Requisition",
+                    //     icon: "mdi-file-document-edit",
+                    //     form: "PrintPendingRequisition",
+                    //     rule: "",
+                    // },
+                ],
+                table_and_template: [
+                    // {
+                    //     label: "Discount Schemes",
+                    //     icon: "mdi-file-document-edit",
+                    //     form: "DiscountSchemes",
+                    //     rule: "",
+                    // },
+                    // {
+                    //     label: "Price Schemes",
+                    //     icon: "mdi-file-document-edit",
+                    //     form: "PriceSchemes",
+                    //     rule: "",
+                    // },
+                ]
+            },
             {
                 label: "Pharmacy Services",
                 icon: "mdi-pill",
