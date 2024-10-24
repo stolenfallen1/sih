@@ -46,159 +46,167 @@
             <v-divider class="py-2"></v-divider>
             <v-row class="py-2">
                 <v-col cols="4">
-                    <v-col cols="12" class="form-col">
-                        <v-list-subheader class="form-header">Last name <span style="color: red;" class="mdi mdi-check"></span></v-list-subheader>
-                        <v-text-field
-                            ref="lastname"
-                            v-model="payload.lastname"
-                            :readonly="clicked_option === 'view'"
-                            :type="enableConfidential ? 'password' : 'text'"
-                            autofocus
-                            hide-details
-                            density="compact"
-                            variant="outlined"
-                            :error-messages="formErrors.lastname ? [formErrors.lastname] : []"
-                        ></v-text-field>
-                    </v-col>
-                    <v-col cols="12" class="form-col">
-                        <v-list-subheader class="form-header">First name <span style="color: red;" class="mdi mdi-check"></span></v-list-subheader>
-                        <v-text-field
-                            ref="firstname"
-                            variant="outlined"
-                            v-model="payload.firstname"
-                            :readonly="clicked_option === 'view'"
-                            autofocus
-                            :type="enableConfidential ? 'password' : 'text'"
-                            hide-details
-                            density="compact"
-                            :error-messages="formErrors.firstname ? [formErrors.firstname] : []"
-                        ></v-text-field>
-                    </v-col>
-                    <v-col cols="12" class="form-col">
-                        <v-list-subheader class="form-header">Middle name</v-list-subheader>
-                        <v-text-field
-                            variant="outlined"
-                            v-model="payload.middlename"
-                            :readonly="clicked_option === 'view'"
-                            hide-details
-                            density="compact"
-                        ></v-text-field>
-                    </v-col>
-                    <v-col cols="12" class="form-col">
-                        <v-list-subheader class="form-header">Suffix</v-list-subheader>
-                        <v-autocomplete
-                            item-title="abbreviations"
-                            item-value="id"
-                            :items="suffix_data"
-                            v-model="payload.suffix_id"
-                            :readonly="clicked_option === 'view'"
-                            hide-details
-                            :clearable="clicked_option === 'new' || clicked_option === 'edit'"
-                            density="compact"
-                            variant="outlined"
-                        ></v-autocomplete>
-                    </v-col>
+                    <fieldset class="pa-2 rounded-fieldset">
+                        <legend class="pa-2">Patient Name</legend>
+                        <v-col cols="12" class="form-col">
+                            <v-list-subheader class="form-header">Last name <span style="color: red;" class="mdi mdi-check"></span></v-list-subheader>
+                            <v-text-field
+                                ref="lastname"
+                                v-model="payload.lastname"
+                                :readonly="clicked_option === 'view'"
+                                :type="enableConfidential ? 'password' : 'text'"
+                                autofocus
+                                hide-details
+                                density="compact"
+                                variant="outlined"
+                                :error-messages="formErrors.lastname ? [formErrors.lastname] : []"
+                            ></v-text-field>
+                        </v-col>
+                        <v-col cols="12" class="form-col">
+                            <v-list-subheader class="form-header">First name <span style="color: red;" class="mdi mdi-check"></span></v-list-subheader>
+                            <v-text-field
+                                ref="firstname"
+                                variant="outlined"
+                                v-model="payload.firstname"
+                                :readonly="clicked_option === 'view'"
+                                autofocus
+                                :type="enableConfidential ? 'password' : 'text'"
+                                hide-details
+                                density="compact"
+                                :error-messages="formErrors.firstname ? [formErrors.firstname] : []"
+                            ></v-text-field>
+                        </v-col>
+                        <v-col cols="12" class="form-col">
+                            <v-list-subheader class="form-header">Middle name</v-list-subheader>
+                            <v-text-field
+                                variant="outlined"
+                                v-model="payload.middlename"
+                                :readonly="clicked_option === 'view'"
+                                hide-details
+                                density="compact"
+                            ></v-text-field>
+                        </v-col>
+                        <v-col cols="12" class="form-col">
+                            <v-list-subheader class="form-header">Suffix</v-list-subheader>
+                            <v-autocomplete
+                                item-title="abbreviations"
+                                item-value="id"
+                                :items="suffix_data"
+                                v-model="payload.suffix_id"
+                                :readonly="clicked_option === 'view'"
+                                hide-details
+                                :clearable="clicked_option === 'new' || clicked_option === 'edit'"
+                                density="compact"
+                                variant="outlined"
+                            ></v-autocomplete>
+                        </v-col>
+                    </fieldset>
                 </v-col>
                 <v-col cols="4">
-                    <v-col cols="12" class="form-col">
-                        <v-list-subheader class="form-header">Sex <span style="color: red;" class="mdi mdi-check"></span></v-list-subheader>
-                        <v-autocomplete
-                            ref="sex_id"
-                            :items="sex_data"
-                            item-title="sex_description"
-                            item-value="id"
-                            v-model="payload.sex_id"
-                            :readonly="clicked_option === 'view' || !!payload.sex_id"
-                            :clearable="(clicked_option === 'new' || clicked_option === 'edit') && !payload.sex_id"
-                            :error-messages="formErrors.sex_id ? [formErrors.sex_id] : []"
-                            hide-details
-                            density="compact"
-                            variant="outlined"
-                        ></v-autocomplete>
-                    </v-col>
-                    <v-col cols="12" class="form-col">
-                        <v-list-subheader class="form-header">Birth Date <span style="color: red;" class="mdi mdi-check"></span></v-list-subheader>
-                        <v-text-field
-                            ref="birthdate"
-                            variant="outlined"
-                            v-model="payload.birthdate"
-                            :readonly="clicked_option === 'view'"
-                            type="date"
-                            :error-messages="formErrors.birthdate ? [formErrors.birthdate] : []"
-                            hide-details
-                            density="compact"
-                            @update:model-value="updatebirthdate"
-                        ></v-text-field>
-                    </v-col>
-                    <v-col cols="12" class="form-col">
-                        <v-list-subheader class="form-header">Age</v-list-subheader>
-                        <v-text-field
-                            variant="outlined"
-                            v-model="payload.age"
-                            readonly
-                            type="number"
-                            hide-details
-                            density="compact"
-                        ></v-text-field>
-                    </v-col>
-                    <v-col cols="12" class="form-col">
-                        <v-list-subheader class="form-header">Civil Status <span style="color: red;" class="mdi mdi-check"></span></v-list-subheader>
-                        <v-autocomplete
-                            ref="civilstatus_id"
-                            :items="civil_status_data"
-                            item-title="civil_status_description"
-                            item-value="id"
-                            v-model="payload.civilstatus_id"
-                            :readonly="clicked_option === 'view'"
-                            :clearable="clicked_option === 'new' || clicked_option === 'edit'"
-                            :error-messages="formErrors.civilstatus_id ? [formErrors.civilstatus_id] : []"
-                            hide-details
-                            density="compact"
-                            variant="outlined"
-                        ></v-autocomplete>
-                    </v-col>
+                    <fieldset class="pa-2 rounded-fieldset">
+                        <legend class="pa-2">Patient Other Info</legend>
+                        <v-col cols="12" class="form-col">
+                            <v-list-subheader class="form-header">Sex <span style="color: red;" class="mdi mdi-check"></span></v-list-subheader>
+                            <v-autocomplete
+                                ref="sex_id"
+                                :items="sex_data"
+                                item-title="sex_description"
+                                item-value="id"
+                                v-model="payload.sex_id"
+                                :clearable="(clicked_option === 'new' || clicked_option === 'edit') && !payload.sex_id"
+                                :error-messages="formErrors.sex_id ? [formErrors.sex_id] : []"
+                                hide-details
+                                density="compact"
+                                variant="outlined"
+                            ></v-autocomplete>
+                        </v-col>
+                        <v-col cols="12" class="form-col">
+                            <v-list-subheader class="form-header">Birth Date <span style="color: red;" class="mdi mdi-check"></span></v-list-subheader>
+                            <v-text-field
+                                ref="birthdate"
+                                variant="outlined"
+                                v-model="payload.birthdate"
+                                :readonly="clicked_option === 'view'"
+                                type="date"
+                                :error-messages="formErrors.birthdate ? [formErrors.birthdate] : []"
+                                hide-details
+                                density="compact"
+                                @update:model-value="updatebirthdate"
+                            ></v-text-field>
+                        </v-col>
+                        <v-col cols="12" class="form-col">
+                            <v-list-subheader class="form-header">Age</v-list-subheader>
+                            <v-text-field
+                                variant="outlined"
+                                v-model="payload.age"
+                                readonly
+                                type="number"
+                                hide-details
+                                density="compact"
+                            ></v-text-field>
+                        </v-col>
+                        <v-col cols="12" class="form-col">
+                            <v-list-subheader class="form-header">Civil Status <span style="color: red;" class="mdi mdi-check"></span></v-list-subheader>
+                            <v-autocomplete
+                                ref="civilstatus_id"
+                                :items="civil_status_data"
+                                item-title="civil_status_description"
+                                item-value="id"
+                                v-model="payload.civilstatus_id"
+                                :readonly="clicked_option === 'view'"
+                                :clearable="clicked_option === 'new' || clicked_option === 'edit'"
+                                :error-messages="formErrors.civilstatus_id ? [formErrors.civilstatus_id] : []"
+                                hide-details
+                                density="compact"
+                                variant="outlined"
+                            ></v-autocomplete>
+                        </v-col>
+                    </fieldset>
                 </v-col>
                 <v-col cols="4">
-                    <v-col cols="12" class="form-col">
-                        <v-list-subheader class="form-header">Telephone No.</v-list-subheader>
-                        <v-text-field
-                            variant="outlined"
-                            v-model="payload.telephone_number"
-                            :readonly="clicked_option === 'view'"
-                            type="number"
-                            hide-details
-                            density="compact"
-                        ></v-text-field>
-                    </v-col>
-                    <v-col cols="12" class="form-col">
-                        <v-list-subheader class="form-header">Mobile No.</v-list-subheader>
-                        <v-text-field
-                            variant="outlined"
-                            v-model="payload.mobile_number"
-                            :readonly="clicked_option === 'view'"
-                            type="number"
-                            hide-details
-                            density="compact"
-                        ></v-text-field>
-                    </v-col>
-                    <v-col cols="12" class="form-col">
-                        <v-list-subheader class="form-header">Email Address</v-list-subheader>
-                        <v-text-field
-                            variant="outlined"
-                            v-model="payload.email_address"
-                            :readonly="clicked_option === 'view'"
-                            type="email"
-                            hide-details
-                            density="compact"
-                        ></v-text-field>
-                    </v-col>
-                    <v-col cols="12">
-                        <v-checkbox
-                            v-model="enableConfidential"
-                            :label="`Confidential Patient`"
-                            color="primary"
-                        ></v-checkbox>
-                    </v-col>
+                    <fieldset class="pa-2 rounded-fieldset">
+                        <legend class="pa-2">Patient Contact Info</legend>
+                        <v-col cols="12" class="form-col">
+                            <v-list-subheader class="form-header">Telephone No.</v-list-subheader>
+                            <v-text-field
+                                variant="outlined"
+                                v-model="payload.telephone_number"
+                                :readonly="clicked_option === 'view'"
+                                type="number"
+                                hide-details
+                                density="compact"
+                            ></v-text-field>
+                        </v-col>
+                        <v-col cols="12" class="form-col">
+                            <v-list-subheader class="form-header">Mobile No.</v-list-subheader>
+                            <v-text-field
+                                variant="outlined"
+                                v-model="payload.mobile_number"
+                                :readonly="clicked_option === 'view'"
+                                type="number"
+                                hide-details
+                                density="compact"
+                            ></v-text-field>
+                        </v-col>
+                        <v-col cols="12" class="form-col">
+                            <v-list-subheader class="form-header">Email Address</v-list-subheader>
+                            <v-text-field
+                                variant="outlined"
+                                v-model="payload.email_address"
+                                :readonly="clicked_option === 'view'"
+                                type="email"
+                                hide-details
+                                density="compact"
+                            ></v-text-field>
+                        </v-col>
+                        <v-col cols="12">
+                            <v-checkbox
+                                v-model="enableConfidential"
+                                :label="`Confidential Patient`"
+                                color="primary"
+                            ></v-checkbox>
+                        </v-col>
+                    </fieldset>
                 </v-col>
             </v-row>
             <v-divider class="py-2"></v-divider>
@@ -228,193 +236,211 @@
             <v-card-text>
                 <v-row class="py-2">
                     <v-col cols="4">
-                        <v-col cols="12" class="form-col">
-                            <v-list-subheader class="form-header">Mother Lastname </v-list-subheader>
-                            <v-text-field
-                                variant="outlined"
-                                v-model="payload.motherLastname"
-                                :readonly="clicked_option === 'view'"
-                                hide-details
-                                density="compact"
-                            ></v-text-field>
-                        </v-col>
-                        <v-col cols="12" class="form-col">
-                            <v-list-subheader class="form-header">Mother Firstname </v-list-subheader>
-                            <v-text-field
-                                variant="outlined"
-                                v-model="payload.motherFirstname"
-                                :readonly="clicked_option === 'view'"
-                                hide-details
-                                density="compact"
-                            ></v-text-field>
-                        </v-col>
-                        <v-col cols="12" class="form-col">
-                            <v-list-subheader class="form-header">Mother Middlename </v-list-subheader>
-                            <v-text-field
-                                variant="outlined"
-                                v-model="payload.motherMiddlename"
-                                :readonly="clicked_option === 'view'"
-                                hide-details
-                                density="compact"
-                            ></v-text-field>
-                        </v-col>
-                        <v-col cols="12" class="form-col">
-                            <v-list-subheader class="form-header">Mothers Suffix </v-list-subheader>
-                            <v-autocomplete
-                                item-title="abbreviations"
-                                item-value="id"
-                                :items="suffix_data"
-                                v-model="payload.motherSuffix_id"
-                                :readonly="clicked_option === 'view'"
-                                hide-details
-                                :clearable="clicked_option === 'new' || clicked_option === 'edit'"
-                                density="compact"
-                                variant="outlined"
-                            ></v-autocomplete>
-                        </v-col>
+                        <fieldset class="pa-2 rounded-fieldset">
+                            <legend class="pa-2">Mother's Name</legend>
+                            <v-col cols="12" class="form-col">
+                                <v-list-subheader class="form-header">Mother Lastname </v-list-subheader>
+                                <v-text-field
+                                    variant="outlined"
+                                    v-model="payload.motherLastname"
+                                    :readonly="clicked_option === 'view'"
+                                    hide-details
+                                    density="compact"
+                                ></v-text-field>
+                            </v-col>
+                            <v-col cols="12" class="form-col">
+                                <v-list-subheader class="form-header">Mother Firstname </v-list-subheader>
+                                <v-text-field
+                                    variant="outlined"
+                                    v-model="payload.motherFirstname"
+                                    :readonly="clicked_option === 'view'"
+                                    hide-details
+                                    density="compact"
+                                ></v-text-field>
+                            </v-col>
+                            <v-col cols="12" class="form-col">
+                                <v-list-subheader class="form-header">Mother Middlename </v-list-subheader>
+                                <v-text-field
+                                    variant="outlined"
+                                    v-model="payload.motherMiddlename"
+                                    :readonly="clicked_option === 'view'"
+                                    hide-details
+                                    density="compact"
+                                ></v-text-field>
+                            </v-col>
+                            <v-col cols="12" class="form-col">
+                                <v-list-subheader class="form-header">Mothers Suffix </v-list-subheader>
+                                <v-autocomplete
+                                    item-title="abbreviations"
+                                    item-value="id"
+                                    :items="suffix_data"
+                                    v-model="payload.motherSuffix_id"
+                                    :readonly="clicked_option === 'view'"
+                                    hide-details
+                                    :clearable="clicked_option === 'new' || clicked_option === 'edit'"
+                                    density="compact"
+                                    variant="outlined"
+                                ></v-autocomplete>
+                            </v-col>
+                        </fieldset>
                     </v-col>
                     <v-col cols="4">
-                        <v-col cols="12" class="form-col">
-                            <v-list-subheader class="form-header">Birth Date </v-list-subheader>
-                            <v-text-field
-                                variant="outlined"
-                                v-model="payload.motherBirthdate"
-                                :readonly="clicked_option === 'view'"
-                                type="date"
-                                hide-details
-                                density="compact"
-                                @update:model-value="updateMotherBirthdate"
-                            ></v-text-field>
-                        </v-col>
-                        <v-col cols="12" class="form-col">
-                            <v-list-subheader class="form-header">Age</v-list-subheader>
-                            <v-text-field
-                                variant="outlined"
-                                v-model="payload.motherAge"
-                                readonly
-                                type="number"
-                                hide-details
-                                density="compact"
-                            ></v-text-field>
-                        </v-col>
+                        <fieldset class="pa-2 rounded-fieldset">
+                            <legend class="pa-2">Mother's Other Info</legend>
+                            <v-col cols="12" class="form-col">
+                                <v-list-subheader class="form-header">Birth Date </v-list-subheader>
+                                <v-text-field
+                                    variant="outlined"
+                                    v-model="payload.motherBirthdate"
+                                    :readonly="clicked_option === 'view'"
+                                    type="date"
+                                    hide-details
+                                    density="compact"
+                                    @update:model-value="updateMotherBirthdate"
+                                ></v-text-field>
+                            </v-col>
+                            <v-col cols="12" class="form-col">
+                                <v-list-subheader class="form-header">Age</v-list-subheader>
+                                <v-text-field
+                                    variant="outlined"
+                                    v-model="payload.motherAge"
+                                    readonly
+                                    type="number"
+                                    hide-details
+                                    density="compact"
+                                ></v-text-field>
+                            </v-col>
+                        </fieldset>
                     </v-col>
                     <v-col cols="4">
-                        <v-col cols="12" class="form-col">
-                            <v-list-subheader class="form-header">Mother's Telephone No. </v-list-subheader>
-                            <v-text-field
-                                variant="outlined"
-                                v-model="payload.mothertelephone_number"
-                                :readonly="clicked_option === 'view'"
-                                hide-details
-                                density="compact"
-                            ></v-text-field>
-                        </v-col>
-                        <v-col cols="12" class="form-col">
-                            <v-list-subheader class="form-header">Mother's Mobile No. </v-list-subheader>
-                            <v-text-field
-                                variant="outlined"
-                                v-model="payload.mothermobile_number"
-                                :readonly="clicked_option === 'view'"
-                                hide-details
-                                density="compact"
-                            ></v-text-field>
-                        </v-col>
+                        <fieldset class="pa-2 rounded-fieldset">
+                            <legend class="pa-2">Mother's Contact Info</legend>
+                            <v-col cols="12" class="form-col">
+                                <v-list-subheader class="form-header">Mother's Telephone No. </v-list-subheader>
+                                <v-text-field
+                                    variant="outlined"
+                                    v-model="payload.mothertelephone_number"
+                                    :readonly="clicked_option === 'view'"
+                                    hide-details
+                                    density="compact"
+                                ></v-text-field>
+                            </v-col>
+                            <v-col cols="12" class="form-col">
+                                <v-list-subheader class="form-header">Mother's Mobile No. </v-list-subheader>
+                                <v-text-field
+                                    variant="outlined"
+                                    v-model="payload.mothermobile_number"
+                                    :readonly="clicked_option === 'view'"
+                                    hide-details
+                                    density="compact"
+                                ></v-text-field>
+                            </v-col>
+                        </fieldset>
                     </v-col>
                 </v-row>
                 <v-divider class="py-2"></v-divider>
                 <v-row>
                     <v-col cols="4">
-                        <v-col cols="12" class="form-col">
-                            <v-list-subheader class="form-header">Father Lastname </v-list-subheader>
-                            <v-text-field
-                                variant="outlined"
-                                v-model="payload.fatherLastname"
-                                :readonly="clicked_option === 'view'"
-                                hide-details
-                                density="compact"
-                            ></v-text-field>
-                        </v-col>
-                        <v-col cols="12" class="form-col">
-                            <v-list-subheader class="form-header">Fathers Firstname </v-list-subheader>
-                            <v-text-field
-                                variant="outlined"
-                                v-model="payload.fatherFirstname"
-                                :readonly="clicked_option === 'view'"
-                                hide-details
-                                density="compact"
-                            ></v-text-field>
-                        </v-col>
-                        <v-col cols="12" class="form-col">
-                            <v-list-subheader class="form-header">Father Middlename </v-list-subheader>
-                            <v-text-field
-                                variant="outlined"
-                                v-model="payload.fatherMiddlename"
-                                :readonly="clicked_option === 'view'"
-                                hide-details
-                                density="compact"
-                            ></v-text-field>
-                        </v-col>
-                        <v-col cols="12" class="form-col">
-                            <v-list-subheader class="form-header">Fathers Suffix </v-list-subheader>
-                            <v-autocomplete
-                                item-title="abbreviations"
-                                item-value="id"
-                                :items="suffix_data"
-                                v-model="payload.fatherSuffix_id"
-                                :readonly="clicked_option === 'view'"
-                                hide-details
-                                :clearable="clicked_option === 'new' || clicked_option === 'edit'"
-                                density="compact"
-                                variant="outlined"
-                            ></v-autocomplete>
-                        </v-col>
+                        <fieldset class="pa-2 rounded-fieldset">
+                            <legend class="pa-2">Father's Name</legend>
+                            <v-col cols="12" class="form-col">
+                                <v-list-subheader class="form-header">Father Lastname </v-list-subheader>
+                                <v-text-field
+                                    variant="outlined"
+                                    v-model="payload.fatherLastname"
+                                    :readonly="clicked_option === 'view'"
+                                    hide-details
+                                    density="compact"
+                                ></v-text-field>
+                            </v-col>
+                            <v-col cols="12" class="form-col">
+                                <v-list-subheader class="form-header">Fathers Firstname </v-list-subheader>
+                                <v-text-field
+                                    variant="outlined"
+                                    v-model="payload.fatherFirstname"
+                                    :readonly="clicked_option === 'view'"
+                                    hide-details
+                                    density="compact"
+                                ></v-text-field>
+                            </v-col>
+                            <v-col cols="12" class="form-col">
+                                <v-list-subheader class="form-header">Father Middlename </v-list-subheader>
+                                <v-text-field
+                                    variant="outlined"
+                                    v-model="payload.fatherMiddlename"
+                                    :readonly="clicked_option === 'view'"
+                                    hide-details
+                                    density="compact"
+                                ></v-text-field>
+                            </v-col>
+                            <v-col cols="12" class="form-col">
+                                <v-list-subheader class="form-header">Fathers Suffix </v-list-subheader>
+                                <v-autocomplete
+                                    item-title="abbreviations"
+                                    item-value="id"
+                                    :items="suffix_data"
+                                    v-model="payload.fatherSuffix_id"
+                                    :readonly="clicked_option === 'view'"
+                                    hide-details
+                                    :clearable="clicked_option === 'new' || clicked_option === 'edit'"
+                                    density="compact"
+                                    variant="outlined"
+                                ></v-autocomplete>
+                            </v-col>
+                        </fieldset>
                     </v-col>
                     <v-col cols="4">
-                        <v-col cols="12" class="form-col">
-                            <v-list-subheader class="form-header">Birth Date </v-list-subheader>
-                            <v-text-field
-                                variant="outlined"
-                                v-model="payload.fatherBirthdate"
-                                :readonly="clicked_option === 'view'"
-                                type="date"
-                                hide-details
-                                density="compact"
-                                @update:model-value="updateFatherBirthdate"
-                            ></v-text-field>
-                        </v-col>
-                        <v-col cols="12" class="form-col">
-                            <v-list-subheader class="form-header">Age</v-list-subheader>
-                            <v-text-field
-                                variant="outlined"
-                                v-model="payload.fatherAge"
-                                readonly
-                                type="number"
-                                hide-details
-                                density="compact"
-                            ></v-text-field>
-                        </v-col>
+                        <fieldset class="pa-2 rounded-fieldset">
+                            <legend class="pa-2">Father's Other Info</legend>
+                            <v-col cols="12" class="form-col">
+                                <v-list-subheader class="form-header">Birth Date </v-list-subheader>
+                                <v-text-field
+                                    variant="outlined"
+                                    v-model="payload.fatherBirthdate"
+                                    :readonly="clicked_option === 'view'"
+                                    type="date"
+                                    hide-details
+                                    density="compact"
+                                    @update:model-value="updateFatherBirthdate"
+                                ></v-text-field>
+                            </v-col>
+                            <v-col cols="12" class="form-col">
+                                <v-list-subheader class="form-header">Age</v-list-subheader>
+                                <v-text-field
+                                    variant="outlined"
+                                    v-model="payload.fatherAge"
+                                    readonly
+                                    type="number"
+                                    hide-details
+                                    density="compact"
+                                ></v-text-field>
+                            </v-col>
+                        </fieldset>
                     </v-col>
                     <v-col cols="4">
-                        <v-col cols="12" class="form-col">
-                            <v-list-subheader class="form-header">Father's Telephone No. </v-list-subheader>
-                            <v-text-field
-                                variant="outlined"
-                                v-model="payload.fathertelephone_number"
-                                :readonly="clicked_option === 'view'"
-                                hide-details
-                                density="compact"
-                            ></v-text-field>
-                        </v-col>
-                        <v-col cols="12" class="form-col">
-                            <v-list-subheader class="form-header">Father's Telephone No. </v-list-subheader>
-                            <v-text-field
-                                variant="outlined"
-                                v-model="payload.fathermobile_number"
-                                :readonly="clicked_option === 'view'"
-                                hide-details
-                                density="compact"
-                            ></v-text-field>
-                        </v-col>
+                        <fieldset class="pa-2 rounded-fieldset">
+                            <legend class="pa-2">Father's Contact Info</legend>
+                            <v-col cols="12" class="form-col">
+                                <v-list-subheader class="form-header">Father's Telephone No. </v-list-subheader>
+                                <v-text-field
+                                    variant="outlined"
+                                    v-model="payload.fathertelephone_number"
+                                    :readonly="clicked_option === 'view'"
+                                    hide-details
+                                    density="compact"
+                                ></v-text-field>
+                            </v-col>
+                            <v-col cols="12" class="form-col">
+                                <v-list-subheader class="form-header">Father's Telephone No. </v-list-subheader>
+                                <v-text-field
+                                    variant="outlined"
+                                    v-model="payload.fathermobile_number"
+                                    :readonly="clicked_option === 'view'"
+                                    hide-details
+                                    density="compact"
+                                ></v-text-field>
+                            </v-col>
+                        </fieldset>
                     </v-col>
                 </v-row>
             </v-card-text>
@@ -613,25 +639,31 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.form-header {
-    color: #000;
-    margin: -12px 0px -12px 0px;
-    font-weight: 500;
-}
-.form-col {
-    padding: 3.25px 0px 3.25px 0px !important;
-    margin: 0px !important;
-}
+    .form-header {
+        color: #000;
+        margin: -12px 0px -12px 0px;
+        font-weight: 500;
+    }
+    .form-col {
+        padding: 3.25px 0px 3.25px 0px !important;
+        margin: 0px !important;
+    }
 
-.fieldset-title {
-  font-weight: bold;
-  text-transform: uppercase;
-  border-bottom: 1px solid #ccc;
-  padding-bottom: 8px;
-  margin-bottom: 16px;
-}
-.field-group-label {
-    color: #2196F3; 
-}
+    .fieldset-title {
+        font-weight: bold;
+        text-transform: uppercase;
+        border-bottom: 1px solid #ccc;
+        padding-bottom: 8px;
+        margin-bottom: 16px;
+    }
+    .field-group-label {
+        color: #2196F3; 
+    }
+
+    .rounded-fieldset {
+        padding: 16px;
+        border-radius: 8px;
+        border: 1px solid #c0c0c0;
+    }
 
 </style>

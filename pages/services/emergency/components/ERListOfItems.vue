@@ -45,12 +45,15 @@
                             />
                         </td>
                     </template>
+
                     <template v-slot:item.id="{ item }">
                         <span>{{ item.map_item_id }}</span>
                     </template>
+
                     <template v-slot:item.item_name="{ item }">
                         <span>{{ item.item_name }} {{ item.item_Description }}</span>
                     </template>
+
                     <template v-slot:item.price="{ item }">
                         <span v-if="item.ware_house_items.length > 0">
                             <template v-for="(warehouseItem, index) in item.ware_house_items" :key="index">
@@ -59,6 +62,7 @@
                         </span>
                         <span v-else>No Price Found</span>
                     </template>
+
                     <template v-slot:item.item_OnHand="{ item }">
                         <span v-if="item.ware_house_items.length > 0">
                             <template v-for="(warehouseItem, index) in item.ware_house_items" :key="index">
@@ -69,6 +73,7 @@
                         </span>
                         <span v-else style="color: red;">No Price Found</span>
                     </template>
+
                 </v-data-table-server>
             </v-card-text>
             <v-divider></v-divider>
@@ -84,26 +89,40 @@
 <script setup>
     import { ref, computed } from 'vue';
     const props = defineProps({
+
+        payload: {
+            type: Object,
+            required: true, 
+            default: () => ({
+                stocks_OnHand: [{}],
+                total: 0 
+            })
+        },
+    
         open_items_list: {
             type: Boolean,
             default: () => false,
             required: true,
         },
+
         patienttype: {
             type: Number,
             default: () => "",
             required: true,
         },
+
         user_input_revenue_code: {
             type: String,
             default: () => "",
             required: true,
         },
+        
         warehouse_id: {
             type: Number,
             default: () => "",
             required: true,
         },
+
         chargecode: {
             type: Array,
             default: () => [],
@@ -111,7 +130,9 @@
         },
         
     });
+
     const emits = defineEmits(["close-dialog", "handle-select"]);
+
     const headers = [
         {
             title: "Code",
@@ -138,6 +159,7 @@
             sortable: false,
         },
     ];
+
     const data = ref({
         title: "List of Items",
         keyword: "",
@@ -175,16 +197,40 @@
             useSnackbar(true, "error", "No data found.");
         }
     };
+
+    const medicine_stocks = ref([]);
+    const supply_stocks = ref([]);
+    const price_array = ref([]);
+    const price = ref(0);
+    const medicine_stocks_array = ref([]);
+    const supply_stocks_array = ref([]);
+
     const handleSelectedRow = (selectedRows) => {
         const selectedItems = selectedRows.map(rowId => serverItems.value.find(item => item.id === rowId));  
-        const validSelectedItems = selectedItems.filter(item => item !== undefined && parseInt(item.ware_house_items[0].item_OnHand) > 0);
+        price_array.value = selectedItems.map(item => item.ware_house_items[0].price);
+        
+        const validSelectedItems = selectedItems.filter(item => item !== undefined && parseInt(item.ware_house_items[0].item_OnHand) > 0)
+        
+        if(validSelectedItems) {
+            if(props.user_input_revenue_code === 'EM') {
+                medicine_stocks.value = selectedItems.map(item => item.ware_house_items[0].item_OnHand);
+                medicine_stocks_array.value.push({ medicine_id: validSelectedItems[0].id, medicine_stock: medicine_stocks.value[0]});
+                props.payload.medicine_stocks_OnHand = medicine_stocks_array.value;
+            }
+            if(props.user_input_revenue_code === 'RS') {
+                supply_stocks.value = selectedItems.map(item => item.ware_house_items[0].item_OnHand);
+                supply_stocks_array.value.push({ supply_id: validSelectedItems[0].id, supply_stock: supply_stocks.value[0]});
+                props.payload.supply_stocks_OnHand = supply_stocks_array.value;
+            }
+            price.value  = price_array.value[0];
+        }
+
         if(validSelectedItems.length === 0) {
             useSnackbar(true, "error", "No valid items selected. Please choose items with stock available.");
             selected_item.value = {};
         } else {
             selected_item.value = validSelectedItems[0];
         }
-        console.log("SELECTED ITEM", selected_item.value);
     };
 
     const isSelectDisabled = computed(() => {
@@ -193,13 +239,17 @@
         }
         return parseInt(selected_item.value.ware_house_items[0].item_OnHand) === 0;
     });
+
     const onSelect = () => {
         emits('handle-select', selected_item.value);
+        emits('update-stocks', { ...props.payload });
         closeDialog();
     }
+
     const search = () => {
         loadItems();
     };
+    
     const closeDialog = () => {
         emits("close-dialog");
         selected_item.value = {};

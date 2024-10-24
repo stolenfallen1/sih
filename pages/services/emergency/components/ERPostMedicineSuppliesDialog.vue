@@ -217,6 +217,7 @@
                                         <th>Code</th>
                                         <th>Item Description</th>
                                         <th>Frequency</th>
+                                        <th>Selling Price</th>
                                         <th>Quantity</th> 
                                         <th>Amount</th> 
                                         <th>Remarks</th>
@@ -229,8 +230,9 @@
                                             <td> <input class="input medicine-focus" v-model="item.code" @keyup.enter="handleAddMedicine(item, index)" :readonly="item.isReadonly" /> </td>
                                             <td> <input class="input medicine-focus" v-model="item.item_name" @keyup.enter="handleAddMedicine(item, index)" readonly /> </td>
                                             <td> <input class="input medicine-focus" v-model="item.frequency_description" @keyup.enter="openFrequencyList" readonly /> </td>
-                                            <td> <input class="input medicine-focus" v-model="item.quantity" /> </td>
                                             <td> <input class="input medicine-focus" v-model="item.price" readonly /> </td>
+                                            <td> <input class="input medicine-focus" v-model="item.quantity" @input="handleTotalMedicine(item)" /> </td>
+                                            <td> <input class="input medicine-focus" v-model="item.amount" readonly /> </td>
                                             <td> <input class="input medicine-focus" v-model="item.remarks" /> </td>
                                             <td>
                                                 <select class="input medicine-focus" v-model="item.charge_type">
@@ -246,7 +248,7 @@
                                 <tfoot>
                                     <tr>
                                         <td colspan="4" class="text-right">Total Amount: </td>
-                                        <!-- <td>{{ usePeso(totalAmount) }}</td> -->
+                                        <td> <input class="input medicine-focus" v-model="totalAmount" readonly /> </td>
                                     </tr>
                                 </tfoot>
                             </v-table>
@@ -278,8 +280,9 @@
                                     <tr>
                                         <th>Code</th>
                                         <th>Item Description</th>
+                                        <th>Selling Price</th> 
                                         <th>Quantity</th> 
-                                        <th>Amount</th> 
+                                        <th>Amount</th>
                                         <th>Remarks</th>
                                         <th>STAT</th>
                                     </tr>
@@ -289,8 +292,9 @@
                                         <tr>
                                             <td> <input class="input supplies-focus" v-model="item.code" @keyup.enter="handleAddSupplies(item, index)" :readonly="item.isReadonly" /> </td>
                                             <td> <input class="input supplies-focus" v-model="item.item_name" @keyup.enter="handleAddSupplies(item, index)" readonly /> </td>
-                                            <td> <input class="input supplies-focus" v-model="item.quantity" /> </td>
                                             <td> <input class="input supplies-focus" v-model="item.price" readonly /> </td>
+                                            <td> <input class="input medicine-focus" v-model="item.quantity" @input="handleTotalSupply(item)" /> </td>
+                                            <td> <input class="input medicine-focus" v-model="item.amount" readonly /> </td>
                                             <td> <input class="input supplies-focus" v-model="item.remarks" /> </td>
                                             <td>
                                                 <select class="input supplies-focus" v-model="item.charge_type">
@@ -317,36 +321,65 @@
             <v-card-actions>
                 <v-btn color="blue-darken-1 border border-info" @click="closeDialog"> Close </v-btn>
                 <v-spacer></v-spacer>
-                <v-btn class="bg-primary text-white" @click="onSubmit"> Save Entry </v-btn>
+                <v-btn class="bg-primary text-white" @click="openConfirmDialog"> Save Entry </v-btn>
             </v-card-actions>
         </v-card>
     </v-dialog>
 
     <list-of-items 
-    :open_items_list="open_items_list_for_medicines" 
-    :patienttype="payload.charge_to === 'Self-Pay' ? 1 : 2"
-    :user_input_revenue_code="user_input_revenue_code"
-    :warehouse_id="selectedWarehouseID"
-    :chargecode="chargecode"
-    @handle-select="(selected_item) => handleSelectedItem(selected_item, 'medicines')" 
-    @close-dialog="closeItemsDialogForMedicines" 
-/>
+        :open_items_list="open_items_list_for_medicines" 
+        :patienttype="payload.charge_to === 'Self-Pay' ? 1 : 2"
+        :payload="payload"
+        :user_input_revenue_code="user_input_revenue_code"
+        :warehouse_id="selectedWarehouseID"
+        :chargecode="chargecode"
+        @handle-select="(selected_item) => handleSelectedItem(selected_item, 'medicines')" 
+        @close-dialog="closeItemsDialogForMedicines" 
+    />
 
-<list-of-items 
-    :open_items_list="open_items_list_for_supplies" 
-    :patienttype="payload.charge_to === 'Self-Pay' ? 1 : 2"
-    :user_input_revenue_code="user_input_revenue_code"
-    :warehouse_id="selectedWarehouseID"
-    :chargecode="chargecode"
-    @handle-select="(selected_item) => handleSelectedItem(selected_item, 'supplies')" 
-    @close-dialog="closeItemsDialogForSupplies" 
-/>
+    <list-of-items 
+        :open_items_list="open_items_list_for_supplies" 
+        :patienttype="payload.charge_to === 'Self-Pay' ? 1 : 2"
+        :payload="payload"
+        :user_input_revenue_code="user_input_revenue_code"
+        :warehouse_id="selectedWarehouseID"
+        :chargecode="chargecode"
+        @handle-select="(selected_item) => handleSelectedItem(selected_item, 'supplies')" 
+        @close-dialog="closeItemsDialogForSupplies" 
+    />
 
 
     <list-of-frequency 
         :open_frequency_list="open_frequency_list"
         @handle-select="handleSelectedFrequency"
         @close-dialog="closeFrequencyList"
+    />
+
+    <Confirmation 
+        :show="chargeconfirmation"
+        :payload="payload"
+        :loading="isLoadingBtn"
+        :error_msg="error_msg"
+        @submit="onSubmit"
+        @close="closeConfirmCharge"
+    />
+
+    <Confirmation 
+        :show="revokeconfirmation"
+        :payload="payload"
+        :loading="isLoadingBtn"
+        :error_msg="error_msg"
+        @submit="onRevoke"
+        @close="closeConfirmRevoke"
+    />
+
+    
+    <Confirmation 
+        :show="showDialog"
+        :payload="payload"
+        :loading="isLoading"
+        @submit="onSubmit"
+        @close="closeConfirmDialog"
     />
 </template>
 
@@ -363,7 +396,8 @@
 
     const { selectedRowDetails } = storeToRefs(useSubcomponentSelectedRowDetailsStore()); 
     const emits = defineEmits(['close-dialog'])
-
+    const isLoading = ref(false);
+    const credit_limit = ref(null);
     let panel = ref([0, 1]);
     const payload = ref({});
     const chargecode = ref([]);
@@ -371,6 +405,17 @@
     const open_items_list_for_supplies = ref(false);
     const open_frequency_list = ref(false);
     const user_input_revenue_code = ref('');
+    const isLoadingBtn = ref(false);
+    const showDialog = ref(false);
+    
+    const openConfirmDialog = async () => {
+        showDialog.value = true;
+    }
+
+    const closeConfirmDialog = () => {
+        showDialog.value = false;
+    }
+
     const charge_to = ref([
         { value: 1, text: "Self-Pay" },
         { value: 2, text: "Company / Insurance" }, 
@@ -382,6 +427,7 @@
             item_name: "",
             frequency: "",
             quantity: "",
+            selling_price: "",
             amount: "",
             remarks: "",
             stat: "",
@@ -393,6 +439,7 @@
             code: "",
             item_name: "",
             frequency: "",
+            selling_price: "",
             amount: "",
             remarks: "",
             stat: "",
@@ -476,28 +523,36 @@
 
         item.code = item.code.toUpperCase();
         const lastRow = Medicines.value[Medicines.value.length - 1];
+
         if (!item.code) {
             return useSnackbar(true, "error", "Code Should not be empty.");
         }
+
         const desiredCodes = medicine_revenue_data.value.map(item => item.code);
+
         if (desiredCodes.includes(item.code) === false) {
             return useSnackbar(true, "error", "Invalid Code, refer to help code.");
         }
 
         const matchingRevenue = medicine_revenue_data.value.find(revenue => revenue.code === item.code);
-        if (!matchingRevenue) return;
-        selectedWarehouseID.value = matchingRevenue.warehouse_id;
 
+        if (!matchingRevenue) return;
+
+        selectedWarehouseID.value = matchingRevenue.warehouse_id;
         user_input_revenue_code.value = item.code;
+
         if(item.code && !item.map_item_id && !item.item_name) {
 
             open_items_list_for_medicines.value = true;
+
             let medicines = Medicines.value.filter(function (obj) {
                 return obj.code !== '' && obj.map_item_id !== '' && obj.item_name !== '';
             });
+
             let resultArray = medicines.filter(item => item.code.toUpperCase() === lastRow.code.toUpperCase()).map(item => item.map_item_id);
             chargecode.value = resultArray;
         }
+
         if(item.code && item.map_item_id && item.item_name) {
             const isItemCodeAndRevenueAlreadyExists = Medicines.value.slice(0, index).some(row => row.map_item_id === lastRow.map_item_id && row.code === lastRow.code);
                 if(!isItemCodeAndRevenueAlreadyExists) {
@@ -563,6 +618,7 @@
                         remarks: "",
                         stat: "",
                 });
+
                 if (lastRow) {
                     lastRow.isReadonly = true;
                     lastRow.isDelete = true;
@@ -590,10 +646,65 @@
     };
 
 
+    const handleTotalMedicine = (item) => {
+        if (!item.base_price) {
+            item.base_price = parseFloat(item.price.replace(/[^0-9.-]+/g, ''));
+        }
+
+        const base_price = item.base_price;
+        const quantity = parseInt(item.quantity) || 0;
+
+        if (!isNaN(quantity) && !isNaN(base_price)) {
+            item.amount = (quantity * base_price).toFixed(2);
+            calculateTotalAmountMedicine();
+        } else {
+            item.price = "0.00"; 
+        }
+    };
+
+    
+    const handleTotalSupply = (item) => {
+        if (!item.base_price) {
+            item.base_price = parseFloat(item.price.replace(/[^0-9.-]+/g, ''));
+        }
+
+        const base_price = item.base_price;
+        const quantity = parseInt(item.quantity) || 0;
+
+        if (!isNaN(quantity) && !isNaN(base_price)) {
+            item.amount = (quantity * base_price).toFixed(2);
+            calculateTotalAmountSupply();
+        } else {
+            item.price = "0.00"; 
+        }
+    };
+
+    const totalAmount = ref(0);
+
+    const calculateTotalAmountMedicine = () => {
+        totalAmount.value = 0;
+
+        Medicines.value.forEach(item => {
+            const itemAmount = parseFloat(item.amount) || 0; 
+            (totalAmount.value += itemAmount).toFixed(2);
+        });
+
+    }
+
+    const calculateTotalAmountSupply = () => {
+        totalAmount.value = 0;
+
+        Supplies.value.forEach(item => {
+            const itemAmount = parseFloat(item.amount) || 0;
+            (totalAmount.value += itemAmount).toFixed(2);
+        })
+    }
+
+  
     const handleSelectedFrequency = (selected_item) => {
         const lastRow = Medicines.value[Medicines.value.length - 1];
-        lastRow.frequency = selected_item.dosage_id; // For submission
-        lastRow.frequency_description = selected_item.description; // For display
+        lastRow.frequency = selected_item.dosage_id; 
+        lastRow.frequency_description = selected_item.description;
     };
 
     const removeMedicineItem = (selectedItem) => {
@@ -616,13 +727,94 @@
         open_frequency_list.value = false;
     }
 
-    const onSubmit = () => {
-        let medicines = Medicines.value.filter(obj => obj.code !== '');
-        let supplies = Supplies.value.filter(obj => obj.code !== '');
+
+    const onSubmit = async () => {
+        isLoading.value = true;
+        isLoadingBtn.value = true;
+
+        const medicines = Medicines.value.filter(obj => obj.code !== '');
+        const supplies = Supplies.value.filter(obj => obj.code !== '');
+
+        let flagMedicine = true;
+        let flagSupply = true;
+
         payload.value.Medicines = medicines;
         payload.value.Supplies = supplies;
-        console.log(payload.value);
-    }
+
+        try {
+            checkStockAvailability(payload.value.medicine_stocks_OnHand, medicines, 'medicine', (flag) => flagMedicine = flag);
+            checkStockAvailability(payload.value.supply_stocks_OnHand, supplies, 'supply', (flag) => flagSupply = flag);
+
+            if (flagMedicine || flagSupply) {
+                if (payload.value.charge_to === "Company / Insurance") {
+                    credit_limit.value = payload.value.guarantor_Credit_Limit === 'OPEN'
+                        ? null
+                        : parseFloat(payload.value.guarantor_Credit_Limit.replace(/[^0-9.-]+/g, ''));
+
+                    if (credit_limit.value !== null && parseFloat(totalAmount.value) > credit_limit.value) {
+                        useSnackbar(true, "error", `Insufficient credit limit! Total is ${totalAmount.value}, but your credit limit is only ${credit_limit.value}.`);
+                    }
+                }
+
+                await processCharges();
+
+            } else {
+                useSnackbar(true, "error", 'Cannot charge, double-check item stocks for medicines or supplies.');
+            }
+
+        } catch (error) {
+            handleErrorResponse(error);
+
+        } finally {
+            isLoadingBtn.value = false;
+            isLoading.value = false;
+        }
+    };
+
+    const checkStockAvailability = (stocksOnHand, items, itemType, updateFlag) => {
+        stocksOnHand.forEach((stock, index) => {
+            const item = items[index];
+            if (!item) return;
+
+            const requiredQuantity = parseInt(item.quantity);
+            const availableStocks = parseInt(stock.stock);
+
+            if (availableStocks < requiredQuantity) {
+                const itemId = stock.id;
+                updateFlag(false);
+                useSnackbar(true, "error", `Insufficient stock! for ${itemId}. You requested ${requiredQuantity} units, but only ${availableStocks} are available.`);
+            }
+        });
+    };
+
+    const processCharges = async () => {
+        try{
+            const response = await useMethod("post", "er-medicine-supplies-charges", payload.value);
+
+            if (response && response.success) {
+                useSnackbar(true, "success", 'Charges posted successfully');
+                closeDialog();
+                closeConfirmDialog();
+            } else {
+
+                useSnackbar(true, "error", 'Failed to post charges. Please try again.');
+            }
+
+        } catch(error) {
+
+            handleErrorResponse(error);
+        }
+    };
+
+    const handleErrorResponse = (error) => {
+        if (error?.response?.status === 404) {
+            useSnackbar(true, "error", 'Incorrect Username or Passcode');
+        } else {
+            useSnackbar(true, "error", "CATCH ERROR: Call IT Department");
+        }
+        isLoading.value = false;
+        isLoadingBtn.value = false;
+    };
 
     const closeDialog = () => {
         emits('close-dialog');
@@ -663,46 +855,48 @@
         payload.value.guarantor_Id = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0].guarantor_Id || payload.value.patient_Id;
         payload.value.guarantor_Name = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0].guarantor_Name || 'PERSONAL';
         payload.value.guarantor_Credit_Limit = selectedRowDetails.value.patient_registry 
-                && selectedRowDetails.value.patient_registry[0].guarantor_Credit_Limit !== null 
-                && selectedRowDetails.value.patient_registry[0].guarantor_Credit_Limit !== undefined
-                ? usePeso(selectedRowDetails.value.patient_registry[0].guarantor_Credit_Limit) 
-                : "OPEN";
+            && selectedRowDetails.value.patient_registry[0].guarantor_Credit_Limit !== null 
+            && selectedRowDetails.value.patient_registry[0].guarantor_Credit_Limit !== undefined
+            ? usePeso(selectedRowDetails.value.patient_registry[0].guarantor_Credit_Limit) 
+            : "OPEN";
     })
 
     onMounted(() => {
+
         getRevenueCode();
+
     });
 
 </script>
 
 <style scoped>
-:deep(.v-expansion-panel-text__wrapper) {
-    padding: 0 !important;
-}
-.styled-table th, .styled-table td {
-    padding: 8px;
-    border: 1px solid #eceaea;
-    margin: 0;
-}
-.input {
-    border-bottom: 1px solid #A9A9A9;
-    padding: 4px 8px;
-}
-.styled-table {
-    overflow-y: auto;
-    scrollbar-width: thin; 
-    scrollbar-color: #727272 #f5f5f5; 
-}
-.styled-table::-webkit-scrollbar {
-    width: 12px;
-}
-.styled-table::-webkit-scrollbar-thumb {
-    background-color: #107bac; 
-    border-radius: 10px; 
-    border: 3px solid #f5f5f5; 
-}
-.styled-table::-webkit-scrollbar-track {
-    background-color: #f5f5f5; 
-    border-radius: 10px; 
-}
+    :deep(.v-expansion-panel-text__wrapper) {
+        padding: 0 !important;
+    }
+    .styled-table th, .styled-table td {
+        padding: 8px;
+        border: 1px solid #eceaea;
+        margin: 0;
+    }
+    .input {
+        border-bottom: 1px solid #A9A9A9;
+        padding: 4px 8px;
+    }
+    .styled-table {
+        overflow-y: auto;
+        scrollbar-width: thin; 
+        scrollbar-color: #727272 #f5f5f5; 
+    }
+    .styled-table::-webkit-scrollbar {
+        width: 12px;
+    }
+    .styled-table::-webkit-scrollbar-thumb {
+        background-color: #107bac; 
+        border-radius: 10px; 
+        border: 3px solid #f5f5f5; 
+    }
+    .styled-table::-webkit-scrollbar-track {
+        background-color: #f5f5f5; 
+        border-radius: 10px; 
+    }
 </style>
