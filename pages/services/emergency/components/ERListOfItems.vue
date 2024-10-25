@@ -204,6 +204,8 @@
     const price = ref(0);
     const medicine_stocks_array = ref([]);
     const supply_stocks_array = ref([]);
+    const medicine_item_ListCost= ref([]);
+    const supply_item_ListCost = ref([]);
 
     const handleSelectedRow = (selectedRows) => {
         const selectedItems = selectedRows.map(rowId => serverItems.value.find(item => item.id === rowId));  
@@ -213,16 +215,40 @@
         
         if(validSelectedItems) {
             if(props.user_input_revenue_code === 'EM') {
-                medicine_stocks.value = selectedItems.map(item => item.ware_house_items[0].item_OnHand);
-                medicine_stocks_array.value.push({ medicine_id: validSelectedItems[0].id, medicine_stock: medicine_stocks.value[0]});
+                medicine_stocks.value = selectedItems.map(
+                    item => item.ware_house_items[0].item_OnHand,
+                );
+
+                medicine_item_ListCost.value = selectedItems.map(
+                    item => item.ware_house_items[0].item_ListCost,
+                );
+
+                medicine_stocks_array.value.push({ 
+                    medicine_id: validSelectedItems[0].id, 
+                    medicine_stock: medicine_stocks.value[0], 
+                    item_List_Cost: medicine_item_ListCost.value[0]
+                });
                 props.payload.medicine_stocks_OnHand = medicine_stocks_array.value;
             }
             if(props.user_input_revenue_code === 'RS') {
-                supply_stocks.value = selectedItems.map(item => item.ware_house_items[0].item_OnHand);
-                supply_stocks_array.value.push({ supply_id: validSelectedItems[0].id, supply_stock: supply_stocks.value[0]});
+                supply_stocks.value = selectedItems.map(
+                    item => item.ware_house_items[0].item_OnHand
+                );
+
+                supply_item_ListCost.value = selectedItems.map(
+                    item => item.ware_house_items[0].item_ListCost
+                );
+                
+                supply_stocks_array.value.push({ 
+                    supply_id: validSelectedItems[0].id, 
+                    supply_stock: supply_stocks.value[0],
+                    item_List_Cost: supply_item_ListCost.value[0]
+                });
                 props.payload.supply_stocks_OnHand = supply_stocks_array.value;
             }
+
             price.value  = price_array.value[0];
+
         }
 
         if(validSelectedItems.length === 0) {
