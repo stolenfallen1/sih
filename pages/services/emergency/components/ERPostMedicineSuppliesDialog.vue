@@ -373,7 +373,6 @@
         @close="closeConfirmRevoke"
     />
 
-    
     <Confirmation 
         :show="showDialog"
         :payload="payload"
@@ -381,11 +380,20 @@
         @submit="onSubmit"
         @close="closeConfirmDialog"
     />
+
+    <WarningDialog
+        :showWarning="showWarning"
+        @close="closeWarningDialog"
+        @confirm="confirmCharges"
+    />
+
 </template>
 
 <script setup>
     import ListOfItems from './ERListOfItems.vue';
     import ListOfFrequency from './ERFrequencyList.vue';
+    import WarningChargeConfirmation from '~/components/reusables/WarningChargeConfirmation.vue';
+    import ConsultantSpecializationForm from '~/components/reusables/build-file/consultant-specializations/sub-forms/ConsultantSpecializationForm.vue';
 
     const props = defineProps({
         show: {
@@ -407,7 +415,8 @@
     const user_input_revenue_code = ref('');
     const isLoadingBtn = ref(false);
     const showDialog = ref(false);
-    
+    const showWarning = ref(false);
+
     const openConfirmDialog = async () => {
         showDialog.value = true;
     }
@@ -729,6 +738,7 @@
 
 
     const onSubmit = async () => {
+
         isLoading.value = true;
         isLoadingBtn.value = true;
 
@@ -742,32 +752,59 @@
         payload.value.Supplies = supplies;
 
         try {
-            checkStockAvailability(payload.value.medicine_stocks_OnHand, medicines, 'medicine', (flag) => flagMedicine = flag);
-            checkStockAvailability(payload.value.supply_stocks_OnHand, supplies, 'supply', (flag) => flagSupply = flag);
+
+            if (payload.value.medicine_stocks_OnHand !== undefined) {
+                checkStockAvailability(payload.value.medicine_stocks_OnHand, medicines, 'medicine', (flag) => flagMedicine = flag);
+            }
+
+            if (payload.value.supply_stocks_OnHand !== undefined) {
+                checkStockAvailability(payload.value.supply_stocks_OnHand, supplies, 'supply', (flag) => flagSupply = flag);
+            }
 
             if (flagMedicine || flagSupply) {
+
                 if (payload.value.charge_to === "Company / Insurance") {
                     credit_limit.value = payload.value.guarantor_Credit_Limit === 'OPEN'
                         ? null
                         : parseFloat(payload.value.guarantor_Credit_Limit.replace(/[^0-9.-]+/g, ''));
 
                     if (credit_limit.value !== null && parseFloat(totalAmount.value) > credit_limit.value) {
-                        useSnackbar(true, "error", `Insufficient credit limit! Total is ${totalAmount.value}, but your credit limit is only ${credit_limit.value}.`);
+                      
+                        if (confirm(`Insufficient credit limit! Total is ${totalAmount.value}, but your credit limit is only ${credit_limit.value}. Proceed anyway?`)) {
+                            
+                            await processCharges();
+
+                        } else {
+
+                            useSnackbar(true, "warning", 'Charge process halted. Please review the items.');
+
+                        }
+                    } else {
+
+                        await processCharges();
                     }
+
+                } else {
+
+                    await processCharges();
                 }
 
-                await processCharges();
-
             } else {
+
                 useSnackbar(true, "error", 'Cannot charge, double-check item stocks for medicines or supplies.');
             }
 
         } catch (error) {
+
             handleErrorResponse(error);
 
         } finally {
+
             isLoadingBtn.value = false;
             isLoading.value = false;
+            closeDialog();
+            closeConfirmCharge();
+            closeConfirmDialog();
         }
     };
 
@@ -790,10 +827,10 @@
     const processCharges = async () => {
         try{
             const response = await useMethod("post", "er-medicine-supplies-charges", payload.value);
-
-            if (response && response.success) {
-                useSnackbar(true, "success", 'Charges posted successfully');
+            if (response.message) {
+                useSnackbar(true, "success", response.message);
                 closeDialog();
+                closeConfirmCharge();
                 closeConfirmDialog();
             } else {
 
@@ -814,6 +851,15 @@
         }
         isLoading.value = false;
         isLoadingBtn.value = false;
+    };
+
+    const closeWarningDialog = () => {
+        showWarning.value = false;
+    };
+
+    const confirmCharges = async () => {
+        showWarning.value = false;
+        await processCharges(); 
     };
 
     const closeDialog = () => {
