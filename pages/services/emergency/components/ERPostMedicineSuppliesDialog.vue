@@ -316,6 +316,70 @@
                             </v-table>
                         </v-expansion-panel-text>
                     </v-expansion-panel>
+
+                    <v-expansion-panel>
+                        <v-expansion-panel-title color="#107bac">
+                            Posted Medicine
+                        </v-expansion-panel-title>
+                            <v-data-table 
+                                :items="chargeMedicineList" 
+                                :headers="medicineHeaders" 
+                                density="compact" 
+                                height="40vh" 
+                                class="styled-table"
+                            >
+                       
+                                <template v-slot:item.selected="{ item }">
+                                    <input 
+                                        type="checkbox" 
+                                        :checked="isCheckedCashAssessment(item)" 
+                                        @change="toggleCashAssessmentSelection(item)" 
+                                    />
+                                </template>
+
+                                <template v-slot:item.amount>
+                                    {{ usePeso(item.amount) }}
+                                </template>
+                                <template v-slot:footer>
+                                    <tr>
+                                        <td colspan="6" class="text-right">Total Amount:</td>
+                                        <td>{{ usePeso(totalAmount) }}</td>
+                                    </tr>
+                                </template>
+                            </v-data-table>
+                    </v-expansion-panel>
+
+                    <v-expansion-panel>
+                        <v-expansion-panel-title color="#107bac">
+                            Posted Supply
+                        </v-expansion-panel-title>
+                            <v-data-table 
+                                :items="chargeSupplyList" 
+                                :headers="supplyHeaders" 
+                                density="compact" 
+                                height="40vh" 
+                                class="styled-table"
+                            >
+                       
+                                <template v-slot:item.selected="{ item }">
+                                    <input 
+                                        type="checkbox" 
+                                        :checked="isCheckedCashAssessment(item)" 
+                                        @change="toggleCashAssessmentSelection(item)" 
+                                    />
+                                </template>
+                                
+                                <template v-slot:item.amount>
+                                    {{ usePeso(item.amount) }}
+                                </template>
+                                <template v-slot:footer>
+                                    <tr>
+                                        <td colspan="6" class="text-right">Total Amount:</td>
+                                        <td>{{ usePeso(totalAmount) }}</td>
+                                    </tr>
+                                </template>
+                            </v-data-table>
+                    </v-expansion-panel>
                 </v-expansion-panels>
             </v-card-text>
             <v-card-actions>
@@ -877,6 +941,79 @@
             }
         ];
     }
+    const chargeMedicineList = ref([]);
+    const chargeSupplyList = ref([]);
+    const grandtotal = computed(() =>
+        chargeMedicineList.value.reduce((acc, item) => acc + parseFloat(item.Amount), 0)
+    );
+
+    const medicineHeaders = ref([
+        { title: "Status", key: "status"},
+        { title: 'Code', key: 'code' },
+        { title: 'Item Name', key: 'item_name' },
+        { title: 'Price', key: 'price' },
+        { title: 'Quantity', key: 'quantity' },
+        { title: 'Frequency', key: 'dosage' },
+        { title: 'Net Amount', key: 'net_amount' }
+    ]);
+
+    const supplyHeaders = ref([
+        { title: "Status", key: "status"},
+        { title: 'Code', key: 'code' },
+        { title: 'Item Name', key: 'item_name' },
+        { title: 'Price', key: 'price' },
+        { title: 'Quantity', key: 'quantity' },
+        { title: 'Net Amount', key: 'net_amount' }
+    ]);
+
+
+    const getMedicineCharges = async () => {
+        isLoading.value = true;
+        try {
+            const response = await useMethod("get", "get-charge-items/", "", payload.value.case_No);
+            console.log("Response:", response); 
+
+            const data = Array.isArray(response) ? response : response.data;
+
+            if (data && Array.isArray(data)) {
+                const filteredMedicineData = data.filter(item => item.RevenueID === 'EM');
+                chargeMedicineList.value = filteredMedicineData.map(item => ({
+                    status: item.RecordStatus === 'X' 
+                        ? 'unpaid' 
+                        : 'paid',
+
+                    code: item.ItemID,
+                    item_name: item.Description,
+                    price: parseFloat(item.NetCost).toFixed(2),
+                    quantity: parseInt(item.Quantity),
+                    dosage: item.description,
+                    net_amount: parseFloat(item.Amount).toFixed(2),
+                    
+                }));
+
+                const filteredSupplyData = data.filter(item => item.RevenueID === 'RS')
+                chargeSupplyList.value = filteredSupplyData.map(item => ({
+                    status: item.RecordStatus === 'X' ? 'unpaid' : 'paid',
+                    code: item.ItemID,
+                    code: item.ItemID,
+                    item_name: item.Description,
+                    price: parseFloat(item.NetCost).toFixed(2),
+                    quantity: parseInt(item.Quantity),
+                    net_amount: parseFloat(item.Amount).toFixed(2),
+                }))
+
+    
+                console.log('Filtered and Mapped Data: ', chargeMedicineList.value);
+            } else {
+                console.log("No data available in response.");
+            }
+
+        } catch (error) {
+            console.log("Error fetching data:", error);
+        } finally {
+            isLoading.value = false;
+        }
+    };
 
     watchEffect(() => {
         if (payload.value.account == 'Self-Pay') {
@@ -886,6 +1023,13 @@
         }
     })
 
+    watch(() => payload.value.case_No, (newValue) => {
+        if (newValue) {
+            getMedicineCharges();
+        }
+    });
+
+    console.log('Params : ', selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0].case_No)
     onUpdated(() => {
         payload.value.patient_Name = selectedRowDetails.value.lastname + ', ' + selectedRowDetails.value.firstname + ' ' + selectedRowDetails.value.middlename || '';
         payload.value.patient_Id = selectedRowDetails.value.patient_Id || '';
@@ -908,8 +1052,9 @@
     })
 
     onMounted(() => {
-
+        
         getRevenueCode();
+        getMedicineCharges(); 
 
     });
 
