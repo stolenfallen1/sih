@@ -803,7 +803,6 @@
             isLoadingBtn.value = false;
             isLoading.value = false;
             closeDialog();
-            closeConfirmCharge();
             closeConfirmDialog();
         }
     };
@@ -827,11 +826,12 @@
     const processCharges = async () => {
         try{
             const response = await useMethod("post", "er-medicine-supplies-charges", payload.value);
-            if (response.message) {
+            if (response) {
+
                 useSnackbar(true, "success", response.message);
                 closeDialog();
-                closeConfirmCharge();
                 closeConfirmDialog();
+                
             } else {
 
                 useSnackbar(true, "error", 'Failed to post charges. Please try again.');
