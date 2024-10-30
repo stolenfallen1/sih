@@ -328,6 +328,11 @@
                                 height="40vh" 
                                 class="styled-table"
                             >
+                            <template v-slot:item.status="{ item }">
+                                <span :style="{ color: item.status === 'Paid' ? 'green' : 'red' }">
+                                    {{ item.status }}
+                                </span>
+                            </template>
                        
                                 <template v-slot:item.selected="{ item }">
                                     <input 
@@ -336,10 +341,11 @@
                                         @change="toggleCashAssessmentSelection(item)" 
                                     />
                                 </template>
-
+                       
                                 <template v-slot:item.amount>
                                     {{ usePeso(item.amount) }}
                                 </template>
+
                                 <template v-slot:item.action="{ item }">
                                     <v-btn
                                         flat
@@ -380,7 +386,12 @@
                                 height="40vh" 
                                 class="styled-table"
                             >
-                       
+                                <template v-slot:item.status="{ item }">
+                                    <span :style="{ color: item.status === 'Paid' ? 'green' : 'red' }">
+                                        {{ item.status }}
+                                    </span>
+                                </template>
+                                
                                 <template v-slot:item.selected="{ item }">
                                     <input 
                                         type="checkbox" 
@@ -1011,24 +1022,24 @@
     );
 
     const medicineHeaders = ref([
-        { title: "Status",      key: "status"},
-        { title: 'Code',        key: 'code' },
-        { title: 'Item Name',   key: 'item_name' },
-        { title: 'Price',       key: 'price' },
-        { title: 'Quantity',    key: 'quantity' },
-        { title: 'Frequency',   key: 'dosage' },
-        { title: 'Net Amount',  key: 'net_amount' },
-        { title: 'Action',      key: 'action'}
+        { title: "Status",      key: "status",      sortable: false },
+        { title: 'Code',        key: 'code',        sortable: false },
+        { title: 'Item',        key: 'item_name',   sortable: false },
+        { title: 'Price',       key: 'price',       sortable: false },
+        { title: 'Quantity',    key: 'quantity',    sortable: false },
+        { title: 'Frequency',   key: 'dosage',      sortable: false },
+        { title: 'Amount',      key: 'net_amount',  sortable: false },
+        { title: 'Action',      key: 'action',      sortable: false }
     ]);
 
     const supplyHeaders = ref([
-        { title: "Status",      key: "status"},
-        { title: 'Code',        key: 'code' },
-        { title: 'Item Name',   key: 'item_name' },
-        { title: 'Price',       key: 'price' },
-        { title: 'Quantity',    key: 'quantity' },
-        { title: 'Net Amount',  key: 'net_amount' },
-        { title: 'Action',      key: 'action'}
+        { title: "Status",      key: "status",      sortable: false },
+        { title: 'Code',        key: 'code',        sortable: false },
+        { title: 'Item Name',   key: 'item_name',   sortable: false },
+        { title: 'Price',       key: 'price',       sortable: false },
+        { title: 'Quantity',    key: 'quantity',    sortable: false },
+        { title: 'Net Amount',  key: 'net_amount',  sortable: false },
+        { title: 'Action',      key: 'action',      sortable: false }
     ]);
 
 
@@ -1044,10 +1055,7 @@
                 const filteredMedicineData = data.filter(item => item.RevenueID === 'EM');
                 chargeMedicineList.value = filteredMedicineData.map(item => ({
 
-                    status: item.RecordStatus === 'X' 
-                        ? 'unpaid' 
-                        : 'paid',
-
+                    status: (payload.value.guarantor_Name !== 'PERSONAL') ? 'Paid' : 'Unpaid',
                     code: item.ItemID,
                     item_name: item.Description,
                     price: parseFloat(item.NetCost).toFixed(2),
@@ -1061,7 +1069,7 @@
                 const filteredSupplyData = data.filter(item => item.RevenueID === 'RS')
                 chargeSupplyList.value = filteredSupplyData.map(item => ({
 
-                    status: item.RecordStatus === 'X' ? 'unpaid' : 'paid',
+                    status: (payload.value.guarantor_Name !== 'PERSONAL') ? 'Paid' : 'Unpaid',
                     code: item.ItemID,
                     code: item.ItemID,
                     item_name: item.Description,
@@ -1100,29 +1108,39 @@
     });
 
     console.log('Params : ', selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0].case_No)
+
     onUpdated(() => {
-        payload.value.patient_Name = selectedRowDetails.value.lastname + ', ' + selectedRowDetails.value.firstname + ' ' + selectedRowDetails.value.middlename || '';
-        payload.value.patient_Id = selectedRowDetails.value.patient_Id || '';
-        payload.value.civil_status = selectedRowDetails.value.civil_status && selectedRowDetails.value.civil_status.civil_status_description || '';
-        payload.value.sex = selectedRowDetails.value.sex && selectedRowDetails.value.sex.sex_description || '';
-        payload.value.birthdate = useDateMMDDYYY(selectedRowDetails.value.birthdate) || '';
-        payload.value.age = selectedRowDetails.value.age || '';
-        payload.value.case_No = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0].case_No || '';
-        payload.value.account = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0].mscPrice_Schemes == 1 ? "Self-Pay" : "Company / Insurance";
-        payload.value.registry_Date = selectedRowDetails.value.patient_registry && useDateMMDDYYY(selectedRowDetails.value.patient_registry[0].registry_Date) || '';
-        payload.value.attending_Doctor = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0].attending_Doctor || 'N/A';
-        payload.value.attending_Doctor_fullname = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0].attending_Doctor_fullname || 'N/A';
-        payload.value.guarantor_Id = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0].guarantor_Id || payload.value.patient_Id;
-        payload.value.guarantor_Name = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0].guarantor_Name || 'PERSONAL';
-        payload.value.guarantor_Credit_Limit = selectedRowDetails.value.patient_registry 
-            && selectedRowDetails.value.patient_registry[0].guarantor_Credit_Limit !== null 
-            && selectedRowDetails.value.patient_registry[0].guarantor_Credit_Limit !== undefined
-            ? usePeso(selectedRowDetails.value.patient_registry[0].guarantor_Credit_Limit) 
-            : "OPEN";
+        if (selectedRowDetails.value && selectedRowDetails.value.id) {
+            if (payload.value.id !== selectedRowDetails.value.id) { 
+
+                payload.value       = Object.assign({}, selectedRowDetails.value);
+                payload.value.name  = selectedRowDetails.value.lastname && selectedRowDetails.value.firstname 
+                    ? `${selectedRowDetails.value.lastname}, ${selectedRowDetails.value.firstname} ${selectedRowDetails.value.middlename || ''}` 
+                    : '';
+                payload.value.patient_Name = selectedRowDetails.value.lastname + ', ' + selectedRowDetails.value.firstname + ' ' + selectedRowDetails.value.middlename || '';
+                payload.value.patient_Id = selectedRowDetails.value.patient_Id || '';
+                payload.value.civil_status = selectedRowDetails.value.civil_status && selectedRowDetails.value.civil_status.civil_status_description || '';
+                payload.value.sex = selectedRowDetails.value.sex && selectedRowDetails.value.sex.sex_description || '';
+                payload.value.birthdate = useDateMMDDYYY(selectedRowDetails.value.birthdate) || '';
+                payload.value.age = selectedRowDetails.value.age || '';
+                payload.value.case_No = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0].case_No || '';
+                payload.value.account = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0].mscPrice_Schemes == 1 ? "Self-Pay" : "Company / Insurance";
+                payload.value.registry_Date = selectedRowDetails.value.patient_registry && useDateMMDDYYY(selectedRowDetails.value.patient_registry[0].registry_Date) || '';
+                payload.value.attending_Doctor = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0].attending_Doctor || 'N/A';
+                payload.value.attending_Doctor_fullname = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0].attending_Doctor_fullname || 'N/A';
+                payload.value.guarantor_Id = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0].guarantor_Id || payload.value.patient_Id;
+                payload.value.guarantor_Name = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0].guarantor_Name || 'PERSONAL';
+                payload.value.guarantor_Credit_Limit = selectedRowDetails.value.patient_registry 
+                    && selectedRowDetails.value.patient_registry[0].guarantor_Credit_Limit !== null 
+                    && selectedRowDetails.value.patient_registry[0].guarantor_Credit_Limit !== undefined
+                    ? usePeso(selectedRowDetails.value.patient_registry[0].guarantor_Credit_Limit) 
+                    : "OPEN";
+            }
+        }
+        console.log('Is Updated HMO : ', payload.value.guarantor_Name )
     })
 
     onMounted(() => {
-        
         getRevenueCode();
         getMedicineCharges(); 
 
