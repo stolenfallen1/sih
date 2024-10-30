@@ -340,6 +340,26 @@
                                 <template v-slot:item.amount>
                                     {{ usePeso(item.amount) }}
                                 </template>
+                                <template v-slot:item.action="{ item }">
+                                    <v-btn
+                                        flat
+                                        size="large"
+                                        class="p-2 text-capitalize"
+                                        desity="default"
+                                        :id="item.request_num"
+                                        @click.prevent="handleCancelCharges(item.request_num)"
+                                    >
+                                        <v-icon color="#D50000">mdi-trash-can-outline</v-icon>
+                                        <v-tooltip
+                                            activator="parent"
+                                            location="top"
+                                        >
+                                            Cancel Charges
+
+                                        </v-tooltip>
+                                    </v-btn>
+                                </template>
+
                                 <template v-slot:footer>
                                     <tr>
                                         <td colspan="6" class="text-right">Total Amount:</td>
@@ -372,6 +392,26 @@
                                 <template v-slot:item.amount>
                                     {{ usePeso(item.amount) }}
                                 </template>
+            
+                                <template v-slot:item.action="{ item }">
+                                    <v-btn
+                                        flat
+                                        size="large"
+                                        class="p-2 text-capitalize"
+                                        desity="default"
+                                        @click.prevent="handleCancelCharges(item.request_num)"
+                                    >
+                                        <v-icon color="#D50000">mdi-trash-can-outline</v-icon>
+                                        <v-tooltip
+                                            activator="parent"
+                                            location="top"
+                                        >
+                                            Cancel Charges 
+
+                                        </v-tooltip>
+                                    </v-btn>
+                                </template>
+
                                 <template v-slot:footer>
                                     <tr>
                                         <td colspan="6" class="text-right">Total Amount:</td>
@@ -411,7 +451,6 @@
         @handle-select="(selected_item) => handleSelectedItem(selected_item, 'supplies')" 
         @close-dialog="closeItemsDialogForSupplies" 
     />
-
 
     <list-of-frequency 
         :open_frequency_list="open_frequency_list"
@@ -800,9 +839,15 @@
         open_frequency_list.value = false;
     }
 
+    const reference_id = ref(0);
+    const handleCancelCharges = async (id) => {
+       reference_id.value = id
+       openConfirmDialog()
+        
+    }
+
 
     const onSubmit = async () => {
-
         isLoading.value = true;
         isLoadingBtn.value = true;
 
@@ -814,49 +859,51 @@
 
         payload.value.Medicines = medicines;
         payload.value.Supplies = supplies;
+        payload.value.reference_id = reference_id.value;
 
         try {
+            if(parseInt(reference_id.value) !== 0) {
 
-            if (payload.value.medicine_stocks_OnHand !== undefined) {
-                checkStockAvailability(payload.value.medicine_stocks_OnHand, medicines, 'medicine', (flag) => flagMedicine = flag);
-            }
+                await processCharges();
+                
+            } else {
 
-            if (payload.value.supply_stocks_OnHand !== undefined) {
-                checkStockAvailability(payload.value.supply_stocks_OnHand, supplies, 'supply', (flag) => flagSupply = flag);
-            }
+                if (payload.value.medicine_stocks_OnHand !== undefined) {
+                    checkStockAvailability(payload.value.medicine_stocks_OnHand, medicines, 'medicine', (flag) => flagMedicine = flag);
+                }
 
-            if (flagMedicine || flagSupply) {
+                if (payload.value.supply_stocks_OnHand !== undefined) {
+                    checkStockAvailability(payload.value.supply_stocks_OnHand, supplies, 'supply', (flag) => flagSupply = flag);
+                }
 
-                if (payload.value.charge_to === "Company / Insurance") {
-                    credit_limit.value = payload.value.guarantor_Credit_Limit === 'OPEN'
-                        ? null
-                        : parseFloat(payload.value.guarantor_Credit_Limit.replace(/[^0-9.-]+/g, ''));
+                if (flagMedicine || flagSupply) {
 
-                    if (credit_limit.value !== null && parseFloat(totalAmount.value) > credit_limit.value) {
-                      
-                        if (confirm(`Insufficient credit limit! Total is ${totalAmount.value}, but your credit limit is only ${credit_limit.value}. Proceed anyway?`)) {
-                            
-                            await processCharges();
+                    if (payload.value.charge_to === "Company / Insurance") {
+                        credit_limit.value = payload.value.guarantor_Credit_Limit === 'OPEN'
+                            ? null
+                            : parseFloat(payload.value.guarantor_Credit_Limit.replace(/[^0-9.-]+/g, ''));
+
+                        if (credit_limit.value !== null && parseFloat(totalAmount.value) > credit_limit.value) {
+                        
+                            if (confirm(`Insufficient credit limit! Total is ${totalAmount.value}, but your credit limit is only ${credit_limit.value}. Proceed anyway?`)) {
+                                await processCharges();
+                            } else {
+                                useSnackbar(true, "warning", 'Charge process halted. Please review the items.');
+                            }
 
                         } else {
-
-                            useSnackbar(true, "warning", 'Charge process halted. Please review the items.');
-
+                            await processCharges();
                         }
-                    } else {
 
+                    } else {
                         await processCharges();
                     }
 
                 } else {
-
-                    await processCharges();
+                    useSnackbar(true, "error", 'Cannot charge, double-check item stocks for medicines or supplies.');
                 }
-
-            } else {
-
-                useSnackbar(true, "error", 'Cannot charge, double-check item stocks for medicines or supplies.');
             }
+            
 
         } catch (error) {
 
@@ -888,8 +935,17 @@
     };
 
     const processCharges = async () => {
+        let response = {};
         try{
-            const response = await useMethod("post", "er-medicine-supplies-charges", payload.value);
+            if(parseInt(reference_id.value) !== 0) {
+
+                response = await useMethod("post", "er-cancel-charge", payload.value);
+
+            } else {
+
+                response = await useMethod("post", "er-medicine-supplies-charges", payload.value);
+            }
+            console.log('This is The Response')
             if (response) {
 
                 useSnackbar(true, "success", response.message);
@@ -941,29 +997,33 @@
             }
         ];
     }
-    const chargeMedicineList = ref([]);
-    const chargeSupplyList = ref([]);
+
+    const chargeMedicineList    = ref([]);
+    const chargeSupplyList      = ref([]);
+
     const grandtotal = computed(() =>
         chargeMedicineList.value.reduce((acc, item) => acc + parseFloat(item.Amount), 0)
     );
 
     const medicineHeaders = ref([
-        { title: "Status", key: "status"},
-        { title: 'Code', key: 'code' },
-        { title: 'Item Name', key: 'item_name' },
-        { title: 'Price', key: 'price' },
-        { title: 'Quantity', key: 'quantity' },
-        { title: 'Frequency', key: 'dosage' },
-        { title: 'Net Amount', key: 'net_amount' }
+        { title: "Status",      key: "status"},
+        { title: 'Code',        key: 'code' },
+        { title: 'Item Name',   key: 'item_name' },
+        { title: 'Price',       key: 'price' },
+        { title: 'Quantity',    key: 'quantity' },
+        { title: 'Frequency',   key: 'dosage' },
+        { title: 'Net Amount',  key: 'net_amount' },
+        { title: 'Action',      key: 'action'}
     ]);
 
     const supplyHeaders = ref([
-        { title: "Status", key: "status"},
-        { title: 'Code', key: 'code' },
-        { title: 'Item Name', key: 'item_name' },
-        { title: 'Price', key: 'price' },
-        { title: 'Quantity', key: 'quantity' },
-        { title: 'Net Amount', key: 'net_amount' }
+        { title: "Status",      key: "status"},
+        { title: 'Code',        key: 'code' },
+        { title: 'Item Name',   key: 'item_name' },
+        { title: 'Price',       key: 'price' },
+        { title: 'Quantity',    key: 'quantity' },
+        { title: 'Net Amount',  key: 'net_amount' },
+        { title: 'Action',      key: 'action'}
     ]);
 
 
@@ -978,6 +1038,7 @@
             if (data && Array.isArray(data)) {
                 const filteredMedicineData = data.filter(item => item.RevenueID === 'EM');
                 chargeMedicineList.value = filteredMedicineData.map(item => ({
+
                     status: item.RecordStatus === 'X' 
                         ? 'unpaid' 
                         : 'paid',
@@ -988,11 +1049,13 @@
                     quantity: parseInt(item.Quantity),
                     dosage: item.description,
                     net_amount: parseFloat(item.Amount).toFixed(2),
+                    request_num: item.RequestNum
                     
                 }));
 
                 const filteredSupplyData = data.filter(item => item.RevenueID === 'RS')
                 chargeSupplyList.value = filteredSupplyData.map(item => ({
+
                     status: item.RecordStatus === 'X' ? 'unpaid' : 'paid',
                     code: item.ItemID,
                     code: item.ItemID,
@@ -1000,6 +1063,8 @@
                     price: parseFloat(item.NetCost).toFixed(2),
                     quantity: parseInt(item.Quantity),
                     net_amount: parseFloat(item.Amount).toFixed(2),
+                    request_num: item.RequestNum
+
                 }))
 
     
