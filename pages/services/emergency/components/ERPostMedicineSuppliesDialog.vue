@@ -1047,8 +1047,7 @@
         isLoading.value = true;
         try {
             const response = await useMethod("get", "get-charge-items/", "", payload.value.case_No);
-            console.log("Response:", response); 
-
+        
             const data = Array.isArray(response) ? response : response.data;
 
             if (data && Array.isArray(data)) {
@@ -1080,15 +1079,16 @@
 
                 }))
 
-    
-                console.log('Filtered and Mapped Data: ', chargeMedicineList.value);
             } else {
-                console.log("No data available in response.");
+                useSnackbar(true, "error", 'charges is empty or charges may not in array format');
             }
 
         } catch (error) {
-            console.log("Error fetching data:", error);
+
+            useSnackbar(true, "error", error);
+
         } finally {
+
             isLoading.value = false;
         }
     };
@@ -1107,8 +1107,7 @@
         }
     });
 
-    console.log('Params : ', selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0].case_No)
-
+   
     onUpdated(() => {
         if (selectedRowDetails.value && selectedRowDetails.value.id) {
             if (payload.value.id !== selectedRowDetails.value.id) { 
@@ -1137,7 +1136,6 @@
                     : "OPEN";
             }
         }
-        console.log('Is Updated HMO : ', payload.value.guarantor_Name )
     })
 
     onMounted(() => {
