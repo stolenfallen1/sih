@@ -248,7 +248,7 @@
                                 <tfoot>
                                     <tr>
                                         <td colspan="4" class="text-right">Total Amount: </td>
-                                        <td> <input class="input medicine-focus" v-model="totalAmount" readonly /> </td>
+                                        <td> {{ usePeso(totalAmount) }} </td>
                                     </tr>
                                 </tfoot>
                             </v-table>
@@ -309,8 +309,8 @@
                                 </tbody>
                                 <tfoot>
                                     <tr>
-                                        <td colspan="3" class="text-right">Total Amount: </td>
-                                        <!-- <td>{{ usePeso(totalAmount) }}</td> -->
+                                        <td colspan="4" class="text-right">Total Amount: </td>
+                                        <td>{{ usePeso(totalSupplyAmount) }}</td>
                                     </tr>
                                 </tfoot>
                             </v-table>
@@ -792,7 +792,6 @@
     };
 
     const totalAmount = ref(0);
-
     const calculateTotalAmountMedicine = () => {
         totalAmount.value = 0;
 
@@ -803,12 +802,13 @@
 
     }
 
+    const totalSupplyAmount = ref(0)
     const calculateTotalAmountSupply = () => {
-        totalAmount.value = 0;
+        totalSupplyAmount.value = 0;
 
         Supplies.value.forEach(item => {
-            const itemAmount = parseFloat(item.amount) || 0;
-            (totalAmount.value += itemAmount).toFixed(2);
+            const itemSupplyAmount = parseFloat(item.amount) || 0;
+            (totalSupplyAmount.value += itemSupplyAmount).toFixed(2);
         })
     }
 
@@ -846,8 +846,8 @@
         
     }
 
-
     const onSubmit = async () => {
+
         isLoading.value = true;
         isLoadingBtn.value = true;
 
@@ -935,8 +935,11 @@
     };
 
     const processCharges = async () => {
+
         let response = {};
+
         try{
+
             if(parseInt(reference_id.value) !== 0) {
 
                 response = await useMethod("post", "er-cancel-charge", payload.value);
@@ -945,7 +948,7 @@
 
                 response = await useMethod("post", "er-medicine-supplies-charges", payload.value);
             }
-            console.log('This is The Response')
+
             if (response) {
 
                 useSnackbar(true, "success", response.message);
@@ -964,6 +967,7 @@
     };
 
     const handleErrorResponse = (error) => {
+
         if (error?.response?.status === 404) {
             useSnackbar(true, "error", 'Incorrect Username or Passcode');
         } else {
@@ -971,6 +975,7 @@
         }
         isLoading.value = false;
         isLoadingBtn.value = false;
+
     };
 
     const closeWarningDialog = () => {
