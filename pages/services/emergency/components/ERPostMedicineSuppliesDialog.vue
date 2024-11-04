@@ -1049,54 +1049,46 @@
 
         isLoading.value = true;
         
-        try {
-            const response = await useMethod("get", "get-charge-items/", "", payload.value.case_No);
-        
-            const data = Array.isArray(response) ? response : response.data;
+        const response = await useMethod("get", "get-charge-items/", "", payload.value.case_No);
+    
+        const data = Array.isArray(response) ? response : response.data;
 
-            if (data && Array.isArray(data)) {
-                const filteredMedicineData = data.filter(item => item.RevenueID === 'EM');
-                chargeMedicineList.value = filteredMedicineData.map(item => ({
+        if (data && Array.isArray(data)) {
+            const filteredMedicineData = data.filter(item => item.RevenueID === 'EM');
+            chargeMedicineList.value = filteredMedicineData.map(item => ({
 
-                    status: (payload.value.guarantor_Name !== 'PERSONAL') ? 'Paid' : 'Unpaid',
-                    code: item.ItemID,
-                    item_name: item.Description,
-                    price: parseFloat(item.UnitPrice).toFixed(2),
-                    quantity: parseInt(item.Quantity),
-                    dosage: item.description,
-                    net_amount: parseFloat(item.Amount).toFixed(2),
-                    request_num: item.RequestNum,
-                    assess_num: item.AssessNum
-                    
-                }));
-
-                const filteredSupplyData = data.filter(item => item.RevenueID === 'RS')
+                status: (payload.value.guarantor_Name !== 'PERSONAL') ? 'Paid' : 'Unpaid',
+                code: item.ItemID,
+                item_name: item.Description,
+                price: parseFloat(item.UnitPrice).toFixed(2),
+                quantity: parseInt(item.Quantity),
+                dosage: item.description,
+                net_amount: parseFloat(item.Amount).toFixed(2),
+                request_num: item.RequestNum,
+                assess_num: item.AssessNum
                 
-                chargeSupplyList.value = filteredSupplyData.map(item => ({
+            }));
 
-                    status: (payload.value.guarantor_Name !== 'PERSONAL') ? 'Paid' : 'Unpaid',
-                    code: item.ItemID,
-                    code: item.ItemID,
-                    item_name: item.Description,
-                    price: parseFloat(item.UnitPrice).toFixed(2),
-                    quantity: parseInt(item.Quantity),
-                    net_amount: parseFloat(item.Amount).toFixed(2),
-                    request_num: item.RequestNum,
-                    assess_num: item.AssessNum
-                }))
+            const filteredSupplyData = data.filter(item => item.RevenueID === 'RS')
+            
+            chargeSupplyList.value = filteredSupplyData.map(item => ({
 
-            } else {
-                useSnackbar(true, "error", 'charges is empty or charges may not in array format');
-            }
+                status: (payload.value.guarantor_Name !== 'PERSONAL') ? 'Paid' : 'Unpaid',
+                code: item.ItemID,
+                code: item.ItemID,
+                item_name: item.Description,
+                price: parseFloat(item.UnitPrice).toFixed(2),
+                quantity: parseInt(item.Quantity),
+                net_amount: parseFloat(item.Amount).toFixed(2),
+                request_num: item.RequestNum,
+                assess_num: item.AssessNum
+            }))
 
-        } catch (error) {
-
-            useSnackbar(true, "error", error);
-
-        } finally {
-
+        } else {
             isLoading.value = false;
+            useSnackbar(true, "error", 'charges is empty or charges may not in array format');
         }
+
     };
 
     watchEffect(() => {
