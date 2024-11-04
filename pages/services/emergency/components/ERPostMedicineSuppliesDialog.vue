@@ -1046,8 +1046,6 @@
     ]);
 
     const getMedicineCharges = async () => {
-
-        isLoading.value = true;
         
         const response = await useMethod("get", "get-charge-items/", "", payload.value.case_No);
     
@@ -1085,7 +1083,6 @@
             }))
 
         } else {
-            isLoading.value = false;
             useSnackbar(true, "error", 'charges is empty or charges may not in array format');
         }
 
