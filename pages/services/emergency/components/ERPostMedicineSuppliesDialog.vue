@@ -1046,7 +1046,9 @@
     ]);
 
     const getMedicineCharges = async () => {
+
         isLoading.value = true;
+        
         try {
             const response = await useMethod("get", "get-charge-items/", "", payload.value.case_No);
         
