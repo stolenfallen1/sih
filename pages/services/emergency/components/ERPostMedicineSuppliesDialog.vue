@@ -353,7 +353,7 @@
                                         class="p-2 text-capitalize"
                                         desity="default"
                                         :id="item.request_num"
-                                        @click.prevent="handleCancelCharges(item.request_num)"
+                                        @click.prevent="handleCancelCharges(item.request_num, item.assess_num)"
                                     >
                                         <v-icon color="#D50000">mdi-trash-can-outline</v-icon>
                                         <v-tooltip
@@ -410,7 +410,7 @@
                                         size="large"
                                         class="p-2 text-capitalize"
                                         desity="default"
-                                        @click.prevent="handleCancelCharges(item.request_num)"
+                                        @click.prevent="handleCancelCharges(item.request_num, item.assess_num)"
                                     >
                                         <v-icon color="#D50000">mdi-trash-can-outline</v-icon>
                                         <v-tooltip
@@ -851,8 +851,10 @@
     }
 
     const reference_id = ref(0);
-    const handleCancelCharges = async (id) => {
-       reference_id.value = id
+    const medsys_assess_id = ref(0);
+    const handleCancelCharges = async (request_id, assess_num) => {
+       reference_id.value = request_id;
+       medsys_assess_id.value = assess_num;
        openConfirmDialog()
         
     }
@@ -871,6 +873,7 @@
         payload.value.Medicines = medicines;
         payload.value.Supplies = supplies;
         payload.value.reference_id = reference_id.value;
+        payload.value.medsys_AssessNum = medsys_assess_id.value;
 
         try {
             if(parseInt(reference_id.value) !== 0) {
@@ -1042,7 +1045,6 @@
         { title: 'Action',      key: 'action',      sortable: false }
     ]);
 
-
     const getMedicineCharges = async () => {
         isLoading.value = true;
         try {
@@ -1057,26 +1059,28 @@
                     status: (payload.value.guarantor_Name !== 'PERSONAL') ? 'Paid' : 'Unpaid',
                     code: item.ItemID,
                     item_name: item.Description,
-                    price: parseFloat(item.NetCost).toFixed(2),
+                    price: parseFloat(item.UnitPrice).toFixed(2),
                     quantity: parseInt(item.Quantity),
                     dosage: item.description,
                     net_amount: parseFloat(item.Amount).toFixed(2),
-                    request_num: item.RequestNum
+                    request_num: item.RequestNum,
+                    assess_num: item.AssessNum
                     
                 }));
 
                 const filteredSupplyData = data.filter(item => item.RevenueID === 'RS')
+                
                 chargeSupplyList.value = filteredSupplyData.map(item => ({
 
                     status: (payload.value.guarantor_Name !== 'PERSONAL') ? 'Paid' : 'Unpaid',
                     code: item.ItemID,
                     code: item.ItemID,
                     item_name: item.Description,
-                    price: parseFloat(item.NetCost).toFixed(2),
+                    price: parseFloat(item.UnitPrice).toFixed(2),
                     quantity: parseInt(item.Quantity),
                     net_amount: parseFloat(item.Amount).toFixed(2),
-                    request_num: item.RequestNum
-
+                    request_num: item.RequestNum,
+                    assess_num: item.AssessNum
                 }))
 
             } else {
