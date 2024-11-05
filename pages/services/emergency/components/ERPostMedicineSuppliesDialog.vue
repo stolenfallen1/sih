@@ -1083,6 +1083,7 @@
             }))
 
         } else {
+
             useSnackbar(true, "error", 'charges is empty or charges may not in array format');
         }
 
@@ -1102,7 +1103,6 @@
         }
     });
 
-   
     onUpdated(() => {
         if (selectedRowDetails.value && selectedRowDetails.value.id) {
             if (payload.value.id !== selectedRowDetails.value.id) { 
