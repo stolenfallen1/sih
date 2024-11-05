@@ -56,22 +56,22 @@
 	</v-card>
 	<v-card class="mb-2" elevation="4">
 		<ReusableTable
-		:items-per-page="50"
-		:serverItems="serverItems"
-		:totalItems="totalItems"
-		:loading="loading"
-		:tabs="tableTabs"
-		:columns="columns"
-		:showTabs="showTabs"
-		:itemsPerPage="itemsPerPage"
-		:tableTitle="pageTitle"
-		:current-tab="currentTab"
-		@fetchPage="loadItems"
-		@selected-row="selectedUser"
-		@tab-change="handleTabChange"
-		@action-search="handleSearch"
-		@action-refresh="handleRefresh"
-		@open-filter="openFilterOptions"
+			:items-per-page="50"
+			:serverItems="serverItems"
+			:totalItems="totalItems"
+			:loading="loading"
+			:tabs="tableTabs"
+			:columns="columns"
+			:showTabs="showTabs"
+			:itemsPerPage="itemsPerPage"
+			:tableTitle="pageTitle"
+			:current-tab="currentTab"
+			@fetchPage="loadItems"
+			@selected-row="selectedUser"
+			@tab-change="handleTabChange"
+			@action-search="handleSearch"
+			@action-refresh="handleRefresh"
+			@open-filter="openFilterOptions"
 		>
 			<template v-for="column in columns" v-slot:[`column-${column.key}`]="{ item }">
 				<div v-if="column.key === 'registry_status'" :key="column.key" class="isActive">
@@ -104,13 +104,14 @@
 							width: '9px', 
 							backgroundColor: 
 								item.patient_registry && 
-								item.patient_registry[0].guarantor_Id !== null 
+								item.patient_registry[0].guarantor_Name !== 'Self Pay' 
 								? 'yellow' 
 								: 'orange' 
 						}" 
+
 						:title="
 							item.patient_registry && 
-							item.patient_registry[0].guarantor_Id !== null 
+							item.patient_registry[0].guarantor_Name !== 'Self Pay' 
 							? 'HMO ' 
 							: 'Self Pay'
 						"
