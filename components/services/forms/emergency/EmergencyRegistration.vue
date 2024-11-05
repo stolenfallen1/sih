@@ -110,7 +110,7 @@
     });
     const showSnackbar = ref(false);
     const showDialog = ref(false);
-
+    
     let tab = ref("0");
     const formErrors = ref({});
     const formType = ref('emergency');
@@ -398,35 +398,28 @@
             payload.value.selectedConsultant = Consultant.value;
 
             const Allergy = ref([]);
-
+   
             if (selectedRowDetails.value.patient_registry && Array.isArray(selectedRowDetails.value.patient_registry)) {
+                console.log('SELECTED SHOW ALLERGIES : ', selectedRowDetails.value.patient_registry);
                 selectedRowDetails.value.patient_registry.forEach(reg => {
-                    if (reg.allergies) {
 
-                        const allergy_id = reg.allergies.allergy_type_id || '';
-                        const allergy_name = reg.allergies.allergy_description || '';
+                    if (reg.allergies && Array.isArray(reg.allergies)) {
+                        reg.allergies.forEach(allergy => {
+                            const allergy_id = allergy.allergy_type_id || '';
+                            const allergy_name = allergy.allergy_description || ''; 
+                            const symptoms = allergy.symptoms_allergy.map(symptom => ({
+                                description: symptom.symptom_Description  
+                            })) || []; 
+                            const cause = allergy.cause_of_allergy.map(cause => cause.description).join(', ') || '';
+                            const drugUsed = allergy.drug_used_for_allergy.map(drug => drug.drug_Description).join(', ') || ''; 
 
-                        const symptoms = Array.isArray(reg.allergies.symptoms_allergy) 
-                            ?   reg.allergies.symptoms_allergy.map(symptom => ({
-                                    id: symptom.symptom_id || '',
-                                    description: symptom.symptom_Description || ''
-                                }))
-                            : [];
-                        
-                        const cause = Array.isArray(reg.allergies.cause_of_allergy) 
-                            ? reg.allergies.cause_of_allergy.map(cause => cause.description || '').join(', ') 
-                            : '';
-                        
-                        const drugUsed = Array.isArray(reg.allergies.drug_used_for_allergy) 
-                            ? reg.allergies.drug_used_for_allergy.map(drug => drug.drug_Description || '').join(', ') 
-                            : '';
-
-                        Allergy.value.push({
-                            allergy_id,
-                            allergy_name,
-                            symptoms,
-                            cause,
-                            drugUsed
+                            Allergy.value.push({
+                                allergy_id,
+                                allergy_name,
+                                symptoms,
+                                cause,
+                                drugUsed
+                            });
                         });
                     }
                 });
