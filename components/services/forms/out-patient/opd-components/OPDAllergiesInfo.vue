@@ -47,7 +47,7 @@
                 Add Allergies
             </v-btn>
             <v-spacer></v-spacer>
-            <v-btn color="blue-darken-1 border border-info" :disabled="clicked_option === 'view'" @click="getPatientAllergyHistory">
+            <v-btn color="blue-darken-1 border border-info" :disabled="clicked_option === 'view' || !payload.patient_Id" @click="getPatientAllergyHistory">
                 <v-icon class="mr-2">mdi-folder-multiple-outline</v-icon>
                 Look Allergy History
             </v-btn>

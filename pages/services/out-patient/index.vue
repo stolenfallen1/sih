@@ -367,7 +367,7 @@ const tableTabs = ref([
                 title: "Case No.",
                 align: "start",
                 sortable: false,
-                key: "case_no",
+                key: "case_No",
               },
               {
                 title: "Last Name",
