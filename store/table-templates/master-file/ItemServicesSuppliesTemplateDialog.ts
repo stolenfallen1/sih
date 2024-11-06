@@ -11,7 +11,6 @@ export const ItemServicesSuppliesTemplateDialog = defineStore('ItemServicesSuppl
     Dosages: false,
     DrugAdminGroups: false,
     DohDrugLists: false,
-    DxMedicalPackages: false,
     GenericNames: false,
     Indications: false,
     ItemCategories: false,

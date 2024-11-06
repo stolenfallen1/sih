@@ -111,7 +111,7 @@ const props = defineProps({
         default: () => "",
         required: true,
     },
-    chargecode: {
+    itemcodes: {
         type: Array,
         default: () => [],
         required: true,
@@ -170,7 +170,7 @@ const loadItems = async (page = null, itemsPerPage = null) => {
             revenuecode: props.user_input_revenue_code,
             warehouseID:parseInt(props.warehouse_id),
             patienttype: props.patienttype,
-            // chargecode: props.chargecode, 
+            itemcodes: props.itemcodes, 
         }
     });
     if (response) {
@@ -185,7 +185,6 @@ const handleSelectedRow = (selectedRows) => {
     const selectedItems = selectedRows.map(rowId => serverItems.value.find(item => item.id === rowId));  
     const validSelectedItems = selectedItems.filter(item => item !== undefined);
     selected_item.value = validSelectedItems[0];
-    console.log("SELECTED ITEM", selected_item.value);
 };
 const onSelect = () => {
     const wareHouseItems = selected_item.value?.ware_house_items[0];

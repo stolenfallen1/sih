@@ -2,7 +2,7 @@
     <v-dialog :model-value="show" rounded="lg" scrollable @update:model-value="closeDialog" max-width="1120px">    
         <v-card rounded="lg">
             <v-toolbar density="compact" color="#107bac" hide-details>
-                <v-toolbar-title>Patient Account Transaction List {{ selectedRowDetails.id }}</v-toolbar-title>
+                <v-toolbar-title>Requisitions Charges to Patient's Account</v-toolbar-title>
                 <v-btn color="white" @click="closeDialog">
                     <v-icon>mdi-close</v-icon>
                 </v-btn>
@@ -52,19 +52,21 @@
             <v-divider></v-divider>
             <v-card-actions>
                 <v-btn color="blue-darken-1 border border-info" @click="closeDialog"> Close </v-btn>
-                <v-btn color="blue-lighten-1 border border-primary" @click="openPrintSlip"> Print Requisition Slip </v-btn>
+                <v-btn class="bg-success text-white" @click="openPrintSlip"> Rendered Transactions </v-btn>
                 <v-spacer></v-spacer>
-                <v-btn class="bg-primary text-white" @click="openMultiDepartmentSelection">Add</v-btn>
+                <v-btn class="bg-primary text-white" @click="openMultiDepartmentSelection('supply')" prepend-icon="mdi-warehouse">Add Supplies</v-btn>
+                <v-btn class="bg-primary text-white" @click="openMultiDepartmentSelection('medicine')" prepend-icon="mdi-pill">Add Medicines</v-btn>
+                <v-btn class="bg-primary text-white" @click="openMultiDepartmentSelection('procedure')" prepend-icon="mdi-needle">Add Procedures</v-btn>
             </v-card-actions>
         </v-card>
     </v-dialog>
-    <DxMedicalItemSelection :open_medical_item_selection="open_medical_item_selection" @close-dialog="closeMultiDepartmentSelection" @handle-submit="onSubmitSelectedItem" />
+    <RequisitionMultiItemSelection :open_medical_item_selection="open_medical_item_selection" :category="category" @close-dialog="closeMultiDepartmentSelection" @handle-submit="onSubmitSelectedItem" />
     <RequisitionPrintSlip :print_slip="print_slip" :form_type="form_type" @close-dialog="closePrintSlip" />
 </template>
 
 <script setup>
-import DxMedicalItemSelection from '~/components/reusables/build-file/dx-medical-packages/sub-forms/DxMedicalItemSelection.vue';
 import RequisitionPrintSlip from './sub-forms/RequisitionPrintSlip.vue';
+import RequisitionMultiItemSelection from './sub-forms/RequisitionMultiItemSelection.vue';
 
 const props = defineProps({
     show: {
@@ -82,9 +84,11 @@ const { selectedRowDetails } = storeToRefs(useSubcomponentSelectedRowDetailsStor
 const emits = defineEmits(['close-dialog'])
 
 const open_medical_item_selection = ref(false);
+const category = ref(null);
 const print_slip = ref(false);
 
-const openMultiDepartmentSelection = () => {
+const openMultiDepartmentSelection = (selectedCategory) => {
+    category.value = selectedCategory;
     open_medical_item_selection.value = true;
 }
 const closeMultiDepartmentSelection = () => {
@@ -105,18 +109,14 @@ const closeDialog = () => {
 }
 
 const headers = [
-    { title: "Ancillary",  align: "start", sortable: false, key: "ancillary" },
-    { title: "Requisition No.",  align: "start", sortable: false, key: "requisition_no" },
-    { title: "Request DateTime",  align: "start", sortable: false, key: "request_datetime" },
-    { title: "Render DateTime",  align: "start", sortable: false, key: "render_datetime" },
-    { title: "Documnet No.",  align: "start", sortable: false, key: "document_no" },
-    { title: "Amount",  align: "start", sortable: false, key: "amount" },
-    { title: "Output Tax",  align: "start", sortable: false, key: "output_tax" },
-    { title: "Discount Amount",  align: "start", sortable: false, key: "discount_amount" },
-    { title: "Net Amount",  align: "start", sortable: false, key: "net_amount" },
-    { title: "Rendered By",  align: "start", sortable: false, key: "rendered_by" },
-    { title: "Requested By",  align: "start", sortable: false, key: "requested_by" },
-    { title: "Cancelled By",  align: "start", sortable: false, key: "cancelled_by" },
+    { title: "",  align: "start", sortable: false, key: "" },
+    { title: "Code",  align: "start", sortable: false, key: "" },
+    { title: "Category",  align: "start", sortable: false, key: "" },
+    { title: "Description",  align: "start", sortable: false, key: "" },
+    { title: "Quantity",  align: "start", sortable: false, key: "" },
+    { title: "Frequency",  align: "start", sortable: false, key: "" },
+    { title: "Amount",  align: "start", sortable: false, key: "" },
+    { title: "Request Date",  align: "start", sortable: false, key: "" },
 ];
 
 const data = ref({

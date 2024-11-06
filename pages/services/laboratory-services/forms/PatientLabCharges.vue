@@ -151,13 +151,13 @@
                         </template>
                         <template v-slot:item.requestStatus="{ item }">
                             <v-chip color="orange" v-if="item.requestStatus == 'X' && item.cancelleddate == null">Pending</v-chip>
-                            <v-chip color="red" v-if="item.requestStatus == 'X' && item.cancelleddate != null && item.cancelledby != null">Cancelled</v-chip>
-                            <v-chip color="green" v-else-if="item.requestStatus == 'W' && item.cancelleddate != null">Done</v-chip>
+                            <v-chip color="red" v-else-if="item.requestStatus == 'R' && item.cancelleddate == null && item.cancelledby == null">Cancelled</v-chip>
+                            <v-chip color="green" v-else-if="item.requestStatus == 'W' && item.cancelleddate != null && item.cancelledby != null"">Done</v-chip>
                         </template>
                         <template v-slot:item.resultStatus="{ item }">
-                            <v-chip color="orange" v-if="item.resultStatus == 'X' && item.cancelleddate == null">Pending</v-chip>
-                            <v-chip color="red" v-if="item.requestStatus == 'X' && item.cancelleddate != null && item.cancelledby != null">Cancelled</v-chip>
-                            <v-chip color="green" v-else-if="item.resultStatus == 'W' && item.cancelleddate != null">Done</v-chip>
+                            <v-chip color="orange" v-if="item.requestStatus == 'X' && item.cancelleddate == null">Pending</v-chip>
+                            <v-chip color="red" v-else-if="item.requestStatus == 'R' && item.cancelleddate == null && item.cancelledby == null">Cancelled</v-chip>
+                            <v-chip color="green" v-else-if="item.requestStatus == 'W' && item.cancelleddate != null && item.cancelledby != null"">Done</v-chip>
                         </template>
                         <template v-slot:item.cancelleddate="{ item }">
                             {{ item.cancelleddate ? useDateMMDDYYY(item.cancelleddate) : "" }}

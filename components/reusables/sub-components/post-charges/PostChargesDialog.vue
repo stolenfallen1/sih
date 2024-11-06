@@ -2,7 +2,7 @@
     <v-dialog :model-value="show" rounded="lg" scrollable @update:model-value="closeDialog" max-width="1120px">
         <v-card rounded="lg">
             <v-toolbar density="compact" color="#107bac" hide-details>
-                <v-toolbar-title>Post Charges to Patient's Account {{ selectedRowDetails.id }}</v-toolbar-title>
+                <v-toolbar-title>Procedure Charges to Patient's Account</v-toolbar-title>
                 <v-btn color="white" @click="closeDialog">
                     <v-icon>mdi-close</v-icon>
                 </v-btn>
@@ -932,12 +932,7 @@ const onSubmit = async (user_details) => {
                             closeConfirmCharge();
                             printCharges(payload.value, response.data.charges);
                         } else {
-                            if (error.response && error.response.status === 404) {
-                                useSnackbar(true, "error", 'Incorrect Username or Passcode');
-                                isLoading.value = false;
-                            } else {
-                                return useSnackbar(true, "error", "Failed to post charges.");
-                            }
+                            return useSnackbar(true, "error", "Failed to post charges.");
                         }
                     }
                 } else {
@@ -949,23 +944,12 @@ const onSubmit = async (user_details) => {
                         closeConfirmCharge();
                         printCharges(payload.value, response.data.charges);
                     } else {
-                        if (error.response && error.response.status === 404) {
-                            useSnackbar(true, "error", 'Incorrect Username or Passcode');
-                            isLoading.value = false;
-                            user_attempts.value += 1;
-                        } else {
-                            return useSnackbar(true, "error", "Failed to post charges.");
-                        }
+                        return useSnackbar(true, "error", "Failed to post charges.");
                     }
                 } 
             } catch (error) {
-                if (error.response && error.response.status === 404) {
-                        useSnackbar(true, "error", 'Incorrect Username or Passcode');
-                        isLoading.value = false;
-                } else {
-                    return useSnackbar(true, "error", "CATCH ERROR: Call IT Department");
-                }
-
+                console.log(error);
+                return useSnackbar(true, "error", "CATCH ERROR: Call IT Department 123");
             } finally {
                 isLoadingBtn.value = false;
             }
@@ -979,21 +963,11 @@ const onSubmit = async (user_details) => {
                     closeConfirmCharge();
                     printCashAssessment(payload.value, response.data.charges);
                 } else {
-                    if (error.response && error.response.status === 404) {
-                        useSnackbar(true, "error", 'Incorrect Username or Passcode');
-                        isLoading.value = false;
-                    } else {
-                        return useSnackbar(true, "error", "Failed to post charges.");
-                    }
+                    return useSnackbar(true, "error", "Failed to post charges.");
                 }
             } catch (error) {
-                if (error.response && error.response.status === 404) {
-                        useSnackbar(true, "error", 'Incorrect Username or Passcode');
-                        isLoading.value = false;
-                } else {
-                    return useSnackbar(true, "error", "CATCH ERROR: Call IT Department");
-                }
-                return useSnackbar(true, "error", "CATCH ERROR: Call IT Department");
+                console.log(error);
+                return useSnackbar(true, "error", "CATCH ERROR: Call IT Department 456");
             } finally {
                 isLoadingBtn.value = false;
             }
@@ -1061,9 +1035,9 @@ const revokeSelectedCharges = async (charges) => {
         });
         if (response) {
             useSnackbar(true, "success", "Charges revoked successfully.");
-            closeConfirmRevoke();
             getChargesHistory();
             getProfFeeHistory();
+            closeConfirmRevoke();
         } else {
             return useSnackbar(true, "error", "Failed to revoke charges.");
         }
@@ -1084,9 +1058,9 @@ const revokeSelectedCashAssessment = async (charges) => {
         });
         if (response) {
             useSnackbar(true, "success", "Charges revoked successfully.");
-            closeConfirmRevoke();
             getCashAssessmentHistory();
             getCashProfHistory();
+            closeConfirmRevoke();
         } else {
             if (error.response && error.response.status === 404) {
                 useSnackbar(true, "error", 'Incorrect Username or Passcode');

@@ -1,9 +1,9 @@
 <template>
-    <v-dialog :model-value="print_slip" rounded="lg" scrollable @update:model-value="closeDialog" max-width="600px">
+    <v-dialog :model-value="print_slip" rounded="lg" scrollable @update:model-value="closeDialog" max-width="900px">
         <form @submit.prevent="onSubmit">        
             <v-card rounded="lg">
                 <v-toolbar density="compact" color="#107bac" hide-details>
-                    <v-toolbar-title>Print Requisition Slip {{ selectedRowDetails.id }}</v-toolbar-title>
+                    <v-toolbar-title>TO CHANGE AS HISTORY OF PATIENTS REQUISITIONS {{ selectedRowDetails.id }}</v-toolbar-title>
                     <v-btn color="white" @click="closeDialog">
                         <v-icon>mdi-close</v-icon>
                     </v-btn>

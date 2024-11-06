@@ -30,7 +30,7 @@
                             </v-tabs>
                         </v-col>
                         <v-divider vertical color="#000"></v-divider>
-                        <v-col cols="9" class="scrollable-content">
+                        <v-col class="scrollable-content">
                             <v-window v-model="tab">
                                 <v-window-item class="pa-1">
                                     <o-p-d-patient-basic-info :clicked_option="clicked_option" :payload="payload" :formErrors="formErrors" />
