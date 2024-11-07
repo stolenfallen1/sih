@@ -237,11 +237,15 @@
                 response = await useMethod("put", "update-emergency", payload.value, "", payload.value.patient_Id);
                 if (response) {
                     useSnackbar(true, "green", response.message);
-                    isLoading.value = false;
-                    payload.value   = Object.assign({});
-                    tab.value       = "0";
-                    closeDialog();
-                    closeConfirmDialog();
+                    setTimeout(() => {
+                        isLoading.value = false;
+                        payload.value   = Object.assign({});
+                        tab.value       = "0";
+                        closeDialog();
+                        closeConfirmDialog();
+                        window.location.reload();
+                    }, 500);
+        
                 } else {
                     if (error.response && error.response.status === 404) {
                         useSnackbar(true, "red", 'Incorrect Username or Passcode');
@@ -254,11 +258,15 @@
                 response = await useMethod("post", "register-emergency", payload.value);
                 if (response) {
                     useSnackbar(true, "green", response.message);
-                    isLoading.value = false;
-                    payload.value   = Object.assign({});
-                    tab.value       = "0";
-                    closeDialog();
-                    closeConfirmDialog();
+                    setTimeout(() => {
+                        window.location.reload();
+                        isLoading.value = false;
+                        payload.value   = Object.assign({});
+                        tab.value       = "0";
+                        closeDialog();
+                        closeConfirmDialog();
+                    }, 500)
+
                 }  else {
                     if (error.response && error.response.status === 404) {
                         useSnackbar(true, "red", 'Incorrect Username or Passcode');

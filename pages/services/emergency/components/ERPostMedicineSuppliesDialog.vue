@@ -2,7 +2,7 @@
     <v-dialog :model-value="show" rounded="lg" scrollable @update:model-value="closeDialog" max-width="1120px">    
         <v-card rounded="lg">
             <v-toolbar density="compact" color="#107bac" hide-details>
-                <v-toolbar-title>OPDListOfItems.vueine / Supplies Entry</v-toolbar-title>
+                <v-toolbar-title>List Of Items Medicines / Supplies Entry</v-toolbar-title>
                 <v-btn color="white" @click="closeDialog">
                     <v-icon>mdi-close</v-icon>
                 </v-btn>
@@ -624,7 +624,7 @@
 
     const focusNextMedicine = (index) => {
         const inputs = document.querySelectorAll('.medicine-focus');
-        const transactionCodeInput = inputs[(index + 1) * 7];
+        const transactionCodeInput = inputs[(index + 1) * 8];
         if (transactionCodeInput) {
             transactionCodeInput.focus();
         }
@@ -1080,6 +1080,7 @@
                 net_amount: parseFloat(item.Amount).toFixed(2),
                 request_num: item.RequestNum,
                 assess_num: item.AssessNum
+                
             }))
 
         } else {
