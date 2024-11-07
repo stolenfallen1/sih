@@ -400,7 +400,6 @@
         :open_cashier_settings="open_cashier_settings"
         @close-dialog="closeCashierSettings"
         @save-settings="handleCashierSettings"
-        :onSubmit="onSubmit"
     />
     <RecieptsInfo 
         :payload="payload"
@@ -784,7 +783,7 @@ const resetTransactionForm = () => {
 };
 
 const onSubmit = async (user_details) => {
-    if (user_details.user_passcode === usePasscode()) {
+    if (user_details?.user_passcode === usePasscode()) {
         switch(payload.value.payment_code) {
             case 1:
                 const cashtrans_res = await useMethod("post", "save-cash-transaction", payload.value);
@@ -878,7 +877,7 @@ watch(() => payload.value.amount, () => {
 
 
 const parseCurrencyInput = (value) => {
-    return parseFloat(value.replace(/[₱,]/g, '')) || null;
+    return parseFloat(value.replace(/[?,]/g, '')) || null;
 }
 
 const updateCashAmount = () => {
@@ -949,15 +948,13 @@ const handleCardItems = async () => {
     } 
 }
 
-watchEffect(() => {
+onMounted(() => {
     setTimeout(() => {
         cardPaymentMethod();
         cashierPaymentCode();
         discountMethod();
-        if (discount_types.value != null && payment_codes.value != null && card_types.value != null) {
-            openCashierSettings();
-        }
-    }, 1500);
+        openCashierSettings();
+    }, 2000);
 });
 </script>
 
