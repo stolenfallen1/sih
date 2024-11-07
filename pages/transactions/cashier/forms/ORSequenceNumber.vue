@@ -178,6 +178,7 @@ const getORSequence = async () => {
 
 onUpdated(() => {
     getShiftSchedule();
+    getORSequence();
     const userDetails = localStorage.getItem("user_details");
     if (userDetails) {
         try {
@@ -188,10 +189,6 @@ onUpdated(() => {
             console.error('Error parsing user details from localStorage:', error);
         }
     }
-});
-
-onMounted(async() => {
-    getORSequence();
 });
 </script>
 

@@ -68,7 +68,9 @@ const closeDialog = () => {
 };
 
 onMounted(() => {
-  isDialogOpen.value = true;
+  setTimeout(() => {
+        isDialogOpen.value = true;
+    }, 2000);
 });
 </script>
 

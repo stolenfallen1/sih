@@ -948,11 +948,14 @@ const handleCardItems = async () => {
     } 
 }
 
+onUpdated(() => {
+    cardPaymentMethod();
+    cashierPaymentCode();
+    discountMethod();
+});
+
 onMounted(() => {
     setTimeout(() => {
-        cardPaymentMethod();
-        cashierPaymentCode();
-        discountMethod();
         openCashierSettings();
     }, 2000);
 });
