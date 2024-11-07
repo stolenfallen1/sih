@@ -9,12 +9,12 @@ export const useDropdownlist = () => {
   useCivilstatus();
   useDoctorCategory();
   useServiceType();
-  useDoctorSpecialization();
+  // useDoctorSpecialization();
   useRegion();
   useCountry();
   useRoomAccomodation();
   useRoomClass();
-  useRoomStatus();
+  // useRoomStatus();
   useReligion();
   useNationality();
 }
