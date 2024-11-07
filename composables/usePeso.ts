@@ -1,13 +1,16 @@
 export const usePeso = (price: any, currencyCode = 'PHP', locale = 'en-PH') => {
     const amount = typeof price === 'number' ? price : parseFloat(price);
-
-    // Format the amount without rounding
-    const formattedAmount = amount.toLocaleString(locale, {
+    
+    if (isNaN(amount)) {
+        return new Intl.NumberFormat(locale, {
+            style: 'currency',
+            currency: currencyCode,
+        }).format(0); 
+    }
+    
+    const formatter = new Intl.NumberFormat(locale, {
         style: 'currency',
         currency: currencyCode,
-        minimumFractionDigits: 2, 
-        maximumFractionDigits: 2, 
     });
-
-    return formattedAmount;
-}
+    return formatter.format(amount);
+};
