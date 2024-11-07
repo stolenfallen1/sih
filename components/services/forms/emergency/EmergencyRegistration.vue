@@ -364,7 +364,7 @@
             const Guarantor = ref([]);
             if (selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0].guarantor_Id != null) {
                 let guarantor_Id                        = selectedRowDetails.value.patient_registry[0].guarantor_Id ? selectedRowDetails.value.patient_registry[0].guarantor_Id : '';
-                let guarantor_name                      = selectedRowDetails.value.patient_registry[0].guarantor_Name.trim() ? selectedRowDetails.value.patient_registry[0].guarantor_Name.trim() : '';
+                let guarantor_name                      = selectedRowDetails.value.patient_registry[0].guarantor_Name ? selectedRowDetails.value.patient_registry[0].guarantor_Name : '';
                 let guarantor_Approval_code             = selectedRowDetails.value.patient_registry[0].guarantor_Approval_code ? selectedRowDetails.value.patient_registry[0].guarantor_Approval_code : '';
                 let guarantor_Approval_no               = selectedRowDetails.value.patient_registry[0].guarantor_Approval_no ? selectedRowDetails.value.patient_registry[0].guarantor_Approval_no : '';
                 let guarantor_Approval_date             = useDateMMDDYYY(selectedRowDetails.value.patient_registry[0].guarantor_Approval_date) ? useDateMMDDYYY(selectedRowDetails.value.patient_registry[0].guarantor_Approval_date) : '';
@@ -400,9 +400,7 @@
             const Allergy = ref([]);
    
             if (selectedRowDetails.value.patient_registry && Array.isArray(selectedRowDetails.value.patient_registry)) {
-                console.log('SELECTED SHOW ALLERGIES : ', selectedRowDetails.value.patient_registry);
                 selectedRowDetails.value.patient_registry.forEach(reg => {
-
                     if (reg.allergies && Array.isArray(reg.allergies)) {
                         reg.allergies.forEach(allergy => {
                             const allergy_id = allergy.allergy_type_id || '';
@@ -426,6 +424,7 @@
             }
 
             payload.value.selectedAllergy = Allergy.value;
+            
             payload.value.registry_Remarks = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0].registry_Remarks ? selectedRowDetails.value.patient_registry[0].registry_Remarks : '';
         
         } else {
