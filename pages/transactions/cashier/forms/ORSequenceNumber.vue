@@ -119,6 +119,10 @@ const props = defineProps({
         type: Boolean,
         required: false,
     },
+    onSubmit: {
+        type: Function,
+        required: true,
+    }
 });
 
 const payload = ref({
@@ -192,6 +196,12 @@ onUpdated(() => {
 
 onMounted(async() => {
     getORSequence();
+});
+
+watchEffect(() => {
+    if (props.onSubmit()) {
+        getORSequence();
+    }
 });
 </script>
 

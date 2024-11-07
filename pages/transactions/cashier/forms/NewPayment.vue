@@ -400,6 +400,7 @@
         :open_cashier_settings="open_cashier_settings"
         @close-dialog="closeCashierSettings"
         @save-settings="handleCashierSettings"
+        :onSubmit="onSubmit"
     />
     <RecieptsInfo 
         :payload="payload"
@@ -792,6 +793,7 @@ const onSubmit = async (user_details) => {
                     resetTransactionForm();
                     closeRecieptsForm();
                     closeConfirmDialog();
+                    openCashierSettings();
                 }
                 break;
             case 5:
@@ -801,6 +803,7 @@ const onSubmit = async (user_details) => {
                     resetTransactionForm();
                     closeRecieptsForm();
                     closeConfirmDialog();
+                    openCashierSettings();
                 }
                 break;
             case 6:
@@ -810,6 +813,7 @@ const onSubmit = async (user_details) => {
                     resetTransactionForm();
                     closeRecieptsForm();
                     closeConfirmDialog();
+                    openCashierSettings();
                 }
                 break;
             default:
@@ -945,16 +949,15 @@ const handleCardItems = async () => {
     } 
 }
 
-onMounted(() => {
+watchEffect(() => {
     setTimeout(() => {
-        openCashierSettings();
         cardPaymentMethod();
         cashierPaymentCode();
         discountMethod();
-    }, 1000);
-});
-onUnmounted(() => {
-    closeCashierSettings();
+        if (discount_types.value != null && payment_codes.value != null && card_types.value != null) {
+            openCashierSettings();
+        }
+    }, 1500);
 });
 </script>
 
