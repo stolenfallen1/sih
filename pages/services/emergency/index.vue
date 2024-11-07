@@ -74,6 +74,7 @@
 			@open-filter="openFilterOptions"
 		>
 			<template v-for="column in columns" v-slot:[`column-${column.key}`]="{ item }">
+
 				<div v-if="column.key === 'registry_status'" :key="column.key" class="isActive">
 					<span 
 						:style="{ 
@@ -104,14 +105,16 @@
 							width: '9px', 
 							backgroundColor: 
 								item.patient_registry && 
-								item.patient_registry[0].guarantor_Name !== 'Self Pay' 
+								item.patient_registry[0].guarantor_Name !== 'Self Pay' && 
+                item.patient_registry[0].guarantor_Name !== null
 								? 'yellow' 
 								: 'orange' 
 						}" 
 
 						:title="
 							item.patient_registry && 
-							item.patient_registry[0].guarantor_Name !== 'Self Pay' 
+							item.patient_registry[0].guarantor_Name !== 'Self Pay' && 
+              item.patient_registry[0].guarantor_Name !== null
 							? 'HMO ' 
 							: 'Self Pay'
 						"
@@ -254,7 +257,7 @@
 	<SuspendDialog :show="Suspend" :form_type="form_type" @close-dialog="useSubComponents('Suspend', false)" />
 	<RequisitionsDialog :show="Requisitions" :form_type="form_type" @close-dialog="useSubComponents('Requisitions', false)" />
 	<PostChargesDialog :show="PostCharges" @close-dialog="useSubComponents('PostCharges', false)" />
-  <ERPostMedicineSuppliesDialog :show="ERPostMedicineSupplies" @close-dialog="useSubComponents('ERPostMedicineSupplies', false)" />
+  	<ERPostMedicineSuppliesDialog :show="ERPostMedicineSupplies" @close-dialog="useSubComponents('ERPostMedicineSupplies', false)" />
 	<PostCorporatePackageDialog :show="PostCorporateMedicalPackage" @close-dialog="useSubComponents('PostCorporateMedicalPackage', false)"/>
 	<PostDiagnosticPackageDialog :show="PostDiagnosticMedicalPackage" @close-dialog="useSubComponents('PostDiagnosticMedicalPackage', false)"/> 
 	<PostAdjustmentDialog :show="PostAdjustments" @close-dialog="useSubComponents('PostAdjustments', false)" />
