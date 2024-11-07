@@ -874,10 +874,8 @@ watch(() => payload.value.amount, () => {
     }
 });
 
-
-
 const parseCurrencyInput = (value) => {
-    return parseFloat(value.replace(/[?,]/g, '')) || null;
+    return parseFloat(value.replace(/[₱,]/g, '')) || null;
 }
 
 const updateCashAmount = () => {
