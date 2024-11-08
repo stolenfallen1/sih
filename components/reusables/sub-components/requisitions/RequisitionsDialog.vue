@@ -3,6 +3,31 @@
         <v-card rounded="lg">
             <v-toolbar density="compact" color="#107bac" hide-details>
                 <v-toolbar-title>Requisitions Charges to Patient's Account</v-toolbar-title>
+                <v-btn class="mr-4" density="compact" style="background-color: #FFF;">
+                    <v-icon style="color: #000;">mdi-help-circle-outline</v-icon>
+                    <v-menu activator="parent">
+                        <v-list>
+                            <v-list-item>
+                                <div style="display: flex; align-items: center;">
+                                    <span style="width: 10px; height: 10px; background-color: blue; margin-right: 10px;"></span>
+                                    <v-list-item-title>Medicines</v-list-item-title>
+                                </div>
+                            </v-list-item>
+                            <v-list-item>
+                                <div style="display: flex; align-items: center;">
+                                    <span style="width: 10px; height: 10px; background-color: red; margin-right: 10px;"></span>
+                                    <v-list-item-title>Supplies</v-list-item-title>
+                                </div>
+                            </v-list-item>
+                            <v-list-item>
+                                <div style="display: flex; align-items: center;">
+                                    <span style="width: 10px; height: 10px; background-color: green; margin-right: 10px;"></span>
+                                    <v-list-item-title>Procedures</v-list-item-title>
+                                </div>
+                            </v-list-item>
+                        </v-list>
+                    </v-menu>
+                </v-btn>
                 <v-btn color="white" @click="closeDialog">
                     <v-icon>mdi-close</v-icon>
                 </v-btn>
@@ -23,36 +48,92 @@
                 </v-row>
                 <v-data-table-server
                     class="animated animatedFadeInUp fadeInUp mt-4"
-                    v-model:items-per-page="itemsPerPage"
+                    :items-per-page="100"
                     :headers="headers"
                     :items="serverItems"
-                    :items-length="totalItems"
                     :loading="data.loading"
                     item-value="id"
                     :hover="true"
-                    @update:options="initialize"
-                    select-strategy="single"
+                    @update:options="getPatientRequisitions"
                     fixed-header
                     density="compact"
                     height="40vh"
-                    >
-                    <template
-                        v-for="(head, index) of headers"
-                        v-slot:[`item.${head.value}`]="props"
-                    >
-                        <td class="test" :props="props" :key="index">
-                        <slot :name="head.value" :item="props.item">
-                            {{ props.item[head.value] || "..." }}
-                        </slot>
+                >
+                    <template v-for="(head, index) of headers" v-slot:[`item.${head.value}`]="props">
+                        <td class="test" :key="index">
+                            <slot :name="head.value" :item="props.item">
+                                {{ props.item[head.value] || "..." }}
+                            </slot>
                         </td>
                     </template>
+
+                    <template v-slot:item.patient_Id="{ item }">
+                        <span 
+                            :style="{
+                                display: 'inline-block',
+                                width: '12px',
+                                height: '12px',
+                                borderRadius: '2px',
+                                backgroundColor: item.details && item.details.ismedicine === '1' ? 'blue' : 
+                                                item.details && item.details.isprocedure === '1' ? 'green' : 
+                                                item.details && item.details.issupplies === '1' ? 'red' : 'gray'
+                            }"
+                            :title="item.details && item.details.ismedicine === '1' ? 'Medicines' :
+                                    item.details && item.details.isprocedure === '1' ? 'Procedures' :
+                                    item.details && item.details.issupplies === '1' ? 'Supplies' : 'N/A'"
+                        >
+                        </span>
+                    </template>
+
+                    <template v-slot:item.details.revenueID="{ item }">
+                        {{ item.details.revenueID || item.details.revenue_Id || "N/A" }}
+                    </template>
+
+                    <template v-slot:item.details.itemID="{ item }">
+                        {{ item.details.itemID || item.details.item_Id || "N/A" }}
+                    </template>
+
+                    <template v-slot:item.details.requestDescription="{ item }">
+                        {{ item.details.requestDescription || item.details.description || "N/A" }}
+                    </template>
+
+                    <template v-slot:item.details.quantity="{ item }">
+                        {{ parseInt(item.details.quantity) || parseInt(item.details.Quantity) || "N/A" }}
+                    </template>
+
+                    <template v-slot:item.details.dosage="{ item }">
+                        <span v-if="item.details.dosage">
+                            {{ item.details.dosage }}
+                        </span>
+                        <span v-else style="color: red;">
+                            N/A
+                        </span>
+                    </template>
+
+                    <template v-slot:item.details.amount="{ item }">
+                        {{ usePeso(item.details.amount) }}
+                    </template>
+
+                    <template v-slot:item.details.created_at="{ item }">
+                        {{ useDateMMDDYYY(item.created_at) }}
+                    </template>
+
+                    <template v-slot:item.isUnpaid="{ item }">
+                        <v-chip color="red" v-if="item.isUnpaid == true">Pending Payment</v-chip>
+                        <v-chip color="orange" v-else-if="item.isUnpaid == false">Pending Order</v-chip>
+                    </template>
+
+                    <template v-slot:item.action="{ item }">
+                        <v-icon color="red" style="cursor: pointer;">mdi-trash-can</v-icon>
+                    </template>
+
                     <template #bottom></template>
                 </v-data-table-server>
             </v-card-text>
             <v-divider></v-divider>
             <v-card-actions>
                 <v-btn color="blue-darken-1 border border-info" @click="closeDialog"> Close </v-btn>
-                <v-btn class="bg-success text-white" @click="openPrintSlip"> Rendered Transactions </v-btn>
+                <v-btn class="bg-success text-white" @click="openRenderedTransaction"> Rendered Transactions </v-btn>
                 <v-spacer></v-spacer>
                 <v-btn class="bg-primary text-white" @click="openMultiDepartmentSelection('supply')" prepend-icon="mdi-warehouse">Add Supplies</v-btn>
                 <v-btn class="bg-primary text-white" @click="openMultiDepartmentSelection('medicine')" prepend-icon="mdi-pill">Add Medicines</v-btn>
@@ -61,11 +142,16 @@
         </v-card>
     </v-dialog>
     <RequisitionMultiItemSelection :open_medical_item_selection="open_medical_item_selection" :category="category" @close-dialog="closeMultiDepartmentSelection" @handle-submit="onSubmitSelectedItem" />
-    <RequisitionPrintSlip :print_slip="print_slip" :form_type="form_type" @close-dialog="closePrintSlip" />
+    <RenderedRequisitions 
+        :open_rendered_transactions="open_rendered_transactions"  
+        :patient_Id="selectedRowDetails.patient_Id"
+        :case_No="selectedRowDetails.case_No"
+        @close-dialog="closeRenderedTransactions" 
+    />
 </template>
 
 <script setup>
-import RequisitionPrintSlip from './sub-forms/RequisitionPrintSlip.vue';
+import RenderedRequisitions from './sub-forms/RenderedRequisitions.vue';
 import RequisitionMultiItemSelection from './sub-forms/RequisitionMultiItemSelection.vue';
 
 const props = defineProps({
@@ -84,8 +170,9 @@ const { selectedRowDetails } = storeToRefs(useSubcomponentSelectedRowDetailsStor
 const emits = defineEmits(['close-dialog'])
 
 const open_medical_item_selection = ref(false);
+const serverItems = ref([]);
 const category = ref(null);
-const print_slip = ref(false);
+const open_rendered_transactions = ref(false);
 
 const openMultiDepartmentSelection = (selectedCategory) => {
     category.value = selectedCategory;
@@ -94,33 +181,36 @@ const openMultiDepartmentSelection = (selectedCategory) => {
 const closeMultiDepartmentSelection = () => {
     open_medical_item_selection.value = false;
 }
-const openPrintSlip = () => {
-    print_slip.value = true;
+const openRenderedTransaction = () => {
+    open_rendered_transactions.value = true;
 }
 const onSubmitSelectedItem = () => {
     alert('Successfully selected item')
 }
-const closePrintSlip = () => {
-    print_slip.value = false;
+const closeRenderedTransactions = () => {
+    open_rendered_transactions.value = false;
 }
 
 const closeDialog = () => {
+    serverItems.value = [];
     emits('close-dialog');
 }
 
 const headers = [
-    { title: "",  align: "start", sortable: false, key: "" },
-    { title: "Code",  align: "start", sortable: false, key: "" },
-    { title: "Category",  align: "start", sortable: false, key: "" },
-    { title: "Description",  align: "start", sortable: false, key: "" },
-    { title: "Quantity",  align: "start", sortable: false, key: "" },
-    { title: "Frequency",  align: "start", sortable: false, key: "" },
-    { title: "Amount",  align: "start", sortable: false, key: "" },
-    { title: "Request Date",  align: "start", sortable: false, key: "" },
+    { title: "",  align: "start", sortable: false, key: "patient_Id" },
+    { title: "Code",  align: "start", sortable: false, key: "details.revenueID" },
+    { title: "Item ID",  align: "start", sortable: false, key: "details.itemID" },
+    { title: "Description",  align: "start", sortable: false, key: "details.requestDescription" },
+    { title: "Quantity",  align: "start", sortable: false, key: "details.quantity" },
+    { title: "Frequency",  align: "start", sortable: false, key: "details.dosage" },
+    { title: "Amount",  align: "start", sortable: false, key: "details.amount" },
+    { title: "Request Date",  align: "start", sortable: false, key: "details.created_at" },
+    { title: "Status",  align: "start", sortable: false, key: "isUnpaid", align: 'center' },
+    { title: "Action",  align: "start", sortable: false, key: "action", align: 'center' },
 ];
 
 const data = ref({
-    title: "List of payment-methods",
+    title: "List of patient requisitions",
     keyword: "",
     loading: false,
     filter: {},
@@ -128,29 +218,39 @@ const data = ref({
     param_tab: 1,
 });
 
-const itemsPerPage = ref(10);
-const totalItems = ref(0);
-const serverItems = ref([]);
-const initialize = ({ page, itemsPerPage, sortBy }) => {
-    loadItems(page, itemsPerPage, sortBy);
-};
-const loadItems = async (page = null, itemsPerPage = null, sortBy = null) => {
-    data.value.loading = true;
-    let pageno = page || 1;
-    let itemPerpageno = itemsPerPage || 10;
-    let params =
-        "page=" + pageno + "&per_page=" + itemPerpageno + "&keyword=" + data.value.keyword;
-    const response = await useMethod("get", "payment-methods?", "", params);
-    if (response) {
-        serverItems.value = response.data;
-        totalItems.value = response.total;
-        data.value.loading = false;
+const getPatientRequisitions = async () => {
+    if (selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0].mscPrice_Schemes != null) {
+        const items = {
+            patient_Id: selectedRowDetails.value.patient_Id,
+            case_No: selectedRowDetails.value.case_No,
+            account: selectedRowDetails.value.patient_registry[0].mscPrice_Schemes ? selectedRowDetails.value.patient_registry[0].mscPrice_Schemes : null,
+        };
+        const response = await fetch(useApiUrl() + "/get-patients-requisitions", {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + useToken()
+            },
+            body: JSON.stringify({ items })
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            serverItems.value = data.data;
+        } 
     }
-};
+}
+
 
 const search = () => {
     loadItems();
 }
+
+onUpdated(() => {
+    if (props.show) {
+        getPatientRequisitions();
+    }
+})
 </script>
 
 <style scoped>
