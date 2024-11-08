@@ -102,13 +102,14 @@
                 <tr style="cursor: pointer;" @click="handleSelectedItem(item)">
                     <td>{{ item.patient_Id }}</td>
                     <td>{{ item.case_No }}</td>
+                    <td>{{ item.patient_Name }}</td>
                     <td>{{ item.requestNum }}</td>
                 </tr>
             </template>
         </v-data-table>
     </v-card>
 
-    <CarryOrderForm :open_carry_order_form="open_carry_order_form" :patient_type="patient_type" :item="selected_item" @close-dialog="closeCarryOrderForm" />
+    <CarryOrderForm :open_carry_order_form="open_carry_order_form" :patient_type="patient_type" :item="selected_item" @ordered-carried="handleOrderCarried" @close-dialog="closeCarryOrderForm" />
     <PharmaPostedMedicines :open_posted_medicine="open_posted_medicine" :patient_type="patient_type" @close-dialog="closePostedMedicine" />
     <PharmaCorrectionEntry :open_correction_entry="open_correction_entry" :patient_type="patient_type" @close-dialog="closeCorrectionEntry" />
     <PharmaReturnedMedicines :open_returned_medicines="open_returned_medicines" :patient_type="patient_type" @close-dialog="closeReturnedMedicines" />
@@ -139,6 +140,7 @@ const menuCodes = ref([
 const table_headers = [
     { title: "Patient ID", align: "start", key: "patient_Id", sortable: false },
     { title: "Case No", align: "start", key: "case_No", sortable: false },
+    { title: "Patient Name", align: "start", key: "patient_Name", sortable: false },
     { title: "Request No.", align: "start", key: "requestNum", sortable: false },
 ];
 
@@ -159,7 +161,6 @@ const fetchOutPatientCount = async () => {
         console.error("Error fetching out-patient data:", error);
     }
 };
-
 
 const handleOutPatientRequest = async () => {  
     medicine_request_data.value = outPatientData.value;
@@ -257,6 +258,11 @@ const fetchAllCounts = async () => {
     await fetchERPatientCount();
     await fetchInPatientCount();
 };
+
+const handleOrderCarried = () => {
+    medicine_request_data.value = medicine_request_data.value.filter(item => item.requestNum !== selected_item.value.requestNum);
+    fetchAllCounts();
+}
 
 onMounted(() => {
     const intervalId = setInterval(fetchAllCounts, 5000);

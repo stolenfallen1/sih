@@ -113,7 +113,7 @@
                                 {{ usePeso(warehouseItem.price) }}
                             </template>
                           </span>
-                          <span v-else>
+                          <span v-else style="color: red;">
                               No Price Found
                           </span>
                       </template>
@@ -131,7 +131,7 @@
                             </template>
                         </span>
                         <span v-else style="color: red;">
-                            No Price Found
+                            No Stocks Found
                         </span>
                     </template>
                 </v-data-table-server>
@@ -159,6 +159,7 @@
                         style="border-bottom: 1px solid #A9A9A9;"
                         :value="item.frequency ? item.frequency.description : ''"
                         @keyup.enter="openFrequencyList(item)"
+                        readonly
                       />
                     </template>
                     
@@ -324,7 +325,8 @@ const getWarehouse = async (page = null, itemsPerPage = null, keyword = "") => {
     if (props.category === "medicine" || props.category === "supply") {
       const response = await useMethod("get", "get-warehouses?", "", params);
       if (response) {
-          warehouse_data.value = response.data;
+          warehouse_data.value = response.data.filter(item => item.code === 'PH' || item.code === 'C9'); // For now only PH ( Pharmacy ) and C9 ( Supply ) will be shown in the list as per sir joe instruction, if dili gani just remove this line and uncomment the next line
+          // warehouse_data.value = response.data;
           warehouse_total_items.value = response.total;
       }
       warehouse_loading.value = false;
@@ -522,7 +524,7 @@ const handleSelectWarehouseItems = async (selectedRow) => {
         }
 
         if (props.category === 'medicine' || props.category === 'procedure') {
-            item.stat = 1;
+            item.stat = item.stat || '1'; 
         }
 
         if (!selected_item_data.value.some(selected => selected.id === item.id)) {
@@ -607,7 +609,9 @@ const confirmRequisition = () => {
     category: item.category,
     item_name: item.item_name,
     frequency: item.frequency?.id || null,
+    stat: item.stat,
     item_OnHand: parseInt(item.ware_house_items?.[0]?.item_OnHand) || 0,
+    item_ListCost: item.ware_house_items?.[0]?.item_ListCost || 0,
     quantity: item.quantity,
     price: item.ware_house_items?.[0]?.price || 0,
     amount: item.amount,
@@ -626,12 +630,24 @@ const onSubmit = async (user_details) => {
 
     switch (props.category) {
       case "medicine":
-        console.log("Medicine Payload: " , payload.value);
-        // save-supply-requisition
+        const medicine_res = await useMethod("post", "save-medicine-requisition", payload.value);
+        if (medicine_res) {
+            useSnackbar(true, "success", "Successfully posted charges.");
+            closeConfirmation();
+            closeDialog();
+        } else {
+            useSnackbar(true, "error", "Failed to post charges.");
+        }
         break;
       case "supply":
-        console.log("Supply Payload: " , payload.value);
-        // save-medicine-requisition
+        const supply_res = await useMethod("post", "save-supply-requisition", payload.value);
+        if (supply_res) {
+            useSnackbar(true, "success", "Successfully posted charges.");
+            closeConfirmation();
+            closeDialog();
+        } else {
+            useSnackbar(true, "error", "Failed to post charges.");
+        }
         break;
       case "procedure":
         console.log("Procedure Payload: " , payload.value);
@@ -675,6 +691,7 @@ const closeDialog = () => {
   warehouse_item_keyword.value = "";
   selected_warehouse.value = {};
   selected_warehouse_item.value = [];
+  selectedWarehouseItems.value = [];
   emits('close-dialog')
 }
 
@@ -683,7 +700,7 @@ onUpdated(() => {
     payload.value.patient_Id = selectedRowDetails.value.patient_Id || '';
     payload.value.case_No = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0].case_No || '';
     payload.value.patient_Name = selectedRowDetails.value.lastname + ', ' + selectedRowDetails.value.firstname + ' ' + selectedRowDetails.value.middlename || '';
-    payload.value.account = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0].mscPrice_Schemes === 1 ? 'Cash Transaction' : 'Insurance Transaction';
+    payload.value.account = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0].mscPrice_Schemes == 1 ? 'Cash Transaction' : 'Insurance Transaction';
     payload.value.attending_Doctor = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0].attending_Doctor || 'N/A';
     payload.value.attending_Doctor_fullname = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0].attending_Doctor_fullname || 'N/A';
     payload.value.patient_type = selectedRowDetails.value.patient_registry && 
