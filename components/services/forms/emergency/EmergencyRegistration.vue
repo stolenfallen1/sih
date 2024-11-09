@@ -147,7 +147,9 @@
 
     const isLoading = ref(false);
 
-    const emits = defineEmits(['close-dialog']);
+    // const emits = defineEmits(['close-dialog']);
+    const emits = defineEmits(['close-dialog', 'patient-registered']);
+    const patientDetail = ref({});
 
     const closeDialog = () => {
         emits('close-dialog');
@@ -226,65 +228,98 @@
     }
 
     
-    const onSubmit = async (user_details) => {
+    // const onSubmit = async (user_details) => {
+    //     try {
+    //         let response;
+    //         isLoading.value = true;
+
+    //         if (payload.value.id) {
+    //             response = await useMethod("put", "update-emergency", payload.value, "", payload.value.patient_Id);
+    //             if (response) {
+    //                 useSnackbar(true, "green", response.message);
+    //                 setTimeout(() => {
+    //                     isLoading.value = false;
+    //                     payload.value   = Object.assign({});
+    //                     tab.value       = "0";
+    //                     closeDialog();
+    //                     closeConfirmDialog();
+    //                     // window.location.reload();
+    //                     emits('patient-registered', patientDetail);
+    //                 }, 500);
+        
+    //             } else {
+    //                 if (error.response && error.response.status === 404) {
+    //                     useSnackbar(true, "red", 'Incorrect Username or Passcode');
+    //                     isLoading.value = false;
+    //                 } else {
+    //                     useSnackbar(true, "red", response.message || 'Update failed');
+    //                 }
+    //             }
+    //         } else {
+    //             response = await useMethod("post", "register-emergency", payload.value);
+    //             if (response) {
+    //                 useSnackbar(true, "green", response.message);
+    //                 setTimeout(() => {
+    //                     // window.location.reload();
+    //                     isLoading.value = false;
+    //                     payload.value   = Object.assign({});
+    //                     tab.value       = "0";
+    //                     closeDialog();
+    //                     closeConfirmDialog();
+    //                     emits('patient-registered', patientDetail);
+    //                 }, 500)
+
+    //             }  else {
+    //                 if (error.response && error.response.status === 404) {
+    //                     useSnackbar(true, "red", 'Incorrect Username or Passcode');
+    //                     isLoading.value = false;
+    //                 } else {
+    //                     useSnackbar(true, "red", response.message || 'Update failed');
+    //                 }
+    //             }
+    //         }
+
+    //     } catch (error) {
+    //         if (error.response && error.response.status === 404) {
+    //             useSnackbar(true, "red", 'Incorrect Username or Passcode');
+    //             isLoading.value = false;
+    //         } else {
+    //             useSnackbar(true, "red", error.message || 'An error occurred');
+    //             isLoading.value = false;
+    //         }
+    //     }
+    // }
+
+    const onSubmit = async () => {
         try {
-            let response;
             isLoading.value = true;
+            let response;
 
             if (payload.value.id) {
-                response = await useMethod("put", "update-emergency", payload.value, "", payload.value.patient_Id);
-                if (response) {
-                    useSnackbar(true, "green", response.message);
-                    setTimeout(() => {
-                        isLoading.value = false;
-                        payload.value   = Object.assign({});
-                        tab.value       = "0";
-                        closeDialog();
-                        closeConfirmDialog();
-                        window.location.reload();
-                    }, 500);
-        
-                } else {
-                    if (error.response && error.response.status === 404) {
-                        useSnackbar(true, "red", 'Incorrect Username or Passcode');
-                        isLoading.value = false;
-                    } else {
-                        useSnackbar(true, "red", response.message || 'Update failed');
-                    }
-                }
-            } else {
-                response = await useMethod("post", "register-emergency", payload.value);
-                if (response) {
-                    useSnackbar(true, "green", response.message);
-                    setTimeout(() => {
-                        window.location.reload();
-                        isLoading.value = false;
-                        payload.value   = Object.assign({});
-                        tab.value       = "0";
-                        closeDialog();
-                        closeConfirmDialog();
-                    }, 500)
-
-                }  else {
-                    if (error.response && error.response.status === 404) {
-                        useSnackbar(true, "red", 'Incorrect Username or Passcode');
-                        isLoading.value = false;
-                    } else {
-                        useSnackbar(true, "red", response.message || 'Update failed');
-                    }
-                }
+            // Update logic
+            response = await useMethod("put", "update-emergency", payload.value, "", payload.value.patient_Id);
+            if (response) {
+                useSnackbar(true, "green", response.message);
+                patientDetail.value = response.data; // Assuming response.data contains the updated patient details
+                emits('patient-registered', patientDetail.value);
             }
-
+            } else {
+            // Register logic
+            response = await useMethod("post", "register-emergency", payload.value);
+            if (response) {
+                useSnackbar(true, "green", response.message);
+                patientDetail.value = response.data; // Assuming response.data contains the new patient details
+                emits('patient-registered', patientDetail.value);
+            }
+            }
         } catch (error) {
-            if (error.response && error.response.status === 404) {
-                useSnackbar(true, "red", 'Incorrect Username or Passcode');
-                isLoading.value = false;
-            } else {
-                useSnackbar(true, "red", error.message || 'An error occurred');
-                isLoading.value = false;
-            }
+            console.error("Error in submission:", error);
+            useSnackbar(true, "red", error.message || 'An error occurred');
+        } finally {
+            isLoading.value = false;
+            closeDialog();
         }
-    }
+    };
 
 //     const emergencyData = ref([]);
 //     const reloadComponent = ref(false);
