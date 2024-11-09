@@ -524,7 +524,7 @@
     })
 
     const { selectedRowDetails } = storeToRefs(useSubcomponentSelectedRowDetailsStore()); 
-    const emits = defineEmits(['close-dialog'])
+    const emits = defineEmits(['close-dialog', 'post-charges'])
     const isLoading = ref(false);
     const credit_limit = ref(null);
     let panel = ref([0, 1]);
@@ -537,6 +537,7 @@
     const isLoadingBtn = ref(false);
     const showDialog = ref(false);
     const showWarning = ref(false);
+    const postCharges = ref([]);
 
     const openConfirmDialog = async () => {
         showDialog.value = true;
@@ -583,51 +584,37 @@
     const selectedWarehouseID = ref(null); 
 
     const getRevenueCode = async () => {
-
         const revenue_res = await useMethod("get", "get-transaction-codes", "", "");
-
         if (revenue_res) {
-
             const desiredCodes = useRevenueCode();
-
             if (desiredCodes && Array.isArray(desiredCodes)) {
-
                 medicine_revenue_data.value = revenue_res.filter(item => {
                     return item.id 
                         && item.isMedicine == "1"
                         && desiredCodes.map(code => code.toString()).includes(item.id.toString());
                 });
-
                 supplies_revenue_data.value = revenue_res.filter(item => {
                     return item.id 
                         && item.isSupplies == "1"
                         && desiredCodes.map(code => code.toString()).includes(item.id.toString());
                 });
-
                 if (medicine_revenue_data.value.length > 0) {
                     selectedWarehouseID.value = medicine_revenue_data.value[0].warehouse_id;
                 }
-
                 if (supplies_revenue_data.value.length > 0) {
                     selectedWarehouseID.value = supplies_revenue_data.value[0].warehouse_id;
                 }
-
                 medicine_revenue_data_display.value = medicine_revenue_data.value.map(item => {
                     return { code: item.code, description: item.description }
                 });
-
                 supplies_revenue_data_display.value = supplies_revenue_data.value.map(item => {
                     return { code: item.code, description: item.description }
                 });
-
             } 
-
         } else {
-
             useSnackbar(true, "error", "Failed to get revenue codes.");
         }
     };
-
 
     const focusNextMedicine = (index) => {
         const inputs = document.querySelectorAll('.medicine-focus');
@@ -650,35 +637,24 @@
     }
 
     const handleAddMedicine = (item, index) => {
-
         item.code = item.code.toUpperCase();
         const lastRow = Medicines.value[Medicines.value.length - 1];
-
         if (!item.code) {
             return useSnackbar(true, "error", "Code Should not be empty.");
         }
-
         const desiredCodes = medicine_revenue_data.value.map(item => item.code);
-
         if (desiredCodes.includes(item.code) === false) {
             return useSnackbar(true, "error", "Invalid Code, refer to help code.");
         }
-
         const matchingRevenue = medicine_revenue_data.value.find(revenue => revenue.code === item.code);
-
         if (!matchingRevenue) return;
-
         selectedWarehouseID.value = matchingRevenue.warehouse_id;
         user_input_revenue_code.value = item.code;
-
         if(item.code && !item.map_item_id && !item.item_name) {
-
             open_items_list_for_medicines.value = true;
-
             let medicines = Medicines.value.filter(function (obj) {
                 return obj.code !== '' && obj.map_item_id !== '' && obj.item_name !== '';
             });
-
             let resultArray = medicines.filter(item => item.code.toUpperCase() === lastRow.code.toUpperCase()).map(item => item.map_item_id);
             chargecode.value = resultArray;
         }
@@ -884,54 +860,38 @@
 
         try {
             if(parseInt(reference_id.value) !== 0) {
-
                 await processCharges();
-                
             } else {
-
                 if (payload.value.medicine_stocks_OnHand !== undefined) {
                     checkStockAvailability(payload.value.medicine_stocks_OnHand, medicines, 'medicine', (flag) => flagMedicine = flag);
                 }
-
                 if (payload.value.supply_stocks_OnHand !== undefined) {
                     checkStockAvailability(payload.value.supply_stocks_OnHand, supplies, 'supply', (flag) => flagSupply = flag);
                 }
-
                 if (flagMedicine || flagSupply) {
-
                     if (payload.value.charge_to === "Company / Insurance") {
                         credit_limit.value = payload.value.guarantor_Credit_Limit === 'OPEN'
                             ? null
                             : parseFloat(payload.value.guarantor_Credit_Limit.replace(/[^0-9.-]+/g, ''));
-
                         if (credit_limit.value !== null && parseFloat(totalAmount.value) > credit_limit.value) {
-                        
                             if (confirm(`Insufficient credit limit! Total is ${totalAmount.value}, but your credit limit is only ${credit_limit.value}. Proceed anyway?`)) {
                                 await processCharges();
                             } else {
                                 useSnackbar(true, "warning", 'Charge process halted. Please review the items.');
                             }
-
                         } else {
                             await processCharges();
                         }
-
                     } else {
                         await processCharges();
                     }
-
                 } else {
                     useSnackbar(true, "error", 'Cannot charge, double-check item stocks for medicines or supplies.');
                 }
             }
-            
-
         } catch (error) {
-
             handleErrorResponse(error);
-
         } finally {
-
             isLoadingBtn.value = false;
             isLoading.value = false;
             closeDialog();
@@ -956,39 +916,26 @@
     };
 
     const processCharges = async () => {
-
         let response = {};
-
         try{
-
             if(parseInt(reference_id.value) !== 0) {
-
                 response = await useMethod("post", "er-cancel-charge", payload.value);
-
             } else {
-
                 response = await useMethod("post", "er-medicine-supplies-charges", payload.value);
             }
-
             if (response) {
-
                 useSnackbar(true, "success", response.message);
-                closeDialog();
                 closeConfirmDialog();
-                
+                await getMedicineCharges();
             } else {
-
                 useSnackbar(true, "error", 'Failed to post charges. Please try again.');
             }
-
         } catch(error) {
-
             handleErrorResponse(error);
         }
     };
 
     const handleErrorResponse = (error) => {
-
         if (error?.response?.status === 404) {
             useSnackbar(true, "error", 'Incorrect Username or Passcode');
         } else {
@@ -996,7 +943,6 @@
         }
         isLoading.value = false;
         isLoadingBtn.value = false;
-
     };
 
     const closeWarningDialog = () => {
@@ -1054,9 +1000,12 @@
         { title: 'Action',              key: 'action',      sortable: false }
     ]);
 
-
+    const allCharges = ref([]);
     const getMedicineCharges = async () => {
         try {
+            chargeMedicineList.value = [];
+            chargeSupplyList.value = [];
+
             const response = await useMethod("get", "get-charge-items/", "", payload.value.case_No);
             const data = Array.isArray(response) ? response : response.data;
 
@@ -1069,7 +1018,6 @@
                     item_name: item.description || '-',
                     price: item.price ? parseFloat(item.price).toFixed(2) : '-',
                     quantity: item.Quantity ? parseInt(item.Quantity) : '-',
-                    // dosage: item.dosage || '-',
                     dosage: item.frequency,
                     net_amount: item.amount ? parseFloat(item.amount).toFixed(2) : '-',
                     request_num: item.referenceNum,
@@ -1091,6 +1039,7 @@
                     assess_num: item.assessnum
                     
                 }));
+                allCharges.value = [...chargeMedicineList.value, ...chargeSupplyList.value];
             } else {
                 useSnackbar(true, "error", "Charges are empty or may not be in array format");
             }
@@ -1099,7 +1048,6 @@
             useSnackbar(true, "error", "Failed to fetch charges. Please try again.");
         }
     };
-
 
     watchEffect(() => {
         if (payload.value.account == 'Self-Pay') {
