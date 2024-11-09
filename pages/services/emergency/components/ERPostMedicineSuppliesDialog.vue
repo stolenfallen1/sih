@@ -329,7 +329,8 @@
                                 class="styled-table"
                             >
                             <template v-slot:item.status="{ item }">
-                                <span :style="{ color: item.status === 'Paid' ? 'green' : 'red' }">
+                                {{ console.log('Retrieved Items : ', item) }}
+                                <span :style="{ color: item.status === 'Paid' ? 'green' : item.status === 'Unpaid' ? 'orange' : 'red' }">
                                     {{ item.status }}
                                 </span>
                             </template>
@@ -349,11 +350,12 @@
                                 <template v-slot:item.action="{ item }">
                                     <v-btn
                                         flat
-                                        size="large"
+                                        size="medium"
                                         class="p-2 text-capitalize"
                                         desity="default"
                                         :id="item.request_num"
                                         @click.prevent="handleCancelCharges(item.request_num, item.assess_num)"
+                                        :disabled="item.status !== 'Paid' && item.status !== 'Unpaid'" 
                                     >
                                         <v-icon color="#D50000">mdi-trash-can-outline</v-icon>
                                         <v-tooltip
@@ -387,7 +389,7 @@
                                 class="styled-table"
                             >
                                 <template v-slot:item.status="{ item }">
-                                    <span :style="{ color: item.status === 'Paid' ? 'green' : 'red' }">
+                                    <span :style="{ color: item.status === 'Paid' ? 'green' : item.status === 'Unpaid' ? 'orange' : 'red' }">
                                         {{ item.status }}
                                     </span>
                                 </template>
@@ -407,12 +409,17 @@
                                 <template v-slot:item.action="{ item }">
                                     <v-btn
                                         flat
-                                        size="large"
+                                        size="medium"
                                         class="p-2 text-capitalize"
                                         desity="default"
                                         @click.prevent="handleCancelCharges(item.request_num, item.assess_num)"
+                                        :disabled="item.status !== 'Paid' && item.status !== 'Unpaid'" 
                                     >
-                                        <v-icon color="#D50000">mdi-trash-can-outline</v-icon>
+                                    <v-icon 
+                                        color="#D50000">
+                                        mdi-trash-can-outline
+                                    </v-icon>
+
                                         <v-tooltip
                                             activator="parent"
                                             location="top"
@@ -1025,70 +1032,74 @@
     );
 
     const medicineHeaders = ref([
-        { title: "Status",      key: "status",      sortable: false },
-        { title: 'Code',        key: 'code',        sortable: false },
-        { title: 'Item',        key: 'item_name',   sortable: false },
-        { title: 'Price',       key: 'price',       sortable: false },
-        { title: 'Quantity',    key: 'quantity',    sortable: false },
-        { title: 'Frequency',   key: 'dosage',      sortable: false },
-        { title: 'Amount',      key: 'net_amount',  sortable: false },
-        { title: 'Action',      key: 'action',      sortable: false }
+        { title: "Status",              key: "status",      sortable: false },
+        { title: 'Code',                key: 'code',        sortable: false },
+        { title: 'Reference Number',    key: 'request_num', sortable: false },
+        { title: 'Item',                key: 'item_name',   sortable: false },
+        // { title: 'Price',            key: 'price',       sortable: false },
+        { title: 'Quantity',            key: 'quantity',    sortable: false },
+        { title: 'Frequency',           key: 'dosage',      sortable: false },
+        { title: 'Amount',              key: 'net_amount',  sortable: false },
+        { title: 'Action',              key: 'action',      sortable: false }
     ]);
 
     const supplyHeaders = ref([
-        { title: "Status",      key: "status",      sortable: false },
-        { title: 'Code',        key: 'code',        sortable: false },
-        { title: 'Item Name',   key: 'item_name',   sortable: false },
-        { title: 'Price',       key: 'price',       sortable: false },
-        { title: 'Quantity',    key: 'quantity',    sortable: false },
-        { title: 'Net Amount',  key: 'net_amount',  sortable: false },
-        { title: 'Action',      key: 'action',      sortable: false }
+        { title: "Status",              key: "status",      sortable: false },
+        { title: 'Code',                key: 'code',        sortable: false },
+        { title: 'Reference Number',    key: 'request_num', sortable: false },
+        { title: 'Item Name',           key: 'item_name',   sortable: false },
+        // { title: 'Price',               key: 'price',       sortable: false },
+        { title: 'Quantity',            key: 'quantity',    sortable: false },
+        { title: 'Net Amount',          key: 'net_amount',  sortable: false },
+        { title: 'Action',              key: 'action',      sortable: false }
     ]);
 
+
     const getMedicineCharges = async () => {
-        
-        const response = await useMethod("get", "get-charge-items/", "", payload.value.case_No);
-    
-        const data = Array.isArray(response) ? response : response.data;
+        try {
+            const response = await useMethod("get", "get-charge-items/", "", payload.value.case_No);
+            const data = Array.isArray(response) ? response : response.data;
 
-        if (data && Array.isArray(data)) {
-            const filteredMedicineData = data.filter(item => item.RevenueID === 'EM');
-            chargeMedicineList.value = filteredMedicineData.map(item => ({
+            if (data && Array.isArray(data) && data.length > 0) {
+                const filteredMedicineData = data.filter(item => item.revenue_Id === 'EM');
+                chargeMedicineList.value = filteredMedicineData.map(item => ({
 
-                status: (payload.value.guarantor_Name !== 'PERSONAL') ? 'Paid' : 'Unpaid',
-                code: item.ItemID,
-                item_name: item.Description,
-                price: parseFloat(item.UnitPrice).toFixed(2),
-                quantity: parseInt(item.Quantity),
-                dosage: item.description,
-                net_amount: parseFloat(item.Amount).toFixed(2),
-                request_num: item.RequestNum,
-                assess_num: item.AssessNum
-                
-            }));
+                    status: item.record_Status === 'W' ? 'Paid' : item.record_Status === 'X' ? 'Unpaid' : 'Canceled',
+                    code: item.item_Id,
+                    item_name: item.description || '-',
+                    price: item.price ? parseFloat(item.price).toFixed(2) : '-',
+                    quantity: item.Quantity ? parseInt(item.Quantity) : '-',
+                    // dosage: item.dosage || '-',
+                    dosage: item.frequency,
+                    net_amount: item.amount ? parseFloat(item.amount).toFixed(2) : '-',
+                    request_num: item.referenceNum,
+                    assess_num: item.assessnum
 
-            const filteredSupplyData = data.filter(item => item.RevenueID === 'RS')
-            
-            chargeSupplyList.value = filteredSupplyData.map(item => ({
+                }));
 
-                status: (payload.value.guarantor_Name !== 'PERSONAL') ? 'Paid' : 'Unpaid',
-                code: item.ItemID,
-                code: item.ItemID,
-                item_name: item.Description,
-                price: parseFloat(item.UnitPrice).toFixed(2),
-                quantity: parseInt(item.Quantity),
-                net_amount: parseFloat(item.Amount).toFixed(2),
-                request_num: item.RequestNum,
-                assess_num: item.AssessNum
-                
-            }))
+                const filteredSupplyData = data.filter(item => item.revenue_Id === 'RS');
+                chargeSupplyList.value = filteredSupplyData.map(item => ({
 
-        } else {
-
-            useSnackbar(true, "error", 'charges is empty or charges may not in array format');
+                    status: item.record_Status === 'W' ? 'Paid' : item.record_Status === 'X' ? 'Unpaid' : 'Canceled',
+                    code: item.item_Id,
+                    item_name: item.description || '-',
+                    price: item.price ? parseFloat(item.price).toFixed(2) : '-',
+                    quantity: item.Quantity ? parseInt(item.Quantity) : '-',
+                    dosage: item.dosage || '-',
+                    net_amount: item.amount ? parseFloat(item.amount).toFixed(2) : '-',
+                    request_num: item.referenceNum,
+                    assess_num: item.assessnum
+                    
+                }));
+            } else {
+                useSnackbar(true, "error", "Charges are empty or may not be in array format");
+            }
+        } catch (error) {
+            console.error("An error occurred while fetching charges:", error);
+            useSnackbar(true, "error", "Failed to fetch charges. Please try again.");
         }
-
     };
+
 
     watchEffect(() => {
         if (payload.value.account == 'Self-Pay') {
