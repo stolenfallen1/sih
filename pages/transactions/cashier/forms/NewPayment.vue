@@ -18,7 +18,13 @@
                         <tr>
                             <td> {{ item?.revenueID }} </td>
                             <td> {{ item?.itemID }} </td>
-                            <td> {{ item?.items?.exam_description ? item?.items?.exam_description : item?.doctor_details?.doctor_name  }} </td>
+                            <td> 
+                                {{ 
+                                    item?.items?.exam_description 
+                                    ? item?.items?.exam_description 
+                                    : item?.doctor_details?.doctor_name  
+                                }} 
+                            </td>
                             <td> {{ payload.payment_code === 1 ? usePeso(item.amount) : item.amount }} </td>
                         </tr>
                     </template>
@@ -564,8 +570,14 @@ const searchChargeItem = async () => {
 
             const exam_description = response.data.map(item => item.items?.exam_description).filter(Boolean).join(" , ");
             const doctor_names = response.data.map(item => item.doctor_details?.doctor_name).filter(Boolean).join(" , ");
-            payload.value.particulars = exam_description || doctor_names;
-
+            const itemDescription = response.data.map(item => item.requestDescription).filter(Boolean).join(" , ");
+            console.log('Discription',  itemDescription);
+            const dosage = response.data[0].dosage;
+            const itemIndetification = response.data[0].revenueID === 'EM' || response.data[0].revenueID === 'RS' ? true : false;
+            payload.value.particulars = exam_description || doctor_names || itemDescription;
+            itemIndetification ? payload.value.frequency = dosage : payload.value.frequency = '';
+            itemIndetification ? payload.value.quantity = parseInt(response.data[0].quantity) : payload.value.quantity = '';
+            itemIndetification ? payload.value.reference_id = response.data[0].refNum : payload.value.reference_id = '';
             const paymentTotal = response.data.reduce((acc, item) => acc + (parseFloat(item.amount) || 0), 0).toString();
             payload.value.amount = usePeso(paymentTotal);
 

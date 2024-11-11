@@ -74,6 +74,7 @@
 			@open-filter="openFilterOptions"
 		>
 			<template v-for="column in columns" v-slot:[`column-${column.key}`]="{ item }">
+
 				<div v-if="column.key === 'registry_status'" :key="column.key" class="isActive">
 					<span 
 						:style="{ 
@@ -104,14 +105,16 @@
 							width: '9px', 
 							backgroundColor: 
 								item.patient_registry && 
-								item.patient_registry[0].guarantor_Name !== 'Self Pay' 
+								item.patient_registry[0].guarantor_Name !== 'Self Pay' && 
+                item.patient_registry[0].guarantor_Name !== null
 								? 'yellow' 
 								: 'orange' 
 						}" 
 
 						:title="
 							item.patient_registry && 
-							item.patient_registry[0].guarantor_Name !== 'Self Pay' 
+							item.patient_registry[0].guarantor_Name !== 'Self Pay' && 
+              item.patient_registry[0].guarantor_Name !== null
 							? 'HMO ' 
 							: 'Self Pay'
 						"
@@ -247,14 +250,14 @@
 		</v-card>
 	</v-menu>
 
-  	<EmergencyRegistration :clicked_option="clicked_option" :form_dialog="form_dialog" @close-dialog="closeAddFormDialog" />
+  	<EmergencyRegistration :clicked_option="clicked_option" :form_dialog="form_dialog" @patient-registered="loadPatient" @close-dialog="closeAddFormDialog" />
   
 	<!-- Emergency Sub components -->
 	<PatientProfileDialog :show="PatientProfile" :form_payload="payload" @close-dialog="useSubComponents('PatientProfile', false)" />
 	<SuspendDialog :show="Suspend" :form_type="form_type" @close-dialog="useSubComponents('Suspend', false)" />
 	<RequisitionsDialog :show="Requisitions" :form_type="form_type" @close-dialog="useSubComponents('Requisitions', false)" />
 	<PostChargesDialog :show="PostCharges" @close-dialog="useSubComponents('PostCharges', false)" />
-  <ERPostMedicineSuppliesDialog :show="ERPostMedicineSupplies" @close-dialog="useSubComponents('ERPostMedicineSupplies', false)" />
+  	<ERPostMedicineSuppliesDialog :show="ERPostMedicineSupplies" @close-dialog="useSubComponents('ERPostMedicineSupplies', false)" />
 	<PostCorporatePackageDialog :show="PostCorporateMedicalPackage" @close-dialog="useSubComponents('PostCorporateMedicalPackage', false)"/>
 	<PostDiagnosticPackageDialog :show="PostDiagnosticMedicalPackage" @close-dialog="useSubComponents('PostDiagnosticMedicalPackage', false)"/> 
 	<PostAdjustmentDialog :show="PostAdjustments" @close-dialog="useSubComponents('PostAdjustments', false)" />
@@ -733,6 +736,11 @@ const selectedUser = (item) => {
   }
 };
 
+const loadPatient = (patientDetails) => {
+  const keyword = patientDetails || "";
+  loadItems(null, keyword);
+};
+
 const handleView = (clickedOption) => {
   clicked_option.value = clickedOption;
   form_dialog.value = true;
@@ -841,32 +849,33 @@ const closeViewSummary = () => {
   open_summary_modal.value = false;
 }
 
+
 const loadItems = async (options = null, searchkeyword = null) => {
-  try {
-    loading.value = true;
-
-    let keyword = searchkeyword || "";
-      params.value = options  ? "page=" + options.page + "&per_page=" + options.itemsPerPage + "&keyword=" + options.keyword
-    : "page=1&per_page=50&keyword=" + keyword;
-
-    const currentTabInfo = tableTabs.value.find((tab) => tab.value === currentTab.value);
-    const response = await fetch(currentTabInfo?.endpoint + "?" + params.value || "", {
-      headers: {
-        Authorization: `Bearer `+ useToken(),
-      },
-    });
-    const data = await response.json();
-    console.log("TEST", data);
-    updateTotalItems(data.total);
-    updateServerItems(data.data);
-    loading.value = false;
-  } catch (error) {
-    console.error("Error fetching data:", error);
-    loading.value = false;
-  } finally {
-    loading.value = false;
-  }
-};
+	try {
+		loading.value = true;
+		const keyword = searchkeyword || "";
+		params.value = options
+		? `page=${options.page}&per_page=${options.itemsPerPage}&keyword=${options.keyword}`
+		: `page=1&per_page=50&keyword=${keyword}`;
+		const currentTabInfo = tableTabs.value.find((tab) => tab.value === currentTab.value);
+		const response = await fetch(`${currentTabInfo?.endpoint}?${params.value}`, {
+			headers: {
+				Authorization: `Bearer ${useToken()}`,
+			},
+		});
+		const data = await response.json();
+		if (data && data.data) {
+			updateTotalItems(data.total);
+			updateServerItems(data.data);
+		} else {
+			console.log("Data not found or response error");
+		}
+	} catch (error) {
+		console.error("Error fetching data:", error);
+	} finally {
+		loading.value = false;
+ 	}
+}
 
 const handleTabChange = (tabValue) => {
   selectedRowDetails.value.id = "";
