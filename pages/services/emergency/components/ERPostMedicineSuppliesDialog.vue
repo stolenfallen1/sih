@@ -321,6 +321,7 @@
                         <v-expansion-panel-title color="#107bac">
                             Posted Medicine
                         </v-expansion-panel-title>
+                        <v-expansion-panel-text>
                             <v-data-table 
                                 :items="chargeMedicineList" 
                                 :headers="medicineHeaders" 
@@ -375,12 +376,14 @@
                                     </tr>
                                 </template>
                             </v-data-table>
+                        </v-expansion-panel-text>
                     </v-expansion-panel>
 
                     <v-expansion-panel>
                         <v-expansion-panel-title color="#107bac">
                             Posted Supply
                         </v-expansion-panel-title>
+                        <v-expansion-panel-text>
                             <v-data-table 
                                 :items="chargeSupplyList" 
                                 :headers="supplyHeaders" 
@@ -437,6 +440,7 @@
                                     </tr>
                                 </template>
                             </v-data-table>
+                        </v-expansion-panel-text>
                     </v-expansion-panel>
                 </v-expansion-panels>
             </v-card-text>
@@ -527,8 +531,8 @@
     const emits = defineEmits(['close-dialog', 'post-charges'])
     const isLoading = ref(false);
     const credit_limit = ref(null);
-    let panel = ref([0, 1]);
-    const payload = ref({user_userid: '', user_passcode: ''});
+    let panel = ref([0, 1, 2, 3]);
+    const payload = ref({});
     const chargecode = ref([]);
     const open_items_list_for_medicines = ref(false);
     const open_items_list_for_supplies = ref(false);
@@ -936,8 +940,13 @@
         await processCharges(); 
     };
 
+
+    const closeDialog = () => {
+        emits('close-dialog');
+        panel.value = [0, 1, 2, 3];
+
     const clearFields = () => {
-        panel.value = [0, 1];
+        panel.value = [0, 1, 2, 3];
         Medicines.value = [
             {
                 code: "",
