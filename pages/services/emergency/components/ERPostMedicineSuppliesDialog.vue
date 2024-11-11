@@ -1028,7 +1028,6 @@
             } 
         } catch (error) {
             console.error("An error occurred while fetching charges:", error);
-            useSnackbar(true, "error", "Failed to fetch charges. Please try again.");
         }
     };
 
