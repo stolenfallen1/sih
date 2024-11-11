@@ -257,7 +257,7 @@
 	<SuspendDialog :show="Suspend" :form_type="form_type" @close-dialog="useSubComponents('Suspend', false)" />
 	<RequisitionsDialog :show="Requisitions" :form_type="form_type" @close-dialog="useSubComponents('Requisitions', false)" />
 	<PostChargesDialog :show="PostCharges" @close-dialog="useSubComponents('PostCharges', false)" />
-  	<ERPostMedicineSuppliesDialog :show="ERPostMedicineSupplies" @close-dialog="useSubComponents('ERPostMedicineSupplies', false)" />
+  <ERPostMedicineSuppliesDialog :show="ERPostMedicineSupplies" @close-dialog="useSubComponents('ERPostMedicineSupplies', false)" />
 	<PostCorporatePackageDialog :show="PostCorporateMedicalPackage" @close-dialog="useSubComponents('PostCorporateMedicalPackage', false)"/>
 	<PostDiagnosticPackageDialog :show="PostDiagnosticMedicalPackage" @close-dialog="useSubComponents('PostDiagnosticMedicalPackage', false)"/> 
 	<PostAdjustmentDialog :show="PostAdjustments" @close-dialog="useSubComponents('PostAdjustments', false)" />
