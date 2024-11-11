@@ -81,10 +81,10 @@
             Drug Inquiry
             </v-btn>
             <v-btn
-                prepend-icon="mdi-cash-check"
+                prepend-icon="mdi-pill-multiple"
                 class="bg-success text-white"
             >
-            Assessment Entry
+            Manual Posting
             </v-btn>
             <v-spacer></v-spacer>
         </v-card-actions>
@@ -109,7 +109,11 @@
         </v-data-table>
     </v-card>
 
-    <CarryOrderForm :open_carry_order_form="open_carry_order_form" :patient_type="patient_type" :item="selected_item" @ordered-carried="handleOrderCarried" @close-dialog="closeCarryOrderForm" />
+    <CarryOrderForm 
+        :open_carry_order_form="open_carry_order_form" 
+        :patient_type="patient_type" :item="selected_item"
+        @ordered-carried="handleOrderCarried" 
+        @close-dialog="closeCarryOrderForm" />
     <PharmaPostedMedicines :open_posted_medicine="open_posted_medicine" :patient_type="patient_type" @close-dialog="closePostedMedicine" />
     <PharmaCorrectionEntry :open_correction_entry="open_correction_entry" :patient_type="patient_type" @close-dialog="closeCorrectionEntry" />
     <PharmaReturnedMedicines :open_returned_medicines="open_returned_medicines" :patient_type="patient_type" @close-dialog="closeReturnedMedicines" />

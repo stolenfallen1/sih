@@ -37,7 +37,7 @@
                 <v-row>
                     <v-col cols="12">
                         <v-text-field
-                            label="Searh here..."
+                            label="Searh by Description / Code / Item ID"
                             variant="outlined"
                             density="compact"
                             prepend-inner-icon="mdi-magnify"
@@ -225,28 +225,35 @@ const getPatientRequisitions = async () => {
             case_No: selectedRowDetails.value.case_No,
             account: selectedRowDetails.value.patient_registry[0].mscPrice_Schemes ? selectedRowDetails.value.patient_registry[0].mscPrice_Schemes : null,
         };
-        const response = await fetch(useApiUrl() + "/get-patients-requisitions", {
-            method: "POST",
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + useToken()
-            },
-            body: JSON.stringify({ items })
-        });
-
-        if (response.ok) {
-            const data = await response.json();
-            serverItems.value = data.data;
-        } 
+        data.value.loading = true;
+        try {
+            const response = await fetch(useApiUrl() + `/get-patients-requisitions?keyword=${data.value.keyword}`, {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + useToken()
+                },
+                body: JSON.stringify({ items })
+            });
+    
+            if (response.ok) {
+                const data = await response.json();
+                serverItems.value = data.data;
+            } 
+        } catch (error) {
+            console.error(error);
+        } finally {
+            data.value.loading = false;
+        }
     }
 }
 
 
-const search = () => {
-    loadItems();
+const search = (keyword) => {
+    getPatientRequisitions(keyword);
 }
 
-onUpdated(() => {
+watchEffect(() => {
     if (props.show) {
         getPatientRequisitions();
     }

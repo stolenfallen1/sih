@@ -27,6 +27,7 @@
                                             append-icon="mdi-plus-box"
                                             hint="Case No."
                                             density="compact"
+                                            @keyup.enter="getPatientPostedMeds"
                                             hide-details
                                             outlined
                                             focused
@@ -39,7 +40,7 @@
                                     <v-col cols="12">
                                         <v-text-field
                                             label="Patient Name"
-                                            v-model="payload.patientName"
+                                            v-model="payload.patient_Name"
                                             variant="outlined"
                                             density="compact"
                                             hide-details
@@ -96,7 +97,7 @@
                                     </v-col>
                                 </v-row>
                             </v-col>
-                            <v-col cols="5" class="pa-1">
+                            <v-col cols="7" class="pa-1">
                                 <v-row>
                                     <v-col cols="12">
                                         <v-text-field
@@ -116,75 +117,13 @@
                                     <v-col cols="12">
                                         <v-text-field
                                             label="Age"
-                                            v-model="payload.patientAge"
+                                            v-model="payload.age"
                                             variant="outlined"
                                             density="compact"
                                             hide-details
                                             outlined
                                             readonly
                                         ></v-text-field>
-                                    </v-col>
-                                </v-row>
-                            </v-col>
-                            <v-col cols="2" class="pa-1">
-                                <v-row>
-                                    <v-col cols="12">
-                                        <v-text-field
-                                            label="Sex"
-                                            v-model="payload.sex"
-                                            variant="outlined"
-                                            density="compact"
-                                            hide-details
-                                            outlined
-                                            readonly
-                                        ></v-text-field>
-                                    </v-col>
-                                </v-row>
-                            </v-col>
-                        </v-row>
-                        <v-row>
-                            <v-col cols="3" class="pa-1">
-                                <v-checkbox
-                                    label="isSeniorCitizen"
-                                    density="compact"
-                                    v-model="payload.isSeniorCitizen"
-                                    hide-details
-                                ></v-checkbox>
-                            </v-col>
-                            <v-col cols="4" class="pa-1" v-if="payload.isSeniorCitizen == true">
-                                <v-row>
-                                    <v-col cols="12">
-                                        <v-text-field
-                                            label="Senior Citizen ID"
-                                            v-model="payload.seniorCitizenId"
-                                            variant="outlined"
-                                            density="compact"
-                                            hide-details
-                                            outlined
-                                            readonly
-                                        ></v-text-field>
-                                    </v-col>
-                                </v-row>
-                            </v-col>
-                            <v-col cols="4" class="pa-1" v-if="payload.isSeniorCitizen == true">
-                                <v-row>
-                                    <v-col cols="12">
-                                        <v-text-field
-                                            label="Booklet No."
-                                            v-model="payload.bookletNo"
-                                            variant="outlined"
-                                            density="compact"
-                                            hide-details
-                                            outlined
-                                            readonly
-                                        ></v-text-field>
-                                    </v-col>
-                                </v-row>
-                            </v-col>
-                            <v-col cols="1" class="pa-1" v-if="payload.isSeniorCitizen == true">
-                                <v-row>
-                                    <v-col cols="12">
-                                        <v-btn color="blue-darken-1 border border-info"> Update </v-btn>
                                     </v-col>
                                 </v-row>
                             </v-col>
@@ -194,28 +133,40 @@
                 <v-card elevation="4">
                     <v-card-text>
                         <p>List of Posted Medicines</p>
-                        <v-table density="compact" height="45vh" class="styled-table">
-                            <thead>
-                                <tr>
-                                    <th>Trans Date</th>
-                                    <th>Encoder</th>
-                                    <th>Code</th> 
-                                    <th>Description</th>
-                                    <th>Quantity</th>
-                                    <th>Amount</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td> </td>
-                                    <td> </td>
-                                    <td> </td>
-                                    <td> </td>
-                                    <td> </td>
-                                    <td> </td>
-                                </tr>
-                            </tbody>
-                        </v-table>
+                        <v-data-table-server
+                            class="animated animatedFadeInUp fadeInUp mt-4"
+                            :items-per-page="100"
+                            :headers="headers"
+                            :items="serverItems"
+                            :loading="data.loading"
+                            item-value="id"
+                            :hover="true"
+                            fixed-header
+                            density="compact"
+                            height="40vh"
+                        >
+                            <template v-for="(head, index) of headers" v-slot:[`item.${head.value}`]="props">
+                                <td class="test" :key="index">
+                                    <slot :name="head.value" :item="props.item">
+                                        {{ props.item[head.value] || "..." }}
+                                    </slot>
+                                </td>
+                            </template>
+
+                            <template v-slot:item.nurse_logbook.process_Date="{ item }">
+                                {{ useDateMMDDYYY(item.nurse_logbook.process_Date) }}
+                            </template>
+
+                            <template v-slot:item.transaction_Qty="{ item }">
+                                {{ parseInt(item.transaction_Qty) || "N/A" }}
+                            </template>
+
+                            <template v-slot:item.transaction_Item_TotalAmount="{ item }">
+                                {{ usePeso(item.transaction_Item_TotalAmount) }}
+                            </template>
+
+                            <template #bottom />
+                        </v-data-table-server>
                     </v-card-text>
                 </v-card>
             </v-card-text>
@@ -225,9 +176,11 @@
                     <v-col cols="6" class="pa-1">
                         <v-text-field 
                             label="Total Posted"
+                            v-model="totalPosted"
                             variant="outlined"
                             hint="Case No."
                             density="compact"
+                            readonly
                             hide-details
                             outlined
                         ></v-text-field>
@@ -235,9 +188,11 @@
                     <v-col cols="6" class="pa-1">
                         <v-text-field 
                             label="Total Amount"
+                            v-model="totalAmount"
                             variant="outlined"
                             hint="Case No."
                             density="compact"
+                            readonly
                             hide-details
                             outlined
                         ></v-text-field>
@@ -245,9 +200,11 @@
                     <v-col cols="6" class="pa-1">
                         <v-text-field 
                             label="Total Returned"
+                            v-model="totalReturned"
                             variant="outlined"
                             hint="Case No."
                             density="compact"
+                            readonly
                             hide-details
                             outlined
                         ></v-text-field>
@@ -255,9 +212,11 @@
                     <v-col cols="6" class="pa-1">
                         <v-text-field 
                             label="Total Discount"
+                            v-model="totalDiscount"
                             variant="outlined"
                             hint="Case No."
                             density="compact"
+                            readonly
                             hide-details
                             outlined
                         ></v-text-field>
@@ -281,16 +240,80 @@ const props = defineProps({
         type: Number,
         default: () => '',
         required: true,
-    }
+    },
 });
 
-const { selectedRowDetails } = storeToRefs(useSubcomponentSelectedRowDetailsStore());
 const payload = ref({});
 const emits = defineEmits(["close-dialog"]);
+const serverItems = ref([]);
+
+const headers = [
+    { title: "Trans Date",  align: "start", sortable: false, key: "nurse_logbook.process_Date" },
+    { title: "Encoder",  align: "start", sortable: false, key: "nurse_logbook.process_By" },
+    { title: "Item ID",  align: "start", sortable: false, key: "nurse_logbook.item_Id" },
+    { title: "Description",  align: "start", sortable: false, key: "nurse_logbook.description" },
+    { title: "Dosage",  align: "start", sortable: false, key: "transaction_Item_Med_Frequency_Id" },
+    { title: "Quantity",  align: "start", sortable: false, key: "transaction_Qty" },
+    { title: "Amount",  align: "start", sortable: false, key: "transaction_Item_TotalAmount" },
+];
+
+const data = ref({
+    title: "List of posted medicines",
+    keyword: "",
+    loading: false,
+    filter: {},
+    tab: 0,
+    param_tab: 1,
+});
+
+const getPatientPostedMeds = async () => {
+    if (payload.value.case_No == null || payload.value.case_No == undefined || payload.value.case_No == "") {
+        data.value.loading = true;
+        try {
+            const response = await useMethod("get", "get-pharmacy-posted-meds?case_No=", "", payload.value.caseNo);
+            if (response) {
+                payload.value.patient_Id = response.patient_details.patient_Id;
+                payload.value.age = response.patient_details.age;
+                payload.value.patient_Name = response.patient_details.inventory_data[0].nurse_logbook.patient_Name;
+                payload.value.attending_Doctor_fullname = response.patient_details.doctor;
+                serverItems.value = response.patient_details.inventory_data;
+            } 
+        } catch (error) {
+            console.error(error);
+        } finally {
+            data.value.loading = false;
+        }
+    }
+}
+
+const totalAmount = computed(() => {
+    if (serverItems.value.length === 0) return null;
+    const totalAmountValue = serverItems.value.reduce((acc, item) => acc + parseFloat(item.transaction_Item_TotalAmount || 0), 0);
+    return usePeso(totalAmountValue);  
+});
+
+
+const totalPosted = computed(() => {
+    if (serverItems.value.length === 0) return null;
+    return serverItems.value.reduce((acc, item) => acc + parseInt(item.transaction_Qty || 0), 0);
+});
+
+const totalReturned = computed(() => {
+    if (serverItems.value.length === 0) return null;
+    return serverItems.value.reduce((acc, item) => acc + parseInt(item.transaction_Returned_Qty || 0), 0);
+});
+
+const totalDiscount = computed(() => {
+    if (serverItems.value.length === 0) return null;
+    return serverItems.value.reduce((acc, item) => acc + parseFloat(item.transaction_Discount || 0), 0);
+});
+
 
 const closeDialog = () => {
-    emits("close-dialog");
-};
+    serverItems.value = [];
+    payload.value = {};
+    emits('close-dialog');
+}
 </script>
 
 <style scoped>
