@@ -528,7 +528,7 @@
     const isLoading = ref(false);
     const credit_limit = ref(null);
     let panel = ref([0, 1]);
-    const payload = ref({});
+    const payload = ref({user_userid: '', user_passcode: ''});
     const chargecode = ref([]);
     const open_items_list_for_medicines = ref(false);
     const open_items_list_for_supplies = ref(false);
@@ -906,6 +906,8 @@
                 useSnackbar(true, "success", response.message);
                 clearFields()
                 closeConfirmDialog();
+                payload.value.user_userid = '';
+                payload.value.user_passcode = '';
                 await getMedicineCharges();
             } else {
                 useSnackbar(true, "error", 'Failed to post charges. Please try again.');
