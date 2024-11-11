@@ -27,6 +27,7 @@
                                             append-icon="mdi-plus-box"
                                             hint="Case No."
                                             density="compact"
+                                            @keyup.enter="getPatientPostedMeds"
                                             hide-details
                                             outlined
                                             focused
@@ -39,7 +40,7 @@
                                     <v-col cols="12">
                                         <v-text-field
                                             label="Patient Name"
-                                            v-model="payload.patientName"
+                                            v-model="payload.patient_Name"
                                             variant="outlined"
                                             density="compact"
                                             hide-details
@@ -96,22 +97,7 @@
                                     </v-col>
                                 </v-row>
                             </v-col>
-                            <v-col cols="3" class="pa-1">
-                                <v-row>
-                                    <v-col cols="12">
-                                        <v-text-field
-                                            label="ID"
-                                            v-model="payload.attending_Doctor"
-                                            variant="outlined"
-                                            density="compact"
-                                            hide-details
-                                            outlined
-                                            readonly
-                                        ></v-text-field>
-                                    </v-col>
-                                </v-row>
-                            </v-col>
-                            <v-col cols="6" class="pa-1">
+                            <v-col cols="7" class="pa-1">
                                 <v-row>
                                     <v-col cols="12">
                                         <v-text-field
@@ -126,44 +112,12 @@
                                     </v-col>
                                 </v-row>
                             </v-col>
-                        </v-row>
-                        <v-row>
-                            <v-col cols="4" class="pa-1">
-                                <v-row>
-                                    <v-col cols="12">
-                                        <v-text-field
-                                            label="Credit Memo"
-                                            v-model="payload.credit_Memo"
-                                            variant="outlined"
-                                            density="compact"
-                                            hide-details
-                                            outlined
-                                            readonly
-                                        ></v-text-field>
-                                    </v-col>
-                                </v-row>
-                            </v-col>
-                            <v-col cols="4" class="pa-1">
-                                <v-row>
-                                    <v-col cols="12">
-                                        <v-text-field
-                                            label="Total"
-                                            v-model="payload.total"
-                                            variant="outlined"
-                                            density="compact"
-                                            hide-details
-                                            outlined
-                                            readonly
-                                        ></v-text-field>
-                                    </v-col>
-                                </v-row>
-                            </v-col>
                             <v-col cols="2" class="pa-1">
                                 <v-row>
                                     <v-col cols="12">
                                         <v-text-field
                                             label="Age"
-                                            v-model="payload.patientAge"
+                                            v-model="payload.age"
                                             variant="outlined"
                                             density="compact"
                                             hide-details
@@ -173,12 +127,29 @@
                                     </v-col>
                                 </v-row>
                             </v-col>
-                            <v-col cols="2" class="pa-1">
+                        </v-row>
+                        <v-row>
+                            <v-col cols="6" class="pa-1">
                                 <v-row>
                                     <v-col cols="12">
                                         <v-text-field
-                                            label="Sex"
-                                            v-model="payload.sex"
+                                            label="Credit Memo"
+                                            v-model="creditMemo"
+                                            variant="outlined"
+                                            density="compact"
+                                            hide-details
+                                            outlined
+                                            readonly
+                                        ></v-text-field>
+                                    </v-col>
+                                </v-row>
+                            </v-col>
+                            <v-col cols="6" class="pa-1">
+                                <v-row>
+                                    <v-col cols="12">
+                                        <v-text-field
+                                            label="Total"
+                                            v-model="totalAmount"
                                             variant="outlined"
                                             density="compact"
                                             hide-details
@@ -193,29 +164,47 @@
                 </v-card>
                 <v-card elevation="4">
                     <v-card-text>
-                        <p>List of Requests</p>
-                        <v-table density="compact" height="45vh" class="styled-table">
-                            <thead>
-                                <tr>
-                                    <th>Trans Date</th>
-                                    <th>Encoder</th>
-                                    <th>Code</th> 
-                                    <th>Description</th>
-                                    <th>Quantity</th>
-                                    <th>Amount</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td> </td>
-                                    <td> </td>
-                                    <td> </td>
-                                    <td> </td>
-                                    <td> </td>
-                                    <td> </td>
-                                </tr>
-                            </tbody>
-                        </v-table>
+                        <div style="display: flex; align-items: center; justify-content: space-between;">
+                            <p>List of Posted Medicines</p>
+                            <div>
+                                <v-btn class="bg-info text-white" v-if="payload.patient_Name != null" style="margin-right: 10px;" @click="clearData">Clear</v-btn>
+                                <v-btn class="bg-warning text-white" v-if="payload.patient_Name != null">Request to Open</v-btn>
+                            </div>
+                        </div>
+                        <v-data-table-server
+                            class="animated animatedFadeInUp fadeInUp mt-4"
+                            :items-per-page="100"
+                            :headers="headers"
+                            :items="serverItems"
+                            :loading="data.loading"
+                            item-value="id"
+                            :hover="true"
+                            fixed-header
+                            density="compact"
+                            height="40vh"
+                        >
+                            <template v-for="(head, index) of headers" v-slot:[`item.${head.value}`]="props">
+                                <td class="test" :key="index">
+                                    <slot :name="head.value" :item="props.item">
+                                        {{ props.item[head.value] || "..." }}
+                                    </slot>
+                                </td>
+                            </template>
+
+                            <template v-slot:item.nurse_logbook.process_Date="{ item }">
+                                {{ useDateMMDDYYY(item.nurse_logbook.process_Date) }}
+                            </template>
+
+                            <template v-slot:item.transaction_Qty="{ item }">
+                                {{ parseInt(item.transaction_Qty) || "N/A" }}
+                            </template>
+
+                            <template v-slot:item.transaction_Item_TotalAmount="{ item }">
+                                {{ usePeso(item.transaction_Item_TotalAmount) }}
+                            </template>
+
+                            <template #bottom />
+                        </v-data-table-server>
                     </v-card-text>
                 </v-card>
             </v-card-text>
@@ -223,7 +212,7 @@
             <v-card-actions>
                 <v-btn color="blue-darken-1 border border-info" @click="closeDialog"> Close </v-btn>
                 <v-spacer></v-spacer>
-                <v-btn class="bg-primary text-white" type="submit">Submit</v-btn>
+                <v-btn class="bg-primary text-white">Submit Adjustment</v-btn>
             </v-card-actions>
         </v-card>
     </v-dialog>
@@ -243,13 +232,72 @@ const props = defineProps({
     }
 });
 
-const { selectedRowDetails } = storeToRefs(useSubcomponentSelectedRowDetailsStore());
 const payload = ref({});
 const emits = defineEmits(["close-dialog"]);
+const serverItems = ref([]);
+
+const headers = [
+    { title: "Trans Date",  align: "start", sortable: false, key: "nurse_logbook.process_Date" },
+    { title: "Encoder",  align: "start", sortable: false, key: "nurse_logbook.process_By" },
+    { title: "Item ID",  align: "start", sortable: false, key: "nurse_logbook.item_Id" },
+    { title: "Description",  align: "start", sortable: false, key: "nurse_logbook.description" },
+    { title: "Dosage",  align: "start", sortable: false, key: "transaction_Item_Med_Frequency_Id" },
+    { title: "Quantity",  align: "start", sortable: false, key: "transaction_Qty" },
+    { title: "Amount",  align: "start", sortable: false, key: "transaction_Item_TotalAmount" },
+];
+
+const data = ref({
+    title: "List of posted medicines",
+    keyword: "",
+    loading: false,
+    filter: {},
+    tab: 0,
+    param_tab: 1,
+});
+
+const getPatientPostedMeds = async () => {
+    if (payload.value.case_No == null || payload.value.case_No == undefined || payload.value.case_No == "") {
+        data.value.loading = true;
+        try {
+            const response = await useMethod("get", "get-pharmacy-posted-meds?case_No=", "", payload.value.caseNo);
+            if (response) {
+                payload.value.patient_Id = response.patient_details.patient_Id;
+                payload.value.age = response.patient_details.age;
+                payload.value.patient_Name = response.patient_details.inventory_data[0].nurse_logbook.patient_Name;
+                payload.value.attending_Doctor_fullname = response.patient_details.doctor;
+                serverItems.value = response.patient_details.inventory_data;
+            } 
+        } catch (error) {
+            console.error(error);
+        } finally {
+            data.value.loading = false;
+        }
+    }
+}
+
+const clearData = () => {
+    payload.value = {};
+    serverItems.value = [];
+}
+
+const totalAmount = computed(() => {
+    if (serverItems.value.length === 0) return null;
+    const totalAmountValue = serverItems.value.reduce((acc, item) => acc + parseFloat(item.transaction_Item_TotalAmount || 0), 0);
+    return usePeso(totalAmountValue);
+});
+
+const creditMemo = computed(() => {
+    if (serverItems.value.length === 0) return null;
+    const creditMemo =  serverItems.value.reduce((acc, item) => acc + parseFloat(item.transaction_CreditMemo_Number || 0), 0); 
+    if (creditMemo == 0) return "N/A";
+});
+
 
 const closeDialog = () => {
-    emits("close-dialog");
-};
+    serverItems.value = [];
+    payload.value = {};
+    emits('close-dialog');
+}
 </script>
 
 <style scoped>

@@ -3,7 +3,7 @@
         <v-card rounded="lg">
             <v-toolbar density="compact" color="#107bac" hide-details>
                 <v-toolbar-title>
-                    Adjustment of Posted Medicines
+                    Carry Medicine Order
                     {{ patient_type == 2 ? '( OUTPATIENT )' : (patient_type == 5 ? '( EMERGENCY )' : '( INPATIENT )') }}
                 </v-toolbar-title>
                 <v-spacer></v-spacer>
@@ -111,7 +111,7 @@
                     Cancellation Remarks
                 </v-toolbar-title>
                 <v-spacer></v-spacer>
-                <v-btn color="white" @click="closeDialog">
+                <v-btn color="white" @click="closeRemarksDialog">
                 <v-icon>mdi-close</v-icon>
                 </v-btn>
             </v-toolbar>
@@ -239,9 +239,15 @@ const confirmCancelOrder = () => {
     cancelOrderConfirmation.value = true;
 };
 
-const onCancel = (user_details) => {
+const onCancel = async (user_details) => {
     if (user_details.user_passcode === usePasscode()) {
-        console.log(payload.value);
+        const response = await useMethod("post", "cancel-pharmacy-order", payload.value);   
+        if (response) {
+            useSnackbar(true, "success", "Order successfully cancelled.");
+            emits("ordered-carried");
+            closeCancellation();
+            closeDialog();
+        } 
     } else {
         user_attempts.value += 1;
         useSnackbar(true, "error", "Password incorrect.");
@@ -285,8 +291,8 @@ const onSubmit = async (user_details) => {
         if (response) {
             useSnackbar(true, "success", "Order successfully carried.");
             emits("ordered-carried");
-            closeDialog();
             closeConfirmation();
+            closeDialog();
         } 
     } else {
         user_attempts.value += 1;

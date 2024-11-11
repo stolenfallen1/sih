@@ -62,57 +62,36 @@
                             width: '12px',
                             height: '12px',
                             borderRadius: '2px',
-                            backgroundColor: item.details && item.details.ismedicine === '1' ? 'blue' : 
-                                            item.details && item.details.isprocedure === '1' ? 'green' : 
-                                            item.details && item.details.issupplies === '1' ? 'red' : 'gray'
+                            backgroundColor: item.nurse_logbook && item.nurse_logbook.ismedicine === '1' ? 'blue' : 
+                                            item.nurse_logbook && item.nurse_logbook.isprocedure === '1' ? 'green' : 
+                                            item.nurse_logbook && item.nurse_logbook.issupplies === '1' ? 'red' : 'gray'
                         }"
-                        :title="item.details && item.details.ismedicine === '1' ? 'Medicines' :
-                                item.details && item.details.isprocedure === '1' ? 'Procedures' :
-                                item.details && item.details.issupplies === '1' ? 'Supplies' : 'N/A'"
+                        :title="item.nurse_logbook && item.nurse_logbook.ismedicine === '1' ? 'Medicines' :
+                                item.nurse_logbook && item.nurse_logbook.isprocedure === '1' ? 'Procedures' :
+                                item.nurse_logbook && item.nurse_logbook.issupplies === '1' ? 'Supplies' : 'N/A'"
                     >
                     </span>
                 </template>
 
-                <template v-slot:item.details.revenueID="{ item }">
-                    {{ item.details.revenueID || item.details.revenue_Id || "N/A" }}
+                <template v-slot:item.transaction_Qty="{ item }">
+                    {{ parseInt(item.transaction_Qty) || parseInt(item.transaction_Qty) || "N/A" }}
                 </template>
 
-                <template v-slot:item.details.itemID="{ item }">
-                    {{ item.details.itemID || item.details.item_Id || "N/A" }}
-                </template>
-
-                <template v-slot:item.details.requestDescription="{ item }">
-                    {{ item.details.requestDescription || item.details.description || "N/A" }}
-                </template>
-
-                <template v-slot:item.details.quantity="{ item }">
-                    {{ parseInt(item.details.quantity) || parseInt(item.details.Quantity) || "N/A" }}
-                </template>
-
-                <template v-slot:item.details.dosage="{ item }">
-                    <span v-if="item.details.dosage">
-                        {{ item.details.dosage }}
+                <template v-slot:item.transaction_Item_Med_Frequency_Id="{ item }">
+                    <span v-if="item.transaction_Item_Med_Frequency_Id">
+                        {{ item.transaction_Item_Med_Frequency_Id }}
                     </span>
                     <span v-else style="color: red;">
                         N/A
                     </span>
                 </template>
 
-                <template v-slot:item.details.amount="{ item }">
-                    {{ usePeso(item.details.amount) }}
+                <template v-slot:item.transaction_Item_TotalAmount="{ item }">
+                    {{ usePeso(item.transaction_Item_TotalAmount) }}
                 </template>
 
-                <template v-slot:item.details.created_at="{ item }">
+                <template v-slot:item.created_at="{ item }">
                     {{ useDateMMDDYYY(item.created_at) }}
-                </template>
-
-                <template v-slot:item.isUnpaid="{ item }">
-                    <v-chip color="red" v-if="item.isUnpaid == true">Pending Payment</v-chip>
-                    <v-chip color="orange" v-else-if="item.isUnpaid == false">Pending Order</v-chip>
-                </template>
-
-                <template v-slot:item.action="{ item }">
-                    <v-icon color="red" style="cursor: pointer;">mdi-trash-can</v-icon>
                 </template>
 
                 <template #bottom></template>
@@ -147,13 +126,14 @@ const serverItems = ref([]);
 
 const headers = [
     { title: "",  align: "start", sortable: false, key: "patient_Id" },
-    { title: "Code",  align: "start", sortable: false, key: "details.revenueID" },
-    { title: "Item ID",  align: "start", sortable: false, key: "details.itemID" },
-    { title: "Description",  align: "start", sortable: false, key: "details.requestDescription" },
-    { title: "Quantity",  align: "start", sortable: false, key: "details.quantity" },
-    { title: "Frequency",  align: "start", sortable: false, key: "details.dosage" },
-    { title: "Amount",  align: "start", sortable: false, key: "details.amount" },
-    { title: "Process Date",  align: "start", sortable: false, key: "details.created_at" },
+    { title: "Code",  align: "start", sortable: false, key: "nurse_logbook.revenue_Id" },
+    { title: "Item ID",  align: "start", sortable: false, key: "nurse_logbook.item_Id" },
+    { title: "Description",  align: "start", sortable: false, key: "nurse_logbook.description" },
+    { title: "Quantity",  align: "start", sortable: false, key: "transaction_Qty" },
+    { title: "Frequency",  align: "start", sortable: false, key: "transaction_Item_Med_Frequency_Id" },
+    { title: "Amount",  align: "start", sortable: false, key: "transaction_Item_TotalAmount" },
+    { title: "Process By",  align: "start", sortable: false, key: "nurse_logbook.process_By" },
+    { title: "Process Date",  align: "start", sortable: false, key: "created_at" },
 ];
 
 const data = ref({
@@ -166,7 +146,7 @@ const data = ref({
 });
 
 const fetchRenderedTransactions = async () => {
-    const response = await useFetch(useApiUrl() + "/get-rendered-transactions", {
+    const response = await fetch(useApiUrl() + "/get-rendered-transactions", {
         method: "POST",
         headers: {
             'Content-Type': 'application/json',
@@ -178,9 +158,7 @@ const fetchRenderedTransactions = async () => {
     if (response.ok) {
         const data = await response.json();
         serverItems.value = data;
-        console.log("Fetched data:", data);  // Log data content
-        console.log("Updated serverItems:", serverItems.value); // Verify serverItems update
-    }
+    } 
 };
 
 const emits = defineEmits(['close-dialog'])
@@ -191,8 +169,8 @@ const closeDialog = () => {
 
 watchEffect(() => {
     if (props.open_rendered_transactions) {
-        console.log("Dialog opened - fetching transactions");
         fetchRenderedTransactions();
+        console.log("Dialog opened - fetching transactions");
     }
 });
 </script>
