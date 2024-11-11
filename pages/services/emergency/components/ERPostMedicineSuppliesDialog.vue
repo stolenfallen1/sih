@@ -684,35 +684,27 @@
     };
 
     const handleAddSupplies = (item, index) => {
-
         item.code = item.code.toUpperCase();
-
         const lastRow = Supplies.value[Supplies.value.length - 1];
         if (!item.code) {
             return useSnackbar(true, "error", "Code Should not be empty.");
         }
-
         const desiredCodes = supplies_revenue_data.value.map(item => item.code);
         if (desiredCodes.includes(item.code) === false) {
             return useSnackbar(true, "error", "Invalid Code, refer to help code.");
         }
-
         const matchingRevenue = supplies_revenue_data.value.find(revenue => revenue.code === item.code);
         if (!matchingRevenue) return;
         selectedWarehouseID.value = matchingRevenue.warehouse_id;
         user_input_revenue_code.value = item.code;
-
         if(item.code && !item.map_item_id && !item.item_name) {
-
             open_items_list_for_supplies.value = true;
             let supplies = Supplies.value.filter(function (obj) {
                 return obj.code !== '' && obj.map_item_id !== '' && obj.item_name !== '';
             });
-
             let resultArray = supplies.filter(item => item.code.toUpperCase() === lastRow.code.toUpperCase()).map(item => item.map_item_id);
             chargecode.value = resultArray;
         }
-        
         if(item.code && item.map_item_id && item.item_name) {
             const isItemCodeAndRevenueAlreadyExists = Supplies.value.slice(0, index).some(row => row.map_item_id === lastRow.map_item_id && row.code === lastRow.code);
                 if(!isItemCodeAndRevenueAlreadyExists) {
@@ -756,10 +748,8 @@
         if (!item.base_price) {
             item.base_price = parseFloat(item.price.replace(/[^0-9.-]+/g, ''));
         }
-
         const base_price = item.base_price;
         const quantity = parseInt(item.quantity) || 0;
-
         if (!isNaN(quantity) && !isNaN(base_price)) {
             item.amount = (quantity * base_price).toFixed(2);
             calculateTotalAmountMedicine();
@@ -773,10 +763,8 @@
         if (!item.base_price) {
             item.base_price = parseFloat(item.price.replace(/[^0-9.-]+/g, ''));
         }
-
         const base_price = item.base_price;
         const quantity = parseInt(item.quantity) || 0;
-
         if (!isNaN(quantity) && !isNaN(base_price)) {
             item.amount = (quantity * base_price).toFixed(2);
             calculateTotalAmountSupply();
@@ -788,18 +776,15 @@
     const totalAmount = ref(0);
     const calculateTotalAmountMedicine = () => {
         totalAmount.value = 0;
-
         Medicines.value.forEach(item => {
             const itemAmount = parseFloat(item.amount) || 0; 
             (totalAmount.value += itemAmount).toFixed(2);
         });
-
     }
 
     const totalSupplyAmount = ref(0)
     const calculateTotalAmountSupply = () => {
         totalSupplyAmount.value = 0;
-
         Supplies.value.forEach(item => {
             const itemSupplyAmount = parseFloat(item.amount) || 0;
             (totalSupplyAmount.value += itemSupplyAmount).toFixed(2);
@@ -816,23 +801,18 @@
     const removeMedicineItem = (selectedItem) => {
         Medicines.value = Medicines.value.filter(item => !(item.map_item_id === selectedItem.map_item_id && item.code === selectedItem.code));
     }
-
     const removeSuppliesItem = (selectedItem) => {
         Supplies.value = Supplies.value.filter(item => !(item.map_item_id === selectedItem.map_item_id && item.code === selectedItem.code));
     }
-
     const closeItemsDialogForMedicines = () => {
         open_items_list_for_medicines.value = false;
     }
-
     const closeItemsDialogForSupplies = () => {
         open_items_list_for_supplies.value = false;
     }
-
     const closeFrequencyList = () => {
         open_frequency_list.value = false;
     }
-
     const reference_id = ref(0);
     const medsys_assess_id = ref(0);
     const handleCancelCharges = async (request_id, assess_num) => {
@@ -841,7 +821,6 @@
        openConfirmDialog()
         
     }
-
     const onSubmit = async () => {
 
         isLoading.value = true;
@@ -894,7 +873,7 @@
         } finally {
             isLoadingBtn.value = false;
             isLoading.value = false;
-            closeDialog();
+            clearFields();
             closeConfirmDialog();
         }
     };
@@ -925,6 +904,7 @@
             }
             if (response) {
                 useSnackbar(true, "success", response.message);
+                clearFields()
                 closeConfirmDialog();
                 await getMedicineCharges();
             } else {
@@ -954,8 +934,7 @@
         await processCharges(); 
     };
 
-    const closeDialog = () => {
-        emits('close-dialog');
+    const clearFields = () => {
         panel.value = [0, 1];
         Medicines.value = [
             {
@@ -968,11 +947,25 @@
                 stat: "",
             }
         ];
-    }
 
+        Supplies.value = [
+            {
+                code: "",
+                item_name: "",
+                quantity: "",
+                amount: "",
+                remarks: "",
+                stat: "",
+            }
+        ]
+        totalAmount.value = 0;
+        totalSupplyAmount.value = 0;
+    }
+    const closeDialog = () => {
+        emits('close-dialog');
+    }
     const chargeMedicineList    = ref([]);
     const chargeSupplyList      = ref([]);
-
     const grandtotal = computed(() =>
         chargeMedicineList.value.reduce((acc, item) => acc + parseFloat(item.Amount), 0)
     );
@@ -982,7 +975,6 @@
         { title: 'Code',                key: 'code',        sortable: false },
         { title: 'Reference Number',    key: 'request_num', sortable: false },
         { title: 'Item',                key: 'item_name',   sortable: false },
-        // { title: 'Price',            key: 'price',       sortable: false },
         { title: 'Quantity',            key: 'quantity',    sortable: false },
         { title: 'Frequency',           key: 'dosage',      sortable: false },
         { title: 'Amount',              key: 'net_amount',  sortable: false },
@@ -994,7 +986,6 @@
         { title: 'Code',                key: 'code',        sortable: false },
         { title: 'Reference Number',    key: 'request_num', sortable: false },
         { title: 'Item Name',           key: 'item_name',   sortable: false },
-        // { title: 'Price',               key: 'price',       sortable: false },
         { title: 'Quantity',            key: 'quantity',    sortable: false },
         { title: 'Net Amount',          key: 'net_amount',  sortable: false },
         { title: 'Action',              key: 'action',      sortable: false }
@@ -1005,14 +996,11 @@
         try {
             chargeMedicineList.value = [];
             chargeSupplyList.value = [];
-
             const response = await useMethod("get", "get-charge-items/", "", payload.value.case_No);
             const data = Array.isArray(response) ? response : response.data;
-
             if (data && Array.isArray(data) && data.length > 0) {
                 const filteredMedicineData = data.filter(item => item.revenue_Id === 'EM');
                 chargeMedicineList.value = filteredMedicineData.map(item => ({
-
                     status: item.record_Status === 'W' ? 'Paid' : item.record_Status === 'X' ? 'Unpaid' : 'Canceled',
                     code: item.item_Id,
                     item_name: item.description || '-',
@@ -1022,12 +1010,10 @@
                     net_amount: item.amount ? parseFloat(item.amount).toFixed(2) : '-',
                     request_num: item.referenceNum,
                     assess_num: item.assessnum
-
                 }));
 
                 const filteredSupplyData = data.filter(item => item.revenue_Id === 'RS');
                 chargeSupplyList.value = filteredSupplyData.map(item => ({
-
                     status: item.record_Status === 'W' ? 'Paid' : item.record_Status === 'X' ? 'Unpaid' : 'Canceled',
                     code: item.item_Id,
                     item_name: item.description || '-',
@@ -1037,12 +1023,9 @@
                     net_amount: item.amount ? parseFloat(item.amount).toFixed(2) : '-',
                     request_num: item.referenceNum,
                     assess_num: item.assessnum
-                    
                 }));
                 allCharges.value = [...chargeMedicineList.value, ...chargeSupplyList.value];
-            } else {
-                useSnackbar(true, "error", "Charges are empty or may not be in array format");
-            }
+            } 
         } catch (error) {
             console.error("An error occurred while fetching charges:", error);
             useSnackbar(true, "error", "Failed to fetch charges. Please try again.");
@@ -1066,7 +1049,6 @@
     onUpdated(() => {
         if (selectedRowDetails.value && selectedRowDetails.value.id) {
             if (payload.value.id !== selectedRowDetails.value.id) { 
-
                 payload.value       = Object.assign({}, selectedRowDetails.value);
                 payload.value.name  = selectedRowDetails.value.lastname && selectedRowDetails.value.firstname 
                     ? `${selectedRowDetails.value.lastname}, ${selectedRowDetails.value.firstname} ${selectedRowDetails.value.middlename || ''}` 
