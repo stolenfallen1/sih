@@ -11,47 +11,47 @@
                 <v-card-text>
                     <v-row>
                         <v-col cols="3">
-                        <v-tabs
-                            v-model="tab"
-                            direction="vertical"
-                            color="primary"
-                            center-active
-                            density="compact"
-                        >
-                            <v-tab value="0"><v-icon start>mdi-form-select</v-icon> Patient Basic Information </v-tab>
-                            <v-tab value="1"><v-icon start>mdi-form-select</v-icon> Registry Information </v-tab>
-                            <v-tab value="2"><v-icon start>mdi-form-select</v-icon> Other Details </v-tab>
-                            <v-tab value="3"><v-icon start>mdi-form-select</v-icon> HMOs .Guarantors </v-tab>
-                            <v-tab value="4"><v-icon start>mdi-form-select</v-icon> Consultants .Physicians </v-tab>
-                            <v-tab value="5"><v-icon start>mdi-form-select</v-icon> Allergies </v-tab>
-                            <v-tab value="6"><v-icon start>mdi-form-select</v-icon> Notes .Remarks </v-tab>
-                        </v-tabs>
+                            <v-tabs
+                                v-model="tab"
+                                direction="vertical"
+                                color="primary"
+                                center-active
+                                density="compact"
+                            >
+                                <v-tab value="0"><v-icon start>mdi-form-select</v-icon> Patient Basic Information </v-tab>
+                                <v-tab value="1"><v-icon start>mdi-form-select</v-icon> Registry Information </v-tab>
+                                <v-tab value="2"><v-icon start>mdi-form-select</v-icon> Other Details </v-tab>
+                                <v-tab value="3"><v-icon start>mdi-form-select</v-icon> HMOs .Guarantors </v-tab>
+                                <v-tab value="4"><v-icon start>mdi-form-select</v-icon> Consultants .Physicians </v-tab>
+                                <v-tab value="5"><v-icon start>mdi-form-select</v-icon> Allergies </v-tab>
+                                <v-tab value="6"><v-icon start>mdi-form-select</v-icon> Notes .Remarks </v-tab>
+                            </v-tabs>
                         </v-col>
                         <v-divider vertical color="#2a73c5"></v-divider>
                         <v-col cols="9" class="scrollable-content">
-                        <v-window v-model="tab">
-                            <v-window-item class="pa-1">
-                                <ER-Patient-Basic-Info :clicked_option="clicked_option" :formErrors="formErrors" :payload="payload" />
-                            </v-window-item>
-                            <v-window-item class="pa-1">
-                                <ER-Registry-Basic-Info :clicked_option="clicked_option" :formErrors="formErrors" :payload="payload" :form_type="formType" />
-                            </v-window-item>
-                            <v-window-item class="pa-1">
-                                <ER-Other-Details-Info :clicked_option="clicked_option" :formErrors="formErrors" :payload="payload" :form_type="formType" />
-                            </v-window-item>
-                            <v-window-item class="pa-1">
-                                <ER-HMO-Info :clicked_option="clicked_option" :payload="payload" />
-                            </v-window-item>
-                            <v-window-item class="pa-1">
-                                <ER-Consultant-Info :clicked_option="clicked_option" :payload="payload" />
-                            </v-window-item>
-                            <v-window-item class="pa-1">
-                                <ER-Allergies-Info :clicked_option="clicked_option" :payload="payload" />
-                            </v-window-item>
-                            <v-window-item class="pa-1">
-                                <ER-Remarks-Info :clicked_option="clicked_option" :payload="payload" />
-                            </v-window-item>
-                        </v-window>
+                            <v-window v-model="tab">
+                                <v-window-item class="pa-1">
+                                    <ER-Patient-Basic-Info :clicked_option="clicked_option" :formErrors="formErrors" :payload="payload" />
+                                </v-window-item>
+                                <v-window-item class="pa-1">
+                                    <ER-Registry-Basic-Info :clicked_option="clicked_option" :formErrors="formErrors" :payload="payload" :form_type="formType" />
+                                </v-window-item>
+                                <v-window-item class="pa-1">
+                                    <ER-Other-Details-Info :clicked_option="clicked_option" :formErrors="formErrors" :payload="payload" :form_type="formType" />
+                                </v-window-item>
+                                <v-window-item class="pa-1">
+                                    <ER-HMO-Info :clicked_option="clicked_option" :payload="payload" />
+                                </v-window-item>
+                                <v-window-item class="pa-1">
+                                    <ER-Consultant-Info :clicked_option="clicked_option" :payload="payload" />
+                                </v-window-item>
+                                <v-window-item class="pa-1">
+                                    <ER-Allergies-Info :clicked_option="clicked_option" :payload="payload" />
+                                </v-window-item>
+                                <v-window-item class="pa-1">
+                                    <ER-Remarks-Info :clicked_option="clicked_option" :payload="payload" />
+                                </v-window-item>
+                            </v-window>
                         </v-col>
                     </v-row>
                 </v-card-text>
@@ -79,7 +79,6 @@
                 @submit="onSubmit"
                 @close="closeConfirmDialog"
             />
-
         </v-form>
     </v-dialog>
     <v-snackbar
@@ -148,7 +147,9 @@
 
     const isLoading = ref(false);
 
-    const emits = defineEmits(['close-dialog']);
+    // const emits = defineEmits(['close-dialog']);
+    const emits = defineEmits(['close-dialog', 'patient-registered']);
+    const patientDetail = ref({});
 
     const closeDialog = () => {
         emits('close-dialog');
@@ -226,58 +227,175 @@
         showDialog.value = false;
     }
 
+    
+    // const onSubmit = async (user_details) => {
+    //     try {
+    //         let response;
+    //         isLoading.value = true;
 
-    const onSubmit = async (user_details) => {
+    //         if (payload.value.id) {
+    //             response = await useMethod("put", "update-emergency", payload.value, "", payload.value.patient_Id);
+    //             if (response) {
+    //                 useSnackbar(true, "green", response.message);
+    //                 setTimeout(() => {
+    //                     isLoading.value = false;
+    //                     payload.value   = Object.assign({});
+    //                     tab.value       = "0";
+    //                     closeDialog();
+    //                     closeConfirmDialog();
+    //                     // window.location.reload();
+    //                     emits('patient-registered', patientDetail);
+    //                 }, 500);
+        
+    //             } else {
+    //                 if (error.response && error.response.status === 404) {
+    //                     useSnackbar(true, "red", 'Incorrect Username or Passcode');
+    //                     isLoading.value = false;
+    //                 } else {
+    //                     useSnackbar(true, "red", response.message || 'Update failed');
+    //                 }
+    //             }
+    //         } else {
+    //             response = await useMethod("post", "register-emergency", payload.value);
+    //             if (response) {
+    //                 useSnackbar(true, "green", response.message);
+    //                 setTimeout(() => {
+    //                     // window.location.reload();
+    //                     isLoading.value = false;
+    //                     payload.value   = Object.assign({});
+    //                     tab.value       = "0";
+    //                     closeDialog();
+    //                     closeConfirmDialog();
+    //                     emits('patient-registered', patientDetail);
+    //                 }, 500)
+
+    //             }  else {
+    //                 if (error.response && error.response.status === 404) {
+    //                     useSnackbar(true, "red", 'Incorrect Username or Passcode');
+    //                     isLoading.value = false;
+    //                 } else {
+    //                     useSnackbar(true, "red", response.message || 'Update failed');
+    //                 }
+    //             }
+    //         }
+
+    //     } catch (error) {
+    //         if (error.response && error.response.status === 404) {
+    //             useSnackbar(true, "red", 'Incorrect Username or Passcode');
+    //             isLoading.value = false;
+    //         } else {
+    //             useSnackbar(true, "red", error.message || 'An error occurred');
+    //             isLoading.value = false;
+    //         }
+    //     }
+    // }
+
+    const onSubmit = async () => {
         try {
-            
-            let response;
             isLoading.value = true;
+            let response;
 
             if (payload.value.id) {
-                response = await useMethod("put", "update-emergency", payload.value, "", payload.value.patient_Id);
-                if (response) {
-                    useSnackbar(true, "green", response.message);
-                    isLoading.value = false;
-                    payload.value   = Object.assign({});
-                    tab.value       = "0";
-                    closeDialog();
-                    closeConfirmDialog();
-                } else {
-                    if (error.response && error.response.status === 404) {
-                        useSnackbar(true, "red", 'Incorrect Username or Passcode');
-                        isLoading.value = false;
-                    } else {
-                        useSnackbar(true, "red", response.message || 'Update failed');
-                    }
-                }
+            // Update logic
+            response = await useMethod("put", "update-emergency", payload.value, "", payload.value.patient_Id);
+            if (response) {
+                useSnackbar(true, "green", response.message);
+                patientDetail.value = response.data; // Assuming response.data contains the updated patient details
+                emits('patient-registered', patientDetail.value);
+            }
             } else {
-                response = await useMethod("post", "register-emergency", payload.value);
-                if (response) {
-                    useSnackbar(true, "green", response.message);
-                    isLoading.value = false;
-                    payload.value   = Object.assign({});
-                    tab.value       = "0";
-                    closeDialog();
-                    closeConfirmDialog();
-                }  else {
-                    if (error.response && error.response.status === 404) {
-                        useSnackbar(true, "red", 'Incorrect Username or Passcode');
-                        isLoading.value = false;
-                    } else {
-                        useSnackbar(true, "red", response.message || 'Update failed');
-                    }
-                }
+            // Register logic
+            response = await useMethod("post", "register-emergency", payload.value);
+            if (response) {
+                useSnackbar(true, "green", response.message);
+                patientDetail.value = response.data; // Assuming response.data contains the new patient details
+                emits('patient-registered', patientDetail.value);
+            }
             }
         } catch (error) {
-            if (error.response && error.response.status === 404) {
-                useSnackbar(true, "red", 'Incorrect Username or Passcode');
-                isLoading.value = false;
-            } else {
-                useSnackbar(true, "red", error.message || 'An error occurred');
-                isLoading.value = false;
-            }
+            console.error("Error in submission:", error);
+            useSnackbar(true, "red", error.message || 'An error occurred');
+        } finally {
+            isLoading.value = false;
+            closeDialog();
         }
-    }
+    };
+
+//     const emergencyData = ref([]);
+//     const reloadComponent = ref(false);
+//     const onSubmit = async (user_details) => {
+//     try {
+//         let response;
+//         isLoading.value = true;
+
+//         if (payload.value.id) {
+//             // Update operation
+//             response = await useMethod("put", "update-emergency", payload.value, "", payload.value.patient_Id);
+//             if (response) {
+//                 useSnackbar(true, "green", response.message);
+//                 setTimeout(() => {
+//                     isLoading.value = false;
+//                     payload.value = {}; // Clear payload
+//                     tab.value = "0"; // Reset tab
+//                     closeDialog();
+//                     closeConfirmDialog();
+
+//                     // Update emergencyData to reflect the changes without reloading
+//                     const index = emergencyData.value.findIndex(item => item.patient_Id === payload.value.patient_Id);
+//                     if (index !== -1) {
+//                         emergencyData.value[index] = { ...emergencyData.value[index], ...payload.value }; // Update the modified record
+//                     }
+//                 }, 500);
+//             } else {
+//                 handleError(response);
+//             }
+//         } else {
+//             // Register operation
+//             response = await useMethod("post", "register-emergency", payload.value);
+//             if (response) {
+//                 useSnackbar(true, "green", response.message);
+//                 setTimeout(() => {
+//                     isLoading.value = false;
+//                     payload.value = {}; // Clear payload
+//                     tab.value = "0"; // Reset tab
+//                     closeDialog();
+//                     closeConfirmDialog();
+
+//                     // Add the new emergency record to emergencyData
+//                     emergencyData.value.push(response.data); // Assuming `response.data` is the newly added data
+//                 }, 500);
+//             } else {
+//                 handleError(response);
+//             }
+//         }
+//     } catch (error) {
+//         useSnackbar(true, "red", error.message || 'An error occurred');
+//         isLoading.value = false;
+//     }
+// };
+
+// const handleError = (response) => {
+//     if (response && response.status === 404) {
+//         useSnackbar(true, "red", 'Incorrect Username or Passcode');
+//     } else {
+//         useSnackbar(true, "red", response.message || 'Update failed');
+//     }
+// };
+
+// watch(reloadComponent, async () => {
+//     try {
+//         const response = await fetch(`${useApiUrl()}/get-emergency`);
+//         if (response.ok) {
+//             const data = await response.json();
+//             emergencyData.value = data;
+//         } else {
+//             useSnackbar(true, "red", "Failed to load emergency data");
+//         }
+//     } catch (error) {
+//         useSnackbar(true, "red", error.message || "An error occurred while loading data");
+//     }
+// });
+
 
     onUpdated(() => {
         if (selectedRowDetails.value && selectedRowDetails.value.id) {
@@ -364,7 +482,7 @@
             const Guarantor = ref([]);
             if (selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0].guarantor_Id != null) {
                 let guarantor_Id                        = selectedRowDetails.value.patient_registry[0].guarantor_Id ? selectedRowDetails.value.patient_registry[0].guarantor_Id : '';
-                let guarantor_name                      = selectedRowDetails.value.patient_registry[0].guarantor_Name.trim() ? selectedRowDetails.value.patient_registry[0].guarantor_Name.trim() : '';
+                let guarantor_name                      = selectedRowDetails.value.patient_registry[0].guarantor_Name ? selectedRowDetails.value.patient_registry[0].guarantor_Name : '';
                 let guarantor_Approval_code             = selectedRowDetails.value.patient_registry[0].guarantor_Approval_code ? selectedRowDetails.value.patient_registry[0].guarantor_Approval_code : '';
                 let guarantor_Approval_no               = selectedRowDetails.value.patient_registry[0].guarantor_Approval_no ? selectedRowDetails.value.patient_registry[0].guarantor_Approval_no : '';
                 let guarantor_Approval_date             = useDateMMDDYYY(selectedRowDetails.value.patient_registry[0].guarantor_Approval_date) ? useDateMMDDYYY(selectedRowDetails.value.patient_registry[0].guarantor_Approval_date) : '';
@@ -398,11 +516,8 @@
             payload.value.selectedConsultant = Consultant.value;
 
             const Allergy = ref([]);
-   
             if (selectedRowDetails.value.patient_registry && Array.isArray(selectedRowDetails.value.patient_registry)) {
-                console.log('SELECTED SHOW ALLERGIES : ', selectedRowDetails.value.patient_registry);
                 selectedRowDetails.value.patient_registry.forEach(reg => {
-
                     if (reg.allergies && Array.isArray(reg.allergies)) {
                         reg.allergies.forEach(allergy => {
                             const allergy_id = allergy.allergy_type_id || '';
@@ -426,6 +541,7 @@
             }
 
             payload.value.selectedAllergy = Allergy.value;
+            
             payload.value.registry_Remarks = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0].registry_Remarks ? selectedRowDetails.value.patient_registry[0].registry_Remarks : '';
         
         } else {
