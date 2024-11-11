@@ -335,7 +335,6 @@
                                     {{ item.status }}
                                 </span>
                             </template>
-                       
                                 <template v-slot:item.selected="{ item }">
                                     <input 
                                         type="checkbox" 
@@ -343,7 +342,6 @@
                                         @change="toggleCashAssessmentSelection(item)" 
                                     />
                                 </template>
-                       
                                 <template v-slot:item.amount>
                                     {{ usePeso(item.amount) }}
                                 </template>
@@ -944,6 +942,7 @@
     const closeDialog = () => {
         emits('close-dialog');
         panel.value = [0, 1, 2, 3];
+    }
 
     const clearFields = () => {
         panel.value = [0, 1, 2, 3];
@@ -971,9 +970,6 @@
         ]
         totalAmount.value = 0;
         totalSupplyAmount.value = 0;
-    }
-    const closeDialog = () => {
-        emits('close-dialog');
     }
     const chargeMedicineList    = ref([]);
     const chargeSupplyList      = ref([]);
