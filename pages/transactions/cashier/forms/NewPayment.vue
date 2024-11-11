@@ -564,7 +564,7 @@ const searchChargeItem = async () => {
 
             const exam_description = response.data.map(item => item.items?.exam_description).filter(Boolean).join(" , ");
             const doctor_names = response.data.map(item => item.doctor_details?.doctor_name).filter(Boolean).join(" , ");
-            const itemDescription = response.data[0].requestDescription;
+            const itemDescription = response.data.map(item => item.items?.requestDescription).filter(Boolean).join(" , ");
             const dosage = response.data[0].dosage;
             const itemIndetification = response.data[0].revenueID === 'EM' || response.data[0].revenueID === 'RS' ? true : false;
             payload.value.particulars = exam_description || doctor_names || itemDescription;
