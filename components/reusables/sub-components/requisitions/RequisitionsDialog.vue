@@ -253,11 +253,11 @@ const search = (keyword) => {
     getPatientRequisitions(keyword);
 }
 
-watchEffect(() => {
-    if (props.show) {
+watch(() => props.show, (newVal) => {
+    if (newVal) {
         getPatientRequisitions();
     }
-})
+});
 </script>
 
 <style scoped>
