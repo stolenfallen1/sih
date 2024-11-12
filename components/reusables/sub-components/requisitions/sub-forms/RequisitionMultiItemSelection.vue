@@ -152,6 +152,7 @@
                     :items="selected_item_data"
                     :items-per-page="100"
                     hide-details
+                    fixed-header
                     style="max-height: 350px; overflow-y: auto;"
                   >
                     <template v-slot:[`item.frequency`]="{ item }" v-if="props.category === 'medicine'">
