@@ -167,10 +167,9 @@ const closeDialog = () => {
     emits('close-dialog');
 }
 
-watchEffect(() => {
-    if (props.open_rendered_transactions) {
+watch(() => props.open_rendered_transactions, (newVal) => {
+    if (newVal) {
         fetchRenderedTransactions();
-        console.log("Dialog opened - fetching transactions");
     }
 });
 </script>

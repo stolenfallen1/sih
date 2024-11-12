@@ -326,7 +326,7 @@ const getWarehouse = async (page = null, itemsPerPage = null, keyword = "") => {
     if (props.category === "medicine" || props.category === "supply") {
       const response = await useMethod("get", "get-warehouses?", "", params);
       if (response) {
-          warehouse_data.value = response.data.filter(item => item.code === 'PH' || item.code === 'C9'); // For now only PH ( Pharmacy ) and C9 ( Supply ) will be shown in the list as per sir joe instruction, if dili gani just remove this line and uncomment the next line
+          warehouse_data.value = response.data.filter(item => item.code === 'PH' || item.code === 'CS'); // For now only PH ( Pharmacy ) and CS ( Supply ) will be shown in the list as per sir joe instruction, if dili gani just remove this line and uncomment the next line
           // warehouse_data.value = response.data;
           warehouse_total_items.value = response.total;
       }
