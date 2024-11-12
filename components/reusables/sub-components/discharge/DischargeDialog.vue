@@ -234,6 +234,8 @@
             }
         } catch(error) {    
             useSnackbar(true, "red", response.message || 'Tagged Failed');
+        } finally {
+            isLoading.value = false;
         }
     }
 
