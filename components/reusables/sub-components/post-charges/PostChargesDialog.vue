@@ -534,6 +534,7 @@
 
 <script setup>
 import { createApp } from 'vue';
+import nuxtStorage from 'nuxt-storage'; 
 import ChargesList from './sub-forms/ChargesList.vue';
 import PFList from './sub-forms/PFList.vue';
 import ChargeReports from "../../../../public/reports/charges/ChargeReports.vue";
@@ -910,80 +911,100 @@ const confirmCharge = () => {
     payload.value.DoctorCharges = doctorcharges;
 }
 
-
-const onSubmit = async (user_details) => {
-    if (user_details.user_passcode === usePasscode()) {
-        isLoadingBtn.value = true;
-        if (payload.value.charge_to === "Company / Insurance") {
-            try {
-                credit_limit.value = payload.value.guarantor_Credit_Limit === 'OPEN' ? null : parseFloat(payload.value.guarantor_Credit_Limit.replace(/[^0-9.-]+/g, ''));
-                if (credit_limit.value != null && patientExcessAmount.value > credit_limit.value) {
-                    let excessAmount = patientExcessAmount.value - credit_limit.value;
-                    const confirmCharge = window.confirm(`Credit limit exceeded for a total of ${usePeso(excessAmount)}. Do you want to continue?`);
-                    if (!confirmCharge) {
-                        isLoadingBtn.value = false;
-                        closeConfirmCharge();
-                    } else {
-                        payload.value.msc_price_scheme_id = 2;
-                        let response = await useMethod("post", "post-his-charge", payload.value);
-                        if (response) {
-                            useSnackbar(true, "success", `Charges posted successfully but with excess amount of ${usePeso(excessAmount)}`);
-                            closeDialog();
-                            closeConfirmCharge();
-                            printCharges(payload.value, response.data.charges);
-                        } else {
-                            return useSnackbar(true, "error", "Failed to post charges.");
-                        }
-                    }
-                } else {
-                    payload.value.msc_price_scheme_id = 2;
-                    let response = await useMethod("post", "post-his-charge", payload.value);
-                    if (response) {
-                        useSnackbar(true, "success", "Charges posted successfully.");
-                        closeDialog();
-                        closeConfirmCharge();
-                        printCharges(payload.value, response.data.charges);
-                    } else {
-                        return useSnackbar(true, "error", "Failed to post charges.");
-                    }
-                } 
-            } catch (error) {
-                console.log(error);
-                return useSnackbar(true, "error", "CATCH ERROR: Call IT Department 123");
-            } finally {
+const postChargeInsurcane = async () => {
+    try {
+        credit_limit.value = payload.value.guarantor_Credit_Limit === 'OPEN' ? null : parseFloat(payload.value.guarantor_Credit_Limit.replace(/[^0-9.-]+/g, ''));
+        if (credit_limit.value != null && patientExcessAmount.value > credit_limit.value) {
+            let excessAmount = patientExcessAmount.value - credit_limit.value;
+            const confirmCharge = window.confirm(`Credit limit exceeded for a total of ${usePeso(excessAmount)}. Do you want to continue?`);
+            if (!confirmCharge) {
                 isLoadingBtn.value = false;
-            }
-        } else {
-            try {
-                payload.value.msc_price_scheme_id = 1;
-                let response = await useMethod("post", "post-cash-assessment", payload.value);
+                closeConfirmCharge();
+            } else {
+                payload.value.msc_price_scheme_id = 2;
+                let response = await useMethod("post", "post-his-charge", payload.value);
                 if (response) {
-                    useSnackbar(true, "success", "Charges posted successfully.");
+                    useSnackbar(true, "success", `Charges posted successfully but with excess amount of ${usePeso(excessAmount)}`);
                     closeDialog();
                     closeConfirmCharge();
-                    printCashAssessment(payload.value, response.data.charges);
+                    printCharges(payload.value, response.data.charges);
                 } else {
                     return useSnackbar(true, "error", "Failed to post charges.");
                 }
-            } catch (error) {
-                console.log(error);
-                return useSnackbar(true, "error", "CATCH ERROR: Call IT Department 456");
-            } finally {
-                isLoadingBtn.value = false;
             }
+        } else {
+            payload.value.msc_price_scheme_id = 2;
+            let response = await useMethod("post", "post-his-charge", payload.value);
+            if (response) {
+                useSnackbar(true, "success", "Charges posted successfully.");
+                closeDialog();
+                closeConfirmCharge();
+                printCharges(payload.value, response.data.charges);
+            } else {
+                return useSnackbar(true, "error", "Failed to post charges.");
+            }
+        } 
+    } catch (error) {
+        console.log(error);
+        return useSnackbar(true, "error", "CATCH ERROR: Call IT Department 123");
+    } finally {
+        isLoadingBtn.value = false;
+    }
+}
+
+const postChargeCash = async () => {
+    try {
+        payload.value.msc_price_scheme_id = 1;
+        let response = await useMethod("post", "post-cash-assessment", payload.value);
+        if (response) {
+            useSnackbar(true, "success", "Charges posted successfully.");
+            closeDialog();
+            closeConfirmCharge();
+            printCashAssessment(payload.value, response.data.charges);
+        } else {
+            return useSnackbar(true, "error", "Failed to post charges.");
         }
-    } else {
-        user_attempts.value += 1;
-        useSnackbar(true, "error", "Password incorrect.");
-        if (user_attempts.value == 5) {
-            error_msg.value = "Too many wrong attempts, Please try again after 20 seconds.";
-            isLoadingBtn.value = true;
-            setTimeout(() => {
-                isLoadingBtn.value = false;
-                user_attempts.value = 0;
-                error_msg.value = "";
-            }, 20000);
-        }
+    } catch (error) {
+        console.log(error);
+        return useSnackbar(true, "error", "CATCH ERROR: Call IT Department 456");
+    } finally {
+        isLoadingBtn.value = false;
+    }
+}
+
+
+const onSubmit = async (user_details) => {
+    switch (roleID.value) {
+        case '27':
+            if (payload.value.charge_to === "Company / Insurance") {
+                postChargeInsurcane();
+            } else {
+                postChargeCash();
+            }
+            break;
+        default:
+            // Default should check if it is authorized or matches the password of the user
+            if (user_details.user_passcode === usePasscode()) {
+                isLoadingBtn.value = true;
+                if (payload.value.charge_to === "Company / Insurance") {
+                    postChargeInsurcane();
+                } else {
+                    postChargeCash();
+                }
+            } else {
+                user_attempts.value += 1;
+                useSnackbar(true, "error", "Password incorrect.");
+                if (user_attempts.value == 5) {
+                    error_msg.value = "Too many wrong attempts, Please try again after 20 seconds.";
+                    isLoadingBtn.value = true;
+                    setTimeout(() => {
+                        isLoadingBtn.value = false;
+                        user_attempts.value = 0;
+                        error_msg.value = "";
+                    }, 20000);
+                }
+            }
+            break;
     }
 };
 
@@ -1000,30 +1021,45 @@ const confirmRevoke = () => {
     }
 }
 const onRevoke = async (user_details) => {
-    if (user_details.user_passcode !== usePasscode() && user_attempts.value < 5) {
-        user_attempts.value += 1;
-        useSnackbar(true, "error", "Password incorrect.");
-    } else if (user_details.user_passcode !== usePasscode() && user_attempts.value == 5) {
-        error_msg.value = "Too many wrong attempts, Please try again after 20 seconds.";
-        isLoadingBtn.value = true;
-        setTimeout(() => {
-            isLoadingBtn.value = false;
-            user_attempts.value = 0;
-            error_msg.value = "";
-        }, 20000);
-    } else {
-        switch(charge_history_tab.value || pf_history_tab.value) {
-            case "0":
-                revokeSelectedCharges(selected_charges.value);
-                break;
-            case "1":
-                revokeSelectedCashAssessment(selected_cash_assessment.value);
-                break;
-        }
-    } 
+    switch (roleID.value) {
+        case '27':
+            switch(charge_history_tab.value || pf_history_tab.value) {
+                case "0":
+                    revokeSelectedCharges(selected_charges.value, user_details.user_passcode, user_details.user_userid);
+                    break;
+                case "1":
+                    revokeSelectedCashAssessment(selected_cash_assessment.value, user_details.user_passcode, user_details.user_userid);
+                    break;
+            }
+            break;
+        default:
+            if (user_details.user_passcode === usePasscode()) {
+            switch(charge_history_tab.value || pf_history_tab.value) {
+                case "0":
+                    revokeSelectedCharges(selected_charges.value);
+                    break;
+                case "1":
+                    revokeSelectedCashAssessment(selected_cash_assessment.value);
+                    break;
+            }
+            } else {
+                user_attempts.value += 1;
+                useSnackbar(true, "error", "Password incorrect.");
+                if (user_attempts.value == 5) {
+                    error_msg.value = "Too many wrong attempts, Please try again after 20 seconds.";
+                    isLoadingBtn.value = true;
+                    setTimeout(() => {
+                        isLoadingBtn.value = false;
+                        user_attempts.value = 0;
+                        error_msg.value = "";
+                    }, 20000);
+                }
+            }
+            break;
+    }
 }
 
-const revokeSelectedCharges = async (charges) => {
+const revokeSelectedCharges = async (charges, user_passcode, user_userid) => {
     try {
         const response = await fetch(useApiUrl() + "/revoke-his-charge", {
             method: "put",
@@ -1031,7 +1067,7 @@ const revokeSelectedCharges = async (charges) => {
                 'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + useToken()
             },
-            body: JSON.stringify({ items: charges })
+            body: JSON.stringify({ items: charges, user_passcode: user_passcode, user_userid: user_userid })
         });
         if (response) {
             useSnackbar(true, "success", "Charges revoked successfully.");
@@ -1046,7 +1082,7 @@ const revokeSelectedCharges = async (charges) => {
     }
 }
 
-const revokeSelectedCashAssessment = async (charges) => {
+const revokeSelectedCashAssessment = async (charges, user_passcode, user_userid) => {
     try {
         const response = await fetch(useApiUrl() + "/revoke-cash-assessment", {
             method: "put",
@@ -1054,7 +1090,7 @@ const revokeSelectedCashAssessment = async (charges) => {
                 'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + useToken()
             },
-            body: JSON.stringify({ items: charges })
+            body: JSON.stringify({ items: charges, user_passcode: user_passcode, user_userid: user_userid })
         });
         if (response) {
             useSnackbar(true, "success", "Charges revoked successfully.");
@@ -1062,20 +1098,10 @@ const revokeSelectedCashAssessment = async (charges) => {
             getCashProfHistory();
             closeConfirmRevoke();
         } else {
-            if (error.response && error.response.status === 404) {
-                useSnackbar(true, "error", 'Incorrect Username or Passcode');
-                isLoading.value = false;
-            } else {
-                return useSnackbar(true, "error", "Failed to revoke charges.");
-            }
+            return useSnackbar(true, "error", "Failed to revoke charges.");
         }
     } catch (error) {
-        if (error.response && error.response.status === 404) {
-                useSnackbar(true, "error", 'Incorrect Username or Passcode');
-                isLoading.value = false;
-            } else {
-                return useSnackbar(true, "error", "Failed to revoke charges.");
-            }
+        return useSnackbar(true, "error", "Failed to revoke charges.");
     }
 }
 
@@ -1266,8 +1292,14 @@ onUpdated(() => {
     }
 })
 
+// FOR ER ONLY ( SIR CHARLES )
+const user_detail = ref({});
+const roleID = ref('');
 onMounted(() => {
     getRevenueCode();
+    const userDetails = JSON.parse(nuxtStorage.localStorage.getData('user_details') || '{}');
+    user_detail.value = userDetails;
+    roleID.value = user_detail.value?.role_id;
 });
 </script>
 
