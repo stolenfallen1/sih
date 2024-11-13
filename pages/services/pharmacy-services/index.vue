@@ -92,9 +92,10 @@
     <v-card class="mb-4" elevation="4">
         <v-data-table
             density="compact"
-            height="60vh"
+            height="70vh"
             :headers="table_headers"
             :items="medicine_request_data"
+            :items-per-page="100"
             :hover="true"
             hide-details
         >
@@ -106,6 +107,7 @@
                     <td>{{ item.requestNum }}</td>
                 </tr>
             </template>
+            <template #bottom />
         </v-data-table>
     </v-card>
 
