@@ -504,6 +504,7 @@
         @handle-select="handleSelectedChargeItem"
         :user_input_revenue_code="user_input_revenue_code" 
         :chargecode="chargecode"
+        :roleID="roleID"
         @close-dialog="closeChargesList" 
     />
 
@@ -1265,6 +1266,9 @@ onUpdated(() => {
     // }
     // Forda display
     payload.value.patient_Name = selectedRowDetails.value.lastname + ', ' + selectedRowDetails.value.firstname + ' ' + selectedRowDetails.value.middlename || '';
+    payload.value.patient_Type = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry.length > 0 && selectedRowDetails.value.patient_registry[0].mscAccount_Trans_Types == 2 
+            ? 'Out-Patient' : (selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry.length > 0 && selectedRowDetails.value.patient_registry[0].mscAccount_Trans_Types == 5 
+            ? 'Emergency' : 'In-Patient');
     payload.value.patient_Id = selectedRowDetails.value.patient_Id || '';
     payload.value.civil_status = selectedRowDetails.value.civil_status && selectedRowDetails.value.civil_status.civil_status_description || '';
     payload.value.sex = selectedRowDetails.value.sex && selectedRowDetails.value.sex.sex_description || '';
