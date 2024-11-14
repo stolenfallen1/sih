@@ -727,8 +727,6 @@ onUpdated(() => {
     payload.value.patient_Type = selectedRowDetails.value.patient_registry && 
                                   selectedRowDetails.value.patient_registry[0].mscAccount_Trans_Types == 2 ? 'Out-Patient' 
                                   : (selectedRowDetails.value.patient_registry[0].mscAccount_Trans_Types == 5 ? 'Emergency' : 'In-Patient');
-    
-    console.log('Selected Row Details: ', selectedRowDetails.value);
   }
 })
 </script>
