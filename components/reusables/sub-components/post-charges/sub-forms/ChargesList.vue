@@ -88,7 +88,10 @@ const props = defineProps({
         default: () => [],
         required: true,
     },
-    
+    roleID: {
+        type: Number,
+        required: false,
+    }
 });
 const emits = defineEmits(["close-dialog", "handle-select"]);
 const headers = [
@@ -131,6 +134,7 @@ const loadItems = async (page = null, itemsPerPage = null) => {
             revenuecode: props.user_input_revenue_code,
             patienttype: props.patienttype,
             chargecode: props.chargecode, 
+            roleID: props.roleID
         }
     });
     if (response) {
