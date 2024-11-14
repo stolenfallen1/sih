@@ -280,6 +280,10 @@ const props = defineProps({
       type: String,
       default: () => "",
       required: true,
+  },
+  roleID: {
+      type: Number,
+      required: true,
   }
 })
 
@@ -377,7 +381,8 @@ const handleSelectWarehouse = async (selectedRow, page = 1, itemsPerPage = wareh
               body: { 
                   revenuecode: selected_warehouse.value.code,
                   warehouseID: parseInt(selected_warehouse.value.warehouse_id),
-                  patienttype: selectedRowDetails.value.patient_registry ? parseInt(selectedRowDetails.value.patient_registry[0].mscPrice_Schemes) : ""
+                  patienttype: selectedRowDetails.value.patient_registry ? parseInt(selectedRowDetails.value.patient_registry[0].mscPrice_Schemes) : "",
+                  // roleID: props.roleID
               }
           });
   
@@ -626,58 +631,73 @@ const confirmRequisition = () => {
   requisitionconfirmation.value = true;
 };
 
+const submitMedicineRequest = async () => {
+    const medicine_res = await useMethod("post", "save-medicine-requisition", payload.value);
+    if (medicine_res) {
+        useSnackbar(true, "success", "Successfully posted medicine requests.");
+        closeConfirmation();
+        closeDialog();
+    } else {
+        useSnackbar(true, "error", "Failed to post charges.");
+    }
+}
+
+const submitSupplyRequest = async () => {
+    const supply_res = await useMethod("post", "save-supply-requisition", payload.value);
+    if (supply_res) {
+        useSnackbar(true, "success", "Successfully posted supply requests.");
+        closeConfirmation();
+        closeDialog();
+    } else {
+        useSnackbar(true, "error", "Failed to post charges.");
+    }
+}
+
 const onSubmit = async (user_details) => {
-  if (user_details.user_passcode === usePasscode()) {
-
-    switch (props.category) {
-      case "medicine":
-        const medicine_res = await useMethod("post", "save-medicine-requisition", payload.value);
-        if (medicine_res) {
-            useSnackbar(true, "success", "Successfully posted charges.");
-            closeConfirmation();
-            closeDialog();
-        } else {
-            useSnackbar(true, "error", "Failed to post charges.");
+  switch (props.roleID) {
+    case '27':
+      switch (props.category) {
+          case "medicine":
+            submitMedicineRequest();
+            break;
+          case "supply":
+            submitSupplyRequest();
+            break;
+          case "procedure":
+            console.log("Procedure Payload: " , payload.value);
+            // save-procedure-requisition
+            break;
         }
-        break;
-      case "supply":
-        const supply_res = await useMethod("post", "save-supply-requisition", payload.value);
-        if (supply_res) {
-            useSnackbar(true, "success", "Successfully posted charges.");
-            closeConfirmation();
-            closeDialog();
-        } else {
-            useSnackbar(true, "error", "Failed to post charges.");
-        }
-        break;
-      case "procedure":
-        console.log("Procedure Payload: " , payload.value);
-        // save-procedure-requisition
-        break;
-    }
-
-  } else {
-        user_attempts.value += 1;
-        useSnackbar(true, "error", "Password incorrect.");
-        if (user_attempts.value == 5) {
-            error_msg.value = "Too many wrong attempts, Please try again after 20 seconds.";
-            isLoadingBtn.value = true;
-            setTimeout(() => {
-                isLoadingBtn.value = false;
-                user_attempts.value = 0;
-                error_msg.value = "";
-            }, 20000);
-        }
-    }
-  
-  // const response = await useMethod("post", "charge-requisitions", payload.value);
-  // if (response) {
-  //     useSnackbar(true, "success", "Successfully posted charges.");
-  //     closeDialog();
-  //     closeConfirmation();
-  // } else {
-  //     useSnackbar(true, "error", "Failed to post charges.");
-  // }
+      break;
+    default:
+      if (user_details.user_passcode === usePasscode()) {
+      switch (props.category) {
+        case "medicine":
+          submitMedicineRequest();
+          break;
+        case "supply":
+          submitSupplyRequest();
+          break;
+        case "procedure":
+          console.log("Procedure Payload: " , payload.value);
+          // save-procedure-requisition
+          break;
+      }
+    } else {
+          user_attempts.value += 1;
+          useSnackbar(true, "error", "Password incorrect.");
+          if (user_attempts.value == 5) {
+              error_msg.value = "Too many wrong attempts, Please try again after 20 seconds.";
+              isLoadingBtn.value = true;
+              setTimeout(() => {
+                  isLoadingBtn.value = false;
+                  user_attempts.value = 0;
+                  error_msg.value = "";
+              }, 20000);
+          }
+      }
+      break;
+  }
 };
 
 const closeConfirmation = () => {
@@ -704,9 +724,11 @@ onUpdated(() => {
     payload.value.account = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0].mscPrice_Schemes == 1 ? 'Cash Transaction' : 'Insurance Transaction';
     payload.value.attending_Doctor = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0].attending_Doctor || 'N/A';
     payload.value.attending_Doctor_fullname = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0].attending_Doctor_fullname || 'N/A';
-    payload.value.patient_type = selectedRowDetails.value.patient_registry && 
+    payload.value.patient_Type = selectedRowDetails.value.patient_registry && 
                                   selectedRowDetails.value.patient_registry[0].mscAccount_Trans_Types == 2 ? 'Out-Patient' 
                                   : (selectedRowDetails.value.patient_registry[0].mscAccount_Trans_Types == 5 ? 'Emergency' : 'In-Patient');
+    
+    console.log('Selected Row Details: ', selectedRowDetails.value);
   }
 })
 </script>

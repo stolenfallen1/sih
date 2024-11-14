@@ -141,16 +141,23 @@
             </v-card-actions>
         </v-card>
     </v-dialog>
-    <RequisitionMultiItemSelection :open_medical_item_selection="open_medical_item_selection" :category="category" @close-dialog="closeMultiDepartmentSelection" @handle-submit="onSubmitSelectedItem" />
+    <RequisitionMultiItemSelection 
+        :open_medical_item_selection="open_medical_item_selection" 
+        :category="category" 
+        :roleID="roleID"
+        @handle-submit="onSubmitSelectedItem" 
+        @close-dialog="closeMultiDepartmentSelection"
+        /> 
     <RenderedRequisitions 
         :open_rendered_transactions="open_rendered_transactions"  
         :patient_Id="selectedRowDetails.patient_Id"
-        :case_No="selectedRowDetails.case_No"
+        :case_No="selectedRowDetails.patient_registry && selectedRowDetails.patient_registry[0].case_No ? selectedRowDetails.patient_registry[0].case_No : null"
         @close-dialog="closeRenderedTransactions" 
     />
 </template>
 
 <script setup>
+import nuxtStorage from 'nuxt-storage'; 
 import RenderedRequisitions from './sub-forms/RenderedRequisitions.vue';
 import RequisitionMultiItemSelection from './sub-forms/RequisitionMultiItemSelection.vue';
 
@@ -168,7 +175,7 @@ const props = defineProps({
 const { selectedRowDetails } = storeToRefs(useSubcomponentSelectedRowDetailsStore()); 
 
 const emits = defineEmits(['close-dialog'])
-
+const payload = ref({});
 const open_medical_item_selection = ref(false);
 const serverItems = ref([]);
 const category = ref(null);
@@ -222,7 +229,7 @@ const getPatientRequisitions = async () => {
     if (selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0].mscPrice_Schemes != null) {
         const items = {
             patient_Id: selectedRowDetails.value.patient_Id,
-            case_No: selectedRowDetails.value.case_No,
+            case_No: selectedRowDetails.value.patient_registry[0].case_No ? selectedRowDetails.value.patient_registry[0].case_No : null,
             account: selectedRowDetails.value.patient_registry[0].mscPrice_Schemes ? selectedRowDetails.value.patient_registry[0].mscPrice_Schemes : null,
         };
         data.value.loading = true;
@@ -257,6 +264,14 @@ watch(() => props.show, (newVal) => {
     if (newVal) {
         getPatientRequisitions();
     }
+});
+
+const user_detail = ref({});
+const roleID = ref('');
+onMounted(() => {
+    const userDetails = JSON.parse(nuxtStorage.localStorage.getData('user_details') || '{}');
+    user_detail.value = userDetails;
+    roleID.value = user_detail.value?.role_id;
 });
 </script>
 
