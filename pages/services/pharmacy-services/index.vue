@@ -192,7 +192,10 @@ const fetchERPatientCount = async () => {
 }
 
 const handleEmergencyRequest = async () => {
-    alert("Emergency Request");
+    medicine_request_data.value = erData.value;
+    medicine_request_data.value.forEach((item) => {
+        item.patient_type = 5;
+    });
 }
 
 const inPatientCount = ref(0);

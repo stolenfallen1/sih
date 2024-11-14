@@ -10,6 +10,7 @@
                         <th>Dept Code</th>
                         <th>Item Code</th>
                         <th>Description</th>
+                        <th>Quantity</th>
                         <th>Amount</th>
                     </tr>
                 </thead>
@@ -19,11 +20,10 @@
                             <td> {{ item?.revenueID }} </td>
                             <td> {{ item?.itemID }} </td>
                             <td> 
-                                {{ 
-                                    item?.items?.exam_description 
-                                    ? item?.items?.exam_description 
-                                    : item?.doctor_details?.doctor_name  
-                                }} 
+                                {{ item?.exam_description }} 
+                            </td>
+                            <td> 
+                                {{ parseInt(item?.quantity) }} 
                             </td>
                             <td> {{ payload.payment_code === 1 ? usePeso(item.amount) : item.amount }} </td>
                         </tr>
@@ -115,7 +115,21 @@
                         hide-details
                     ></v-text-field>
                 </v-col>
-                <v-col cols="6" >
+            </v-row>
+        </v-col>
+        <v-col cols="5">
+            <v-row>
+                <v-col cols="3">
+                    <v-list-subheader class="form-header">Transaction Code</v-list-subheader>
+                    <v-text-field
+                        v-model="payload.transaction_code"
+                        variant="outlined"
+                        density="compact"
+                        hide-details
+                        readonly
+                    ></v-text-field>
+                </v-col>
+                <v-col cols="5">
                     <v-list-subheader class="form-header">Hospital Bills</v-list-subheader>
                     <v-text-field
                         variant="outlined"
@@ -125,36 +139,12 @@
                         readonly
                     ></v-text-field>
                 </v-col>
-                <v-col cols="6" >
+                <v-col cols="4">
                     <v-list-subheader class="form-header">Credit Limit</v-list-subheader>
                     <v-text-field
                         variant="outlined"
                         density="compact"
                         v-model="payload.guarantor_Credit_Limit"
-                        hide-details
-                        readonly
-                    ></v-text-field>
-                </v-col>
-            </v-row>
-        </v-col>
-        <v-col cols="5">
-            <v-row>
-                <v-col cols="6" >
-                    <v-list-subheader class="form-header">Item Code / Qty</v-list-subheader>
-                    <v-text-field
-                        v-model="payload.itemID"
-                        variant="outlined"
-                        density="compact"
-                        hide-details
-                        readonly
-                    ></v-text-field>
-                </v-col>
-                <v-col cols="6" >
-                    <v-list-subheader class="form-header">Transaction Code</v-list-subheader>
-                    <v-text-field
-                        v-model="payload.transaction_code"
-                        variant="outlined"
-                        density="compact"
                         hide-details
                         readonly
                     ></v-text-field>
@@ -562,22 +552,13 @@ const searchChargeItem = async () => {
         if (response && response.data && response.data.length > 0) {
             payload.value.patient_Id = response.data[0].patient_Id;
             payload.value.case_No = response.data[0].case_No;
+            payload.value.patient_Type = response.data[0].patient_Type;
             payload.value.transaction_code = response.data[0].revenueID;
             payload.value.payors_name = response.data[0].patient_Name;
             payload.value.guarantor_Credit_Limit = "SELF-PAY";
             payload.value.accountnum = response.data[0].patient_Id;
             payload.value.request_doctors_id = response.data[0].requestDoctorID;
-
-            const exam_description = response.data.map(item => item.items?.exam_description).filter(Boolean).join(" , ");
-            const doctor_names = response.data.map(item => item.doctor_details?.doctor_name).filter(Boolean).join(" , ");
-            const itemDescription = response.data.map(item => item.requestDescription).filter(Boolean).join(" , ");
-            console.log('Discription',  itemDescription);
-            const dosage = response.data[0].dosage;
-            const itemIndetification = response.data[0].revenueID === 'EM' || response.data[0].revenueID === 'RS' ? true : false;
-            payload.value.particulars = exam_description || doctor_names || itemDescription;
-            itemIndetification ? payload.value.frequency = dosage : payload.value.frequency = '';
-            itemIndetification ? payload.value.quantity = parseInt(response.data[0].quantity) : payload.value.quantity = '';
-            itemIndetification ? payload.value.reference_id = response.data[0].refNum : payload.value.reference_id = '';
+            payload.value.particulars = response.data.map(item => item.requestDescription).filter(Boolean).join(" , ");
             const paymentTotal = response.data.reduce((acc, item) => acc + (parseFloat(item.amount) || 0), 0).toString();
             payload.value.amount = usePeso(paymentTotal);
 
@@ -588,10 +569,21 @@ const searchChargeItem = async () => {
                 itemID: item.itemID,
                 amount: item.amount,
                 charge_type: item.stat,
+                patient_Name: item.patient_Name,
                 specimen: item.specimenId,
                 barcode: item.Barcode,
                 items: item.items,
-                doctor_details: item.doctor_details
+                item_ListCost: item.item_ListCost,
+                item_Selling_Amount: item.item_Selling_Amount,
+                item_OnHand: item.item_OnHand,
+                dosage: item.dosage,
+                exam_description: item.requestDescription,
+                quantity: item.quantity,
+                section_Id: item.section_Id,
+                userId: item.userId,
+                ismedicine: item.ismedicine,
+                issupplies: item.issupplies,
+                isprocedure: item.isprocedure,
             }));
             console.log(response.data);
 
