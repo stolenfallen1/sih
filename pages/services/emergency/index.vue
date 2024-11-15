@@ -267,7 +267,7 @@
 	<ViewExamUpshotDialog :show="ViewExaminationUpshot" @close-dialog="useSubComponents('ViewExaminationUpshot', false)" />
 	<ApplyPromissoryNoteDialog :show="ApplyPromissoryNote" @close-dialog="useSubComponents('ApplyPromissoryNote', false)" />
 	<ApplyMedicalPackageDialog :show="ApplyMedicalPackage" @close-dialog="useSubComponents('ApplyMedicalPackage', false)" />
-	<TagAsMghDialog :show="TagAsMgh" :form_type="form_type" @close-dialog="useSubComponents('TagAsMgh', false)" />
+	<TagAsMghDialog :show="TagAsMgh" :form_type="form_type" @close-dialog="useSubComponents('TagAsMgh', false)  " />
 	<UntagAsMghDialog :show="UntagAsMgh" @close-dialog="useSubComponents('UntagAsMgh', false)" />
 	<DischargeDialog :show="Discharge" :form_type="form_type" @close-dialog="useSubComponents('Discharge', false)" />
 	<DischargeInstructionDialog :show="DischargeInstruction" @close-dialog="useSubComponents('DischargeInstruction', false)" />
@@ -347,6 +347,7 @@ const payload = ref({});
 const selectedPatient = ref({});
 const open_revoke_form = ref(false);
 const open_unrevoke_form = ref(false);
+
 
 
 const tableTabs = ref([
@@ -699,6 +700,7 @@ const headers = [
   },
 ];
 
+
 const serverItems = ref([]);
 const handleRefresh = () => {
    loadItems();
@@ -720,21 +722,20 @@ const applyFilters = () => {
   console.log('Filters applied:', filter.value);
 };
 const selectedUser = (item) => {
-  isSelectedUser.value = true;
-  isrefresh.value = false;
-  selectedRowDetails.value.id = ""; //clear state id for subcomponents ?id=''
-  selectedRowDetails.value.role_id = ""; //clear state id for subcomponents ?id=''
-  selectedRowDetails.value = Object.assign({}, item); 
-
-  if(item){
-    selectedRowDetails.value =  Object.assign({}, item);; //set state id for subcomponents ?id=item.id value
-    isrefresh.value = true;
-    isSelectedUser.value = false;
-  }else{
-    isrefresh.value = false;
     isSelectedUser.value = true;
-  }
-};
+    isrefresh.value = false;
+    selectedRowDetails.value.id = ""; 
+    selectedRowDetails.value.role_id = ""; 
+    selectedRowDetails.value = Object.assign({}, item); 
+    if(item){
+        selectedRowDetails.value =  Object.assign({}, item);;
+        isrefresh.value = true;
+        isSelectedUser.value = false;
+    } else{
+        isrefresh.value = false;
+        isSelectedUser.value = true;
+    }
+    };
 
 const loadPatient = (patientDetails) => {
   const keyword = patientDetails || "";
@@ -863,6 +864,7 @@ const loadItems = async (options = null, searchkeyword = null) => {
 				Authorization: `Bearer ${useToken()}`,
 			},
 		});
+
 		const data = await response.json();
 		if (data && data.data) {
 			updateTotalItems(data.total);
@@ -876,6 +878,7 @@ const loadItems = async (options = null, searchkeyword = null) => {
 		loading.value = false;
  	}
 }
+
 
 const handleTabChange = (tabValue) => {
   selectedRowDetails.value.id = "";
@@ -894,6 +897,8 @@ const updateTotalItems = (newTotalItems) => {
 const updateServerItems = (newServerItems) => {
   serverItems.value = newServerItems;
 };
+
+
 
 handleTabChange(currentTab.value);
 </script>
