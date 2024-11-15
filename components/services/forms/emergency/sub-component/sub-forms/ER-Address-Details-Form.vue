@@ -1,7 +1,7 @@
 <template>
     <v-dialog
         :model-value="address_form_dialog"
-        @update:model-value="closeDialog"
+        persistent
         hide-overlay
         width="750"
     >
@@ -17,16 +17,16 @@
                     <v-container>
                         <v-row>
                             <v-col cols="6" class="pa-1">
-                                <v-list-subheader class="form-header">Building No. / Street <span style="color: red;" class="mdi mdi-check"></span></v-list-subheader>
+                                <v-list-subheader class="form-header">Building No. / Street </v-list-subheader>
                                 <v-text-field
                                     v-model="address_data.bldgstreet"
-                                    variant="solo"
+                                    variant="outlined"
                                     density="compact"
                                     hide-details
                                 ></v-text-field>
                             </v-col>
                             <v-col cols="6" class="pa-1">
-                                <v-list-subheader class="form-header">Region <span style="color: red;" class="mdi mdi-check"></span></v-list-subheader>
+                                <v-list-subheader class="form-header">Region </v-list-subheader>
                                 <v-autocomplete
                                     v-model="address_data.region_id"
                                     item-title="region_name"
@@ -37,11 +37,11 @@
                                     hide-details
                                     clearable
                                     density="compact" 
-                                    variant="solo"
+                                    variant="outlined"
                                 ></v-autocomplete>
                             </v-col>
                             <v-col cols="6" class="pa-1">
-                                <v-list-subheader class="form-header">Province / State <span style="color: red;" class="mdi mdi-check"></span></v-list-subheader>
+                                <v-list-subheader class="form-header">Province / State </v-list-subheader>
                                 <v-autocomplete
                                     v-model="address_data.province_id"
                                     item-title="province_name"
@@ -52,11 +52,11 @@
                                     hide-details
                                     clearable
                                     density="compact"
-                                    variant="solo"
+                                    variant="outlined"
                                 ></v-autocomplete>
                             </v-col>
                             <v-col cols="6" class="pa-1">
-                                <v-list-subheader class="form-header">Town / Municipality <span style="color: red;" class="mdi mdi-check"></span></v-list-subheader>
+                                <v-list-subheader class="form-header">Town / Municipality </v-list-subheader>
                                 <v-autocomplete
                                     v-model="address_data.municipality_id"
                                     item-title="municipality_name"
@@ -67,13 +67,13 @@
                                     hide-details
                                     clearable
                                     density="compact"
-                                    variant="solo"
+                                    variant="outlined"
                                 ></v-autocomplete>
                             </v-col>
                             <v-col cols="6" class="pa-1">
-                                <v-list-subheader class="form-header">Barangay <span style="color: red;" class="mdi mdi-check"></span></v-list-subheader>
+                                <v-list-subheader class="form-header">Barangay </v-list-subheader>
                                 <v-autocomplete
-                                    v-model="address_data.barangay_id"
+                                    v-model="computedBarangayID"
                                     item-title="barangay_name"
                                     item-value="id"
                                     :items="barangay_data"
@@ -82,13 +82,13 @@
                                     hide-details
                                     clearable
                                     density="compact"
-                                    variant="solo"
+                                    variant="outlined"
                                 ></v-autocomplete>
                             </v-col>
                             <v-col cols="6" class="pa-1">
                                 <v-list-subheader class="form-header">Country </v-list-subheader>
                                 <v-autocomplete
-                                    v-model="address_data.country_id"
+                                    v-model="computedCountryID"
                                     item-title="country_name"
                                     item-value="id"
                                     :items="country_data"
@@ -97,7 +97,7 @@
                                     hide-details
                                     clearable
                                     density="compact"
-                                    variant="solo"
+                                    variant="outlined"
                                 ></v-autocomplete>
                             </v-col>
                         </v-row>
@@ -218,6 +218,9 @@ const getBarangay = async () => {
         barangay_data_loading.value = false;
     }
 }
+const computedBarangayID = computed(() => {
+    return isNaN(address_data.value.barangay_id) ? null : address_data.value.barangay_id;
+});
 const updateBarangay = (value) => {
     const selected = barangay_data.value.find(item => item.id === value);
     address_data.value.barangay_id = value;
@@ -232,8 +235,11 @@ const getCountry = async () => {
     if (response) {
         country_data.value = response;
         country_data_loading.value = false;
-    }
+    } 
 }
+const computedCountryID = computed(() => {
+    return isNaN(address_data.value.country_id) ? null : address_data.value.country_id;
+});
 const updateCountry = (value) => {
     const selected = country_data.value.find(item => item.id === value);
     address_data.value.country_id = value;

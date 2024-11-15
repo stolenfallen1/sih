@@ -1084,7 +1084,6 @@
     onMounted(() => {
         getRevenueCode();
         getMedicineCharges(); 
-
     });
 
 </script>
