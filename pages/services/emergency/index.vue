@@ -259,6 +259,7 @@
 	<PostChargesDialog :show="PostCharges" @close-dialog="useSubComponents('PostCharges', false)" />
   <ERPostMedicineSuppliesDialog :show="ERPostMedicineSupplies" @close-dialog="useSubComponents('ERPostMedicineSupplies', false)" />
 	<PostCorporatePackageDialog :show="PostCorporateMedicalPackage" @close-dialog="useSubComponents('PostCorporateMedicalPackage', false)"/>
+  <NurseActvity :show="NurseActivity" :form_type="form_type" @close-dialog="useSubComponents('NurseActivity', false)  " />
 	<PostDiagnosticPackageDialog :show="PostDiagnosticMedicalPackage" @close-dialog="useSubComponents('PostDiagnosticMedicalPackage', false)"/> 
 	<PostAdjustmentDialog :show="PostAdjustments" @close-dialog="useSubComponents('PostAdjustments', false)" />
 	<PostProfessionalFeesDialog :show="PostProfessionalFees" @close-dialog="useSubComponents('PostProfessionalFees', false)" />
@@ -294,6 +295,7 @@ const patientStore = usePatientStore();
 
 import ReusableTable from "~/components/reusables/ReusableTable.vue";
 import Snackbar from "~/components/reusables/snackbar.vue";
+import NurseActivity from "~/components/reusables/sub-components/nursing-activity/NurseActivity.vue";
 const {
   PatientProfile,
   Suspend, 

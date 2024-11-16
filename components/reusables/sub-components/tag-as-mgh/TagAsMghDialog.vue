@@ -25,7 +25,11 @@
     const isLoading = ref(false);
     const open_professionals_list = ref(false);
     const open_refering_hci_address_form = ref(false);
+    const check_charges_data = ref([]);
+    const check_charges_loading = ref(false);
+    const hasUnpaidCharges = ref(false);
     const patientAccount = ref('');
+    const isProcessed = ref(false);
     const pageLoader = ref(false);
     const value = ref(0)
     const interval = ref(null)
@@ -45,9 +49,10 @@
     };
 
     const closePFDialog = () => {
-        showPFDialog.value = false;
+        isProcessed.value = false;
     };
     const openConfirmDialog = async () => {
+        isProcessed.value = false; 
         showDialog.value = true;
     }
 
@@ -206,27 +211,45 @@
         }
     });
 
-        const check_charges_data = ref([]);
-        const check_charges_loading = ref(false);
-        const hasUnpaidCharges = ref(false);
-        const isProcessed = ref(false);
+    const startLoader = () => {
+        clearInterval(interval.value);
+        value.value = 0;
+        interval.value = setInterval(() => {
+            if (value.value === 100) {
+                value.value = 0 
+            } else {
+                value.value += 10
+            }
+        }, 1000)
+    }
 
-        const checkPendingCharges = async (case_No) => {
+    const stopLoader = () => {
+        clearInterval(interval.value);
+        value.value = 0; 
+    };
+
+    
+    const checkPendingCharges = async (case_No) => {
+
         check_charges_loading.value = true;
+        isProcessed.value = false;
+        pageLoader.value = true;
+        startLoader();
+
         try {
-            const response = await useMethod("get", "get-charge-items/", "", case_No);
+            const response = await useMethod("get", "patient-billing-charges/", "", case_No);
             if (response) {
                 const data = Array.isArray(response) ? response : response.data;
                 if (data && Array.isArray(data) && data.length > 0) {
                     check_charges_data.value = data.map(item => ({
-                        id: item.id,
-                        chargeName: item.charge_name,
-                        amount: item.amount,
-                        date: item.date,
-                        status: item.record_Status
+                        status: item.recordStatus,
+                        ornumber: item.ORNumber
                     }));
-
-                    hasUnpaidCharges.value = check_charges_data.value.some(item => item.status === "X");
+                    hasUnpaidCharges.value = check_charges_data.value.some(item => 
+                        item.status === "X" || 
+                        item.status === "27" || 
+                        item.ornumber === null
+                    );
                 } else {
                     hasUnpaidCharges.value = false;
                 }
@@ -237,7 +260,10 @@
             console.error("Error fetching charges data:", error);
             hasUnpaidCharges.value = false;
         } finally {
+            pageLoader.value = false;
             check_charges_loading.value = false;
+            stopLoader();
+            isProcessed.value = true;
         }
         return hasUnpaidCharges.value;
     };
@@ -247,49 +273,62 @@
         getErResult();
         getDeathTypes();
         getPatientStatus();
-        interval.value = setInterval(() => {
-            if (value.value === 100) {
-                value.value = 0 
-            } else {
-                value.value += 10
-            }
-        }, 1000)
+        startLoader()
     });
 
     onBeforeUnmount(() => {
-        clearInterval(interval.value)
+        stopLoader();
     })
 
-    onUpdated(() => {
-        if (selectedRowDetails.value && selectedRowDetails.value.id) {
-            if (payload.value.id !== selectedRowDetails.value.id) { 
-                payload.value                   = Object.assign({}, selectedRowDetails.value);
-                payload.value.name              = (selectedRowDetails.value.lastname &&
-                                                    selectedRowDetails.value.firstname
-                                                ) 
-                                                ? selectedRowDetails.value.lastname + ', ' + selectedRowDetails.value.firstname + ' ' + selectedRowDetails.value.middlename 
-                                                : '';
-                payload.value.patient_Id        = selectedRowDetails.value.patient_Id ? selectedRowDetails.value.patient_Id : '';
-                payload.value.suffix_id         = parseInt(selectedRowDetails.value.suffix_id) ? parseInt(selectedRowDetails.value.suffix_id) : '';
-                payload.value.case_No           = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0].case_No ? selectedRowDetails.value.patient_registry[0].case_No : '';
-                payload.value.er_Case_No        = selectedRowDetails.value.patient_registry && parseInt(selectedRowDetails.value.patient_registry[0].er_Case_No) ? parseInt(selectedRowDetails.value.patient_registry[0].er_Case_No) : '';
-                payload.value.registry_Date     = useDateMMDDYYY(selectedRowDetails.value.registry_Date) ? useDateMMDDYYY(selectedRowDetails.value.registry_Date) : '';
-                patientAccount.value            = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0].guarantor_Name ? selectedRowDetails.value.patient_registry[0].guarantor_Name : '';
-                
-                if(patientAccount.value === 'Self Pay') {
-                    pageLoader.value = true;
-                    setTimeout(async () => {
-                        await checkPendingCharges(selectedRowDetails.value.patient_registry[0].case_No);
-                        pageLoader.value = false;
-                        isProcessed.value = true;
-                    }, 1000)
-                } else {
-                    pageLoader.value = false;
-                    isProcessed.value = true;
-                }
+    watch(() => selectedRowDetails.value, async (newRow, oldRow) => {
+            if (newRow && newRow.id && (!oldRow || newRow.id !== oldRow.id)) {
+
+                payload.value = {
+                    ...newRow,
+                    name: newRow.lastname && newRow.firstname
+                        ? `${newRow.lastname}, ${newRow.firstname} ${newRow.middlename || ''}`
+                        : '',
+                    patient_Id: newRow.patient_Id || '',
+                    suffix_id: parseInt(newRow.suffix_id) || '',
+                    case_No: newRow.patient_registry?.[0]?.case_No || '',
+                    er_Case_No: parseInt(newRow.patient_registry?.[0]?.er_Case_No) || '',
+                    registry_Date: useDateMMDDYYY(newRow.registry_Date) || ''
+                };
+                await checkPendingCharges(newRow.patient_registry?.[0]?.case_No);
             }
-        } 
-    })
+        },
+        { immediate: true } 
+    );
+
+
+    // onUpdated(() => {
+    //     if (selectedRowDetails.value && selectedRowDetails.value.id) {
+    //         if (payload.value.id !== selectedRowDetails.value.id) { 
+    //             payload.value                   = Object.assign({}, selectedRowDetails.value);
+    //             payload.value.name              = (selectedRowDetails.value.lastname &&
+    //                                                 selectedRowDetails.value.firstname
+    //                                             ) 
+    //                                             ? selectedRowDetails.value.lastname + ', ' + selectedRowDetails.value.firstname + ' ' + selectedRowDetails.value.middlename 
+    //                                             : '';
+    //             payload.value.patient_Id        = selectedRowDetails.value.patient_Id ? selectedRowDetails.value.patient_Id : '';
+    //             payload.value.suffix_id         = parseInt(selectedRowDetails.value.suffix_id) ? parseInt(selectedRowDetails.value.suffix_id) : '';
+    //             payload.value.case_No           = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0].case_No ? selectedRowDetails.value.patient_registry[0].case_No : '';
+    //             payload.value.er_Case_No        = selectedRowDetails.value.patient_registry && parseInt(selectedRowDetails.value.patient_registry[0].er_Case_No) ? parseInt(selectedRowDetails.value.patient_registry[0].er_Case_No) : '';
+    //             payload.value.registry_Date     = useDateMMDDYYY(selectedRowDetails.value.registry_Date) ? useDateMMDDYYY(selectedRowDetails.value.registry_Date) : '';
+    //             patientAccount.value            = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0].guarantor_Name ? selectedRowDetails.value.patient_registry[0].guarantor_Name : '';
+                
+    //             if(patientAccount) {
+    //                 pageLoader.value = true;
+    //                 startLoder();
+    //                 setTimeout(async () => {
+    //                     await checkPendingCharges(selectedRowDetails.value.patient_registry[0].case_No);
+    //                     pageLoader.value = false;
+    //                     isProcessed.value = true;
+    //                 }, 1000)
+    //             } 
+    //         }
+    //     } 
+    // })
 
 </script>
 

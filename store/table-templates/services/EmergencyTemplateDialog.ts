@@ -28,6 +28,7 @@ export const EmergencyTemplateDialog = defineStore('EmergencyTemplateDialog', {
         MedicalSocialServiceTemplate: false,
         ListOfPetBreed: false,
         RegistryGroup: false,
+        NurseActivity: false
     }),
     actions: {
       setEmergencyDialog(dialog: any, type: Boolean) {

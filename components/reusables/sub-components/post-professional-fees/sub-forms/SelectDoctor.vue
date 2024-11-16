@@ -1,5 +1,6 @@
 <template>
-    <v-dialog :model-value="open_select_doctor" rounded="lg" @update:model-value="closeDialog"  scrollable max-width="800px">     
+    <v-dialog :model-value="open_select_doctor" rounded="lg" @update:model-value="closeDialog"  scrollable max-width="800px">
+        <form @submit.prevent="handleSubmit">    
             <v-card rounded="lg">
                 <v-toolbar density="compact" color="#107bac" hide-details>
                     <v-toolbar-title>Select Doctor</v-toolbar-title>
@@ -52,9 +53,10 @@
                 <v-card-actions>
                     <v-btn color="blue-darken-1 border border-info" @click="closeDialog"> Close </v-btn>
                     <v-spacer></v-spacer>
-                    <v-btn class="bg-primary text-white" @click="onSelect">Select</v-btn>
+                    <v-btn class="bg-primary text-white" type="submit">Select</v-btn>
                 </v-card-actions>
             </v-card>
+        </form>
     </v-dialog>
 </template>
 
@@ -136,11 +138,11 @@
         emits('handle-select', validSelectedItems);
     };
 
-    const onSelect = () => {
-        handleSelectedRow(selected_item.value);
-        console.log('Selected Item Value : ', selected_item);
-        closeDialog();
-    }
+
+const handleSubmit = () => {
+    handleSelectedRow(selected_item.value);
+    emits('close-dialog');
+}
 
 const closeDialog = () => {
     emits('close-dialog');
