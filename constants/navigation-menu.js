@@ -1630,6 +1630,12 @@ export default [
                 path: "/services/nursing-services",
                 rule: "browse_nursingservices",
                 subcomponents: [
+                    {   
+                        label: "Nursing Activity",
+                        icon: "mdi-file-document-edit",
+                        form: "NurseActivity",
+                        rule: "",
+                    },
                     // {
                     //     label: "Patient Profile",
                     //     icon: "mdi-file-document-edit",

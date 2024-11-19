@@ -261,7 +261,6 @@
                 payload.value.er_Case_No    = parseInt(selectedRowDetails.value.patient_registry?.[0]?.er_Case_No) || '';
                 payload.value.registry_Date = useDateMMDDYYY(selectedRowDetails.value.registry_Date) || '';
                 payload.value.mgh_Datetime  = useDateMMDDYYY(selectedRowDetails.value.mgh_Datetime) || '';
-
                 getPatientBalance();
             }
         }

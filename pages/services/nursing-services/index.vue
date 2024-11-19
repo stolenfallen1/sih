@@ -141,6 +141,7 @@
   <PatientProfileDialog :show="PatientProfile" :form_payload="form_payload" @close-dialog="useSubComponents('PatientProfile', false)" />
   <RequisitionsDialog :show="Requisitions" :form_type="form_type" @close-dialog="useSubComponents('Requisitions', false)" />
   <PostChargesDialog :show="PostCharges" @close-dialog="useSubComponents('PostCharges', false)" />
+  <NurseActvity :show="NurseActivity" :form_type="form_type" @close-dialog="useSubComponents('NurseActivity', false)  " />
   <ApplyCreditNoteDialog :show="ApplyCreditNote" @close-dialog="useSubComponents('ApplyCreditNote', false)" />
   <ViewExamUpshotDialog :show="ViewExaminationUpshot" @close-dialog="useSubComponents('ViewExaminationUpshot', false)" />
   <TagAsMghDialog :show="TagAsMgh" :form_type="form_type" @close-dialog="useSubComponents('TagAsMgh', false)" />
@@ -161,201 +162,202 @@
 </template>
 
 <script setup>
-import PatientProfileDialog from "../../../components/master-file/forms/patient/FormContainer.vue";
+  import PatientProfileDialog from "../../../components/master-file/forms/patient/FormContainer.vue";
 
-import ReusableTable from "~/components/reusables/ReusableTable.vue";
-const {
-  PatientProfile,
-  Requisitions,
-  PostCharges,
-  ApplyCreditNote,
-  ViewExaminationUpshot,
-  TagAsMgh,
-  UntagAsMgh,
-  Discharge,
-  DischargeInstruction,
-  RelocatePatient,
-  NurseEndorsementForm,
-  ViewPatientDietHistory,
-  ViewDrugsAndMedicines,
-  ViewStatementOfAccount,
-  ClaimForm4Processing,
-} = storeToRefs(NursingSubComponentsDialog());
+  import ReusableTable from "~/components/reusables/ReusableTable.vue";
+  const {
+    PatientProfile,
+    Requisitions,
+    PostCharges,
+    ApplyCreditNote,
+    ViewExaminationUpshot,
+    NurseActvity,
+    TagAsMgh,
+    UntagAsMgh,
+    Discharge,
+    DischargeInstruction,
+    RelocatePatient,
+    NurseEndorsementForm,
+    ViewPatientDietHistory,
+    ViewDrugsAndMedicines,
+    ViewStatementOfAccount,
+    ClaimForm4Processing,
+  } = storeToRefs(NursingSubComponentsDialog());
 
-const { 
-  DietaryTransactions,
-  MayGoHomePatientList,
-  RoomStatusAvailability,
-} = storeToRefs(PQNursingServicesDialog());
+  const { 
+    DietaryTransactions,
+    MayGoHomePatientList,
+    RoomStatusAvailability,
+  } = storeToRefs(PQNursingServicesDialog());
 
-definePageMeta({
-  layout: "root-layout",
-});
+  definePageMeta({
+    layout: "root-layout",
+  });
 
-const { selectedRowDetails, isrefresh } = storeToRefs(useSubcomponentSelectedRowDetailsStore());
-const isSelectedUser = ref(true);
-const pageTitle = ref("Nursing Services");
-const currentTab = ref(false);
-const showTabs = ref(false);
-const tableTabs = ref([]);
-const form_payload = ref({});
+  const { selectedRowDetails, isrefresh } = storeToRefs(useSubcomponentSelectedRowDetailsStore());
+  const isSelectedUser = ref(true);
+  const pageTitle = ref("Nursing Activity");
+  const currentTab = ref(false);
+  const showTabs = ref(false);
+  const tableTabs = ref([]);
+  const form_payload = ref({});
 
-const totalItems = ref(0);
-const itemsPerPage = ref(15);
-const search = ref("");
-const filter = ref({});
-const open_filter_options = ref(false);
-const params = ref("");
-const loading = ref(true);
-const open_summary_modal = ref(false);
-const nursing_services_test_data = ref([
-  { label: "Admissions", value: "1" },
-  { label: "MGH", value: "2" },
-]); 
+  const totalItems = ref(0);
+  const itemsPerPage = ref(15);
+  const search = ref("");
+  const filter = ref({});
+  const open_filter_options = ref(false);
+  const params = ref("");
+  const loading = ref(true);
+  const open_summary_modal = ref(false);
+  const nursing_services_test_data = ref([
+    { label: "Admissions", value: "1" },
+    { label: "MGH", value: "2" },
+  ]); 
 
-const headers = [
-  {
-    title: "ID",
-    align: "start",
-    sortable: true,
-    key: "id",
-    width: "5%",
-  },
-  {
-    title: "Code",
-    align: "start",
-    sortable: true,
-    key: "doctor_code",
-    width: "5%",
-  },
-  {
-    title: "Category",
-    key: "category",
-    align: "start",
-    width: "5%",
-    sortable: false,
-  },
-  {
-    title: "Specialization",
-    key: "specialization_id",
-    align: "start",
-    width: "5%",
-    sortable: false,
-  },
-  {
-    title: "Consultant Name",
-    key: "doctor_name",
-    align: "start",
-    width: "40%",
-    sortable: false,
-  },
-  {
-    title: "PHIC No.",
-    key: "philhealth_accreditation_no",
-    align: "start",
-    width: "10%",
-    sortable: false,
-  },
-  {
-    title: "Email",
-    key: "email",
-    align: "start",
-    width: "30%",
-    sortable: false,
-  },
-  {
-    title: "Status",
-    key: "isactive",
-    align: "start",
-    width: "30%",
-    sortable: false,
-  },
-];
-const serverItems = ref([]);
-const handleRefresh = () => {
-    loadItems();
-};
-const handleSearch = (keyword) => {
-  // Handle search action
-    loadItems(null, keyword);
-};
-const openFilterOptions = () => {
-  setTimeout(() => {
-    open_filter_options.value = true;
-  }, 100);
-};
-const closeFilterOptions = () => {
-  open_filter_options.value = false;
-};
-const applyFilters = () => {
-  console.log('Filters applied:', filter.value);
-};
-const selectedUser = (item) => {
-  isSelectedUser.value = true;
-  isrefresh.value = false;
-  selectedRowDetails.value.id = ""; //clear state id for subcomponents ?id=''
-  selectedRowDetails.value.role_id = ""; //clear state id for subcomponents ?id=''
-
-  if(item){
-    selectedRowDetails.value =  Object.assign({}, item);; //set state id for subcomponents ?id=item.id value
-    isrefresh.value = true;
-    isSelectedUser.value = false;
-  }else{
-    isrefresh.value = false;
+  const headers = [
+    {
+      title: "ID",
+      align: "start",
+      sortable: true,
+      key: "id",
+      width: "5%",
+    },
+    {
+      title: "Code",
+      align: "start",
+      sortable: true,
+      key: "doctor_code",
+      width: "5%",
+    },
+    {
+      title: "Category",
+      key: "category",
+      align: "start",
+      width: "5%",
+      sortable: false,
+    },
+    {
+      title: "Specialization",
+      key: "specialization_id",
+      align: "start",
+      width: "5%",
+      sortable: false,
+    },
+    {
+      title: "Consultant Name",
+      key: "doctor_name",
+      align: "start",
+      width: "40%",
+      sortable: false,
+    },
+    {
+      title: "PHIC No.",
+      key: "philhealth_accreditation_no",
+      align: "start",
+      width: "10%",
+      sortable: false,
+    },
+    {
+      title: "Email",
+      key: "email",
+      align: "start",
+      width: "30%",
+      sortable: false,
+    },
+    {
+      title: "Status",
+      key: "isactive",
+      align: "start",
+      width: "30%",
+      sortable: false,
+    },
+  ];
+  const serverItems = ref([]);
+  const handleRefresh = () => {
+      loadItems();
+  };
+  const handleSearch = (keyword) => {
+    // Handle search action
+      loadItems(null, keyword);
+  };
+  const openFilterOptions = () => {
+    setTimeout(() => {
+      open_filter_options.value = true;
+    }, 100);
+  };
+  const closeFilterOptions = () => {
+    open_filter_options.value = false;
+  };
+  const applyFilters = () => {
+    console.log('Filters applied:', filter.value);
+  };
+  const selectedUser = (item) => {
     isSelectedUser.value = true;
+    isrefresh.value = false;
+    selectedRowDetails.value.id = ""; //clear state id for subcomponents ?id=''
+    selectedRowDetails.value.role_id = ""; //clear state id for subcomponents ?id=''
+
+    if(item){
+      selectedRowDetails.value =  Object.assign({}, item);; //set state id for subcomponents ?id=item.id value
+      isrefresh.value = true;
+      isSelectedUser.value = false;
+    }else{
+      isrefresh.value = false;
+      isSelectedUser.value = true;
+    }
+  };
+  const handleView = () => {
+    
+  };
+  const handleEdit = () => {
+    
+  };
+  const handleNew = () => {
+    
+  };
+  const DeactiveUser = () => {
+    
+  };
+
+  const ViewSummary = () => {
+    open_summary_modal.value = true;
   }
-};
-const handleView = () => {
-  
-};
-const handleEdit = () => {
-  
-};
-const handleNew = () => {
-  
-};
-const DeactiveUser = () => {
-  
-};
-
-const ViewSummary = () => {
-  open_summary_modal.value = true;
-}
-const closeViewSummary = () => {
-  open_summary_modal.value = false;
-}
-
-const loadItems = async (options = null, searchkeyword = null) => {
-  try {
-    loading.value = true;
-
-    let keyword = searchkeyword || "";
-      params.value = options  ? "page=" + options.page + "&per_page=" + options.itemsPerPage + "&keyword=" + options.keyword
-    : "page=1&per_page=10&keyword=" + keyword;
-    const response = await fetch(useApiUrl()+'/doctors'+ "?" + params.value || "", {
-      headers: {
-        Authorization: `Bearer `+ useToken(),
-      },
-    });
-    const data = await response.json();
-    updateTotalItems(data.total);
-    updateServerItems(data.data);
-    loading.value = false;
-    // tableColumns.value = currentTabInfo?.columns || [];
-  } catch (error) {
-    console.error("Error fetching data:", error);
-    loading.value = false;
-  } finally {
-    loading.value = false;
+  const closeViewSummary = () => {
+    open_summary_modal.value = false;
   }
-};
-const updateTotalItems = (newTotalItems) => {
-  totalItems.value = newTotalItems;
-};
 
-const updateServerItems = (newServerItems) => {
-  serverItems.value = newServerItems;
-};
+  const loadItems = async (options = null, searchkeyword = null) => {
+    try {
+		loading.value = true;
+
+		let keyword = searchkeyword || "";
+			params.value = options  ? "page=" + options.page + "&per_page=" + options.itemsPerPage + "&keyword=" + options.keyword
+		: "page=1&per_page=10&keyword=" + keyword;
+		const response = await fetch(useApiUrl()+'/doctors'+ "?" + params.value || "", {
+			headers: {
+			Authorization: `Bearer `+ useToken(),
+			},
+		});
+		const data = await response.json();
+		updateTotalItems(data.total);
+		updateServerItems(data.data);
+		loading.value = false;
+		// tableColumns.value = currentTabInfo?.columns || [];
+    } catch (error) {
+		console.error("Error fetching data:", error);
+		loading.value = false;
+    } finally {
+      	loading.value = false;
+    }
+  };
+  const updateTotalItems = (newTotalItems) => {
+    totalItems.value = newTotalItems;
+  };
+
+  const updateServerItems = (newServerItems) => {
+    serverItems.value = newServerItems;
+  };
 
 </script>
 
