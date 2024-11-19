@@ -1,3 +1,5 @@
+import NurseActivity from "~/components/reusables/sub-components/nursing-activity/NurseActivityDialog.vue";
+
 export const NursingServicesTemplateDialog = defineStore('NursingServicesTemplateDialog' , {
   state: () => ({
     AdmissionResult: false,
@@ -5,6 +7,8 @@ export const NursingServicesTemplateDialog = defineStore('NursingServicesTemplat
     DeathTypeDialog: false,
     NursingEndorsement: false,
     ReferralCauses: false,
+    NursingServce: false,
+    NurseActivity: false
   }),
   actions: {
     setNursingServicesDialog(dialog: any, type: Boolean) {

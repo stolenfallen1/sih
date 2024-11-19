@@ -1008,7 +1008,7 @@
             if (data && Array.isArray(data) && data.length > 0) {
                 const filteredMedicineData = data.filter(item => item.revenue_Id === 'EM');
                 chargeMedicineList.value = filteredMedicineData.map(item => ({
-                    status: item.record_Status === 'W' ? 'Paid' : item.record_Status === 'X' ? 'Unpaid' : 'Canceled',
+                    status: item.ORN !== null ? 'Paid' : (item.record_Status === 'X' || parseInt(item.record_Status) === 27) ? 'Unpaid' : 'Canceled',
                     code: item.item_Id,
                     item_name: item.description || '-',
                     price: item.price ? parseFloat(item.price).toFixed(2) : '-',
@@ -1021,7 +1021,7 @@
 
                 const filteredSupplyData = data.filter(item => item.revenue_Id === 'RS');
                 chargeSupplyList.value = filteredSupplyData.map(item => ({
-                    status: item.record_Status === 'W' ? 'Paid' : item.record_Status === 'X' ? 'Unpaid' : 'Canceled',
+                    status: item.ORN !== null ? 'Paid' : (item.record_Status === 'X' || parseInt(item.record_Status) === 27) ? 'Unpaid' : 'Canceled',
                     code: item.item_Id,
                     item_name: item.description || '-',
                     price: item.price ? parseFloat(item.price).toFixed(2) : '-',

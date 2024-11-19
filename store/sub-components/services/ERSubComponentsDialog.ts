@@ -1,3 +1,5 @@
+import NurseActivity from "~/components/reusables/sub-components/nursing-activity/NurseActivityDialog.vue";
+
 export const ERSubComponentsDialog = defineStore('ERSubComponentsDialog',{
     state: () => ({
         PatientProfile: false,
@@ -23,7 +25,8 @@ export const ERSubComponentsDialog = defineStore('ERSubComponentsDialog',{
         ViewPrintReports: false, 
         AdmitPatient: false, 
         PrintClaimForms: false,
-        ClaimForm4Processing: false, 
+        ClaimForm4Processing: false,
+        NurseActivity: false,
     }),
     actions:{
     setERSubComponentsDialog(dialog:any,type:Boolean) {

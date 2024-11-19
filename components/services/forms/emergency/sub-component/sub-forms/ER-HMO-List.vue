@@ -57,6 +57,7 @@
 </template>
 
 <script setup>
+
 const props = defineProps({
     open_hmo_list: {
         type: Boolean,
@@ -68,6 +69,7 @@ const props = defineProps({
 const emits = defineEmits(['close-dialog', 'handle-select']);
 const selected_item = ref([]);
 const isloading = ref(false);
+
 const headers = [
     {
         title: 'Code',
@@ -101,11 +103,11 @@ const loadItems = async(page = null,itemsPerPage = null,sortBy = null)=>{
     const response = await useMethod("get","get-company-list?","",params);
     if(response){
         serverItems.value = response.data;
-        console.log('Server Items', serverItems);
         totalItems.value = response.total;
         data.value.loading = false;
     }
 }
+
 const search = ()=>{
     loadItems();
 }
