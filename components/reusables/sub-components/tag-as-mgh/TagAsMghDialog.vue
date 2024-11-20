@@ -1,5 +1,6 @@
 <script setup>
     import { defineProps, defineEmits, onMounted } from 'vue';
+    import ConsultantRoleTypeForm from '../../build-file/consultant-role-types/sub-forms/ConsultantRoleTypeForm.vue';
     const props = defineProps({
         show: {
             type: Boolean,
@@ -35,6 +36,9 @@
     const value = ref(0)
     const interval = ref(null)
 
+    const fieldRules = [
+        v => !!v || 'Field is required',
+    ]
 
     const handleDoctorsList = () => {
         showPFDialog.value = true;
@@ -155,9 +159,11 @@
             patient_status.value = response;
             patient_status_loading.value = false;
         }
+        payload.value.patient_status = patient_status.value[0].id;
     }
 
     const erResult_data = ref([]);
+    const filteredERData = ref([])
     const erResult_loading = ref(false);
     const getErResult = async () => {
         erResult_loading.value = true;
@@ -184,7 +190,6 @@
         let response;
         isLoading.value = true;
         try{
-            
             response = await useMethod("put", "tag-patient-maygohome", payload.value, "", payload.value.case_No);
             if(response) {
                 useSnackbar(true, "green", response.message);
@@ -202,7 +207,10 @@
     const updateErResult = () => {
         if(parseInt(payload.value.mscDisposition_Id) === 7) {
             payload.value.ERpatient_result = erResult_data.value[1].id
+        } else if(parseInt(payload.value.mscDisposition_Id) === 10 ) {
+            payload.value.ERpatient_result = erResult_data.value[5].id
         } else {
+            filteredERData.value = erResult_data.value.filter(item => item.description !== 'Died')
             payload.value.ERpatient_result = '';
         }
     }
@@ -284,7 +292,6 @@
         getDeathTypes();
         getPatientStatus();
         startLoader();
-        isOnPage.value = true;
     });
 
     onBeforeUnmount(() => {
@@ -312,60 +319,6 @@
         },
         { immediate: true } 
     );
-
-//     const previousRow = ref(null); // Track the previous row
-
-// watchEffect(async () => {
-//     const newRow = selectedRowDetails.value;
-
-//     // Check if the row is valid and different from the previous one
-//     if (newRow && newRow.id && (!previousRow.value || newRow.id !== previousRow.value.id)) {
-//         // Update the payload
-//         payload.value = {
-//             ...newRow,
-//             name: newRow.lastname && newRow.firstname
-//                 ? `${newRow.lastname}, ${newRow.firstname} ${newRow.middlename || ''}`
-//                 : '',
-//             patient_Id: newRow.patient_Id || '',
-//             suffix_id: parseInt(newRow.suffix_id) || '',
-//             case_No: newRow.patient_registry?.[0]?.case_No || '',
-//             er_Case_No: parseInt(newRow.patient_registry?.[0]?.er_Case_No) || '',
-//             registry_Date: useDateMMDDYYY(newRow.registry_Date) || ''
-//         };
-
-//         // Log the changes for debugging
-//         console.log('Previous Row:', previousRow.value);
-//         console.log('New Row:', newRow);
-
-//         // Call the API
-//         await checkPendingCharges(newRow.patient_registry?.[0]?.case_No, newRow.patient_registry?.[0]?.guarantor_Name);
-
-//         // Update the previous row
-//         previousRow.value = newRow;
-//     }
-// });
-
-
-    // onUpdated( async () => {
-    //     if (selectedRowDetails.value && selectedRowDetails.value.id) {
-    //         if (payload.value.id !== selectedRowDetails.value.id) { 
-    //             payload.value                   = Object.assign({}, selectedRowDetails.value);
-    //             payload.value.name              = (selectedRowDetails.value.lastname &&
-    //                                                 selectedRowDetails.value.firstname
-    //                                             ) 
-    //                                             ? selectedRowDetails.value.lastname + ', ' + selectedRowDetails.value.firstname + ' ' + selectedRowDetails.value.middlename 
-    //                                             : '';
-    //             payload.value.patient_Id        = selectedRowDetails.value.patient_Id ? selectedRowDetails.value.patient_Id : '';
-    //             payload.value.suffix_id         = parseInt(selectedRowDetails.value.suffix_id) ? parseInt(selectedRowDetails.value.suffix_id) : '';
-    //             payload.value.case_No           = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0].case_No ? selectedRowDetails.value.patient_registry[0].case_No : '';
-    //             payload.value.er_Case_No        = selectedRowDetails.value.patient_registry && parseInt(selectedRowDetails.value.patient_registry[0].er_Case_No) ? parseInt(selectedRowDetails.value.patient_registry[0].er_Case_No) : '';
-    //             payload.value.registry_Date     = useDateMMDDYYY(selectedRowDetails.value.registry_Date) ? useDateMMDDYYY(selectedRowDetails.value.registry_Date) : '';
-    //             patientAccount.value            = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0].guarantor_Name ? selectedRowDetails.value.patient_registry[0].guarantor_Name : '';
-    //             await checkPendingCharges(selectedRowDetails.value.patient_registry[0].case_No, patientAccount.value); 
-    //         }
-    //     } 
-    // })
-
 </script>
 
 <template>
@@ -461,6 +414,8 @@
                                     item-value="id"
                                     :readonly="clicked_option === 'view'"
                                     :clearable="clicked_option === 'new' || clicked_option === 'edit'"
+                                    :rules="fieldRules"
+                                    required
                                     variant="outlined"
                                     density="compact"
                                     hide-details
@@ -480,11 +435,11 @@
                                     label="ER Result"
                                     variant="outlined"
                                     density="compact"
-                                    :items="erResult_data"
+                                    :items="parseInt(payload.mscDisposition_Id) === 7 ? erResult_data : filteredERData"
                                     item-title="description"
                                     item-value="id"
                                     v-model="payload.ERpatient_result"
-                                    :readonly="payload.ERpatient_result === 5"
+                                    :readonly="payload.ERpatient_result === 5 || payload.ERpatient_result === 11"
                                     clearable
                                     hide-details
                                 ></v-autocomplete>
