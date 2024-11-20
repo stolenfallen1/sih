@@ -255,7 +255,6 @@
                         code: item.revenue_Id
                     }));
                     if(accountType === 'Self Pay') {
-                        console.log('Self Pay Man ko')
                         hasUnpaidCharges.value = check_charges_data.value.some(item => 
                             item.status === "X" || 
                             item.status === "27" || 
@@ -265,7 +264,8 @@
                         hasUnpaidCharges.value = check_charges_data.value.some(item => 
                             item.code !== 'EM' &&
                             item.code !== 'RS' &&
-                            item.status === "X"
+                            item.status === "X" ||
+                            item.status === "27"
                         );
                     }
                 } else {
