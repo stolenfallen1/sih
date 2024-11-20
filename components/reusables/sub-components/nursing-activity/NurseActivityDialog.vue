@@ -28,22 +28,19 @@
         { title: "Description",         key: "description",     sortable: false },
         { title: 'Quantity',            key: 'quantity',        sortable: false },
         { title: 'Department',          key: 'department',      sortable: false },
-        { title: 'Date/Time',           key: 'requestDate',     sortable: false },
         { title: 'Code',                key: 'code',            sortable: false },
-        { title: 'Requested By',        key: 'requestBy',     sortable: false },
-        { title: 'Process Date / Time', key: 'processedDate',   sortable: false },
+        { title: 'Requested By',        key: 'requestBy',       sortable: false },
+        { title: 'Date Process',        key: 'processedDate',   sortable: false },
         { title: 'Processed By',        key: 'processedBy',     sortable: false },
-        { title: 'Remarks',             key: 'remarks',         sortable: false },
     ]);
 
     const pendingData = ref([
         { title: "Description",         key: "description",     sortable: false },
         { title: 'Quantity',            key: 'quantity',        sortable: false },
         { title: 'Department',          key: 'department',      sortable: false },
-        { title: 'Date/Time',           key: 'processedDate',   sortable: false },
+        { title: 'Date Requested',      key: 'processedDate',   sortable: false },
         { title: 'Code',                key: 'code',            sortable: false },
         { title: 'Requested By',        key: 'requestedBy',     sortable: false },
-        { title: 'Remarks',             key: 'remarks',         sortable: false },
     ]);
 
     const cashAssessmentData = ref([
@@ -51,8 +48,8 @@
         { title: "Description",         key: "description",     sortable: false },
         { title: 'Quantity',            key: 'quantity',        sortable: false },
         { title: 'Department',          key: 'department',      sortable: false },
-        { title: 'Date/Time',           key: 'processedDate',   sortable: false },
-    ])
+        { title: 'Date Process',        key: 'processedDate',   sortable: false },
+    ]);
 
     const allCharges = ref([]);
     const getAllCharges = async (case_No, accountType) => {
@@ -66,57 +63,58 @@
            if(data && Array.isArray(data) && data.length > 0) {
                 if(accountType !== 'Self Pay') {
                     const filteredProcessedData  = data.filter( 
-                        item => item.revenue_Id === 'EM' || 
-                                item.revenue_Id === 'RS' || 
-                                item.LBRecordStatus === 'W'
+                        item => item.record_Status === 'W'
                     );
                     processedChargeList.value = filteredProcessedData.map(item => ({
-                        description:    item.description,
-                        department:     item.department,
+                        description:    toTitleCase(item.description),
+                        department:     toTitleCase(item.department),
                         code:           item.item_Id,
-                        requestDate:    useDateMMDDYYY(item.hmoCharged_at),
+                        requestDate:    getDateTime(item.created_at),
                         requestBy:      item.requestBy,
-                        processedBy:    item.requestBy,
+                        processedBy:    item.revenue_Id === 'EM' ||
+                                        item.revenue_Id === 'RS'
+                                        ? item.requestBy 
+                                        : item.process_By,
                         item_name:      item.description || '-',
                         quantity:       item.Quantity ? parseInt(item.Quantity) : '-',
                         request_num:    item.referenceNum,
                         assess_num:     item.assessnum,
-                        processedDate:  useDateMMDDYYY(item.hmoCharged_at) 
+                        processedDate:  item.revenue_Id === 'EM' ||
+                                        item.revenue_Id === 'RS'
+                                        ? getDateTime(item.updated_at) 
+                                        : getDateTime(item.process_Date) 
                     }));
 
                     const filteredPendingData  = data.filter(
-                        item => item.revenue_Id !== 'EM' && 
-                                item.revenue_Id !== 'RS' && 
-                                item.LBRecordStatus !== 'W' && 
-                                item.LBRecordStatus !== 'R'
+                        item => item.record_Status !== 'W' && 
+                                item.record_Status !== 'R'
                     );
                     pendingChargeList.value = filteredPendingData.map(item => ({
-                        description:    item.description,
-                        department:     item.department,
+                        description:    toTitleCase(item.description),
+                        department:     toTitleCase(item.department),
                         code:           item.item_Id,
                         revenue_id:     item.revenue_Id,
                         item_name:      item.description || '-',
                         quantity:       item.Quantity ? parseInt(item.Quantity) : '-',
                         request_num:    item.referenceNum,
                         assess_num:     item.assessnum,
-                        processedDate:  useDateMMDDYYY(item.hmoCharged_at)
+                        processedDate:  getDateTime(item.created_at)
                     }))
 
                 } else {
-                    const filteredCashAssessmentRequestData = data.filter(item => item.CARecordStatus !== 'R');
+                    const filteredCashAssessmentRequestData = data.filter(item => item.record_Status !== 'R');
                     cashAssessnentChargeList.value = filteredCashAssessmentRequestData.map(item => ({
-                        description:    item.description,
-                        department:     item.department,
+                        description:    toTitleCase(item.description),
+                        department:     toTitleCase(item.department),
                         code:           item.item_Id,
                         revenue_id:     item.revenue_Id,
                         item_name:      item.description || '-',
                         quantity:       item.Quantity ? parseInt(item.Quantity) : '-',
                         request_num:    item.referenceNum,
                         assess_num:     item.assessnum,
-                        processedDate:  item.cashProcessed_at !== null 
-                                        ? useDateMMDDYYY(item.cashProcessed_at) 
-                                        : useDateMMDDYYY(item.cashCharged_at)
-
+                        processedDate:  item.updated_at !== null 
+                                        ? getDateTime(item.updated_at) 
+                                        : getDateTime(item.created_at)
                     }))
                 }
            } else {
@@ -127,9 +125,35 @@
         }
     };
 
+    const getDateTime = (dateString) => {
+        if(dateString === null) {
+            return '';
+        }
+        const date = new Date(dateString);
+        if (isNaN(date)) {
+            return '';
+        }
+
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, "0"); 
+        const day = String(date.getDate()).padStart(2, "0");
+        const hours = date.getHours() % 12 || 12; 
+        const minutes = String(date.getMinutes()).padStart(2, "0");
+        const ampm = date.getHours() >= 12 ? "PM" : "AM"; 
+
+        return `${year}-${month}-${day} ${hours}:${minutes} ${ampm}`;
+    }
+
+    const toTitleCase = (str) => {
+        return str
+            .split(' ') 
+            .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()) 
+            .join(' '); 
+     }
+
+
     watch(() => selectedRowDetails.value, async (newRow, oldRow) => {
             if (newRow && newRow.id && (!oldRow || newRow.id !== oldRow.id)) {
-
                 payload.value = {
                     ...newRow,
                     patient_name:       newRow.lastname && newRow.firstname
