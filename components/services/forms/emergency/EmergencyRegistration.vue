@@ -242,6 +242,7 @@
                 response = await useMethod("post", "register-emergency", payload.value);
                 if (response) {
                     useSnackbar(true, "green", response.message);
+                    payload.value = {};
                     patientDetail.value = response.data;
                     emits('patient-registered', patientDetail.value);
                 }

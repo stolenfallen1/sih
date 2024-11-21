@@ -259,7 +259,7 @@
 	<PostChargesDialog :show="PostCharges" @close-dialog="useSubComponents('PostCharges', false)" />
   <ERPostMedicineSuppliesDialog :show="ERPostMedicineSupplies" @close-dialog="useSubComponents('ERPostMedicineSupplies', false)" />
   <NurseActivityDialog :show="NurseActivity" :form_type="form_type" @close-dialog="useSubComponents('NurseActivity', false)" /> 
-	<PostCorporatePackageDialog :show="PostCorporateMedicalPackage" @close-dialog="useSubComponents('PostCorporateMedicalPackage', false)"/>
+	<!-- <PostCorporatePackageDialog :show="PostCorporateMedicalPackage" @close-dialog="useSubComponents('PostCorporateMedicalPackage', false)"/>
 	<PostDiagnosticPackageDialog :show="PostDiagnosticMedicalPackage" @close-dialog="useSubComponents('PostDiagnosticMedicalPackage', false)"/> 
 	<PostAdjustmentDialog :show="PostAdjustments" @close-dialog="useSubComponents('PostAdjustments', false)" />
 	<PostProfessionalFeesDialog :show="PostProfessionalFees" @close-dialog="useSubComponents('PostProfessionalFees', false)" />
@@ -267,7 +267,7 @@
 	<PostArTransferDialog :show="PostArTransfer" :form_type="form_type" @close-dialog="useSubComponents('PostArTransfer', false)" />
 	<ViewExamUpshotDialog :show="ViewExaminationUpshot" @close-dialog="useSubComponents('ViewExaminationUpshot', false)" />
 	<ApplyPromissoryNoteDialog :show="ApplyPromissoryNote" @close-dialog="useSubComponents('ApplyPromissoryNote', false)" />
-	<ApplyMedicalPackageDialog :show="ApplyMedicalPackage" @close-dialog="useSubComponents('ApplyMedicalPackage', false)" />
+	<ApplyMedicalPackageDialog :show="ApplyMedicalPackage" @close-dialog="useSubComponents('ApplyMedicalPackage', false)" /> -->
 	<TagAsMghDialog :show="TagAsMgh" :form_type="form_type" @close-dialog="useSubComponents('TagAsMgh', false)  " />
 	<UntagAsMghDialog :show="UntagAsMgh" @close-dialog="useSubComponents('UntagAsMgh', false)" />
 	<DischargeDialog :show="Discharge" :form_type="form_type" @close-dialog="useSubComponents('Discharge', false)" />
