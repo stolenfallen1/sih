@@ -1,171 +1,3 @@
-<template>
-    <v-dialog :model-value="show" rounded="lg" scrollable @update:model-value="closeDialog" max-width="750px">
-        <form @submit.prevent="openConfirmDialog">
-            <v-card rounded="lg">
-                <v-toolbar density="compact" color="#107bac" hide-details>
-                    <v-toolbar-title>Discharge Registry Account {{ selectedRowDetails.id }}</v-toolbar-title>
-                    <v-btn color="white" @click="closeDialog">
-                        <v-icon>mdi-close</v-icon>
-                    </v-btn>
-                </v-toolbar>
-                <v-divider></v-divider>
-                <v-card-text>
-                    <v-card elevation="4">
-                        <v-toolbar density="compact" hide-details>
-                            <v-toolbar-title class="toolbar-title">Patient Account Information</v-toolbar-title>
-                        </v-toolbar>
-                        <v-card-text>
-                            <v-row>
-                                <v-col cols="6">
-                                    <v-text-field 
-                                        label="Patient Name"
-                                        v-model="payload.name"
-                                        variant="outlined" 
-                                        density="compact" 
-                                        hide-details 
-                                        readonly
-                                    ></v-text-field>
-                                </v-col>
-                                <v-col cols="6">
-                                    <v-text-field 
-                                        :label="form_type === 'outpatient' ? 'Outpatient Case No.' : (form_type === 'emergency' ? 'ER Case No.' : 'Admission No.')" 
-                                        v-model="payload.case_No"
-                                        variant="outlined" 
-                                        density="compact" 
-                                        hide-details 
-                                        readonly
-                                    ></v-text-field>
-                                </v-col>
-                                <v-col cols="6" class="form-col">
-                                    <v-text-field 
-                                        type="date"
-                                        :label="form_type === 'outpatient' ? 'Outpatient Case Date' : (form_type === 'emergency' ? 'ER Case Date' : 'Admission Date')" 
-                                        v-model="payload.registry_Date"
-                                        variant="outlined" 
-                                        density="compact" 
-                                        hide-details 
-                                        readonly
-                                    ></v-text-field>
-                                </v-col>
-                                <v-col cols="6" class="form-col">
-                                    <v-text-field 
-                                        type="date"
-                                        label="Discharge Date Time" 
-                                        v-model="payload.mgh_Datetime"
-                                        variant="outlined" 
-                                        density="compact" 
-                                        hide-details 
-                                        readonly
-                                    ></v-text-field>
-                                </v-col>
-                                <v-col cols="4" class="form-col">
-                                    <v-text-field 
-                                        label="Debit" 
-                                        variant="outlined" 
-                                        v-model="charges"
-                                        density="compact" 
-                                        hide-details 
-                                        readonly
-                                    ></v-text-field>
-                                </v-col>
-                                <v-col cols="4" class="form-col">
-                                    <v-text-field 
-                                        label="Credit" 
-                                        variant="outlined" 
-                                        v-model="credit"
-                                        density="compact" 
-                                        hide-details 
-                                        readonly
-                                    ></v-text-field>
-                                </v-col>
-                                <v-col cols="4" class="form-col">
-                                    <v-text-field 
-                                        label="Balance" 
-                                        variant="outlined" 
-                                        v-model="balance"
-                                        density="compact" 
-                                        hide-details 
-                                        readonly
-                                    ></v-text-field>
-                                </v-col>
-                            </v-row>
-                        </v-card-text>
-                    </v-card>
-                    <v-card elevation="4">
-                        <v-toolbar density="compact" hide-details>
-                            <v-toolbar-title class="toolbar-title">Discharge Diagnosis</v-toolbar-title>
-                        </v-toolbar>
-                        <v-card-text>
-                            <v-row>
-                                <v-col cols="12">
-                                    <v-textarea
-                                        label="Discharge Diagnosis"
-                                        v-model="payload.discharge_Diagnosis"
-                                        variant="outlined" 
-                                        density="compact" 
-                                        hide-details
-                                    ></v-textarea>
-                                </v-col>
-                            </v-row>
-                        </v-card-text>
-                    </v-card>
-                    <v-card elevation="4">
-                        <v-toolbar density="compact" hide-details>
-                            <v-toolbar-title class="toolbar-title">Secondary Discharge Diagnosis</v-toolbar-title>
-                        </v-toolbar>
-                        <v-card-text>
-                            <v-row>
-                                <v-col cols="12">
-                                    <v-textarea
-                                        label="Secondary Discharge Diagnosis"
-                                        v-model="payload.secondary_discharge_Diagnosis"
-                                        variant="outlined" 
-                                        density="compact" 
-                                        hide-details
-                                    ></v-textarea>
-                                </v-col>
-                            </v-row>
-                        </v-card-text>
-                    </v-card>
-                    <v-card elevation="4">
-                        <v-toolbar density="compact" hide-details>
-                            <v-toolbar-title class="toolbar-title">Discharge Remarks</v-toolbar-title>
-                        </v-toolbar>
-                        <v-card-text>
-                            <v-row>
-                                <v-col cols="12">
-                                    <v-textarea
-                                        label="Discharge Remarks"
-                                        v-model="payload.discharge_remarks"
-                                        variant="outlined" 
-                                        density="compact" 
-                                        hide-details
-                                    ></v-textarea>
-                                </v-col>
-                            </v-row>
-                        </v-card-text>
-                    </v-card>
-                </v-card-text>
-                <v-divider></v-divider>
-                <v-card-actions>
-                    <v-btn color="blue-darken-1 border border-info" @click="closeDialog"> Close </v-btn>
-                    <v-spacer></v-spacer>
-                    <v-btn class="bg-primary text-white" type="submit">Discharge Patient</v-btn>
-                </v-card-actions>
-            </v-card>
-        </form>
-    </v-dialog>
-
-    <Confirmation 
-        :show="showDialog"
-        :payload="payload"
-        :loading="isLoading"
-        @submit="onSubmit"
-        @close="closeConfirmDialog"
-    />
-
-</template>
-
 <script setup>
     const props = defineProps({
         show: {
@@ -179,8 +11,7 @@
         },
     });
 
-        const { selectedRowDetails } = storeToRefs(useSubcomponentSelectedRowDetailsStore()); 
-
+    const { selectedRowDetails } = storeToRefs(useSubcomponentSelectedRowDetailsStore()); 
     const showDialog = ref(false);
     const isLoading = ref(false);
 
@@ -189,19 +20,26 @@
     }
 
     const closeConfirmDialog = () => {
-            showDialog.value = false;
-        }
+        showDialog.value = false;
+    }
 
-    const emits = defineEmits(['close-dialog'])
-
+    const emits = defineEmits(['close-dialog', 'patient-registered'])
+    const patientDetail = ref({});
     const closeDialog = () => {
         emits('close-dialog');
     }
 
-    const balance = ref([]);
-    const credit = ref([]);
-    const charges = ref([])
-    const balance_loading = ref(false);
+    const balance           = ref([]);
+    const credit            = ref([]);
+    const charges           = ref([])
+    const balance_loading   = ref(false);
+    const isElible          = ref(false);
+    const isDischarged      = ref(false);
+    const isProcessed       = ref(false);
+    const pageLoader        = ref(false);
+    const value             = ref(0)
+    const interval          = ref(null)
+
     const getPatientBalance = async () => {
         balance_loading.value = true;
         let case_No = selectedRowDetails.value.patient_registry?.[0]?.case_No;
@@ -221,6 +59,33 @@
         }
     };
 
+    const startLoader = () => {
+        clearInterval(interval.value);
+        value.value = 0;
+        interval.value = setInterval(() => {
+            if (value.value === 100) {
+                value.value = 0 
+            } else {
+                value.value += 10
+            }
+        }, 1000)
+    }
+
+    const stopLoader = () => {
+        clearInterval(interval.value);
+        value.value = 0; 
+    };
+
+    onMounted(() => {
+        startLoader();
+    })
+
+    onBeforeUnmount(() => {
+        stopLoader();
+    })
+
+
+
     const onSubmit = async () => {
         isLoading.value = true;
         let response
@@ -231,42 +96,317 @@
                 isLoading.value = false;
                 closeConfirmDialog();
                 useSubComponents('Discharge', false)
+                patientDetail.value = response.data; 
+                emits('patient-registered', patientDetail.value);
             }
         } catch(error) {    
             useSnackbar(true, "red", response.message || 'Tagged Failed');
         } finally {
             isLoading.value = false;
+            closeDialog();
         }
     }
 
     const payload = ref([
-            {
-                balance: balance.value,
-                credit: credit.value,
-                charges: charges.value
-            }
-        ]);
-
-    onUpdated(() => {
-        if (selectedRowDetails.value && selectedRowDetails.value.id) {
-            if (payload.value.id !== selectedRowDetails.value.id) { 
-
-                payload.value       = Object.assign({}, selectedRowDetails.value);
-                payload.value.name  = selectedRowDetails.value.lastname && selectedRowDetails.value.firstname 
-                    ? `${selectedRowDetails.value.lastname}, ${selectedRowDetails.value.firstname} ${selectedRowDetails.value.middlename || ''}` 
-                    : '';
-                payload.value.patient_Id    = selectedRowDetails.value.patient_Id || '';
-                payload.value.case_No       = selectedRowDetails.value.patient_registry?.[0]?.case_No || '';
-                payload.value.suffix_id     = parseInt(selectedRowDetails.value.suffix_id) || '';
-                payload.value.er_Case_No    = parseInt(selectedRowDetails.value.patient_registry?.[0]?.er_Case_No) || '';
-                payload.value.registry_Date = useDateMMDDYYY(selectedRowDetails.value.registry_Date) || '';
-                payload.value.mgh_Datetime  = useDateMMDDYYY(selectedRowDetails.value.mgh_Datetime) || '';
-                getPatientBalance();
-            }
+        {
+            balance: balance.value,
+            credit: credit.value,
+            charges: charges.value
         }
-    });
+    ]);
+
+    const patientEligibilityForDischarge = async (case_No) => {
+        isLoading.value = true;
+        pageLoader.value = true;
+        startLoader();
+        let response;
+        try {
+            response = await useMethod("get", "check-elgibility-for-discharge/", "", case_No);
+            if(response) {
+                if(parseInt(response.isEligible) === 0 && parseInt(response.isDischarged) === 0) {
+                    isElible.value = false;
+                    isDischarged.value = false
+                    isProcessed.value = false;
+                    isLoading.value = false;
+                } else if(parseInt(response.isEligible) === 0 && parseInt(response.isDischarged) === 1) {
+                    isElible.value = false;
+                    isDischarged.value = true
+                    isProcessed.value = false;
+                    isLoading.value = false;
+                }else {
+                    isElible.value = true;
+                    isDischarged.value = false
+                    isLoading.value = false;
+                }
+                console.log('Response : ',response.isEligible);
+            }
+        } catch(error) {
+            console.log('Error' + error);
+        } finally {
+            isLoading.value = false;
+            pageLoader.value = false;
+            stopLoader();
+            isProcessed.value = true;
+        }
+    }
+
+    watch(() => selectedRowDetails.value, async (newRow, oldRow) => {
+            if (newRow && newRow.id && (!oldRow || newRow.id !== oldRow.id)) {
+                    payload.value = {
+                        ...newRow,
+                        name: newRow.lastname && newRow.firstname
+                            ? `${newRow.lastname}, ${newRow.firstname} ${newRow.middlename || ''}`
+                            : '',
+                        patient_Id: newRow.patient_Id || '',
+                        suffix_id: parseInt(newRow.suffix_id) || '',
+                        case_No: newRow.patient_registry?.[0]?.case_No || '',
+                        er_Case_No: parseInt(newRow.patient_registry?.[0]?.er_Case_No) || '',
+                        registry_Date: useDateMMDDYYY(newRow.registry_Date) || ''
+                    };
+                    getPatientBalance();
+                    await patientEligibilityForDischarge(newRow.patient_registry?.[0]?.case_No);
+                }
+            },
+        { immediate: true } 
+    );
 
 </script>
+
+<template>
+    <div v-if="isProcessed">
+        <div v-if="isElible && !isDischarged">
+            <v-dialog 
+                :model-value="show" 
+                rounded="lg" 
+                scrollable 
+                @update:model-value="closeDialog" 
+                :style="{maxWidth: isProcessed ? '800px' : '500px'}" 
+                >
+                <form @submit.prevent="openConfirmDialog">
+                    <v-card rounded="lg">
+                        <v-toolbar density="compact" color="#107bac" hide-details>
+                            <v-toolbar-title>Discharge Registry Account {{ selectedRowDetails.id }}</v-toolbar-title>
+                            <v-btn color="white" @click="closeDialog">
+                                <v-icon>mdi-close</v-icon>
+                            </v-btn>
+                        </v-toolbar>
+                        <v-divider></v-divider>
+                        <v-card-text>
+                            <v-card elevation="4">
+                                <v-toolbar density="compact" hide-details>
+                                    <v-toolbar-title class="toolbar-title">Patient Account Information</v-toolbar-title>
+                                </v-toolbar>
+                                <v-card-text>
+                                    <v-row>
+                                        <v-col cols="6">
+                                            <v-text-field 
+                                                label="Patient Name"
+                                                v-model="payload.name"
+                                                variant="outlined" 
+                                                density="compact" 
+                                                hide-details 
+                                                readonly
+                                            ></v-text-field>
+                                        </v-col>
+                                        <v-col cols="6">
+                                            <v-text-field 
+                                                :label="form_type === 'outpatient' ? 'Outpatient Case No.' : (form_type === 'emergency' ? 'ER Case No.' : 'Admission No.')" 
+                                                v-model="payload.case_No"
+                                                variant="outlined" 
+                                                density="compact" 
+                                                hide-details 
+                                                readonly
+                                            ></v-text-field>
+                                        </v-col>
+                                        <v-col cols="6" class="form-col">
+                                            <v-text-field 
+                                                type="date"
+                                                :label="form_type === 'outpatient' ? 'Outpatient Case Date' : (form_type === 'emergency' ? 'ER Case Date' : 'Admission Date')" 
+                                                v-model="payload.registry_Date"
+                                                variant="outlined" 
+                                                density="compact" 
+                                                hide-details 
+                                                readonly
+                                            ></v-text-field>
+                                        </v-col>
+                                        <v-col cols="6" class="form-col">
+                                            <v-text-field 
+                                                type="date"
+                                                label="Discharge Date Time" 
+                                                v-model="payload.mgh_Datetime"
+                                                variant="outlined" 
+                                                density="compact" 
+                                                hide-details 
+                                                readonly
+                                            ></v-text-field>
+                                        </v-col>
+                                        <v-col cols="4" class="form-col">
+                                            <v-text-field 
+                                                label="Debit" 
+                                                variant="outlined" 
+                                                v-model="charges"
+                                                density="compact" 
+                                                hide-details 
+                                                readonly
+                                            ></v-text-field>
+                                        </v-col>
+                                        <v-col cols="4" class="form-col">
+                                            <v-text-field 
+                                                label="Credit" 
+                                                variant="outlined" 
+                                                v-model="credit"
+                                                density="compact" 
+                                                hide-details 
+                                                readonly
+                                            ></v-text-field>
+                                        </v-col>
+                                        <v-col cols="4" class="form-col">
+                                            <v-text-field 
+                                                label="Balance" 
+                                                variant="outlined" 
+                                                v-model="balance"
+                                                density="compact" 
+                                                hide-details 
+                                                readonly
+                                            ></v-text-field>
+                                        </v-col>
+                                    </v-row>
+                                </v-card-text>
+                            </v-card>
+                            <v-card elevation="4">
+                                <v-toolbar density="compact" hide-details>
+                                    <v-toolbar-title class="toolbar-title">Discharge Diagnosis</v-toolbar-title>
+                                </v-toolbar>
+                                <v-card-text>
+                                    <v-row>
+                                        <v-col cols="12">
+                                            <v-textarea
+                                                label="Discharge Diagnosis"
+                                                v-model="payload.discharge_Diagnosis"
+                                                variant="outlined" 
+                                                density="compact" 
+                                                hide-details
+                                            ></v-textarea>
+                                        </v-col>
+                                    </v-row>
+                                </v-card-text>
+                            </v-card>
+                            <v-card elevation="4">
+                                <v-toolbar density="compact" hide-details>
+                                    <v-toolbar-title class="toolbar-title">Secondary Discharge Diagnosis</v-toolbar-title>
+                                </v-toolbar>
+                                <v-card-text>
+                                    <v-row>
+                                        <v-col cols="12">
+                                            <v-textarea
+                                                label="Secondary Discharge Diagnosis"
+                                                v-model="payload.secondary_discharge_Diagnosis"
+                                                variant="outlined" 
+                                                density="compact" 
+                                                hide-details
+                                            ></v-textarea>
+                                        </v-col>
+                                    </v-row>
+                                </v-card-text>
+                            </v-card>
+                            <v-card elevation="4">
+                                <v-toolbar density="compact" hide-details>
+                                    <v-toolbar-title class="toolbar-title">Discharge Remarks</v-toolbar-title>
+                                </v-toolbar>
+                                <v-card-text>
+                                    <v-row>
+                                        <v-col cols="12">
+                                            <v-textarea
+                                                label="Discharge Remarks"
+                                                v-model="payload.discharge_remarks"
+                                                variant="outlined" 
+                                                density="compact" 
+                                                hide-details
+                                            ></v-textarea>
+                                        </v-col>
+                                    </v-row>
+                                </v-card-text>
+                            </v-card>
+                        </v-card-text>
+                        <v-divider></v-divider>
+                        <v-card-actions>
+                            <v-btn color="blue-darken-1 border border-info" @click="closeDialog"> Close </v-btn>
+                            <v-spacer></v-spacer>
+                            <v-btn class="bg-primary text-white" type="submit">Discharge Patient</v-btn>
+                        </v-card-actions>
+                    </v-card>
+                </form>
+            </v-dialog>
+        </div>
+        <div v-else>
+            <v-dialog 
+                :model-value="show" 
+                rounded="lg" 
+                scrollable 
+                @update:model-value="closeDialog" 
+                :style="{maxWidth: isProcessed ? '800px' : '500px'}" 
+                >
+                <v-card>
+                    <v-card-title>
+                        <h3>Notification</h3>
+                    </v-card-title>
+                    <v-card-text>
+                        <v-row>
+                            <v-col cols="1">
+                                <v-icon
+                                    color="#107bac"
+                                    class="info-icon pa-4"
+                                >mdi-information-outline</v-icon>
+                            </v-col>
+                            <v-col cols="11" v-if="!isElible && !isDischarged">
+                                <h5 class="alert-text">
+                                    You cannot send a discharge order at this time. This patient has not yet been tagged for May Go Home.
+                                </h5>
+                            </v-col>
+                            <v-col cols="11" v-if="!isElible && isDischarged">
+                                <h5 class="alert-text">
+                                    You cannot send a discharge order. The patient already has a discharge order.
+                                </h5>
+                            </v-col>
+                        </v-row>
+                    </v-card-text>
+                    <v-divider></v-divider>
+                    <v-card-actions>
+                        <v-btn color="blue-darken-1 border border-info" @click="closeDialog"> Close </v-btn>
+                    </v-card-actions>
+                </v-card>
+            </v-dialog>
+        </div>
+    </div>
+    <div v-else>
+        <v-dialog 
+            :model-value="show" 
+            rounded="lg" 
+            scrollable 
+            @update:model-value="closeDialog" 
+            :style="{maxWidth: isProcessed ? '800px' : '500px'}" 
+            >
+            <v-card size="small" color="transparent">
+                <v-card-text>
+                    <div class="text-center">
+                        <v-progress-circular :model-value="value" :rotate="360" :size="100" :width="15" color="#107bac">
+                            <template v-slot:default> {{ value }} % </template>
+                        </v-progress-circular><br/>
+                        Checking Eligibility for May Go Home...
+                    </div>
+                </v-card-text>
+            </v-card>
+        </v-dialog>
+    </div>
+    <Confirmation 
+        :show="showDialog"
+        :payload="payload"
+        :loading="isLoading"
+        @submit="onSubmit"
+        @close="closeConfirmDialog"
+    />
+
+</template>
 
 <style scoped>
     .toolbar-title {
@@ -276,5 +416,14 @@
     }
     .form-col {
         margin-top: -16px !important;
+    }
+    .info-icon {
+        font-size: 50px !important;
+    }
+    .alert-text {
+        padding: 10px !important;
+        font-size: 16px;
+        line-height: 2rem;
+        color: #F44336 !important;
     }
 </style>

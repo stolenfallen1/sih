@@ -58,7 +58,6 @@
     };
     
     const openConfirmDialog = async () => {
-        isProcessed.value = false; 
         showDialog.value = true;
     }
 
@@ -157,9 +156,9 @@
         const response = await useMethod("get", 'patient-status', "", "");
         if(response) {
             patient_status.value = response;
+            payload.value.Status = patient_status.value[0].id;
             patient_status_loading.value = false;
         }
-        payload.value.patient_status = patient_status.value[0].id;
     }
 
     const erResult_data = ref([]);
@@ -205,13 +204,29 @@
     }
 
     const updateErResult = () => {
+        payload.value.Status = patient_status.value[0].id;
         if(parseInt(payload.value.mscDisposition_Id) === 7) {
             payload.value.ERpatient_result = erResult_data.value[1].id
-        } else if(parseInt(payload.value.mscDisposition_Id) === 10 ) {
-            payload.value.ERpatient_result = erResult_data.value[5].id
+            filteredERData.value = erResult_data.value.filter(item => item.description === 'Died')
         } else {
             filteredERData.value = erResult_data.value.filter(item => item.description !== 'Died')
-            payload.value.ERpatient_result = '';
+            if(parseInt(payload.value.mscDisposition_Id) === 2)
+                payload.value.ERpatient_result = erResult_data.value[8].id
+
+            else if(parseInt(payload.value.mscDisposition_Id) === 4)
+                payload.value.ERpatient_result = erResult_data.value[10].id
+
+            else if(parseInt(payload.value.mscDisposition_Id) === 5)
+                payload.value.ERpatient_result = erResult_data.value[3].id
+
+            else if(parseInt(payload.value.mscDisposition_Id) === 8)
+                payload.value.ERpatient_result = erResult_data.value[6].id
+
+            else if(parseInt(payload.value.mscDisposition_Id) === 10 )
+                payload.value.ERpatient_result = erResult_data.value[5].id
+
+            else 
+                payload.value.ERpatient_result = '';
         }
     }
 
@@ -312,8 +327,6 @@
                     er_Case_No: parseInt(newRow.patient_registry?.[0]?.er_Case_No) || '',
                     registry_Date: useDateMMDDYYY(newRow.registry_Date) || ''
                 };
-                console.log(oldRow);
-                console.log(newRow);
                 await checkPendingCharges(newRow.patient_registry?.[0]?.case_No, newRow.patient_registry?.[0]?.guarantor_Name);
             }
         },
@@ -415,7 +428,6 @@
                                     :readonly="clicked_option === 'view'"
                                     :clearable="clicked_option === 'new' || clicked_option === 'edit'"
                                     :rules="fieldRules"
-                                    required
                                     variant="outlined"
                                     density="compact"
                                     hide-details
@@ -435,7 +447,7 @@
                                     label="ER Result"
                                     variant="outlined"
                                     density="compact"
-                                    :items="parseInt(payload.mscDisposition_Id) === 7 ? erResult_data : filteredERData"
+                                    :items="filteredERData"
                                     item-title="description"
                                     item-value="id"
                                     v-model="payload.ERpatient_result"
@@ -628,7 +640,7 @@
                                     :items="patient_status"
                                     item-title="description"
                                     item-value="id"
-                                    v-model="payload.patient_status"
+                                    v-model="payload.Status"
                                     variant="outlined"
                                     density="compact"
                                     hide-details
