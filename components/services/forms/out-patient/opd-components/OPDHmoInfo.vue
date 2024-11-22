@@ -18,11 +18,11 @@
                     <tbody>
                         <tr v-for="(item, index) in payload.selectedGuarantor" :key="index">
                             <td style="margin: 0; padding: 1px;" width="100%"> <input v-model="item.guarantor_name" class="hmo-input" readonly/> </td>
-                            <td style="margin: 0; padding: 1px;" width="100%"> <input v-model="item.guarantor_Approval_code" class="hmo-input fillable"/> </td>
-                            <td style="margin: 0; padding: 1px;" width="100%"> <input v-model="item.guarantor_Approval_no" class="hmo-input fillable"/> </td>
-                            <td style="margin: 0; padding: 1px;" width="100%"> <input v-model="item.guarantor_Approval_date" type="date" class="hmo-input fillable"/> </td>
-                            <td style="margin: 0; padding: 1px;" width="100%"> <input v-model="item.guarantor_Validity_date" type="date" class="hmo-input fillable"/> </td>
-                            <td style="margin: 0; padding: 1px;" width="100%"> <input v-model="item.guarantor_Credit_Limit" :readonly="item.isOpen === true" class="hmo-input fillable" />  </td>
+                            <td style="margin: 0; padding: 1px;" width="100%"> <input v-model="item.guarantor_Approval_code" :readonly="clicked_option === 'view'" class="hmo-input fillable"/> </td>
+                            <td style="margin: 0; padding: 1px;" width="100%"> <input v-model="item.guarantor_Approval_no" :readonly="clicked_option === 'view'" class="hmo-input fillable"/> </td>
+                            <td style="margin: 0; padding: 1px;" width="100%"> <input v-model="item.guarantor_Approval_date" :readonly="clicked_option === 'view'" type="date" class="hmo-input fillable"/> </td>
+                            <td style="margin: 0; padding: 1px;" width="100%"> <input v-model="item.guarantor_Validity_date" :readonly="clicked_option === 'view'" type="date" class="hmo-input fillable"/> </td>
+                            <td style="margin: 0; padding: 1px;" width="100%"> <input v-model="item.guarantor_Credit_Limit" :readonly="item.isOpen === true || clicked_option=== 'view'" class="hmo-input fillable" />  </td>
                             <td style="text-align: center"><input type="checkbox" v-model="item.isOpen" :checked="item.isOpen === true" /></td>
                             <td> 
                                 <v-icon v-if="clicked_option !== 'view'" color="red" class="cursor-pointer" @click="removeGuarantor(index)">
