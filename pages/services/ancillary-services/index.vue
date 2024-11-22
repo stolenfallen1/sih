@@ -20,10 +20,10 @@
     </v-tabs>
     <v-window v-model="tab">
       <v-window-item class="pa-1" v-if="showSuppliesTab">
-        <h1>Supplies Test</h1>
+        <AncillarySupplyPages />
       </v-window-item>
       <v-window-item style="width:100%;" class="pa-1" v-if="showProcedureTab">
-        <h1>Procedure Test</h1>
+        <AncillaryProcedurePages />
       </v-window-item>
     </v-window>
   </v-card>
@@ -39,18 +39,20 @@
 
 <script setup>
 import nuxtStorage from 'nuxt-storage'; 
+import AncillarySupplyPages from './sub-pages/AncillarySupplyPages.vue';
+import AncillaryProcedurePages from './sub-pages/AncillaryProcedurePages.vue';
 
-const {
-  PatientProfile,
-  DirectRender,
-  DrugAdministration,
-  ApplyCreditNote,
-  CentralizedCreditNote,
-} = storeToRefs(AncillarySubComponentsDialog());
+// const {
+//   PatientProfile,
+//   DirectRender,
+//   DrugAdministration,
+//   ApplyCreditNote,
+//   CentralizedCreditNote,
+// } = storeToRefs(AncillarySubComponentsDialog());
 
-const { 
-  PrintPendingRequisition
-} = storeToRefs(PQAncillaryServicesDialog());
+// const { 
+//   PrintPendingRequisition
+// } = storeToRefs(PQAncillaryServicesDialog());
 
 definePageMeta({
 layout: "root-layout",

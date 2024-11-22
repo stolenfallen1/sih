@@ -222,7 +222,7 @@
                     </template>
 
                     <template v-slot:[`item.specimens`]="{ item }">
-                        <select v-model="item.specimen" style="border: 1px solid #A9A9A9; padding: 1px 7px 1px 7px;" v-if="item.category === 'LABORATORY' && item.specimen != []">
+                        <select v-model="item.specimen" style="border: 1px solid #A9A9A9; padding: 1px 7px 1px 7px; width: 175px;" v-if="item.category === 'LABORATORY' && item.specimen != []">
                             <option v-for="(specimen, sIndex) in item.specimens" :key="sIndex" :value="specimen.id">
                                 {{ specimen.description }} 
                             </option>
@@ -288,7 +288,7 @@ const props = defineProps({
 })
 
 const { selectedRowDetails } = storeToRefs(useSubcomponentSelectedRowDetailsStore()); 
-const emits = defineEmits(['close-dialog' , 'handle-submit'])
+const emits = defineEmits(['close-dialog' , 'handle-submit', 'submit-requisition']);
 const payload = ref({
   selectedItems: [],
 });
@@ -368,7 +368,6 @@ const handleSelectWarehouse = async (selectedRow, page = 1, itemsPerPage = wareh
     const selectedWarehouse = selectedRow.map(rowId => warehouse_data.value.find(item => item.id === rowId));
     const validSelectedWarehouse = selectedWarehouse.filter(item => item !== undefined);
     selected_warehouse.value = validSelectedWarehouse[0];
-    console.log(selected_warehouse.value);
 
     try {
       if (selected_warehouse.value) {
@@ -394,7 +393,6 @@ const handleSelectWarehouse = async (selectedRow, page = 1, itemsPerPage = wareh
                 warehouseID: selected_warehouse.value.warehouse_id || null,
                 warehouse_identifier: selected_warehouse.value.isMedicine == 1 ? "isMedicine" : (selected_warehouse.value.isSupplies == 1 ? "isSupplies" : null),
             }));
-            console.log(warehouse_items_data.value);
             warehouse_item_total_items.value = response.total;
             warehouse_item_loading.value = false;
           }
@@ -417,7 +415,6 @@ const handleSelectWarehouse = async (selectedRow, page = 1, itemsPerPage = wareh
                 revenueID: selected_warehouse.value.code || null,
                 warehouse_identifier: selected_warehouse.value.isMedicine == 1 ? "isMedicine" : (selected_warehouse.value.isSupplies == 1 ? "isSupplies" : selected_warehouse.value.isProcedure == 1 ? "isProcedure" : null),
             }));
-            console.log(warehouse_items_data.value);
             warehouse_item_total_items.value = response.total;
             warehouse_item_loading.value = false;
           }
@@ -499,7 +496,6 @@ const handleSelectWarehouseItems = async (selectedRow) => {
                     const response = await useMethod("get", "get-charges-specimen?map_item_id=", "", item.map_item_id);
                     if (response && response.data) {
                         item.specimens = response.data.map(specimen => {
-                            console.log(specimen.specimens.description); 
                             return {
                                 id: specimen.specimens.id,
                                 description: specimen.specimens.description
@@ -550,14 +546,25 @@ const updateAmount = (item) => {
 }
 
 const totalAmount = computed(() => {
-    return selected_item_data.value.reduce((acc, item) => {
-        const cleanedPrice = item.ware_house_items && item.ware_house_items.length > 0 
-                              ? item.ware_house_items[0].price.replace(/[^\d.-]/g, '') 
-                              : '0';
-        const quantity = Number(item.quantity) || 0; 
-        const price = Number(cleanedPrice) || 0; 
-        return acc + (quantity * price); 
-    }, 0);
+    if (props.category == 'medicine' || props.category == 'supply') {
+      return selected_item_data.value.reduce((acc, item) => {
+          const cleanedPrice = item.ware_house_items && item.ware_house_items.length > 0 
+                                ? item.ware_house_items[0].price.replace(/[^\d.-]/g, '') 
+                                : '0';
+          const quantity = Number(item.quantity) || 0; 
+          const price = Number(cleanedPrice) || 0; 
+          return acc + (quantity * price); 
+      }, 0);
+    } else if (props.category == 'procedure') {
+      return selected_item_data.value.reduce((acc, item) => {
+            const cleanedPrice = item.prices && item.prices.length > 0 
+                                  ? item.prices[0].price.replace(/[^\d.-]/g, '') 
+                                  : '0';
+            const price = Number(cleanedPrice) || 0; 
+            return acc + price; 
+        }, 0);
+    }
+    return 0;
 });
 
 
@@ -603,9 +610,16 @@ const confirmRequisition = () => {
     return;
   }
 
-  if (selected_item_data.value.some(item => parseInt(item.quantity) > parseInt(item.ware_house_items[0].item_OnHand))) {
+  if (props.category == 'supply' && props.category == 'medicine' && (selected_item_data.value.some(item => parseInt(item.quantity) > parseInt(item.ware_house_items[0].item_OnHand)))) {
     useSnackbar(true, "error", "Request Quantity can't be higher than Stocks On hand.");
     return;
+  }
+
+  const drcr = ref("");
+  const lgrp = ref("");
+  if (props.category == 'procedure') {
+    drcr.value = selected_warehouse.value.drcr;
+    lgrp.value = selected_warehouse.value.lgrp;
   }
 
   payload.value.selectedItems = selected_item_data.value.map(item => ({
@@ -613,14 +627,19 @@ const confirmRequisition = () => {
     warehouse_id: item.warehouseID,
     map_item_id: item.map_item_id,
     category: item.category,
-    item_name: item.item_name,
+    item_name: item.item_name ?? item.exam_description,
     frequency: item.frequency?.id || null,
     stat: item.stat,
+    drcr: drcr.value || null,
+    lgrp: lgrp.value || null,
+    form: item.form || null,
+    barcode_prefix: item?.sections?.barcodeid_prefix || null,
+    specimen: item.specimen,
     item_OnHand: parseInt(item.ware_house_items?.[0]?.item_OnHand) || 0,
     item_ListCost: item.ware_house_items?.[0]?.item_ListCost || 0,
     quantity: item.quantity,
     price: item.ware_house_items?.[0]?.price || 0,
-    amount: item.amount,
+    amount: item.amount ?? item.prices?.[0]?.price,
   }));
 
   if (props.category == 'medicine' && payload.value.selectedItems.some(item => item.frequency == null || item.frequency == "")) {
@@ -635,6 +654,7 @@ const submitMedicineRequest = async () => {
     const medicine_res = await useMethod("post", "save-medicine-requisition", payload.value);
     if (medicine_res) {
         useSnackbar(true, "success", "Successfully posted medicine requests.");
+        emits('submit-requisition');
         closeConfirmation();
         closeDialog();
     } else {
@@ -646,6 +666,19 @@ const submitSupplyRequest = async () => {
     const supply_res = await useMethod("post", "save-supply-requisition", payload.value);
     if (supply_res) {
         useSnackbar(true, "success", "Successfully posted supply requests.");
+        emits('submit-requisition');
+        closeConfirmation();
+        closeDialog();
+    } else {
+        useSnackbar(true, "error", "Failed to post charges.");
+    }
+}
+
+const submitProcedureRequest = async () => {
+  const procedure_res = await useMethod("post", "save-procedure-requisition", payload.value);
+    if (procedure_res) {
+        useSnackbar(true, "success", "Successfully posted supply requests.");
+        emits('submit-requisition');
         closeConfirmation();
         closeDialog();
     } else {
@@ -664,38 +697,36 @@ const onSubmit = async (user_details) => {
             submitSupplyRequest();
             break;
           case "procedure":
-            console.log("Procedure Payload: " , payload.value);
-            // save-procedure-requisition
+            submitProcedureRequest();
             break;
         }
       break;
     default:
       if (user_details.user_passcode === usePasscode()) {
-      switch (props.category) {
-        case "medicine":
-          submitMedicineRequest();
-          break;
-        case "supply":
-          submitSupplyRequest();
-          break;
-        case "procedure":
-          console.log("Procedure Payload: " , payload.value);
-          // save-procedure-requisition
-          break;
-      }
-    } else {
-          user_attempts.value += 1;
-          useSnackbar(true, "error", "Password incorrect.");
-          if (user_attempts.value == 5) {
-              error_msg.value = "Too many wrong attempts, Please try again after 20 seconds.";
-              isLoadingBtn.value = true;
-              setTimeout(() => {
-                  isLoadingBtn.value = false;
-                  user_attempts.value = 0;
-                  error_msg.value = "";
-              }, 20000);
-          }
-      }
+        switch (props.category) {
+          case "medicine":
+            submitMedicineRequest();
+            break;
+          case "supply":
+            submitSupplyRequest();
+            break;
+          case "procedure":
+            submitProcedureRequest();
+            break;
+        }
+      } else {
+            user_attempts.value += 1;
+            useSnackbar(true, "error", "Password incorrect.");
+            if (user_attempts.value == 5) {
+                error_msg.value = "Too many wrong attempts, Please try again after 20 seconds.";
+                isLoadingBtn.value = true;
+                setTimeout(() => {
+                    isLoadingBtn.value = false;
+                    user_attempts.value = 0;
+                    error_msg.value = "";
+                }, 20000);
+            }
+        }
       break;
   }
 };
@@ -724,6 +755,7 @@ onUpdated(() => {
     payload.value.account = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0].mscPrice_Schemes == 1 ? 'Cash Transaction' : 'Insurance Transaction';
     payload.value.attending_Doctor = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0].attending_Doctor || 'N/A';
     payload.value.attending_Doctor_fullname = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0].attending_Doctor_fullname || 'N/A';
+    payload.value.guarantor_Id = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0].guarantor_Id || '';
     payload.value.patient_Type = selectedRowDetails.value.patient_registry && 
                                   selectedRowDetails.value.patient_registry[0].mscAccount_Trans_Types == 2 ? 'Out-Patient' 
                                   : (selectedRowDetails.value.patient_registry[0].mscAccount_Trans_Types == 5 ? 'Emergency' : 'In-Patient');

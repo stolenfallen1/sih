@@ -111,11 +111,13 @@
         </v-data-table>
     </v-card>
 
-    <CarryOrderForm 
+    <CarryMedicineOrder 
         :open_carry_order_form="open_carry_order_form" 
-        :patient_type="patient_type" :item="selected_item"
+        :patient_type="patient_type" 
+        :item="selected_item"
         @ordered-carried="handleOrderCarried" 
         @close-dialog="closeCarryOrderForm" />
+        
     <PharmaPostedMedicines :open_posted_medicine="open_posted_medicine" :patient_type="patient_type" @close-dialog="closePostedMedicine" />
     <PharmaCorrectionEntry :open_correction_entry="open_correction_entry" :patient_type="patient_type" @close-dialog="closeCorrectionEntry" />
     <PharmaReturnedMedicines :open_returned_medicines="open_returned_medicines" :patient_type="patient_type" @close-dialog="closeReturnedMedicines" />
@@ -123,7 +125,7 @@
 </template>
 
 <script setup>
-import CarryOrderForm from './forms/CarryOrderForm.vue';
+import CarryMedicineOrder from './forms/CarryMedicineOrder.vue';
 import PharmaPostedMedicines from './forms/PharmaPostedMedicines.vue';
 import PharmaCorrectionEntry from './forms/PharmaCorrectionEntry.vue';
 import PharmaReturnedMedicines from './forms/PharmaReturnedMedicines.vue';
@@ -220,7 +222,6 @@ const handleInPatientRequest = async () => {
 
 const handleSelectedItem = (item) => {
     if (item.requestNum !== null || item.requestNum !== undefined) {
-        console.log(item);
         open_carry_order_form.value = true;
         patient_type.value = item.patient_type;
         selected_item.value = item;

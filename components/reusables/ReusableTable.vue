@@ -39,7 +39,7 @@
             :fixed-header="true"
             v-model="selectedRows"
             density="compact"
-            height="60vh"
+            :height="tableHeight"
             class="animated animatedFadeInUp fadeInUp"
             :headers="columns"
             :items-length="totalItems"
@@ -103,6 +103,10 @@ const props = defineProps({
     tabs: {
         type: Array,
         default: () => [],
+    },
+    tableHeight: {
+        type: String,
+        default: "60vh",
     },
     // radios: {
     //     type: Array,

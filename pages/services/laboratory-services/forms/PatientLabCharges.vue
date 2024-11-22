@@ -11,7 +11,7 @@
         <v-divider></v-divider>
         <v-card-text>
             <v-row>
-                <v-col cols="6">
+                <v-col cols="6" class="pa-1">
                     <v-row>
                         <v-col cols="12">
                             <v-text-field
@@ -26,7 +26,7 @@
                         </v-col>
                     </v-row>
                 </v-col>
-                <v-col cols="3">
+                <v-col cols="3" class="pa-1">
                     <v-row>
                         <v-col cols="12">
                             <v-text-field
@@ -41,7 +41,7 @@
                         </v-col>
                     </v-row>
                 </v-col>
-                <v-col cols="3">
+                <v-col cols="3" class="pa-1">
                     <v-row>
                         <v-col cols="12">
                             <v-text-field
@@ -58,7 +58,7 @@
                 </v-col>
             </v-row>
             <v-row>
-                <v-col cols="2">
+                <v-col cols="2" class="pa-1">
                     <v-row>
                         <v-col cols="12">
                             <v-text-field
@@ -73,7 +73,7 @@
                         </v-col>
                     </v-row>
                 </v-col>
-                <v-col cols="2">
+                <v-col cols="2" class="pa-1">
                     <v-row>
                         <v-col cols="12">
                             <v-text-field
@@ -88,7 +88,7 @@
                         </v-col>
                     </v-row>
                 </v-col>
-                <v-col cols="5">
+                <v-col cols="5" class="pa-1">
                     <v-row>
                         <v-col cols="12">
                             <v-text-field
@@ -103,7 +103,7 @@
                         </v-col>
                     </v-row>
                 </v-col>
-                <v-col cols="3">
+                <v-col cols="3" class="pa-1">
                     <v-row>
                         <v-col cols="12">
                             <v-text-field
@@ -146,21 +146,37 @@
                             </slot>
                             </td>
                         </template>
+                        <template v-slot:item.qty="{ item }">
+                            <span v-if="item.qty"> {{ parseInt(item.qty) }} </span>
+                            <span v-else style="color: red;"> N/A </span>
+                        </template>
+                        <template v-slot:item.specimen="{ item }">
+                            <span v-if="item.specimen"> {{ item.specimen }} </span>
+                            <span v-else style="color: red;"> N/A </span>
+                        </template>
+                        <template v-slot:item.renderby="{ item }">
+                            <span v-if="item.cancelledby == null"> {{ item.renderby }} </span>
+                            <span v-else style="color: red;"> N/A </span>
+                        </template>
                         <template v-slot:item.renderdate="{ item }">
-                            {{ item.renderdate ? useDateMMDDYYY(item.renderdate) : "" }}
+                            <span v-if="item.cancelleddate == null"> {{ useDateMMDDYYY(item.renderdate) }} </span>
+                            <span v-else style="color: red;"> N/A </span>
                         </template>
                         <template v-slot:item.requestStatus="{ item }">
-                            <v-chip color="orange" v-if="item.requestStatus == 'X' && item.cancelleddate == null">Pending</v-chip>
-                            <v-chip color="red" v-else-if="item.requestStatus == 'R' && item.cancelleddate == null && item.cancelledby == null">Cancelled</v-chip>
-                            <v-chip color="green" v-else-if="item.requestStatus == 'W' && item.cancelleddate != null && item.cancelledby != null"">Done</v-chip>
+                            <v-chip color="green" v-if="item.requestStatus == 'W'">Rendered</v-chip>
+                            <v-chip color="red" v-if="item.requestStatus == 'R'">Cancelled</v-chip>
                         </template>
                         <template v-slot:item.resultStatus="{ item }">
-                            <v-chip color="orange" v-if="item.requestStatus == 'X' && item.cancelleddate == null">Pending</v-chip>
-                            <v-chip color="red" v-else-if="item.requestStatus == 'R' && item.cancelleddate == null && item.cancelledby == null">Cancelled</v-chip>
-                            <v-chip color="green" v-else-if="item.requestStatus == 'W' && item.cancelleddate != null && item.cancelledby != null"">Done</v-chip>
+                            <v-chip color="green" v-if="item.requestStatus == 'W'">Rendered</v-chip>
+                            <v-chip color="red" v-if="item.requestStatus == 'R'">Cancelled</v-chip>
+                        </template>
+                        <template v-slot:item.cancelledby="{ item }">
+                            <span v-if="item.renderby == null"> {{ item.cancelledby }} </span>
+                            <span v-else style="color: red;"> N/A </span>
                         </template>
                         <template v-slot:item.cancelleddate="{ item }">
-                            {{ item.cancelleddate ? useDateMMDDYYY(item.cancelleddate) : "" }}
+                            <span v-if="item.renderdate == null"> {{ useDateMMDDYYY(item.cancelleddate) }} </span>
+                            <span v-else style="color: red;"> N/A </span>
                         </template>
                     </v-data-table-server>
                 </v-col>

@@ -7,20 +7,17 @@
           @click="handleView()"
           :disabled="isSelectedUser"
           prepend-icon="mdi-eye-outline"
-          color="primary"
           class="bg-info text-white"
         >
           View
         </v-btn>
         <v-btn
-          @click="handleCancellation()"
-          prepend-icon="mdi-toggle-switch"
-          :disabled="isSelectedUser"
-          color="primary"
-          class="bg-error text-white"
+          @click="openPatientCheckLabStatus()"
+          prepend-icon="mdi-eye-outline"
+          class="bg-success text-white"
         >
-          Request Cancellation</v-btn
-        >
+          Patient Lab Request Status
+        </v-btn>
       </v-card-actions>
     </v-card>
   <v-card class="mb-2" elevation="4">
@@ -28,6 +25,7 @@
       :items-per-page="50"
       :serverItems="serverItems"
       :totalItems="totalItems"
+      :table-height="tableHeight"
       :loading="loading"
       :tabs="tableTabs"
       :columns="columns"
@@ -61,29 +59,60 @@
       </template>
     </ReusableTable>
   </v-card>
-  <div class="floating-wrapper">
-    <v-btn
-      v-if="newDischargedPatient"
-      class="floating-button"
-      :class="{ 'blinking': isBlinking }"
-      @click="viewDischargedPatients"
-      icon
-    >
-      <v-icon>mdi-bell-ring-outline</v-icon>
-    </v-btn>
-    <span v-if="isBlinking" class="floating-text">Discharge Notice</span>
-  </div>
-  <DischargeNoticeForm :open_discharge_notice="open_discharge_notice" @close-dialog="closeDischargeNotice" />
+
+  <main class="button-container">
+    <div style="display: flex; align-items: center; flex-direction: column;">
+      <v-btn
+        v-if="newOPDLabRequest"
+        class="floating-button-opd"
+        :class="{ 'blinking': isOPDBlinking }"
+        @click="openCarryOrderForm('OPD')"
+        icon
+      >
+        <v-icon>mdi-bell-ring-outline</v-icon>
+      </v-btn>
+      <span v-if="isOPDBlinking" class="floating-text">Out-patient Lab Request</span>
+    </div>
+    <div style="display: flex; align-items: center; flex-direction: column;">
+      <v-btn
+        v-if="newERLabRequest"
+        class="floating-button-er"
+        :class="{ 'blinking': isERBlinking }"
+        @click="openCarryOrderForm('ER')"
+        icon
+      >
+        <v-icon>mdi-bell-ring-outline</v-icon>
+      </v-btn>
+      <span v-if="isERBlinking" class="floating-text">Emergency Lab Request</span>
+    </div>
+    <div style="display: flex; align-items: center; flex-direction: column;">
+      <v-btn
+        v-if="newIPDLabRequest"
+        class="floating-button-ipd"
+        :class="{ 'blinking': isIPDBlinking }"
+        icon
+      >
+        <v-icon>mdi-bell-ring-outline</v-icon>
+      </v-btn>
+      <span v-if="isIPDBlinking" class="floating-text">In-patient Lab Request</span>
+    </div>
+  </main>
+
+  <CarryLabOrder 
+    :open_pending_patients_list="open_pending_patients_list" 
+    :patient_type="patient_type" 
+    :item="selected_item"
+    @close-dialog="closeCarryOrderForm" 
+  />
+
   <PatientLabCharges :open_patient_info_and_charges="open_patient_info_and_charges" :items="items" @close-dialog="closePatientInfoAndCharges" />
-  <RequestCancellation :open_request_cancellation="open_request_cancellation" :items="items" @close-dialog="closeRequestCancellation" />
   <Snackbar />
 </template>
 
 <script setup>
 import ReusableTable from "~/components/reusables/ReusableTable.vue";
-import DischargeNoticeForm from "./forms/DischargeNoticeForm.vue";
+import CarryLabOrder from "./forms/CarryLabOrder.vue";
 import PatientLabCharges from "./forms/PatientLabCharges.vue";
-import RequestCancellation from "./forms/RequestCancellation.vue";
 
 definePageMeta({
   layout: "root-layout",
@@ -95,14 +124,24 @@ const items = ref({});
 const isSelectedUser = ref(true);
 const currentTab = ref(1);
 const pageTitle = ref("");
+const tableHeight = ref("58vh");
 const showTabs = ref(true);
 const columns = ref([]);
 const test = ref(['test']);
-const newDischargedPatient = ref(false);
-const isBlinking = ref(false);
-const open_discharge_notice = ref(false);
+const open_pending_patients_list = ref(false);
+const newOPDPatientData = ref([]);
+const newERPatientData = ref([]);
+const newIPDPatientData = ref([]);
+const newOPDLabRequest = ref(false);
+const newERLabRequest = ref(false);
+const newIPDLabRequest = ref(false);
+const isOPDBlinking = ref(false);
+const isERBlinking = ref(false);
+const isIPDBlinking = ref(false);
 const open_patient_info_and_charges = ref(false);
-const open_request_cancellation = ref(false);
+const open_patient_check_lab_status = ref(false);
+const patient_type = ref(0);
+const selected_item = ref([]);
 
 const totalItems = ref(0);
 const itemsPerPage = ref(15);
@@ -266,11 +305,11 @@ const handleSearch = (keyword) => {
 const selectedUser = (item) => {
   isSelectedUser.value = true;
   isrefresh.value = false;
-  selectedRowDetails.value.id = ""; //clear state id for subcomponents ?id=''
-  selectedRowDetails.value.role_id = ""; //clear state id for subcomponents ?id=''
+  selectedRowDetails.value.id = ""; 
+  selectedRowDetails.value.role_id = ""; 
 
   if(item){
-    selectedRowDetails.value =  Object.assign({}, item);; //set state id for subcomponents ?id=item.id value
+    selectedRowDetails.value =  Object.assign({}, item);; 
     isrefresh.value = true;
     isSelectedUser.value = false;
   }else{
@@ -279,44 +318,12 @@ const selectedUser = (item) => {
   }
 };
 
-const checkForDischargedPatients = async () => {
-  try {
-    const response = await useMethod("get", "get-discharged-patient-today", "", "");
-    if (response) {
-      newDischargedPatient.value = true;
-      isBlinking.value = true;
-    } else {
-      isBlinking.value = false;
-      console.log("No discharged patients found");
-    }
-  } catch (error) {
-    console.error("Error fetching discharged patients:", error);
-  }
-};
-
-const closeDischargeNotice = () => {
-  open_discharge_notice.value = false;
-}
-
 const closePatientInfoAndCharges = () => {
   selectedRowDetails.value = Object.assign({}, {});
   test.value = [];
   isSelectedUser.value = true;
   open_patient_info_and_charges.value = false;
 }
-
-const closeRequestCancellation = () => {
-  selectedRowDetails.value = Object.assign({}, {});
-  test.value = [];
-  isSelectedUser.value = true;
-  open_request_cancellation.value = false;
-}
-
-const viewDischargedPatients = () => {
-  open_discharge_notice.value = true;
-  newDischargedPatient.value = false;
-  isBlinking.value = false;
-};
 
 const handleView = async () => {
   items.value = {
@@ -329,15 +336,12 @@ const handleView = async () => {
   }
 }
 
-const handleCancellation = () => {
-  items.value = {
-    patient_Id: selectedRowDetails.value.patient_Id,
-    case_No: selectedRowDetails.value.case_No,
-    mscAccount_Trans_Types: selectedRowDetails.value.mscAccount_Trans_Types,
-  };
-  if (items.value !== null) {
-    open_request_cancellation.value = true;
-  }
+const openPatientCheckLabStatus = () => {
+  open_patient_check_lab_status.value = true;
+}
+
+const closePatientCheckLabStatus = () => {
+  open_patient_check_lab_status.value = false;
 }
 
 const loadItems = async (options = null, searchkeyword = null) => {
@@ -366,6 +370,68 @@ const loadItems = async (options = null, searchkeyword = null) => {
   }
 };
 
+const fetchOutPatientCount = async () => {
+    try {
+      const response = await useMethod("get", "get-laboratory-opd-orders", "", "");
+      if (response) {
+        newOPDPatientData.value = response;
+        if (newOPDPatientData.value.length > 0) {
+          newOPDLabRequest.value = true;
+          isOPDBlinking.value = true;
+        }
+      } else {
+        isOPDBlinking.value = false;
+      }
+    } catch (error) {
+      console.error("Error fetching out-patient data:", error);
+    }
+}
+
+const closeCarryOrderForm = () => {
+  open_pending_patients_list.value = false;
+}
+
+const fetchERPatientCount = async () => {
+  try {
+      const response = await useMethod("get", "get-laboratory-er-orders", "", "");
+      if (response) {
+        newERPatientData.value = response;
+        if (newERPatientData.value.length > 0) {
+          newERLabRequest.value = true;
+          isERBlinking.value = true;
+        }
+      } else {
+        isERBlinking.value = false;
+      }
+    } catch (error) {
+      console.error("Error fetching out-patient data:", error);
+    }
+}
+
+// const fetchInPatientCount = async () => {
+  
+// }
+
+const openCarryOrderForm = (type) => {
+  selected_item.value = []; 
+
+  if (type === "OPD") {
+    selected_item.value = newOPDPatientData.value;
+    patient_type.value = 2;
+  } else if (type === "ER") {
+    selected_item.value = newERPatientData.value;
+    patient_type.value = 5;
+  } 
+
+  open_pending_patients_list.value = true;
+};
+
+const fetchAllCounts = async () => {
+    await fetchOutPatientCount();
+    await fetchERPatientCount();
+    // await fetchInPatientCount();
+};
+
 const handleTabChange = (tabValue) => {
   selectedRowDetails.value.id = "";
   payload.value = Object.assign({}, {});
@@ -385,7 +451,7 @@ const updateServerItems = (newServerItems) => {
 };
 
 onMounted(() => {
-  const intervalId = setInterval(checkForDischargedPatients, 15000);
+  const intervalId = setInterval(fetchAllCounts, 5000);
   onBeforeUnmount(() => {
     clearInterval(intervalId);
   });
@@ -399,14 +465,19 @@ handleTabChange(currentTab.value);
 .v-data-table {
   overflow-x: auto;
 }
-.floating-wrapper {
-  position: absolute;
-  bottom: 2px;
-  right: 20px;
-  text-align: center;
-  z-index: 999;
+.button-container {
+  display: flex;
+  justify-content: space-around;
 }
-.floating-button {
+.floating-button-opd {
+  background-color: red;
+  color: white;
+}
+.floating-button-er {
+  background-color: red;
+  color: white;
+}
+.floating-button-ipd {
   background-color: red;
   color: white;
 }
@@ -414,7 +485,6 @@ handleTabChange(currentTab.value);
   display: block;
   color: red;
   font-weight: bold;
-  margin-top: 5px; 
 }
 .blinking {
   animation: blinking 1s infinite;
