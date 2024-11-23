@@ -1,109 +1,158 @@
 <template>
-  <v-card class="mb-2" elevation="4">
-    <v-card-actions>
-      <v-spacer></v-spacer>
-      <v-btn
-        @click="handleView"
-        :disabled="isSelectedUser"
-        prepend-icon="mdi-eye-outline"
-        width="100"
-        color="primary"
-        class="bg-info text-white"
-      >
-        View
-      </v-btn>
-      <v-btn
-        @click="handleNew"
-        disabled
-        prepend-icon="mdi-plus-outline"
-        width="100"
-        color="primary"
-        class="bg-primary text-white"
-      >
-        New
-      </v-btn>
-      <v-btn
-        @click="handleEdit"
-        prepend-icon="mdi-pencil"
-        :disabled="isSelectedUser"
-        width="100"
-        color="primary"
-        class="bg-success text-white"
-      >
-        Edit
-      </v-btn>
-      <v-btn
-        @click="DeactiveUser"
-        prepend-icon="mdi-toggle-switch"
-        disabled
-        width="150"
-        color="primary"
-        class="bg-error text-white"
-      >
-        Deactive</v-btn
-      >
-      <v-btn
-        @click="ViewSummary"
-        prepend-icon="mdi-information-box-outline"
-        width="150"
-        color="primary"
-        class="bg-warning text-white"
-      >
-        Summary</v-btn
-      >
-    </v-card-actions>
-  </v-card>
-  <v-card class="mb-2" elevation="4">
-    <ReusableTable
-      :items-per-page="10"
-      :serverItems="serverItems"
-      :totalItems="totalItems"
-      :loading="loading"
-      :tabs="tableTabs"
-      :columns="headers"
-      :showTabs="showTabs"
-      :itemsPerPage="itemsPerPage"
-      :tableTitle="pageTitle"
-      :current-tab="currentTab"
-      @fetchPage="loadItems"
-      @selected-row="selectedUser"
-      @action-search="handleSearch"
-      @action-refresh="handleRefresh"
-      @open-filter="openFilterOptions"
-    >
-      <!-- Custom templates for each column -->
-      <template v-for="column in headers" v-slot:[`column-${column.key}`]="{ item }">
-        <!-- customize rendering for each column here -->
-        <span v-if="column.key ==='building'" :key="column.key">{{
-          item.stations.floors ? item.stations.floors.building.description : ""
-        }}</span>
-        <span v-if="column.key === 'floor'" :key="column.key">{{
-          item.stations.floors ?  item.stations.floors.description : ""
-        }}</span>
-
-        <span v-if="column.key === 'roomstatus'" :key="column.key">
-          {{ item.room_status ? item.room_status.room_description : "" }}</span
-        >
-        <span v-if="column.key === 'roomClass'" :key="column.key">
-          {{ item.room_class ? item.room_class.room_class_description : "" }}</span
-        >
-        <span v-if="column.key === 'station'" :key="column.key">
-          {{ item.stations ? item.stations.station_description : "" }}</span
-        >
-        <span v-if="column.key === 'isactive'" :key="column.key">
-          {{ item.isactive == 1 ? "Active" : "In Active" }}</span
-        >
-
-        <!-- Add more custom logic for other columns -->
-      </template>
-    </ReusableTable>
-  </v-card>
-  <SummaryModal 
-    :show="open_summary_modal"
-    :summary_header="'Nursing Services'"
-    :data="nursing_services_test_data"
-    @close-dialog="closeViewSummary"
-  />
+	<v-card class="mb-2" elevation="4">
+		<v-card-actions>
+		<v-spacer></v-spacer>
+		<v-btn
+			@click="handleView"
+			:disabled="isSelectedUser"
+			prepend-icon="mdi-eye-outline"
+			width="100"
+			color="primary"
+			class="bg-info text-white"
+		>
+			View
+		</v-btn>
+		<v-btn
+			@click="handleNew"
+			disabled
+			prepend-icon="mdi-plus-outline"
+			width="100"
+			color="primary"
+			class="bg-primary text-white"
+		>
+			New
+		</v-btn>
+		<v-btn
+			@click="handleEdit"
+			prepend-icon="mdi-pencil"
+			:disabled="isSelectedUser"
+			width="100"
+			color="primary"
+			class="bg-success text-white"
+		>
+			Edit
+		</v-btn>
+		<v-btn
+			@click="DeactiveUser"
+			prepend-icon="mdi-toggle-switch"
+			disabled
+			width="150"
+			color="primary"
+			class="bg-error text-white"
+		>
+			Deactive</v-btn
+		>
+		<v-btn
+			@click="ViewSummary"
+			prepend-icon="mdi-information-box-outline"
+			width="150"
+			color="primary"
+			class="bg-warning text-white"
+		>
+			Summary</v-btn
+		>
+		</v-card-actions>
+	</v-card>
+	<v-card class="mb-2" elevation="4">
+		<v-card-title> Print Reports</v-card-title>
+		<v-row>
+			<v-col cols="3">
+				<v-col cols="12">
+					<v-btn  @click="handleReportByDept">
+						<v-icon
+							color="#0D47A1"
+							size="large"
+						>mdi-newspaper</v-icon>
+						Census Report (By Stations)
+					</v-btn>
+				</v-col>
+				<v-col cols="12">
+					<v-btn  @click="handleReportByAllDept">
+						<v-icon
+							color="#0D47A1"
+							size="large"
+						>mdi-newspaper</v-icon>
+						Census Report (All Stations)
+					</v-btn>
+				</v-col>
+			</v-col>
+			<v-col cols="3">
+				<v-col cols="12">
+					<v-btn  @click="handleReportDietList">
+						<v-icon
+							color="#F44336"
+							size="large"
+						>mdi-fruit-watermelon</v-icon>
+						Diet List (By Stations)
+					</v-btn>
+				</v-col>
+				<v-col cols="12">
+					<v-btn  @click="handleReportForDischargePatient">
+						<v-icon
+							color="#4CAF50"
+							size="large"
+						>mdi-hospital-building</v-icon>
+						Discharges for the Day
+					</v-btn>
+				</v-col>
+			</v-col>
+			<v-col cols="3">
+				<v-col cols="12">
+					<v-btn  @click="handleDetailedIncomeReport">
+						<v-icon
+							color="#4CAF50"
+							size="large"
+						>mdi-newspaper</v-icon>
+						Income Report (Detailed)
+					</v-btn>
+				</v-col>
+				<v-col cols="12">
+					<v-btn  @click="handleIncomeReportSummary">
+						<v-icon
+							color="#E65100"
+							size="large"
+						>mdi-newspaper</v-icon>
+						Income Report (Summary)
+					</v-btn>
+				</v-col>
+			</v-col>
+			<v-col cols="3">
+				<v-col cols="12">
+					<v-btn  @click="handleListOfMedicineReport">
+						<v-icon
+							color="#0277BD"
+							size="large"
+						>mdi-pill-multiple</v-icon>
+						List of Medicines Posted
+					</v-btn>
+				</v-col>
+				<v-col cols="12">
+					<v-btn  @click="handleListOfRequestReport">
+						<v-icon
+							color="#0D47A1"
+							size="large"
+						>mdi-newspaper</v-icon>
+						List of Request / Orders
+					</v-btn>
+				</v-col>
+				<v-col cols="12">
+					<v-btn  @click="handleListOfSupplyReport">
+						<v-icon
+							color="#F44336"
+							size="large"
+						>mdi-medical-bag</v-icon>
+						List of Supplies Posted
+					</v-btn>
+				</v-col>
+			</v-col>
+		</v-row>
+	</v-card>
+	<SummaryModal 
+		:show="open_summary_modal"
+		:summary_header="'Nursing Services'"
+		:data="nursing_services_test_data"
+		@close-dialog="closeViewSummary"
+	/>
   <v-menu
     v-model="open_filter_options"
     :close-on-content-click="false"
@@ -141,7 +190,6 @@
   <PatientProfileDialog :show="PatientProfile" :form_payload="form_payload" @close-dialog="useSubComponents('PatientProfile', false)" />
   <RequisitionsDialog :show="Requisitions" :form_type="form_type" @close-dialog="useSubComponents('Requisitions', false)" />
   <PostChargesDialog :show="PostCharges" @close-dialog="useSubComponents('PostCharges', false)" />
-  <NurseActvity :show="NurseActivity" :form_type="form_type" @close-dialog="useSubComponents('NurseActivity', false)  " />
   <ApplyCreditNoteDialog :show="ApplyCreditNote" @close-dialog="useSubComponents('ApplyCreditNote', false)" />
   <ViewExamUpshotDialog :show="ViewExaminationUpshot" @close-dialog="useSubComponents('ViewExaminationUpshot', false)" />
   <TagAsMghDialog :show="TagAsMgh" :form_type="form_type" @close-dialog="useSubComponents('TagAsMgh', false)" />
@@ -330,7 +378,6 @@
   const loadItems = async (options = null, searchkeyword = null) => {
     try {
 		loading.value = true;
-
 		let keyword = searchkeyword || "";
 			params.value = options  ? "page=" + options.page + "&per_page=" + options.itemsPerPage + "&keyword=" + options.keyword
 		: "page=1&per_page=10&keyword=" + keyword;
@@ -343,7 +390,6 @@
 		updateTotalItems(data.total);
 		updateServerItems(data.data);
 		loading.value = false;
-		// tableColumns.value = currentTabInfo?.columns || [];
     } catch (error) {
 		console.error("Error fetching data:", error);
 		loading.value = false;
@@ -358,6 +404,95 @@
   const updateServerItems = (newServerItems) => {
     serverItems.value = newServerItems;
   };
+
+  const handleReportByDept = async () => {
+	loading.value = true;
+	try {
+		const response = await useMethod("get", "generate-er-daily-report", "", "");
+		if (response) {
+			const blobUrl = URL.createObjectURL(response);
+			console.log('BLOB : ', blobUrl)
+			window.open(blobUrl, '_blank');
+		} else {
+			useSnackbar(true, "red", response.message || 'Failed to generate statement');
+			isLoading.value = false;
+		}
+    } catch (error) {
+		if (error.response && error.response.status === 404) {
+			useSnackbar(true, "red", error.response.message || 'Billing is empty');
+		} else {
+			useSnackbar(true, "red", error.response.message || 'Failed to generate statement');
+		}
+		isLoading.value = false;
+
+	} finally {
+		isLoading.value = false;
+	}
+  }
+
+//   const createAccountStatement = async () => {
+//         let caseNo = selectedRowDetails.value.patient_registry[0].case_No;
+//         try {
+//             const response = await useMethod("get", `generate-statement-summary/${caseNo}`, "", "");
+//             if (response) {
+//                 const blobUrl = URL.createObjectURL(response);
+//                 console.log('BLOB : ', blobUrl)
+//                 window.open(blobUrl, '_blank');
+//             } else {
+//                 useSnackbar(true, "red", response.message || 'Failed to generate statement');
+//                 isLoading.value = false;
+//             }
+//         } catch (error) {
+//             if (error.response && error.response.status === 404) {
+//                 useSnackbar(true, "red", error.response.message || 'Billing is empty');
+//             } else {
+//                 useSnackbar(true, "red", error.response.message || 'Failed to generate statement');
+//             }
+//             isLoading.value = false;
+//         } finally {
+//             isLoading.value = false;
+//         }
+//     };
+
+
+  const handleReportByAllDept = async () => {
+	loading.value = true;
+	try {
+		
+	} catch(error) {
+
+	} finally {
+		loading.value = false;
+	}
+  }
+
+  const handleReportDietList = async () => {
+	alert('Ready to print report diet list')
+  }
+
+  const handleReportForDischargePatient = async () => {
+	alert('Ready to print report Discharged Patient with in the day')
+  }
+
+  const handleDetailedIncomeReport = async () => {
+	alert('Ready to print Detailed Income Report')
+  }
+
+  const handleIncomeReportSummary = async () => {
+	alert('Ready to print Income summary report')
+  }
+
+  const handleListOfMedicineReport = async () => {
+	alert('Ready to print List of Medicine report')
+  }
+
+  const handleListOfRequestReport = async () => {
+	alert('Ready to print Request report')
+  }
+
+  const handleListOfSupplyReport = async () => {
+	alert('Ready to print List of supply report')
+  }
 
 </script>
 
