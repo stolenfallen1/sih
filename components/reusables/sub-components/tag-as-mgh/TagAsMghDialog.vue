@@ -28,11 +28,10 @@
     const open_refering_hci_address_form = ref(false);
     const check_charges_data = ref([]);
     const check_charges_loading = ref(false);
+    const istagmgh = ref(false);
     const hasUnpaidCharges = ref(false);
-    const patientAccount = ref('');
     const isProcessed = ref(false);
     const pageLoader = ref(false);
-    const isOnPage = ref(false);
     const value = ref(0)
     const interval = ref(null)
 
@@ -258,33 +257,40 @@
         check_charges_loading.value = true;
         isProcessed.value = false;
         pageLoader.value = true;
+        istagmgh.value = false;
         startLoader();
         try {
             const response = await useMethod("get", "patient-billing-charges/", "", case_No);
             if (response) {
-                const data = Array.isArray(response) ? response : response.data;
-                if (data && Array.isArray(data) && data.length > 0) {
-                    check_charges_data.value = data.map(item => ({
-                        status: item.recordStatus,
-                        ornumber: item.ORNumber,
-                        code: item.revenue_Id
-                    }));
-                    if(accountType === 'Self Pay') {
-                        hasUnpaidCharges.value = check_charges_data.value.some(item => 
-                            item.status === "X" || 
-                            item.status === "27" || 
-                            item.ornumber === null
-                        );
-                    } else {
-                        hasUnpaidCharges.value = check_charges_data.value.some(item => 
-                            item.code !== 'EM' &&
-                            item.code !== 'RS' &&
-                            item.status === "X" ||
-                            item.status === "27"
-                        );
-                    }
+                if(parseInt(response.isMayGoHome)) {
+                    istagmgh.value = true;
                 } else {
-                    hasUnpaidCharges.value = false;
+                    istagmgh.value = false;
+                    const data = Array.isArray(response) ? response : response.data;
+                    if (data && Array.isArray(data) && data.length > 0) {
+                        check_charges_data.value = data.map(item => ({
+                            status: item.recordStatus,
+                            ornumber: item.ORNumber,
+                            code: item.revenue_Id
+                        }));
+
+                        if(accountType === 'Self Pay') {
+                            hasUnpaidCharges.value = check_charges_data.value.some(item => 
+                                item.status === "X" || 
+                                item.status === "27" || 
+                                item.ornumber === null
+                            );
+                        } else {
+                            hasUnpaidCharges.value = check_charges_data.value.some(item => 
+                                item.code !== 'EM' &&
+                                item.code !== 'RS' &&
+                                item.status === "X" ||
+                                item.status === "27"
+                            );
+                        }
+                    } else {
+                        hasUnpaidCharges.value = false;
+                    }
                 }
             } else {
                 hasUnpaidCharges.value = false; 
@@ -336,7 +342,7 @@
 
 <template>
     <div v-if="isProcessed">
-        <div v-if="!hasUnpaidCharges">
+        <div v-if="!hasUnpaidCharges && !istagmgh">
             <v-dialog 
                 :model-value="show" 
                 rounded="lg" scrollable 
@@ -667,7 +673,7 @@
             </form>
         </v-dialog>
         </div>
-        <div v-if="hasUnpaidCharges">
+        <div v-if="hasUnpaidCharges && !istagmgh">
             <v-dialog 
                 :model-value="show" 
                 rounded="lg" scrollable 
@@ -675,32 +681,38 @@
                 :style="{maxWidth: isProcessed ? '800px' : '500px'}" 
                 v-if="show"
                 >
-                <v-card>
-                    <v-card-title>
-                        <h3>Notification</h3>
-                    </v-card-title>
-                    <v-card-text>
-                        <v-row>
-                            <v-col cols="1">
-                                <v-icon
-                                    color="#107bac"
-                                    class="info-icon pa-4"
-                                >mdi-information-outline</v-icon>
-                            </v-col>
-                            <v-col cols="11">
-                                <h5 class="alert-text">
-                                    You can't send discharge order at this time. There are still pending requests.<br/>
-                                    Please cancel pending requests first or notify concered cost<br/>
-                                    centers to process requests for this patient.
-                                </h5>
-                            </v-col>
-                        </v-row>
-                    </v-card-text>
-                    <v-divider></v-divider>
-                    <v-card-actions>
-                        <v-btn color="blue-darken-1 border border-info" @click="closeDialog"> Close </v-btn>
-                    </v-card-actions>
-                </v-card>
+                <v-alert
+                    border="left"
+                    color="red"
+                    dismissible
+                    elevation="24"
+                    icon="mdi-alert-circle"
+                >
+                    You can't send discharge order at this time. There are still pending requests.<br/>
+                    Please cancel pending requests first or notify concered cost<br/>
+                    centers to process requests for this patient.
+            </v-alert>
+
+            </v-dialog>
+        </div>
+        <div v-if="istagmgh">
+            <v-dialog 
+                :model-value="show" 
+                rounded="lg" scrollable 
+                @update:model-value="closeDialog" 
+                :style="{maxWidth: isProcessed ? '800px' : '500px'}" 
+                v-if="show"
+                >
+                <v-alert
+                    border="left"
+                    color="red"
+                    dismissible
+                    elevation="24"
+                    icon="mdi-alert-circle"
+                >
+                This patient has already been tagged for MayGoHome or may already have a discharge order. Thank you.
+            </v-alert>
+
             </v-dialog>
         </div>
     </div>
