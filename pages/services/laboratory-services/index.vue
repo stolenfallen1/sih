@@ -13,7 +13,7 @@
         </v-btn>
         <v-btn
           @click="openPatientCheckLabStatus()"
-          prepend-icon="mdi-eye-outline"
+          prepend-icon="mdi-clipboard-text-search-outline"
           class="bg-success text-white"
         >
           Patient Lab Request Status
@@ -105,6 +105,11 @@
     @close-dialog="closeCarryOrderForm" 
   />
 
+  <PatientLabRequestStatusForm 
+    :open_patient_check_lab_status="open_patient_check_lab_status"
+    @close-dialog="closePatientCheckLabStatus"
+  />
+
   <PatientLabCharges :open_patient_info_and_charges="open_patient_info_and_charges" :items="items" @close-dialog="closePatientInfoAndCharges" />
   <Snackbar />
 </template>
@@ -113,6 +118,7 @@
 import ReusableTable from "~/components/reusables/ReusableTable.vue";
 import CarryLabOrder from "./forms/CarryLabOrder.vue";
 import PatientLabCharges from "./forms/PatientLabCharges.vue";
+import PatientLabRequestStatusForm from "./forms/PatientLabRequestStatusForm.vue";
 
 definePageMeta({
   layout: "root-layout",

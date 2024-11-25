@@ -146,6 +146,7 @@
                             </slot>
                             </td>
                         </template>
+
                         <template v-slot:item.qty="{ item }">
                             <span v-if="item.qty"> {{ parseInt(item.qty) }} </span>
                             <span v-else style="color: red;"> N/A </span>
@@ -178,6 +179,7 @@
                             <span v-if="item.renderdate == null"> {{ useDateMMDDYYY(item.cancelleddate) }} </span>
                             <span v-else style="color: red;"> N/A </span>
                         </template>
+                        
                     </v-data-table-server>
                 </v-col>
             </v-row>
