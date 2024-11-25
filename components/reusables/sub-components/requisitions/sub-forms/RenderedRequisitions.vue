@@ -62,36 +62,36 @@
                             width: '12px',
                             height: '12px',
                             borderRadius: '2px',
-                            backgroundColor: item.nurse_logbook && item.nurse_logbook.ismedicine === '1' ? 'blue' : 
-                                            item.nurse_logbook && item.nurse_logbook.isprocedure === '1' ? 'green' : 
-                                            item.nurse_logbook && item.nurse_logbook.issupplies === '1' ? 'red' : 'gray'
+                            backgroundColor: item && item.ismedicine === '1' ? 'blue' : 
+                                            item && item.isprocedure === '1' ? 'green' : 
+                                            item && item.issupplies === '1' ? 'red' : 'gray'
                         }"
-                        :title="item.nurse_logbook && item.nurse_logbook.ismedicine === '1' ? 'Medicines' :
-                                item.nurse_logbook && item.nurse_logbook.isprocedure === '1' ? 'Procedures' :
-                                item.nurse_logbook && item.nurse_logbook.issupplies === '1' ? 'Supplies' : 'N/A'"
+                        :title="item && item.ismedicine === '1' ? 'Medicines' :
+                                item && item.isprocedure === '1' ? 'Procedures' :
+                                item && item.issupplies === '1' ? 'Supplies' : 'N/A'"
                     >
                     </span>
                 </template>
 
-                <template v-slot:item.transaction_Qty="{ item }">
-                    {{ parseInt(item.transaction_Qty) || parseInt(item.transaction_Qty) || "N/A" }}
+                <template v-slot:item.Quantity="{ item }">
+                    {{ parseInt(item.Quantity) || parseInt(item.Quantity) || "N/A" }}
                 </template>
 
-                <template v-slot:item.transaction_Item_Med_Frequency_Id="{ item }">
-                    <span v-if="item.transaction_Item_Med_Frequency_Id">
-                        {{ item.transaction_Item_Med_Frequency_Id }}
+                <template v-slot:item.dosage="{ item }">
+                    <span v-if="item.dosage">
+                        {{ item.dosage }}
                     </span>
                     <span v-else style="color: red;">
                         N/A
                     </span>
                 </template>
 
-                <template v-slot:item.transaction_Item_TotalAmount="{ item }">
-                    {{ usePeso(item.transaction_Item_TotalAmount) }}
+                <template v-slot:item.amount="{ item }">
+                    {{ usePeso(item.amount) }}
                 </template>
 
-                <template v-slot:item.created_at="{ item }">
-                    {{ useDateMMDDYYY(item.created_at) }}
+                <template v-slot:item.createdat="{ item }">
+                    {{ useDateTimeFormater(item.createdat) }}
                 </template>
 
                 <template #bottom></template>
@@ -126,14 +126,14 @@ const serverItems = ref([]);
 
 const headers = [
     { title: "",  align: "start", sortable: false, key: "patient_Id" },
-    { title: "Code",  align: "start", sortable: false, key: "nurse_logbook.revenue_Id" },
-    { title: "Item ID",  align: "start", sortable: false, key: "nurse_logbook.item_Id" },
-    { title: "Description",  align: "start", sortable: false, key: "nurse_logbook.description" },
-    { title: "Quantity",  align: "start", sortable: false, key: "transaction_Qty" },
-    { title: "Frequency",  align: "start", sortable: false, key: "transaction_Item_Med_Frequency_Id" },
-    { title: "Amount",  align: "start", sortable: false, key: "transaction_Item_TotalAmount" },
-    { title: "Process By",  align: "start", sortable: false, key: "nurse_logbook.process_By" },
-    { title: "Process Date",  align: "start", sortable: false, key: "created_at" },
+    { title: "Code",  align: "start", sortable: false, key: "revenue_Id" },
+    { title: "Item ID",  align: "start", sortable: false, key: "item_Id" },
+    { title: "Description",  align: "start", sortable: false, key: "description" },
+    { title: "Quantity",  align: "start", sortable: false, key: "Quantity" },
+    { title: "Frequency",  align: "start", sortable: false, key: "dosage" },
+    { title: "Amount",  align: "start", sortable: false, key: "amount" },
+    { title: "Process By",  align: "start", sortable: false, key: "process_By" },
+    { title: "Process Date",  align: "start", sortable: false, key: "createdat" },
 ];
 
 const data = ref({
