@@ -15,6 +15,17 @@
     const pendingChargeList         = ref([]);
     const cashAssessnentChargeList  = ref([]);
     let panel                       = ref([0, 1, 2]);
+    const isLoading                 = ref(false);
+    const showDialog                = ref(false);
+
+    const openConfirmDialog = async () => {
+        showDialog.value = true;
+    }
+
+    const closeConfirmDialog = () => {
+        showDialog.value = false;
+    }
+
 
     const emit = defineEmits(['close-dialog']);
 
@@ -23,6 +34,39 @@
     const closeDialog = () => {
         emit('close-dialog');
     };
+
+    const reference_id = ref(0);
+    const medsys_assess_id = ref(0);
+    const handleCancelCharges = async (request_id, assess_num) => {
+       reference_id.value = request_id;
+       medsys_assess_id.value = assess_num;
+       openConfirmDialog()
+        
+    }
+
+    const onSubmit = async () => {
+        isLoading.value = true;
+        let response;
+        payload.value.reference_id = reference_id.value;
+        payload.value.medsys_AssessNum = medsys_assess_id.value;
+        try{
+            response = await useMethod("post", "er-cancel-charge", payload.value);
+            if(response) {
+                useSnackbar(true, "success", response.message);
+                isLoading.value = false;
+                closeConfirmDialog();
+            } else {
+                useSnackbar(true, "error", 'Failed to post charges. Please try again.');
+            }
+        } catch(error) {
+            useSnackbar(true, "error", 'There was an error.');
+        } finally {
+            isLoading.value = false;
+            closeConfirmDialog();
+        }
+    }
+
+
     
     const processedRequest = ref([
         { title: "Description",         key: "description",     sortable: false },
@@ -32,15 +76,18 @@
         { title: 'Requested By',        key: 'requestBy',       sortable: false },
         { title: 'Date Process',        key: 'processedDate',   sortable: false },
         { title: 'Processed By',        key: 'processedBy',     sortable: false },
+        { title: 'Action',              key: 'action',          sortable: false }
     ]);
 
     const pendingData = ref([
+  
         { title: "Description",         key: "description",     sortable: false },
         { title: 'Quantity',            key: 'quantity',        sortable: false },
         { title: 'Department',          key: 'department',      sortable: false },
         { title: 'Date Requested',      key: 'processedDate',   sortable: false },
         { title: 'Code',                key: 'code',            sortable: false },
         { title: 'Requested By',        key: 'requestedBy',     sortable: false },
+        { title: 'Action',              key: 'action',          sortable: false }
     ]);
 
     const cashAssessmentData = ref([
@@ -49,6 +96,7 @@
         { title: 'Quantity',            key: 'quantity',        sortable: false },
         { title: 'Department',          key: 'department',      sortable: false },
         { title: 'Date Process',        key: 'processedDate',   sortable: false },
+        { title: 'Action',              key: 'action',          sortable: false }
     ]);
 
     const allCharges = ref([]);
@@ -114,7 +162,7 @@
                         assess_num:     item.assessnum,
                         processedDate:  item.updated_at !== null 
                                         ? getDateTime(item.updated_at) 
-                                        : getDateTime(item.created_at)
+                                        : getDateTime(item.created_at),
                     }))
                 }
            } else {
@@ -310,19 +358,26 @@
                                 height="40vh" 
                                 class="styled-table"
                                 >
-                            
-                                <template v-slot:item.selected="{ item }">
-                                    <input 
-                                        type="checkbox" 
-                                        :checked="isCheckedCashAssessment(item)" 
-                                        @change="toggleCashAssessmentSelection(item)" 
-                                    />
-                                </template>
-                                <template v-slot:footer>
-                                    <tr>
-                                        <td colspan="6" class="text-right">Total Amount:</td>
-                                        <td>{{ usePeso(totalAmount) }}</td>
-                                    </tr>
+                                <template v-slot:item.action="{ item }">
+                                    <v-btn
+                                        flat
+                                        size="medium"
+                                        class="p-2 text-capitalize"
+                                        desity="default"
+                                        @click.prevent="handleCancelCharges(item.request_num, item.assess_num)"
+                                    >
+                                    <v-icon 
+                                        color="#D50000">
+                                        mdi-trash-can-outline
+                                    </v-icon>
+                                        <v-tooltip
+                                            activator="parent"
+                                            location="top"
+                                        >
+                                            Cancel Charges 
+
+                                        </v-tooltip>
+                                    </v-btn>
                                 </template>
                             </v-data-table>
                         </v-expansion-panel-text>
@@ -340,19 +395,26 @@
                                 height="40vh" 
                                 class="styled-table"
                                 >
-                            
-                                <template v-slot:item.selected="{ item }">
-                                    <input 
-                                        type="checkbox" 
-                                        :checked="isCheckedCashAssessment(item)" 
-                                        @change="toggleCashAssessmentSelection(item)" 
-                                    />
-                                </template>
-                                <template v-slot:footer>
-                                    <tr>
-                                        <td colspan="6" class="text-right">Total Amount:</td>
-                                        <td>{{ usePeso(totalAmount) }}</td>
-                                    </tr>
+                                <template v-slot:item.action="{ item }">
+                                    <v-btn
+                                        flat
+                                        size="medium"
+                                        class="p-2 text-capitalize"
+                                        desity="default"
+                                        @click.prevent="handleCancelCharges(item.request_num, item.assess_num)"
+                                    >
+                                    <v-icon 
+                                        color="#D50000">
+                                        mdi-trash-can-outline
+                                    </v-icon>
+                                        <v-tooltip
+                                            activator="parent"
+                                            location="top"
+                                        >
+                                            Cancel Charges 
+
+                                        </v-tooltip>
+                                    </v-btn>
                                 </template>
                             </v-data-table>
                         </v-expansion-panel-text>
@@ -371,18 +433,26 @@
                                 class="styled-table"
                                 >
                             
-                                <template v-slot:item.selected="{ item }">
-                                    <input 
-                                        type="checkbox" 
-                                        :checked="isCheckedCashAssessment(item)" 
-                                        @change="toggleCashAssessmentSelection(item)" 
-                                    />
-                                </template>
-                                <template v-slot:footer>
-                                    <tr>
-                                        <td colspan="6" class="text-right">Total Amount:</td>
-                                        <td>{{ usePeso(totalAmount) }}</td>
-                                    </tr>
+                                <template v-slot:item.action="{ item }">
+                                    <v-btn
+                                        flat
+                                        size="medium"
+                                        class="p-2 text-capitalize"
+                                        desity="default"
+                                        @click.prevent="handleCancelCharges(item.request_num, item.assess_num)"
+                                    >
+                                    <v-icon 
+                                        color="#D50000">
+                                        mdi-trash-can-outline
+                                    </v-icon>
+                                        <v-tooltip
+                                            activator="parent"
+                                            location="top"
+                                        >
+                                            Cancel Charges 
+
+                                        </v-tooltip>
+                                    </v-btn>
                                 </template>
                             </v-data-table>
                         </v-expansion-panel-text>
@@ -391,6 +461,13 @@
             </v-card-text>
         </v-card>
     </v-dialog>
+    <Confirmation 
+        :show="showDialog"
+        :payload="payload"
+        :loading="isLoading"
+        @submit="onSubmit"
+        @close="closeConfirmDialog"
+    />
 </template>
 
 <style scoped>

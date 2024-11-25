@@ -118,6 +118,9 @@
     const patientEligibilityForDischarge = async (case_No) => {
         isLoading.value = true;
         pageLoader.value = true;
+        isElible.value = false;
+        isDischarged.value = false
+        isProcessed.value = false;
         startLoader();
         let response;
         try {
@@ -346,35 +349,28 @@
                 @update:model-value="closeDialog" 
                 :style="{maxWidth: isProcessed ? '800px' : '500px'}" 
                 >
-                <v-card>
-                    <v-card-title>
-                        <h3>Notification</h3>
-                    </v-card-title>
-                    <v-card-text>
-                        <v-row>
-                            <v-col cols="1">
-                                <v-icon
-                                    color="#107bac"
-                                    class="info-icon pa-4"
-                                >mdi-information-outline</v-icon>
-                            </v-col>
-                            <v-col cols="11" v-if="!isElible && !isDischarged">
-                                <h5 class="alert-text">
-                                    You cannot send a discharge order at this time. This patient has not yet been tagged for May Go Home.
-                                </h5>
-                            </v-col>
-                            <v-col cols="11" v-if="!isElible && isDischarged">
-                                <h5 class="alert-text">
-                                    You cannot send a discharge order. The patient already has a discharge order.
-                                </h5>
-                            </v-col>
-                        </v-row>
-                    </v-card-text>
-                    <v-divider></v-divider>
-                    <v-card-actions>
-                        <v-btn color="blue-darken-1 border border-info" @click="closeDialog"> Close </v-btn>
-                    </v-card-actions>
-                </v-card>
+                <div v-if="!isElible && !isDischarged">
+                    <v-alert
+                        border="left"
+                        color="red"
+                        dismissible
+                        elevation="24"
+                        icon="mdi-alert-circle"
+                        >
+                        You cannot send a discharge order at this time. This patient has not yet been tagged for May Go Home.
+                    </v-alert>
+                </div>
+                <div v-if="!isElible && isDischarged">
+                    <v-alert
+                        border="left"
+                        color="red"
+                        dismissible
+                        elevation="24"
+                        icon="mdi-alert-circle"
+                        >
+                        The patient already has a discharge order, Please be advise or may call IT Department for futher assistance. Thank you.
+                    </v-alert>
+                </div>
             </v-dialog>
         </div>
     </div>
