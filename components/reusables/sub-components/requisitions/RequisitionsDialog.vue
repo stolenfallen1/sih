@@ -35,15 +35,19 @@
             <v-divider></v-divider>
             <v-card-text>
                 <v-row>
-                    <v-col cols="12">
+                    <v-col cols="9">
                         <v-text-field
                             label="Searh by Description / Code / Item ID"
                             variant="outlined"
                             density="compact"
                             prepend-inner-icon="mdi-magnify"
+                            hide-details
                             v-model="data.keyword"
                             @keyup.enter="search"
                         ></v-text-field>
+                    </v-col>
+                    <v-col cols="3">
+                        <v-btn class="bg-success text-white" @click="openRenderedTransaction"> Rendered Transactions </v-btn>
                     </v-col>
                 </v-row>
                 <v-data-table-server
@@ -52,12 +56,15 @@
                     :headers="headers"
                     :items="serverItems"
                     :loading="data.loading"
-                    item-value="id"
+                    item-value="details.id"
+                    :model-value="selectedRequisitionItem"
+                    show-select
                     :hover="true"
+                    @update:modelValue="handleSelectedRow"
                     @update:options="getPatientRequisitions"
                     fixed-header
                     density="compact"
-                    height="40vh"
+                    height="50vh"
                 >
                     <template v-for="(head, index) of headers" v-slot:[`item.${head.value}`]="props">
                         <td class="test" :key="index">
@@ -84,6 +91,10 @@
                         >
                         </span>
                     </template>
+                    
+                    <template v-slot:item.details.refNum="{ item }">
+                        {{ item.details.refNum || item.details.requestNum || "N/A" }}
+                    </template>
 
                     <template v-slot:item.details.revenueID="{ item }">
                         {{ item.details.revenueID || item.details.revenue_Id || "N/A" }}
@@ -101,15 +112,6 @@
                         {{ parseInt(item.details.quantity) || parseInt(item.details.Quantity) || "N/A" }}
                     </template>
 
-                    <template v-slot:item.details.dosage="{ item }">
-                        <span v-if="item.details.dosage">
-                            {{ item.details.dosage }}
-                        </span>
-                        <span v-else style="color: red;">
-                            N/A
-                        </span>
-                    </template>
-
                     <template v-slot:item.details.amount="{ item }">
                         {{ usePeso(item.details.amount) }}
                     </template>
@@ -123,17 +125,14 @@
                         <v-chip color="orange" v-else-if="item.isUnpaid == false">Pending Order</v-chip>
                     </template>
 
-                    <template v-slot:item.action="{ item }">
-                        <v-icon color="red" style="cursor: pointer;">mdi-trash-can</v-icon>
-                    </template>
-
                     <template #bottom></template>
                 </v-data-table-server>
             </v-card-text>
             <v-divider></v-divider>
             <v-card-actions>
                 <v-btn color="blue-darken-1 border border-info" @click="closeDialog"> Close </v-btn>
-                <v-btn class="bg-success text-white" @click="openRenderedTransaction"> Rendered Transactions </v-btn>
+                <v-btn class="text-white bg-error" @click="confirmRevoke">Revoke Charge</v-btn>
+                <v-btn class="text-white bg-info" @click="onPrint">Print</v-btn>
                 <v-spacer></v-spacer>
                 <v-btn class="bg-primary text-white" @click="openMultiDepartmentSelection('supply')" prepend-icon="mdi-warehouse">Add Supplies</v-btn>
                 <v-btn class="bg-primary text-white" @click="openMultiDepartmentSelection('medicine')" prepend-icon="mdi-pill">Add Medicines</v-btn>
@@ -141,11 +140,64 @@
             </v-card-actions>
         </v-card>
     </v-dialog>
+
+    <v-dialog :model-value="warning_cannot_be_revoked" rounded="lg" max-width="450px" @update:model-value="closeWarningDialog">
+        <v-card elevation="4" rounded="lg">
+            <v-toolbar density="compact" color="red" hide-details>
+                <v-toolbar-title>
+                    <v-icon size="25">mdi-alert</v-icon> WARNING
+                </v-toolbar-title>
+                <v-spacer></v-spacer>
+                <v-btn color="white" @click="closeWarningDialog">
+                    <v-icon>mdi-close</v-icon>
+                </v-btn>
+            </v-toolbar>
+            <v-card-text>
+                <h2 style="text-align: left;">
+                    CAN'T REVOKED ITEMS THAT HAS BEEN PAID! CONTACT CASHIER INSTEAD TO CANCEL
+                    <span style="color: red;">ORNUMBER</span>
+                </h2>
+            </v-card-text>
+        </v-card>
+    </v-dialog>
+
+    <v-dialog :model-value="revoke_remarks_dialog" rounded="lg" max-width="550px" @update:model-value="closeRemarksRevoke">
+        <v-card elevation="4" rounded="lg">
+            <v-toolbar density="compact" color="#107bac" hide-details>
+                <v-toolbar-title>Revoke Item Remarks</v-toolbar-title>
+                <v-spacer></v-spacer>
+                <v-btn color="white" @click="closeRemarksRevoke">
+                    <v-icon>mdi-close</v-icon>
+                </v-btn>
+            </v-toolbar>
+            <v-card-text>
+                <v-row>
+                    <v-col cols="12">
+                        <v-textarea 
+                            v-model="payload.remarks" 
+                            variant="outlined"
+                            label="Remarks"
+                            hint="Reason as to why you want to revoke this item..." 
+                            density="compact" 
+                        ></v-textarea>
+                    </v-col>
+                </v-row>
+            </v-card-text>
+            <v-divider></v-divider>
+            <v-card-actions>
+                <v-btn color="blue-darken-1 border border-info" @click="closeRemarksRevoke">Close</v-btn>
+                <v-spacer></v-spacer>
+                <v-btn class="bg-primary text-white" @click="openRevokeConfirmation">Confirm</v-btn>
+            </v-card-actions>
+        </v-card>
+    </v-dialog>
+
     <RequisitionMultiItemSelection 
         :open_medical_item_selection="open_medical_item_selection" 
         :category="category" 
         :roleID="roleID"
         @handle-submit="onSubmitSelectedItem" 
+        @submit-requisition="getPatientRequisitions"
         @close-dialog="closeMultiDepartmentSelection"
         /> 
     <RenderedRequisitions 
@@ -153,6 +205,14 @@
         :patient_Id="selectedRowDetails.patient_Id"
         :case_No="selectedRowDetails.patient_registry && selectedRowDetails.patient_registry[0].case_No ? selectedRowDetails.patient_registry[0].case_No : null"
         @close-dialog="closeRenderedTransactions" 
+    />
+    <Confirmation 
+        :show="revokeconfirmation"
+        :payload="payload"
+        :loading="isLoadingBtn"
+        :error_msg="error_msg"
+        @submit="onRevoke"
+        @close="closeRevokeConfirmation"
     />
 </template>
 
@@ -175,11 +235,19 @@ const props = defineProps({
 const { selectedRowDetails } = storeToRefs(useSubcomponentSelectedRowDetailsStore()); 
 
 const emits = defineEmits(['close-dialog'])
-const payload = ref({});
+const payload = ref({
+    Items: [],
+});
 const open_medical_item_selection = ref(false);
 const serverItems = ref([]);
 const category = ref(null);
 const open_rendered_transactions = ref(false);
+const revokeconfirmation = ref(false);
+const error_msg = ref('');
+const isLoadingBtn = ref(false);
+const selected_items = ref([]);
+const warning_cannot_be_revoked = ref(false);
+const revoke_remarks_dialog = ref(false);
 
 const openMultiDepartmentSelection = (selectedCategory) => {
     category.value = selectedCategory;
@@ -200,20 +268,26 @@ const closeRenderedTransactions = () => {
 
 const closeDialog = () => {
     serverItems.value = [];
+    selectedRequisitionItem.value = [];
+    selected_items.value = [];
     emits('close-dialog');
+}
+
+const closeWarningDialog = () => {
+    warning_cannot_be_revoked.value = false;
+    selectedRequisitionItem.value = [];
+    selected_items.value = [];
 }
 
 const headers = [
     { title: "",  align: "start", sortable: false, key: "patient_Id" },
-    { title: "Code",  align: "start", sortable: false, key: "details.revenueID" },
+    { title: "Ref #",  align: "start", sortable: false, key: "details.refNum" },
     { title: "Item ID",  align: "start", sortable: false, key: "details.itemID" },
     { title: "Description",  align: "start", sortable: false, key: "details.requestDescription" },
     { title: "Quantity",  align: "start", sortable: false, key: "details.quantity" },
-    { title: "Frequency",  align: "start", sortable: false, key: "details.dosage" },
     { title: "Amount",  align: "start", sortable: false, key: "details.amount" },
     { title: "Request Date",  align: "start", sortable: false, key: "details.created_at" },
     { title: "Status",  align: "start", sortable: false, key: "isUnpaid", align: 'center' },
-    { title: "Action",  align: "start", sortable: false, key: "action", align: 'center' },
 ];
 
 const data = ref({
@@ -252,6 +326,89 @@ const getPatientRequisitions = async () => {
         } finally {
             data.value.loading = false;
         }
+    }
+}
+
+const selectedRequisitionItem = ref([]);
+const handleSelectedRow = (selectedRows) => {
+    selectedRequisitionItem.value = selectedRows;
+    const selectedItems = selectedRows.map(rowId => serverItems.value.find(item => item.details.id === rowId));  
+    selected_items.value = selectedItems;
+} 
+
+const onPrint = () => {
+    if (selected_items.value.length == 0 || selected_items.value == null || selected_items.value == undefined) {
+        useSnackbar(true, "error", "Please select item to print");
+    } else {
+        alert('Successfully printed item');
+        selectedRequisitionItem.value = [];
+        selected_items.value = [];
+    }
+}
+
+const confirmRevoke = () => {
+    payload.value.account = selectedRowDetails.value.patient_registry 
+                            && selectedRowDetails.value.patient_registry[0].mscPrice_Schemes 
+                            ? selectedRowDetails.value.patient_registry[0].mscPrice_Schemes : null;
+
+    if (selected_items.value.length == 0 || selected_items.value == null || selected_items.value == undefined) {
+        useSnackbar(true, "error", "Please select item to revoke");
+    } else if (selected_items.value.some(item => item.isUnpaid == false) && payload.value.account == 1) {
+        warning_cannot_be_revoked.value = true;
+    } else {
+        payload.value.Items = selected_items.value;
+        revoke_remarks_dialog.value = true;
+    }
+}
+
+const closeRemarksRevoke = () => {
+    revoke_remarks_dialog.value = false;
+    payload.value.remarks = '';
+}
+
+const openRevokeConfirmation = () => {
+    revokeconfirmation.value = true;
+}
+
+const closeRevokeConfirmation = () => {
+    revokeconfirmation.value = false;
+}
+
+const onRevoke = async (user_details) => {
+    switch(roleID.value) {
+        case '27':
+            const response = await useMethod("post", "cancel-requisition-request", payload.value);
+            if (response) {
+                closeRemarksRevoke();
+                closeRevokeConfirmation();
+                getPatientRequisitions();
+                selectedRequisitionItem.value = [];
+                selected_items.value = [];
+            }
+        default: 
+            if (user_details.user_passcode === usePasscode()) {
+                const response = await useMethod("post", "cancel-requisition-request", payload.value);
+                if (response) {
+                    closeRemarksRevoke();
+                    closeRevokeConfirmation();
+                    getPatientRequisitions();
+                    selectedRequisitionItem.value = [];
+                    selected_items.value = [];
+                }
+            } else {
+                user_attempts.value += 1;
+                useSnackbar(true, "error", "Password incorrect.");
+                if (user_attempts.value == 5) {
+                    error_msg.value = "Too many wrong attempts, Please try again after 20 seconds.";
+                    isLoadingBtn.value = true;
+                    setTimeout(() => {
+                        isLoadingBtn.value = false;
+                        user_attempts.value = 0;
+                        error_msg.value = "";
+                    }, 20000);
+                }
+            }
+            break;
     }
 }
 

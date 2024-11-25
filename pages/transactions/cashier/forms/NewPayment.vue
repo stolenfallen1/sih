@@ -248,6 +248,47 @@
     </v-row>
     <p style="margin-top: 30px; margin-bottom: 10px; font-weight: bolder; color: #107bac; border-top: 1px solid #E4E4E4;">Mode of Payment</p>
     <v-row style="margin-bottom: 0px;">
+        <v-col cols="4" >
+            <p style="font-size: 17px; font-weight: bolder; text-decoration: underline;">Cheque</p>
+            <v-col cols="12" >
+                <v-list-subheader class="form-header">Drawee Bank</v-list-subheader>
+                <v-text-field
+                    variant="outlined"
+                    density="compact"
+                    v-model="payload.bank_check"
+                    hide-details
+                ></v-text-field>
+            </v-col>
+            <v-col cols="12" >
+                <v-list-subheader class="form-header">Check No.</v-list-subheader>
+                <v-text-field
+                    variant="outlined"
+                    density="compact"
+                    v-model="payload.check_no"
+                    hide-details
+                ></v-text-field>
+            </v-col>
+            <v-col cols="12" >
+                <v-list-subheader class="form-header">Check Date</v-list-subheader>
+                <v-text-field
+                    type="date"
+                    variant="outlined"
+                    density="compact"
+                    v-model="payload.check_date"
+                    hide-details
+                ></v-text-field>
+            </v-col>
+            <v-col cols="12" >
+                <v-list-subheader class="form-header">Check Amount</v-list-subheader>
+                <v-text-field
+                    variant="outlined"
+                    density="compact"
+                    v-model="tempCheckAmount"
+                    @blur="updateCheckAmount"
+                    hide-details
+                ></v-text-field>
+            </v-col>
+        </v-col>
         <v-col cols="4">
             <p style="font-size: 17px; font-weight: bolder; text-decoration: underline;">Card</p>
             <v-col cols="12" >
@@ -308,47 +349,6 @@
                     density="compact"
                     v-model="tempCardAmount"
                     @blur="updateCardAmount"
-                    hide-details
-                ></v-text-field>
-            </v-col>
-        </v-col>
-        <v-col cols="4" >
-            <p style="font-size: 17px; font-weight: bolder; text-decoration: underline;">Cheque</p>
-            <v-col cols="12" >
-                <v-list-subheader class="form-header">Drawee Bank</v-list-subheader>
-                <v-text-field
-                    variant="outlined"
-                    density="compact"
-                    v-model="payload.bank_check"
-                    hide-details
-                ></v-text-field>
-            </v-col>
-            <v-col cols="12" >
-                <v-list-subheader class="form-header">Check No.</v-list-subheader>
-                <v-text-field
-                    variant="outlined"
-                    density="compact"
-                    v-model="payload.check_no"
-                    hide-details
-                ></v-text-field>
-            </v-col>
-            <v-col cols="12" >
-                <v-list-subheader class="form-header">Check Date</v-list-subheader>
-                <v-text-field
-                    type="date"
-                    variant="outlined"
-                    density="compact"
-                    v-model="payload.check_date"
-                    hide-details
-                ></v-text-field>
-            </v-col>
-            <v-col cols="12" >
-                <v-list-subheader class="form-header">Check Amount</v-list-subheader>
-                <v-text-field
-                    variant="outlined"
-                    density="compact"
-                    v-model="tempCheckAmount"
-                    @blur="updateCheckAmount"
                     hide-details
                 ></v-text-field>
             </v-col>
