@@ -157,8 +157,7 @@
             </v-toolbar>
             <v-card-text>
                 <h2 style="text-align: left;">
-                    CAN'T REVOKED ITEMS THAT HAS BEEN PAID! CONTACT CASHIER INSTEAD TO CANCEL
-                    <span style="color: red;">ORNUMBER</span>
+                    {{ warning_description }}
                 </h2>
             </v-card-text>
         </v-card>
@@ -225,10 +224,12 @@
 </template>
 
 <script setup>
+import { createApp } from 'vue';
 import nuxtStorage from 'nuxt-storage'; 
 import RenderedRequisitions from './sub-forms/RenderedRequisitions.vue';
 import CancelledRequisitions from './sub-forms/CancelledRequisitions.vue';
 import RequisitionMultiItemSelection from './sub-forms/RequisitionMultiItemSelection.vue';
+import RequisitionReports from '~/public/reports/charges/requisition/RequisitionReports.vue';
 
 const props = defineProps({
     show: {
@@ -257,6 +258,7 @@ const error_msg = ref('');
 const isLoadingBtn = ref(false);
 const selected_items = ref([]);
 const warning_cannot_be_revoked = ref(false);
+const warning_description = ref("");
 const revoke_remarks_dialog = ref(false);
 
 const openMultiDepartmentSelection = (selectedCategory) => {
@@ -349,15 +351,38 @@ const handleSelectedRow = (selectedRows) => {
     selected_items.value = selectedItems;
 } 
 
-const onPrint = () => {
-    if (selected_items.value.length == 0 || selected_items.value == null || selected_items.value == undefined) {
-        useSnackbar(true, "error", "Please select item to print");
-    } else {
-        alert('Successfully printed item');
-        selectedRequisitionItem.value = [];
-        selected_items.value = [];
+const printRequistion = (payload, charges) => {
+    console.log(charges);
+    const newWindow = window.open('', '_blank', 'width=900,height=750');
+    if (newWindow) {
+        const app = createApp(RequisitionReports, {
+            payload: payload,
+            charges: charges,
+        });
+        app.mount(newWindow.document.body);
+        nextTick(() => {
+            newWindow.print();
+            newWindow.onafterprint = () => {
+                newWindow.close();
+                selectedRequisitionItem.value = [];
+                selected_items.value = [];
+            }
+        });
     }
 }
+
+const onPrint = () => {
+    if (selected_items.value.length === 0 || selected_items.value == null || selected_items.value === undefined) {
+        useSnackbar(true, "error", "Please select item to print");
+    } else if (selected_items.value.some(item => item.recordStatus === null) && 
+                selected_items.value.some(item => item.recordStatus !== null)) {
+        warning_description.value = "CAN'T PRINT ITEMS THAT ARE BOTH PENDING PAYMENT AND PENDING ORDERED!";
+        warning_cannot_be_revoked.value = true;
+    } else {
+        printRequistion(selectedRowDetails.value, selected_items.value);
+    }
+};
+
 
 const confirmRevoke = () => {
     payload.value.account = selectedRowDetails.value.patient_registry 
@@ -367,6 +392,7 @@ const confirmRevoke = () => {
     if (selected_items.value.length == 0 || selected_items.value == null || selected_items.value == undefined) {
         useSnackbar(true, "error", "Please select item to revoke");
     } else if (selected_items.value.some(item => item.isUnpaid == false) && payload.value.account == 1) {
+        warning_description.value = "CAN'T REVOKED ITEMS THAT HAS BEEN PAID! CONTACT CASHIER INSTEAD TO CANCEL";
         warning_cannot_be_revoked.value = true;
     } else {
         payload.value.Items = selected_items.value;
