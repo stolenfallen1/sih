@@ -19,9 +19,7 @@
                 </div>
                 <div style="display: flex; margin: 5px 0;">
                     <span style="font-size: 13px; min-width: 150px;">Patient Name:</span>
-                    <span style="font-size: 13px;  display: inline-block; min-width: 150px;">
-                        {{ payload?.lastname + ', ' + payload?.firstname + ' ' + payload?.middlename }}
-                    </span>
+                    <span style="font-size: 13px;  display: inline-block; min-width: 150px;">{{ payload.patient_Name }}</span>
                 </div>
                 <div style="display: flex; margin: 5px 0;">
                     <span style="font-size: 13px; min-width: 150px;">Age:</span>
@@ -29,52 +27,60 @@
                 </div>
                 <div style="display: flex; margin: 5px 0;">
                     <span style="font-size: 13px; min-width: 150px;">Sex:</span>
-                    <span style="font-size: 13px;  display: inline-block; min-width: 150px;">{{ payload.sex?.sex_description }}</span>
+                    <span style="font-size: 13px;  display: inline-block; min-width: 150px;">
+                        {{ payload.sex && payload.sex == 1 ? 'Male' : 'Female' }}
+                    </span>
                 </div>
             </section>
             <section style="flex: 1;">
                 <div style="display: flex; margin: 5px 0;">
                     <span style="font-size: 13px; min-width: 150px;">Account:</span>
                     <span style="font-size: 13px;  display: inline-block; min-width: 150px;">
-                        {{ payload.patient_registry[0].mscPrice_Schemes && payload.patient_registry[0].mscPrice_Schemes == '1' ? 'Cash' : 'Company / Insurance' }}
+                        {{ payload.acount && payload.acount == '1' ? 'Cash' : 'Company / Insurance' }}
                     </span>
                 </div>
                 <div style="display: flex; margin: 5px 0;">
                     <span style="font-size: 13px; min-width: 150px;">Case No:</span>
-                    <span style="font-size: 13px;  display: inline-block; min-width: 150px;">{{ payload.patient_registry[0]?.case_No }}</span>
+                    <span style="font-size: 13px;  display: inline-block; min-width: 150px;">{{ payload.case_No }}</span>
                 </div>
                 <div style="display: flex; margin: 5px 0;">
                     <span style="font-size: 13px; min-width: 150px;">Physician:</span>
-                    <span style="font-size: 13px;  display: inline-block; min-width: 150px;">{{ payload.patient_registry[0]?.attending_Doctor_fullname }}</span>
+                    <span style="font-size: 13px;  display: inline-block; min-width: 150px;">{{ payload.attending_Doctor_fullname }}</span>
                 </div>
             </section>
         </div>
-        <div style="margin-top: 12px;">
+        <div style="margin-top: 8px;">
             <template v-if="groupedCharges">
                 <template v-for="(charges, groupKey) in groupedCharges" :key="groupKey">
-                    <p style="margin: 0;">{{ requesteeDept }} REQUEST NO: 
+                    <p style="margin: 0; margin-top: 8px;">PHARMACY REFERENCE NO: 
                         <span style="font-weight: bolder;">{{ groupKey }}</span>
                     </p>
                     <table style="width: 100%; border-collapse: collapse; margin: 2px; text-align: left;">
                         <thead style="border-bottom: 1px solid #A9A9A9; border-top: 1px solid #A9A9A9;">
                             <tr>
+                                <th style="font-size: 12px; width: 10%">DATE</th>
                                 <th style="font-size: 12px; width: 10%;">DEPT</th>
-                                <th style="font-size: 12px; width: 15%;">CODE</th>
-                                <th style="font-size: 12px; width: 45%;">DESCRIPTION</th>
-                                <th style="font-size: 12px; width: 10%;">QTY</th>
-                                <th style="font-size: 12px; width: 20%">AMOUNT</th>
+                                <th style="font-size: 12px; width: 10%;">CODE</th>
+                                <th style="font-size: 12px; width: 40%;">DESCRIPTION</th>
+                                <th style="font-size: 12px; width: 10%;">DOSAGE</th>
+                                <th style="font-size: 12px; width: 5%;">QTY</th>
+                                <th style="font-size: 12px; width: 15%">AMOUNT</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr v-for="(item, index) in charges" :key="index" style="border-bottom: 1px solid #A9A9A9;">
-                                <td style="font-size: 12px;">{{ item.details.revenue_Id ? item.details.revenue_Id : item.details.revenueID }}</td>
-                                <td style="font-size: 12px;">{{ item.details.item_Id ? item.details.item_Id : item.details.itemID }}</td>
-                                <td style="font-size: 12px;">{{ item.details.description ? item.details.description : item.details.requestDescription }}</td>
-                                <td style="font-size: 12px;">{{ item.details.Quantity ? parseInt(item.details.Quantity) : parseInt(item.details.quantity) }}</td>
-                                <td style="font-size: 12px;">{{ usePeso(item.details.amount) }}</td>
+                                <td style="font-size: 12px;">{{ useDateMMDDYYY(item.created_at) }}</td>
+                                <td style="font-size: 12px;">{{ item.nurse_logbook.revenue_Id }}</td>
+                                <td style="font-size: 12px;">{{ item.nurse_logbook.item_Id }}</td>
+                                <td style="font-size: 12px;">{{ item.nurse_logbook.description }}</td>
+                                <td style="font-size: 12px;">{{ item.nurse_logbook.dosage }}</td>
+                                <td style="font-size: 12px;">{{ parseInt(item.transaction_Qty) }}</td>
+                                <td style="font-size: 12px;">{{ usePeso(item.transaction_Item_TotalAmount) }}</td>
                             </tr>
                             <tr>
-                                <td colspan="4" style="text-align: right; font-size: 12px;">SUB-TOTAL:</td>
+                                <td colspan="2" style="text-align: right; font-size: 12px;">PROCESSED BY:</td>
+                                <td style="font-size: 12px; font-weight: bold;">{{ processedBy[groupKey] }}</td>
+                                <td colspan="6" style="text-align: right; font-size: 12px;">SUB-TOTAL:</td>
                                 <td style="font-size: 12px;">{{ usePeso(groupSubTotal(groupKey)) }}</td>
                             </tr>
                         </tbody>
@@ -107,7 +113,7 @@
         </div>
         <footer style="margin: 0; display: flex; justify-content: space-between; align-items: center;">
             <div style="margin: 0;">
-                <p style="margin: 0; font-size: 13px;">Requested by: <span style="border-bottom: 1px solid #000;">{{ requestedBy }}</span></p>
+                <!-- <p style="margin: 0; font-size: 13px;">Requested by: <span style="border-bottom: 1px solid #000;">{{ requestedBy }}</span></p> -->
                 <p style="margin: 0; font-size: 13px;">Printed by: <span style="border-bottom: 1px solid #000;">{{ printedBy }}</span></p>
                 <p style="margin: 0; font-size: 13px;">Print Date: <span style="">{{ printDate }}</span></p>
             </div>
@@ -137,13 +143,12 @@ const props = defineProps({
 
 const user_detail = ref({});
 
-const requestedBy = ref(props.charges[0]?.details.user_Id ? props.charges[0]?.details.user_Id : props.charges[0]?.details.userId);
 const printedBy = ref("");
 const printDate = ref(new Date().toLocaleString([], { dateStyle: 'short', timeStyle: 'short' }));
 
 const groupedCharges = computed(() => {
     const grouped = props.charges.reduce((acc, charge) => {
-        const groupKey = charge.details.requestNum ? charge.details.requestNum : charge.details.refNum;
+        const groupKey = charge.trasanction_Reference_Number;
         if (!acc[groupKey]) {
             acc[groupKey] = [];
         }
@@ -153,33 +158,24 @@ const groupedCharges = computed(() => {
     return grouped;
 });
 
-const requesteeDept = computed(() => {
-    const departmentMap = {
-        'LB': 'LABORATORY',
-        'PH': 'PHARMACY',
-        'CS': 'CENTRAL SUPPLY',
-        // Add more department here
-    };
-
-    for (const charge of props.charges) {
-        const revenueId = charge.details.revenue_Id || charge.details.revenueID;
-        if (departmentMap[revenueId]) {
-            return departmentMap[revenueId]; 
-        }
+const processedBy = computed(() => {
+    const result = {};
+    for (const [groupKey, charges] of Object.entries(groupedCharges.value)) {
+        const firstProcessedBy = charges.find(charge => charge.nurse_logbook.process_By)?.nurse_logbook.process_By;
+        result[groupKey] = firstProcessedBy || 'N/A'; 
     }
-
-    return '';
+    return result;
 });
 
 
 const groupSubTotal = (groupKey) => {
     if (!groupedCharges.value[groupKey]) return 0;
-    return groupedCharges.value[groupKey].reduce((total, charge) => total + parseFloat(charge.details.amount), 0);
+    return groupedCharges.value[groupKey].reduce((total, charge) => total + parseFloat(charge.transaction_Item_TotalAmount), 0);
 };
 
 const grandTotal = computed(() => {
     return Object.values(groupedCharges.value).reduce((total, charges) => {
-        return total + charges.reduce((subTotal, charge) => subTotal + parseFloat(charge.details.amount), 0);
+        return total + charges.reduce((subTotal, charge) => subTotal + parseFloat(charge.transaction_Item_TotalAmount), 0);
     }, 0);
 });
 

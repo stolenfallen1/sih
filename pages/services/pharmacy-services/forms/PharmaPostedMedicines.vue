@@ -223,6 +223,7 @@
                     </v-col>
                 </v-row>
                 <v-spacer></v-spacer>
+                <v-btn class="text-white bg-info" @click="onPrint">Print All</v-btn>
                 <v-btn color="blue-darken-1 border border-info" @click="closeDialog"> Close </v-btn>
             </v-card-actions>
         </v-card>
@@ -230,6 +231,9 @@
 </template>
 
 <script setup>
+import { createApp } from 'vue';
+import PharmacyDespensingReports from '~/public/reports/pharmacy/PharmacyDespensingReports.vue';
+
 const props = defineProps({
     open_posted_medicine: {
         type: Boolean,
@@ -273,8 +277,12 @@ const getPatientPostedMeds = async () => {
             const response = await useMethod("get", "get-pharmacy-posted-meds?case_No=", "", payload.value.caseNo);
             if (response) {
                 payload.value.patient_Id = response.patient_details.patient_Id;
+                payload.value.case_No = response.patient_details.case_No;
                 payload.value.age = response.patient_details.age;
                 payload.value.patient_Name = response.patient_details.inventory_data[0].nurse_logbook.patient_Name;
+                payload.value.sex = response.patient_details.sex;
+                payload.value.account = response.patient_details.mscPrice_Schemes;
+                payload.value.birthdate = response.patient_details.birthdate;
                 payload.value.attending_Doctor_fullname = response.patient_details.doctor;
                 serverItems.value = response.patient_details.inventory_data;
             } 
@@ -308,6 +316,39 @@ const totalDiscount = computed(() => {
     return serverItems.value.reduce((acc, item) => acc + parseFloat(item.transaction_Discount || 0), 0);
 });
 
+const printRequistion = (payload, charges) => {
+    const newWindow = window.open('', '_blank', 'width=900,height=750');
+    if (newWindow) {
+        const app = createApp(PharmacyDespensingReports, {
+            payload: payload,
+            charges: charges,
+        });
+        app.mount(newWindow.document.body);
+        nextTick(() => {
+            newWindow.print();
+            newWindow.onafterprint = () => {
+                newWindow.close();
+            }
+        });
+    }
+}
+
+const print_payload = ref({});
+const print_charges = ref([]);
+const onPrint = () => {
+    print_payload.value = {
+        patient_Id: payload.value.patient_Id,
+        case_No: payload.value.case_No,
+        patient_Name: payload.value.patient_Name,
+        birthdate: payload.value.birthdate,
+        age: payload.value.age,
+        sex: payload.value.sex,
+        account: payload.value.account,
+        attending_Doctor_fullname: payload.value.attending_Doctor_fullname,
+    }
+    print_charges.value = serverItems.value;
+    printRequistion(print_payload.value, print_charges.value);
+}
 
 const closeDialog = () => {
     serverItems.value = [];
