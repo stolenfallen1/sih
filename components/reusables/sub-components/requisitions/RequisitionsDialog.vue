@@ -35,7 +35,7 @@
             <v-divider></v-divider>
             <v-card-text>
                 <v-row>
-                    <v-col cols="9">
+                    <v-col cols="6">
                         <v-text-field
                             label="Searh by Description / Code / Item ID"
                             variant="outlined"
@@ -48,6 +48,9 @@
                     </v-col>
                     <v-col cols="3">
                         <v-btn class="bg-success text-white" @click="openRenderedTransaction"> Rendered Transactions </v-btn>
+                    </v-col>
+                    <v-col cols="3">
+                        <v-btn class="bg-error text-white" @click="openCancelledTransaction"> Cancelled Transactions </v-btn>
                     </v-col>
                 </v-row>
                 <v-data-table-server
@@ -196,7 +199,6 @@
         :open_medical_item_selection="open_medical_item_selection" 
         :category="category" 
         :roleID="roleID"
-        @handle-submit="onSubmitSelectedItem" 
         @submit-requisition="getPatientRequisitions"
         @close-dialog="closeMultiDepartmentSelection"
         /> 
@@ -205,6 +207,12 @@
         :patient_Id="selectedRowDetails.patient_Id"
         :case_No="selectedRowDetails.patient_registry && selectedRowDetails.patient_registry[0].case_No ? selectedRowDetails.patient_registry[0].case_No : null"
         @close-dialog="closeRenderedTransactions" 
+    />
+    <CancelledRequisitions 
+        :open_cancelled_transactions="open_cancelled_transactions"  
+        :patient_Id="selectedRowDetails.patient_Id"
+        :case_No="selectedRowDetails.patient_registry && selectedRowDetails.patient_registry[0].case_No ? selectedRowDetails.patient_registry[0].case_No : null"
+        @close-dialog="closeCancelledTransactions"
     />
     <Confirmation 
         :show="revokeconfirmation"
@@ -219,6 +227,7 @@
 <script setup>
 import nuxtStorage from 'nuxt-storage'; 
 import RenderedRequisitions from './sub-forms/RenderedRequisitions.vue';
+import CancelledRequisitions from './sub-forms/CancelledRequisitions.vue';
 import RequisitionMultiItemSelection from './sub-forms/RequisitionMultiItemSelection.vue';
 
 const props = defineProps({
@@ -242,6 +251,7 @@ const open_medical_item_selection = ref(false);
 const serverItems = ref([]);
 const category = ref(null);
 const open_rendered_transactions = ref(false);
+const open_cancelled_transactions = ref(false);
 const revokeconfirmation = ref(false);
 const error_msg = ref('');
 const isLoadingBtn = ref(false);
@@ -259,11 +269,14 @@ const closeMultiDepartmentSelection = () => {
 const openRenderedTransaction = () => {
     open_rendered_transactions.value = true;
 }
-const onSubmitSelectedItem = () => {
-    alert('Successfully selected item')
+const openCancelledTransaction = () => {
+    open_cancelled_transactions.value = true;
 }
 const closeRenderedTransactions = () => {
     open_rendered_transactions.value = false;
+}
+const closeCancelledTransactions = () => {
+    open_cancelled_transactions.value = false;
 }
 
 const closeDialog = () => {
