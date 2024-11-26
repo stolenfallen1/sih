@@ -1,8 +1,8 @@
 <template>
-    <v-dialog :model-value="open_rendered_transactions" rounded="lg" scrollable @update:model-value="closeDialog" max-width="1000px">     
+    <v-dialog :model-value="open_cancelled_transactions" rounded="lg" scrollable @update:model-value="closeDialog" max-width="1000px">     
         <v-card rounded="lg">
             <v-toolbar density="compact" color="#107bac" hide-details>
-                <v-toolbar-title>Rendered Requisitions Transactions</v-toolbar-title>
+                <v-toolbar-title>Cancelled Requisitions Transactions</v-toolbar-title>
                 <v-btn class="mr-4" density="compact" style="background-color: #FFF;">
                     <v-icon style="color: #000;">mdi-help-circle-outline</v-icon>
                     <v-menu activator="parent">
@@ -90,8 +90,8 @@
                     {{ usePeso(item.amount) }}
                 </template>
 
-                <template v-slot:item.process_Date="{ item }">
-                    {{ useDateTimeFormater(item.process_Date) }}
+                <template v-slot:item.cancelDate="{ item }">
+                    {{ useDateTimeFormater(item.cancelDate) }}
                 </template>
 
                 <template #bottom></template>
@@ -108,7 +108,7 @@
 
 <script setup>
 const props = defineProps({
-    open_rendered_transactions: {
+    open_cancelled_transactions: {
         type: Boolean,
         default: () => false,
     },
@@ -132,8 +132,8 @@ const headers = [
     { title: "Quantity",  align: "start", sortable: false, key: "Quantity" },
     { title: "Frequency",  align: "start", sortable: false, key: "dosage" },
     { title: "Amount",  align: "start", sortable: false, key: "amount" },
-    { title: "Process By",  align: "start", sortable: false, key: "process_By" },
-    { title: "Process Date",  align: "start", sortable: false, key: "process_Date" },
+    { title: "Cancelled By",  align: "start", sortable: false, key: "cancelBy" },
+    { title: "Cancelled Date",  align: "start", sortable: false, key: "cancelDate" },
 ];
 
 const data = ref({
@@ -146,7 +146,7 @@ const data = ref({
 });
 
 const fetchRenderedTransactions = async () => {
-    const response = await fetch(useApiUrl() + "/get-rendered-transactions", {
+    const response = await fetch(useApiUrl() + "/get-cancelled-transactions", {
         method: "POST",
         headers: {
             'Content-Type': 'application/json',
@@ -167,7 +167,7 @@ const closeDialog = () => {
     emits('close-dialog');
 }
 
-watch(() => props.open_rendered_transactions, (newVal) => {
+watch(() => props.open_cancelled_transactions, (newVal) => {
     if (newVal) {
         fetchRenderedTransactions();
     }

@@ -288,7 +288,7 @@ const props = defineProps({
 })
 
 const { selectedRowDetails } = storeToRefs(useSubcomponentSelectedRowDetailsStore()); 
-const emits = defineEmits(['close-dialog' , 'handle-submit', 'submit-requisition']);
+const emits = defineEmits(['close-dialog' , 'submit-requisition']);
 const payload = ref({
   selectedItems: [],
 });
