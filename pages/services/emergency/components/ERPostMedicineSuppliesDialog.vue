@@ -1006,9 +1006,14 @@
             const response = await useMethod("get", "get-charge-items/", "", payload.value.case_No);
             const data = Array.isArray(response) ? response : response.data;
             if (data && Array.isArray(data) && data.length > 0) {
-                const filteredMedicineData = data.filter(item => item.revenue_Id === 'EM');
+                const filteredMedicineData = data.filter(
+                    item => item.revenue_Id === 'EM' &&
+                            item.record_Status !== 'R'
+                );
                 chargeMedicineList.value = filteredMedicineData.map(item => ({
-                    status: item.ORN !== null ? 'Paid' : (item.record_Status === 'X' || parseInt(item.record_Status) === 27) ? 'Unpaid' : 'Canceled',
+                    status: item.ORN !== null || item.record_Status === 'W'
+                            ? 'Paid' 
+                            : (item.record_Status === 'X' || parseInt(item.record_Status) === 27) ? 'Unpaid' : 'Canceled',
                     code: item.item_Id,
                     item_name: item.description || '-',
                     price: item.price ? parseFloat(item.price).toFixed(2) : '-',
@@ -1019,9 +1024,13 @@
                     assess_num: item.assessnum
                 }));
 
-                const filteredSupplyData = data.filter(item => item.revenue_Id === 'RS');
+                const filteredSupplyData = data.filter(
+                    item => item.revenue_Id === 'RS' &&
+                            item.record_Status !== 'R'
+                );
                 chargeSupplyList.value = filteredSupplyData.map(item => ({
-                    status: item.ORN !== null ? 'Paid' : (item.record_Status === 'X' || parseInt(item.record_Status) === 27) ? 'Unpaid' : 'Canceled',
+                    status: item.ORN !== null || item.record_Status === 'W'
+                            ? 'Paid' : (item.record_Status === 'X' || parseInt(item.record_Status) === 27) ? 'Unpaid' : 'Canceled',
                     code: item.item_Id,
                     item_name: item.description || '-',
                     price: item.price ? parseFloat(item.price).toFixed(2) : '-',
