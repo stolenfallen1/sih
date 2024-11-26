@@ -152,6 +152,7 @@
     const patientDetail = ref({});
 
     const closeDialog = () => {
+        showDialog.value = false;
         emits('close-dialog');
         tab.value = "0";
         payload.value = {};
@@ -234,6 +235,7 @@
             if (payload.value.id) {
                 response = await useMethod("put", "update-emergency", payload.value, "", payload.value.patient_Id);
                 if (response) {
+                    closeDialog();
                     useSnackbar(true, "green", response.message);
                     patientDetail.value = response.data; 
                     emits('patient-registered', patientDetail.value);
@@ -241,6 +243,7 @@
             } else {
                 response = await useMethod("post", "register-emergency", payload.value);
                 if (response) {
+                    closeDialog();
                     useSnackbar(true, "green", response.message);
                     payload.value = {};
                     patientDetail.value = response.data;

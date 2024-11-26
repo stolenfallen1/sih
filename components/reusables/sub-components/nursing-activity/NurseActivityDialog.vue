@@ -53,6 +53,7 @@
             response = await useMethod("post", "er-cancel-charge", payload.value);
             if(response) {
                 useSnackbar(true, "success", response.message);
+                getAllCharges(payload.value.case_No, payload.value.accountType);
                 isLoading.value = false;
                 closeConfirmDialog();
             } else {
@@ -108,15 +109,19 @@
         try {
            response = await useMethod("get", "get-charges-list/", "", case_No)
            const data = Array.isArray(response) ? response : response.data;
+
            if(data && Array.isArray(data) && data.length > 0) {
+
                 if(accountType !== 'Self Pay') {
+                    console.log('yesy');
                     const filteredProcessedData  = data.filter( 
-                        item => item.record_Status === 'W'
+                        item => item.record_Status === 'W' || item.revenue_Id.trim() === 'ER'
                     );
                     processedChargeList.value = filteredProcessedData.map(item => ({
-                        description:    toTitleCase(item.description),
+                        description:    item.description !== null ? toTitleCase(item.description) : '',
                         department:     toTitleCase(item.department),
                         code:           item.item_Id,
+                        revenue_id:     item.revenue_Id,
                         requestDate:    getDateTime(item.created_at),
                         requestBy:      item.requestBy,
                         processedBy:    item.revenue_Id === 'EM' ||
@@ -130,15 +135,15 @@
                         processedDate:  item.revenue_Id === 'EM' ||
                                         item.revenue_Id === 'RS'
                                         ? getDateTime(item.updated_at) 
-                                        : getDateTime(item.process_Date) 
+                                        : getDateTime(item.process_Date),
+                        record_Status:  item.record_Status
                     }));
 
                     const filteredPendingData  = data.filter(
-                        item => item.record_Status !== 'W' && 
-                                item.record_Status !== 'R'
+                        item => item.record_Status !== 'W'
                     );
                     pendingChargeList.value = filteredPendingData.map(item => ({
-                        description:    toTitleCase(item.description),
+                        description:    item.description !== null ? toTitleCase(item.description) : '',
                         department:     toTitleCase(item.department),
                         code:           item.item_Id,
                         revenue_id:     item.revenue_Id,
@@ -146,13 +151,14 @@
                         quantity:       item.Quantity ? parseInt(item.Quantity) : '-',
                         request_num:    item.referenceNum,
                         assess_num:     item.assessnum,
-                        processedDate:  getDateTime(item.created_at)
+                        processedDate:  getDateTime(item.created_at),
+                        record_Status:  item.record_Status
                     }))
 
                 } else {
                     const filteredCashAssessmentRequestData = data.filter(item => item.record_Status !== 'R');
                     cashAssessnentChargeList.value = filteredCashAssessmentRequestData.map(item => ({
-                        description:    toTitleCase(item.description),
+                        description:    item.description !== null ? toTitleCase(item.description) : '',
                         department:     toTitleCase(item.department),
                         code:           item.item_Id,
                         revenue_id:     item.revenue_Id,
@@ -163,6 +169,7 @@
                         processedDate:  item.updated_at !== null 
                                         ? getDateTime(item.updated_at) 
                                         : getDateTime(item.created_at),
+                        record_Status:  item.record_Status
                     }))
                 }
            } else {
@@ -217,7 +224,7 @@
                     age:                newRow.age || '',
                     er_Case_No:         parseInt(newRow.patient_registry?.[0]?.er_Case_No) || '',
                     registry_Date:      useDateMMDDYYY(newRow.registry_Date) || '',
-                    accountType:        newRow.patient_registry?.[0]?.guarantor_Name || ''
+                    account:            newRow.patient_registry?.[0]?.guarantor_Name || ''
                 };
                 getAllCharges(newRow.patient_registry?.[0]?.case_No, newRow.patient_registry?.[0]?.guarantor_Name);
             }
@@ -359,25 +366,9 @@
                                 class="styled-table"
                                 >
                                 <template v-slot:item.action="{ item }">
-                                    <v-btn
-                                        flat
-                                        size="medium"
-                                        class="p-2 text-capitalize"
-                                        desity="default"
-                                        @click.prevent="handleCancelCharges(item.request_num, item.assess_num)"
-                                    >
-                                    <v-icon 
-                                        color="#D50000">
-                                        mdi-trash-can-outline
-                                    </v-icon>
-                                        <v-tooltip
-                                            activator="parent"
-                                            location="top"
-                                        >
-                                            Cancel Charges 
-
-                                        </v-tooltip>
-                                    </v-btn>
+                                    <div class="grey--text text--lighten-1 border rounded pa-2">
+                                        carried
+                                    </div>
                                 </template>
                             </v-data-table>
                         </v-expansion-panel-text>
