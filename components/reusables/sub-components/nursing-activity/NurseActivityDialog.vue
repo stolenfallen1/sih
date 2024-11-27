@@ -14,9 +14,12 @@
     const processedChargeList       = ref([]);
     const pendingChargeList         = ref([]);
     const cashAssessnentChargeList  = ref([]);
+    const selected_charges          = ref([]);
+    const account                   = ref('');
     let panel                       = ref([0, 1, 2]);
     const isLoading                 = ref(false);
     const showDialog                = ref(false);
+    const revokeconfirmation        = ref(false);
 
     const openConfirmDialog = async () => {
         showDialog.value = true;
@@ -67,8 +70,6 @@
         }
     }
 
-
-    
     const processedRequest = ref([
         { title: "Description",         key: "description",     sortable: false },
         { title: 'Quantity',            key: 'quantity',        sortable: false },
@@ -221,7 +222,97 @@
             .split(' ') 
             .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()) 
             .join(' '); 
-     }
+    }
+
+    // const isCheckedCharges = (item) => {
+    //     console.log('Item first : ', item)
+    //     return selected_charges.value.includes(item);
+    // }
+
+    // const toggleChargeSelection = (item) => {
+    //     console.log('Item second : ', item)
+    //     if (selected_charges.value.includes(item)) {
+    //         selected_charges.value = selected_charges.value.filter(i => i !== item);
+    //     } else {
+    //         selected_charges.value.push(item);
+    //     }
+    // }
+
+    // const confirmRevoke = () => {
+    //     if (selected_charges.value.length > 0 || selected_cash_assessment.value.length > 0) {
+    //         revokeconfirmation.value = true;
+    //     } else {
+    //         return useSnackbar(true, "error", "Please select charges to revoke.");
+    //     }
+    // }
+
+    // account.value = payload.account;
+    // const onRevoke = async (user_details) => {
+    //     if(account.value === 'Self Pay') {
+    //         revokeSelectedCashAssessment(selected_cash_assessment.value, user_details.user_passcode, user_details.user_userid);   
+    //     } else {
+    //         revokeSelectedCharges(selected_charges.value, user_details.user_passcode, user_details.user_userid);            
+    //     }
+    // }
+
+    // const revokeSelectedCharges = async (charges, user_passcode, user_userid) => {
+    //     try {
+    //         const response = await fetch(useApiUrl() + "/revoke-his-charge", {
+    //             method: "put",
+    //             headers: {
+    //                 'Content-Type': 'application/json',
+    //                 'Authorization': 'Bearer ' + useToken()
+    //             },
+    //             body: JSON.stringify({ 
+    //                 items: charges, 
+    //                 user_passcode: user_passcode, 
+    //                 user_userid: user_userid,
+    //                 patient_Id: payload.value.patient_id,
+    //                 case_No: payload.value.case_No
+    //             })
+    //         });
+    //         if (response) {
+    //             useSnackbar(true, "success", "Charges revoked successfully.");
+    //             getChargesHistory();
+    //             getProfFeeHistory();
+    //             closeConfirmRevoke();
+    //         } else {
+    //             return useSnackbar(true, "error", "Failed to revoke charges.");
+    //         }
+    //     } catch (error) {
+    //         return useSnackbar(true, "error", "Failed to revoke charges.");
+    //     }
+    // }
+
+    // const revokeSelectedCashAssessment = async (charges, user_passcode, user_userid) => {
+    //     try {
+    //         const response = await fetch(useApiUrl() + "/revoke-cash-assessment", {
+    //             method: "put",
+    //             headers: {
+    //                 'Content-Type': 'application/json',
+    //                 'Authorization': 'Bearer ' + useToken()
+    //             },
+    //             body: JSON.stringify({ items: charges, user_passcode: user_passcode, user_userid: user_userid })
+    //         });
+    //         if (response) {
+    //             console.log('Cancel Responses : ', response);
+    //             useSnackbar(true, "success", "Charges revoked successfully.");
+    //             getCashAssessmentHistory();
+    //             getCashProfHistory();
+    //             closeConfirmRevoke();
+    //         } else {
+    //             return useSnackbar(true, "error", "Failed to revoke charges.");
+    //         }
+    //     } catch (error) {
+    //         return useSnackbar(true, "error", "Failed to revoke charges.");
+    //     }
+    // }
+
+    // const closeConfirmRevoke = () => {
+    //     revokeconfirmation.value = false;
+    //     selected_charges.value = [];
+    //     selected_cash_assessment.value = [];
+    // }
 
 
     watch(() => selectedRowDetails.value, async (newRow, oldRow) => {
@@ -403,7 +494,9 @@
                                 height="40vh" 
                                 class="styled-table"
                                 >
+                  
                                 <template v-slot:item.action="{ item }">
+                                    <!-- <input type="checkbox" :checked="isCheckedCharges(item)" @change="toggleChargeSelection(item)" /> -->
                                     <v-btn
                                         flat
                                         size="medium"
@@ -425,6 +518,10 @@
                                     </v-btn>
                                 </template>
                             </v-data-table>
+                            <v-divider></v-divider>
+                            <!-- <v-card-actions>
+                                <v-btn class="text-white bg-error" @click="confirmRevoke">Revoke Charge</v-btn>
+                            </v-card-actions> -->
                         </v-expansion-panel-text>
                     </v-expansion-panel>
 
@@ -475,6 +572,15 @@
         :loading="isLoading"
         @submit="onSubmit"
         @close="closeConfirmDialog"
+    />
+
+    <Confirmation 
+        :show="revokeconfirmation"
+        :payload="payload"
+        :loading="isLoadingBtn"
+        :error_msg="error_msg"
+        @submit="onRevoke"
+        @close="closeConfirmRevoke"
     />
 </template>
 
