@@ -102,6 +102,7 @@
     :open_pending_patients_list="open_pending_patients_list" 
     :patient_type="patient_type" 
     :item="selected_item"
+    @order-carried="loadItems"
     @close-dialog="closeCarryOrderForm" 
   />
 

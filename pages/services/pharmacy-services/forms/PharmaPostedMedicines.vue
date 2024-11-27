@@ -132,7 +132,12 @@
                 </v-card>
                 <v-card elevation="4">
                     <v-card-text>
-                        <p>List of Posted Medicines</p>
+                        <div style="display: flex; align-items: center; justify-content: space-between;">
+                            <p>List of Posted Medicines</p>
+                            <div>
+                                <v-btn class="bg-info text-white" v-if="payload.patient_Name != null" style="margin-right: 10px;" @click="clearData">Clear</v-btn>
+                            </div>
+                        </div>
                         <v-data-table-server
                             class="animated animatedFadeInUp fadeInUp mt-4"
                             :items-per-page="100"
@@ -228,6 +233,7 @@
             </v-card-actions>
         </v-card>
     </v-dialog>
+    <Snackbar />
 </template>
 
 <script setup>
@@ -271,11 +277,19 @@ const data = ref({
 });
 
 const getPatientPostedMeds = async () => {
-    if (payload.value.case_No == null || payload.value.case_No == undefined || payload.value.case_No == "") {
-        data.value.loading = true;
-        try {
-            const response = await useMethod("get", "get-pharmacy-posted-meds?case_No=", "", payload.value.caseNo);
-            if (response) {
+    if (!payload.value.caseNo) {
+        return useSnackbar(true, "error", "Please enter case number.");
+    }
+    data.value.loading = true;
+    try {
+        const response = await useMethod("get", "get-pharmacy-posted-meds?case_No=", "", payload.value.caseNo);
+        if (response) {
+            if (response.patient_details.inventory_data.length === 0) {
+                clearData();
+                useSnackbar(true, "error", "No posted medicines found for this patient.");
+                return;
+            } else {
+                console.log("TEST 123");
                 payload.value.patient_Id = response.patient_details.patient_Id;
                 payload.value.case_No = response.patient_details.case_No;
                 payload.value.age = response.patient_details.age;
@@ -285,13 +299,18 @@ const getPatientPostedMeds = async () => {
                 payload.value.birthdate = response.patient_details.birthdate;
                 payload.value.attending_Doctor_fullname = response.patient_details.doctor;
                 serverItems.value = response.patient_details.inventory_data;
-            } 
-        } catch (error) {
-            console.error(error);
-        } finally {
-            data.value.loading = false;
-        }
+            }
+        } 
+    } catch (error) {
+        console.error(error);
+    } finally {
+        data.value.loading = false;
     }
+}
+
+const clearData = () => {
+    payload.value = {};
+    serverItems.value = [];
 }
 
 const totalAmount = computed(() => {
