@@ -113,7 +113,6 @@
            if(data && Array.isArray(data) && data.length > 0) {
 
                 if(accountType !== 'Self Pay') {
-                    console.log('yesy');
                     const filteredProcessedData  = data.filter( 
                         item => item.record_Status === 'W' || item.revenue_Id.trim() === 'ER'
                     );
@@ -123,24 +122,37 @@
                         code:           item.item_Id,
                         revenue_id:     item.revenue_Id,
                         requestDate:    getDateTime(item.created_at),
-                        requestBy:      item.requestBy,
-                        processedBy:    item.revenue_Id === 'EM' ||
-                                        item.revenue_Id === 'RS'
-                                        ? item.requestBy 
-                                        : item.process_By,
+                        requestBy:      item.requestBy 
+                                        ? iten.requestBy 
+                                        : item.process_By
+                                        ? item.process_By
+                                        : item.userId 
+                                        ? item.userId
+                                        : '-',
+                        processedBy:    item.requestBy 
+                                        ? iten.requestBy 
+                                        : item.process_By
+                                        ? item.process_By
+                                        : item.userId 
+                                        ? item.userId
+                                        : '-',
                         item_name:      item.description || '-',
-                        quantity:       item.Quantity ? parseInt(item.Quantity) : '-',
+                        quantity:       item.quantity ? parseInt(item.quantity) : '-',
                         request_num:    item.referenceNum,
                         assess_num:     item.assessnum,
-                        processedDate:  item.revenue_Id === 'EM' ||
-                                        item.revenue_Id === 'RS'
+                        processedDate:  item.updated_at
                                         ? getDateTime(item.updated_at) 
-                                        : getDateTime(item.process_Date),
+                                        : item.process_Date
+                                        ? getDateTime(item.process_Date)
+                                        : item.created_at
+                                        ? getDateTime(item.created_at)
+                                        : '-',
                         record_Status:  item.record_Status
                     }));
 
                     const filteredPendingData  = data.filter(
-                        item => item.record_Status !== 'W'
+                        item => item.record_Status !== 'W' &&
+                                item.revenue_Id.trim() !== 'ER'
                     );
                     pendingChargeList.value = filteredPendingData.map(item => ({
                         description:    item.description !== null ? toTitleCase(item.description) : '',
@@ -148,9 +160,14 @@
                         code:           item.item_Id,
                         revenue_id:     item.revenue_Id,
                         item_name:      item.description || '-',
-                        quantity:       item.Quantity ? parseInt(item.Quantity) : '-',
+                        quantity:       item.quantity ? parseInt(item.quantity) : '-',
                         request_num:    item.referenceNum,
                         assess_num:     item.assessnum,
+                        requestedBy:    item.requestBy
+                                        ? item.requestBy
+                                        : item.userId
+                                        ? item.userId
+                                        : '-',
                         processedDate:  getDateTime(item.created_at),
                         record_Status:  item.record_Status
                     }))
@@ -163,7 +180,7 @@
                         code:           item.item_Id,
                         revenue_id:     item.revenue_Id,
                         item_name:      item.description || '-',
-                        quantity:       item.Quantity ? parseInt(item.Quantity) : '-',
+                        quantity:       item.quantity ? parseInt(item.quantity) : '-',
                         request_num:    item.referenceNum,
                         assess_num:     item.assessnum,
                         processedDate:  item.updated_at !== null 
