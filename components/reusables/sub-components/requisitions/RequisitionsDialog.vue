@@ -352,7 +352,6 @@ const handleSelectedRow = (selectedRows) => {
 } 
 
 const printRequistion = (payload, charges) => {
-    console.log(charges);
     const newWindow = window.open('', '_blank', 'width=900,height=750');
     if (newWindow) {
         const app = createApp(RequisitionReports, {

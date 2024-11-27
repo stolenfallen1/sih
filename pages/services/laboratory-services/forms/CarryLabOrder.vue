@@ -256,7 +256,7 @@ const table_headers = [
     { title: "Status", align: "start", key: "request_Status", sortable: false },
 ];
 
-const emits = defineEmits(["close-dialog"]);
+const emits = defineEmits(["close-dialog", "order-carried"]);
 
 const setPayloadProperties = () => {
     payload.value.patient_Id = patient_details.value.patient_Id;
@@ -314,6 +314,7 @@ const onCancel = async (user_details) => {
             const response = await useMethod("post", "cancel-laboratory-exam", payload.value);   
             if (response) {
                 useSnackbar(true, "success", "Lab Requests successfully cancelled.");
+                emits("order-carried");
                 closeCancellation();
                 closeRemarksDialog();
                 closeCarryOrder();
@@ -365,6 +366,7 @@ const onSubmit = async (user_details) => {
             const response = await useMethod("post", "carry-laboratory-exam", payload.value);   
             if (response) {
                 useSnackbar(true, "success", "Lab Requests successfully carried.");
+                emits("order-carried");
                 closeConfirmation();
                 closeCarryOrder();
                 closeDialog();

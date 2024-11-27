@@ -156,27 +156,29 @@
                             <span v-else style="color: red;"> N/A </span>
                         </template>
                         <template v-slot:item.renderby="{ item }">
-                            <span v-if="item.cancelledby == null"> {{ item.renderby }} </span>
+                            <span v-if="item.cancelledby == null && item.renderby != null"> {{ item.renderby }} </span>
                             <span v-else style="color: red;"> N/A </span>
                         </template>
                         <template v-slot:item.renderdate="{ item }">
-                            <span v-if="item.cancelleddate == null"> {{ useDateMMDDYYY(item.renderdate) }} </span>
+                            <span v-if="item.cancelleddate == null && item.renderdate != null"> {{ useDateMMDDYYY(item.renderdate) }} </span>
                             <span v-else style="color: red;"> N/A </span>
                         </template>
                         <template v-slot:item.requestStatus="{ item }">
                             <v-chip color="green" v-if="item.requestStatus == 'W'">Rendered</v-chip>
                             <v-chip color="red" v-if="item.requestStatus == 'R'">Cancelled</v-chip>
+                            <v-chip color="orange" v-if="item.requestStatus == 'X'">Pending</v-chip>
                         </template>
                         <template v-slot:item.resultStatus="{ item }">
-                            <v-chip color="green" v-if="item.requestStatus == 'W'">Rendered</v-chip>
-                            <v-chip color="red" v-if="item.requestStatus == 'R'">Cancelled</v-chip>
+                            <v-chip color="green" v-if="item.resultStatus == 'W'">Rendered</v-chip>
+                            <v-chip color="red" v-if="item.resultStatus == 'R'">Cancelled</v-chip>
+                            <v-chip color="orange" v-if="item.resultStatus == 'X'">Pending</v-chip>
                         </template>
                         <template v-slot:item.cancelledby="{ item }">
-                            <span v-if="item.renderby == null"> {{ item.cancelledby }} </span>
+                            <span v-if="item.renderby == null && item.renderby != null"> {{ item.cancelledby }} </span>
                             <span v-else style="color: red;"> N/A </span>
                         </template>
                         <template v-slot:item.cancelleddate="{ item }">
-                            <span v-if="item.renderdate == null"> {{ useDateMMDDYYY(item.cancelleddate) }} </span>
+                            <span v-if="item.renderdate == null && item.cancelleddate != null"> {{ useDateMMDDYYY(item.cancelleddate) }} </span>
                             <span v-else style="color: red;"> N/A </span>
                         </template>
                         
@@ -187,6 +189,7 @@
         <v-divider></v-divider>
         <v-card-actions>
             <v-spacer></v-spacer>
+            <v-btn class="text-white bg-info" @click="onPrint">Print Rendered Requests</v-btn>
             <v-btn color="blue-darken-1 border border-info" @click="closeDialog"> Close </v-btn>
         </v-card-actions>
         </v-card>
@@ -194,6 +197,9 @@
 </template>
 
 <script setup>
+import { createApp } from 'vue';
+import PatientLabResultsReports from '~/public/reports/laboratory/PatientLabResultsReports.vue';
+
 const props = defineProps({
     open_patient_info_and_charges: {
         type: Boolean,
@@ -276,6 +282,48 @@ const loadItems = async (page = null, itemsPerPage = null) => {
     }
 };
 
+const printRequistion = (payload, charges) => {
+    const newWindow = window.open('', '_blank', 'width=900,height=750');
+    if (newWindow) {
+        const app = createApp(PatientLabResultsReports, {
+            payload: payload,
+            charges: charges,
+        });
+        app.mount(newWindow.document.body);
+        nextTick(() => {
+            newWindow.print();
+            newWindow.onafterprint = () => {
+                newWindow.close();
+            }
+        });
+    }
+}
+
+const print_payload = ref({});
+const print_charges = ref([]);
+const onPrint = () => {
+    print_payload.value = {
+        patient_Id: payload.value.patient_Id,
+        case_No: payload.value.case_No,
+        patient_Name: payload.value.patient_name,
+        birthdate: payload.value.birthdate,
+        age: payload.value.patient_Age,
+        sex: payload.value.sex,
+        account: payload.value.account,
+        attending_Doctor_fullname: payload.value.attending_Doctor_fullname,
+    }
+    const filteredCharges = serverItems.value.filter(item => {
+        return item.requestStatus == 'W' && item.resultStatus == 'W';
+    });
+    if (filteredCharges.length > 0) {
+        print_charges.value = filteredCharges;
+    } else {
+        useSnackbar(true, "red", "No rendered charges to print");
+        return;
+    }
+    printRequistion(print_payload.value, print_charges.value);
+}
+
 const closeDialog = () => {
     emits("close-dialog");
 };
@@ -289,6 +337,8 @@ onUpdated(() => {
         payload.value.patient_Id = selectedRowDetails.value?.patient_Id;
         payload.value.case_No = selectedRowDetails.value?.case_No;
         payload.value.patient_Age = selectedRowDetails.value?.patient_Age ? selectedRowDetails.value?.patient_Age : "N/A";
+        payload.value.birthdate = selectedRowDetails.value?.birthdate ? useDateMMDDYYY(selectedRowDetails.value?.birthdate) : "N/A";
+        payload.value.sex = selectedRowDetails.value?.sex_id ?  selectedRowDetails.value?.sex_id : null;
         payload.value.registry_Date = selectedRowDetails.value?.registry_Date ? useDateMMDDYYY(selectedRowDetails.value?.registry_Date) : "N/A";
         payload.value.attending_Doctor_fullname = selectedRowDetails.value?.attending_Doctor_fullname ? selectedRowDetails.value?.attending_Doctor_fullname : "N/A";
         payload.value.account = selectedRowDetails.value?.mscPrice_Schemes && selectedRowDetails.value?.mscPrice_Schemes  == 1 ? "Self-Pay" : "Company / Insurance";
