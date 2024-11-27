@@ -1021,6 +1021,7 @@ const confirmRevoke = () => {
         return useSnackbar(true, "error", "Please select charges to revoke.");
     }
 }
+
 const onRevoke = async (user_details) => {
     switch (roleID.value) {
         case '27':
