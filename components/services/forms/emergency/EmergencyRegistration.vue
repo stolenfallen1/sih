@@ -1,5 +1,16 @@
 <template>
     <v-dialog :model-value="form_dialog" :persistent="true" hide-overlay width="1280" scrollable>
+        <div v-if="isVisible" class="data-loader">
+            <v-progress-circular
+                :model-value="value" 
+                :rotate="360" :size="100" 
+                :width="15" color="#107bac"
+                >
+                <template 
+                    v-slot:default> {{ value }} % 
+                </template>
+            </v-progress-circular>
+        </div>
         <v-form ref="form" @submit.prevent="openConfirmDialog">
             <v-card rounded="lg">
                 <v-toolbar density="compact" color="#107bac" hide-details>
@@ -34,7 +45,7 @@
                                     <ER-Patient-Basic-Info :clicked_option="clicked_option" :formErrors="formErrors" :payload="payload" />
                                 </v-window-item>
                                 <v-window-item class="pa-1">
-                                    <ER-Registry-Basic-Info :clicked_option="clicked_option" :formErrors="formErrors" :payload="payload" :form_type="formType" />
+                                    <ER-Registry-Basic-Info :clicked_option="clicked_option" :formErrors="formErrors" :payload="payload" :form_type="formType" @toggle-loader="handleLoader" @update-progress="updateProgress" />
                                 </v-window-item>
                                 <v-window-item class="pa-1">
                                     <ER-Other-Details-Info :clicked_option="clicked_option" :formErrors="formErrors" :payload="payload" :form_type="formType" />
@@ -109,12 +120,22 @@
     });
     const showSnackbar = ref(false);
     const showDialog = ref(false);
+    const isVisible = ref(false);
+    const value = ref(0);
+
+    const handleLoader = (status) => {
+        isVisible.value = status;
+    }
+
+    const updateProgress = (progress) => {
+        value.value = progress;
+    };
+
     
     let tab = ref("0");
     const formErrors = ref({});
     const formType = ref('emergency');
     const isLoadingBtn = ref(false);
-
     const findTabIndexByError = (field) => {
         switch (field) {
             case "lastname": return "0";
@@ -235,15 +256,14 @@
             if (payload.value.id) {
                 response = await useMethod("put", "update-emergency", payload.value, "", payload.value.patient_Id);
                 if (response) {
-                    closeDialog();
                     useSnackbar(true, "green", response.message);
                     patientDetail.value = response.data; 
                     emits('patient-registered', patientDetail.value);
                 }
             } else {
+                console.log('Payload : ', payload.value);
                 response = await useMethod("post", "register-emergency", payload.value);
                 if (response) {
-                    closeDialog();
                     useSnackbar(true, "green", response.message);
                     payload.value = {};
                     patientDetail.value = response.data;
@@ -446,5 +466,33 @@
     .scrollable-content {
         overflow-y: auto;
         max-height: calc(100vh - 200px); 
+    }
+
+    .v-progress-circular {
+        margin: 1rem;
+    }
+
+    .data-loader {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 80vw;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: rgba(0, 0, 0, 0.1);
+        z-index: 99999;
+    }
+
+    .overlay {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .v-card {
+        position: relative !important;
+        z-index: auto !important;
     }
 </style>

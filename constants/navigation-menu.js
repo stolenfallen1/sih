@@ -1083,12 +1083,12 @@ export default [
                         form: "ERPostMedicineSupplies",
                         rule: "",
                     },
-                    {
-                        label: "Nursing Activity",
-                        icon: "mdi-file-document-edit",
-                        form: "NurseActivity",
-                        rule: "",
-                    },
+                    // {
+                    //     label: "Nursing Activity",
+                    //     icon: "mdi-file-document-edit",
+                    //     form: "NurseActivity",
+                    //     rule: "",
+                    // },
                     // {
                     //     label: "Post Corporate Medical Package",
                     //     icon: "mdi-file-document-edit",
@@ -1636,18 +1636,19 @@ export default [
                         form: "NurseActivity",
                         rule: "",
                     },
+    
                     // {
                     //     label: "Patient Profile",
                     //     icon: "mdi-file-document-edit",
                     //     form: "PatientProfile",
                     //     rule: "",
                     // },
-                    // {
-                    //     label: "Requisitions",
-                    //     icon: "mdi-file-document-edit",
-                    //     form: "Requisitions",
-                    //     rule: "",
-                    // },
+                    {
+                        label: "Requisitions",
+                        icon: "mdi-file-document-edit",
+                        form: "Requisitions",
+                        rule: "",
+                    },
                     // {
                     //     label: "Post Charges",
                     //     icon: "mdi-file-document-edit",

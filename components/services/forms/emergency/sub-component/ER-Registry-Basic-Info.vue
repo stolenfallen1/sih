@@ -1,363 +1,366 @@
 <template>
-    <v-row class="py-4">
-        <v-col cols="4">
-            <fieldset class="pa-2 rounded-fieldset">
-                <legend class="pa-2">Registry Source & Plan</legend>
-                <v-col cols="12" class="form-col">
-                    <v-list-subheader class="form-header">Register Source</v-list-subheader>
-                    <v-autocomplete
-                        variant="outlined"
-                        :items="register_source_data"
-                        item-title="description"
-                        item-value="id"
-                        v-model="payload.register_Source"
-                        hide-details
-                        density="compact"
-                    ></v-autocomplete>
-                </v-col>
-                <v-col cols="12" class="form-col">
+    <div>
+        <v-row class="py-4">
+            <v-col cols="4">
+                <fieldset class="pa-2 rounded-fieldset">
+                    <legend class="pa-2">Registry Source & Plan</legend>
                     <v-col cols="12" class="form-col">
-                        <v-list-subheader class="form-header">Transaction Type <span style="color: red;" class="mdi mdi-check"></span></v-list-subheader>
+                        <v-list-subheader class="form-header">Register Source</v-list-subheader>
                         <v-autocomplete
-                            ref="mscAccount_Trans_Types"
-                            :items="transaction_type_data"
+                            variant="outlined"
+                            :items="register_source_data"
                             item-title="description"
                             item-value="id"
-                            v-model="payload.mscAccount_Trans_Types"
+                            v-model="payload.register_Source"
+                            hide-details
+                            density="compact"
+                        ></v-autocomplete>
+                    </v-col>
+                    <v-col cols="12" class="form-col">
+                        <v-col cols="12" class="form-col">
+                            <v-list-subheader class="form-header">Transaction Type <span style="color: red;" class="mdi mdi-check"></span></v-list-subheader>
+                            <v-autocomplete
+                                ref="mscAccount_Trans_Types"
+                                :items="transaction_type_data"
+                                item-title="description"
+                                item-value="id"
+                                v-model="payload.mscAccount_Trans_Types"
+                                :readonly="clicked_option === 'view'"
+                                :clearable="clicked_option === 'new' || clicked_option === 'edit'"
+                                density="compact"
+                                variant="outlined"
+                                :error-messages="formErrors.mscAccount_Trans_Types ? [formErrors.mscAccount_Trans_Types] : []"
+                                hide-details
+                            ></v-autocomplete>
+                        </v-col>
+                    </v-col>
+                    <v-col cols="12" class="form-col">
+                        <v-list-subheader class="form-header">Hospitalization Plan <span style="color: red;" class="mdi mdi-check"></span></v-list-subheader>
+                        <v-autocomplete
+                            ref="mscAccount_Type"
+                            :items="hospitalization_plan_data"
+                            item-title="description"
+                            item-value="id"
+                            v-model="payload.mscAccount_Type"
                             :readonly="clicked_option === 'view'"
                             :clearable="clicked_option === 'new' || clicked_option === 'edit'"
+                            :error-messages="formErrors.mscAccount_Type ? [formErrors.mscAccount_Type] : []"
+                            hide-details
                             density="compact"
                             variant="outlined"
-                            :error-messages="formErrors.mscAccount_Trans_Types ? [formErrors.mscAccount_Trans_Types] : []"
-                            hide-details
+                            @update:model-value="handleHospitalizationPlan"
                         ></v-autocomplete>
                     </v-col>
-                </v-col>
-                <v-col cols="12" class="form-col">
-                    <v-list-subheader class="form-header">Hospitalization Plan <span style="color: red;" class="mdi mdi-check"></span></v-list-subheader>
-                    <v-autocomplete
-                        ref="mscAccount_Type"
-                        :items="hospitalization_plan_data"
-                        item-title="description"
-                        item-value="id"
-                        v-model="payload.mscAccount_Type"
-                        :readonly="clicked_option === 'view'"
-                        :clearable="clicked_option === 'new' || clicked_option === 'edit'"
-                        :error-messages="formErrors.mscAccount_Type ? [formErrors.mscAccount_Type] : []"
-                        hide-details
-                        density="compact"
-                        variant="outlined"
-                        @update:model-value="handleHospitalizationPlan"
-                    ></v-autocomplete>
-                </v-col>
-                <v-col cols="12" class="form-col">
-                    <v-list-subheader class="form-header">Price Group <span style="color: red;" class="mdi mdi-check"></span></v-list-subheader>
-                    <v-autocomplete
-                        ref="mscPrice_Groups"
-                        :items="price_group_data"
-                        item-title="description"
-                        item-value="id"
-                        v-model="payload.mscPrice_Groups"
-                        :error-messages="formErrors.mscPrice_Groups ? [formErrors.mscPrice_Groups] : []"
-                        hide-details
-                        density="compact"
-                        variant="outlined"
-                    ></v-autocomplete>
-                </v-col>
-                <v-col cols="12" class="form-col">
-                    <v-list-subheader class="form-header">Price Scheme <span style="color: red;" class="mdi mdi-check"></span></v-list-subheader>
-                    <v-autocomplete
-                        ref="mscPrice_Schemes"
-                        :items="price_scheme_data"
-                        item-title="description"
-                        item-value="id"
-                        v-model="payload.mscPrice_Schemes"
-                        :disabled="clicked_option === 'view'"
-                        :error-messages="formErrors.mscPrice_Schemes ? [formErrors.mscPrice_Schemes] : []"
-                        hide-details
-                        density="compact"
-                        variant="outlined"
-                    ></v-autocomplete>
-                </v-col>
-            </fieldset>
-        </v-col>
-        <v-col cols="4">
-            <fieldset class="pa-2 rounded-fieldset">
-                <legend class="pa-2">Registry Type & Service</legend>
-                <v-col cols="12" class="form-col">
                     <v-col cols="12" class="form-col">
-                        <v-list-subheader class="form-header">Register Case Type</v-list-subheader>
+                        <v-list-subheader class="form-header">Price Group <span style="color: red;" class="mdi mdi-check"></span></v-list-subheader>
                         <v-autocomplete
-                            variant="outlined"
-                            :items="register_case_type_data"
+                            ref="mscPrice_Groups"
+                            :items="price_group_data"
                             item-title="description"
                             item-value="id"
-                            v-model="payload.register_Casetype"
+                            v-model="payload.mscPrice_Groups"
+                            :error-messages="formErrors.mscPrice_Groups ? [formErrors.mscPrice_Groups] : []"
                             hide-details
                             density="compact"
+                            variant="outlined"
                         ></v-autocomplete>
                     </v-col>
-                    <v-list-subheader class="form-header">
-                        ER Case Date<span style="color: red;" class="mdi mdi-check"></span>
-                    </v-list-subheader>
-                    <v-text-field
-                        ref="registry_date"
-                        variant="outlined"
-                        v-model="payload.registry_Date"
-                        :readonly="clicked_option === 'view'"
-                        type="date"
-                        :error-messages="formErrors.registry_Date ? [formErrors.registry_Date] : []"
-                        hide-details
-                        density="compact"
-                    ></v-text-field>
-                </v-col>
-                <v-col cols="12" class="form-col">
-                    <v-list-subheader class="form-header">Patient Brought By</v-list-subheader>
-                    <v-autocomplete
-                        v-model="payload.mscBroughtBy_Relationship_Id"
-                        :items="patientBroughtBy"
-                        item-title="description"
-                        item-value="id"
-                        :readonly="clicked_option === 'view'"
-                        :clearable="clicked_option === 'new' || clicked_option === 'edit'"
-                        variant="outlined"
-                        density="compact"
-                        hide-details
-                    ></v-autocomplete>
-                </v-col>
-                <v-col cols="12" class="form-col">
-                    <v-list-subheader class="form-header">Service Type </v-list-subheader>
-                    <v-autocomplete
-                        :items="service_type_data"
-                        item-title="description"
-                        item-value="id"
-                        variant="outlined"
-                        v-model="payload.mscService_Type"
-                        :readonly="clicked_option === 'view'"
-                        hide-details
-                        density="compact"
-                    ></v-autocomplete>
-                </v-col>
-                <v-col cols="12" class="form-col">
-                    <v-list-subheader class="form-header">Area / Bed No. </v-list-subheader>
-                    <v-text-field
-                        variant="outlined"
-                        v-model="payload.er_Bedno"
-                        :readonly="clicked_option === 'view'"
-                        hide-details
-                        density="compact"
-                    ></v-text-field>
-                </v-col>
-            </fieldset>
-        </v-col>
-        <v-col cols="4" class="py-3">
-            <fieldset class="pa-2 rounded-fieldset">
-                <legend class="pa-2">Registry Death Info</legend>
-                <v-col cols="12" class="form-col">
-                    <v-checkbox 
-                        label="Dead on Arrival?" 
-                        v-model="payload.dead_on_arrival" 
-                        color="primary" 
-                        :readonly="clicked_option === 'view'" 
-                        hide-details 
-                        density="compact"
-                    ></v-checkbox>
-                </v-col>
-                <v-col cols="12" class="form-col">
-                    <v-list-subheader :class="{'text-muted' : !payload.dead_on_arrival, 'form-header': true}">Date of Death</v-list-subheader>
-                    <v-text-field
+                    <v-col cols="12" class="form-col">
+                        <v-list-subheader class="form-header">Price Scheme <span style="color: red;" class="mdi mdi-check"></span></v-list-subheader>
+                        <v-autocomplete
+                            ref="mscPrice_Schemes"
+                            :items="price_scheme_data"
+                            item-title="description"
+                            item-value="id"
+                            v-model="payload.mscPrice_Schemes"
+                            :disabled="clicked_option === 'view'"
+                            :error-messages="formErrors.mscPrice_Schemes ? [formErrors.mscPrice_Schemes] : []"
+                            hide-details
+                            density="compact"
                             variant="outlined"
-                            v-model="payload.dateOfDeath"
-                            :disabled="!payload.dead_on_arrival"
+                        ></v-autocomplete>
+                    </v-col>
+                </fieldset>
+            </v-col>
+            <v-col cols="4">
+                <fieldset class="pa-2 rounded-fieldset">
+                    <legend class="pa-2">Registry Type & Service</legend>
+                    <v-col cols="12" class="form-col">
+                        <v-col cols="12" class="form-col">
+                            <v-list-subheader class="form-header">Register Case Type</v-list-subheader>
+                            <v-autocomplete
+                                variant="outlined"
+                                :items="register_case_type_data"
+                                item-title="description"
+                                item-value="id"
+                                v-model="payload.register_Casetype"
+                                hide-details
+                                density="compact"
+                            ></v-autocomplete>
+                        </v-col>
+                        <v-list-subheader class="form-header">
+                            ER Case Date<span style="color: red;" class="mdi mdi-check"></span>
+                        </v-list-subheader>
+                        <v-text-field
+                            ref="registry_date"
+                            variant="outlined"
+                            v-model="payload.registry_Date"
                             :readonly="clicked_option === 'view'"
                             type="date"
+                            :error-messages="formErrors.registry_Date ? [formErrors.registry_Date] : []"
                             hide-details
                             density="compact"
                         ></v-text-field>
-                </v-col>
-                <v-col cols="12" class="form-col">
-                    <v-list-subheader :class="{'text-muted' : !payload.dead_on_arrival, 'form-header': true}">Time of Death</v-list-subheader>
-                    <v-text-field
-                        variant="outlined"
-                        v-model="payload.timeOfDeath"
-                        :disabled="!payload.dead_on_arrival"
-                        :readonly="clicked_option === 'view'"
-                        type="time"
-                        density="compact"
-                        hide-details
-                    ></v-text-field>
-                </v-col>
-                <v-col cols="12" class="form-col">
-                    <v-list-subheader :class="{'text-muted' : !payload.dead_on_arrival, 'form-header': true}">Type of Death</v-list-subheader>
+                    </v-col>
+                    <v-col cols="12" class="form-col">
+                        <v-list-subheader class="form-header">Patient Brought By</v-list-subheader>
                         <v-autocomplete
+                            v-model="payload.mscBroughtBy_Relationship_Id"
+                            :items="patientBroughtBy"
                             item-title="description"
                             item-value="id"
-                            placeholder="Choose Type of Death"
-                            v-model="payload.typeOfDeath_id"
-                            :disabled="!payload.dead_on_arrival"
+                            :readonly="clicked_option === 'view'"
+                            :clearable="clicked_option === 'new' || clicked_option === 'edit'"
+                            variant="outlined"
+                            density="compact"
+                            hide-details
+                        ></v-autocomplete>
+                    </v-col>
+                    <v-col cols="12" class="form-col">
+                        <v-list-subheader class="form-header">Service Type </v-list-subheader>
+                        <v-autocomplete
+                            :items="service_type_data"
+                            item-title="description"
+                            item-value="id"
+                            variant="outlined"
+                            v-model="payload.mscService_Type"
                             :readonly="clicked_option === 'view'"
                             hide-details
-                            :clearable="clicked_option === 'new' || clicked_option === 'edit'"
-                            :items="death_types_data"
                             density="compact"
-                            variant="outlined"
                         ></v-autocomplete>
-                </v-col>
-            </fieldset>
-        </v-col>
-    </v-row>
-    <v-divider class="py-2"></v-divider>
-    <v-row class="py-2">
-        <v-col cols="6">
-            <v-col cols="12" class="form-col">
-                <v-checkbox-btn
-                    label="Referred from another hospital?"
-                    v-model="enabled"
-                    class="pe-2"
-                    size="large"
-                    color="primary"
-                ></v-checkbox-btn>
+                    </v-col>
+                    <v-col cols="12" class="form-col">
+                        <v-list-subheader class="form-header">Area / Bed No. </v-list-subheader>
+                        <v-text-field
+                            variant="outlined"
+                            v-model="payload.er_Bedno"
+                            :readonly="clicked_option === 'view'"
+                            hide-details
+                            density="compact"
+                        ></v-text-field>
+                    </v-col>
+                </fieldset>
             </v-col>
-        </v-col>
-        <v-col cols="6">
-            <v-col cols="12" class="form-col">
-                <v-list-subheader class="form-header">Dispostion</v-list-subheader>
-                <v-autocomplete
-                    v-model="payload.mscDisposition_Id"
-                    :items="disposition_data"
-                    item-title="description"
-                    item-value="id"
-                    :readonly="clicked_option === 'view'"
-                    :clearable="clicked_option === 'new' || clicked_option === 'edit'"
-                    variant="outlined"
-                    density="compact"
-                    hide-details
-                ></v-autocomplete>
+            <v-col cols="4" class="py-3">
+                <fieldset class="pa-2 rounded-fieldset">
+                    <legend class="pa-2">Registry Death Info</legend>
+                    <v-col cols="12" class="form-col">
+                        <v-checkbox 
+                            label="Dead on Arrival?" 
+                            v-model="payload.dead_on_arrival" 
+                            color="primary" 
+                            :readonly="clicked_option === 'view'" 
+                            hide-details 
+                            density="compact"
+                        ></v-checkbox>
+                    </v-col>
+                    <v-col cols="12" class="form-col">
+                        <v-list-subheader :class="{'text-muted' : !payload.dead_on_arrival, 'form-header': true}">Date of Death</v-list-subheader>
+                        <v-text-field
+                                variant="outlined"
+                                v-model="payload.dateOfDeath"
+                                :disabled="!payload.dead_on_arrival"
+                                :readonly="clicked_option === 'view'"
+                                type="date"
+                                hide-details
+                                density="compact"
+                            ></v-text-field>
+                    </v-col>
+                    <v-col cols="12" class="form-col">
+                        <v-list-subheader :class="{'text-muted' : !payload.dead_on_arrival, 'form-header': true}">Time of Death</v-list-subheader>
+                        <v-text-field
+                            variant="outlined"
+                            v-model="payload.timeOfDeath"
+                            :disabled="!payload.dead_on_arrival"
+                            :readonly="clicked_option === 'view'"
+                            type="time"
+                            density="compact"
+                            hide-details
+                        ></v-text-field>
+                    </v-col>
+                    <v-col cols="12" class="form-col">
+                        <v-list-subheader :class="{'text-muted' : !payload.dead_on_arrival, 'form-header': true}">Type of Death</v-list-subheader>
+                            <v-autocomplete
+                                item-title="description"
+                                item-value="id"
+                                placeholder="Choose Type of Death"
+                                v-model="payload.typeOfDeath_id"
+                                :disabled="!payload.dead_on_arrival"
+                                :readonly="clicked_option === 'view'"
+                                hide-details
+                                :clearable="clicked_option === 'new' || clicked_option === 'edit'"
+                                :items="death_types_data"
+                                density="compact"
+                                variant="outlined"
+                            ></v-autocomplete>
+                    </v-col>
+                </fieldset>
             </v-col>
-        </v-col>
-    </v-row>
-    <v-divider class="py-2"></v-divider>
-    <v-row class="py-2">
-        <v-col cols="4">
-            <fieldset class="pa-2 rounded-fieldset">
-                <legend class="pa-2">Refered From</legend>
+        </v-row>
+        <v-divider class="py-2"></v-divider>
+        <v-row class="py-2">
+            <v-col cols="6">
                 <v-col cols="12" class="form-col">
-                    <v-list-subheader :class="{'text-muted': !enabled && parseInt(payload.mscDisposition_Id) !== 3, 'form-header': true}">Refered From HCI</v-list-subheader>
-                    <v-text-field
-                        v-model="payload.referred_From_HCI"
+                    <v-checkbox-btn
+                        label="Referred from another hospital?"
+                        v-model="enabled"
+                        class="pe-2"
+                        size="large"
+                        color="primary"
+                    ></v-checkbox-btn>
+                </v-col>
+            </v-col>
+            <v-col cols="6">
+                <v-col cols="12" class="form-col">
+                    <v-list-subheader class="form-header">Dispostion</v-list-subheader>
+                    <v-autocomplete
+                        v-model="payload.mscDisposition_Id"
+                        :items="disposition_data"
+                        item-title="description"
+                        item-value="id"
                         :readonly="clicked_option === 'view'"
                         :clearable="clicked_option === 'new' || clicked_option === 'edit'"
-                        :disabled="!enabled && parseInt(payload.mscDisposition_Id) !== 3"
                         variant="outlined"
                         density="compact"
                         hide-details
-                    ></v-text-field>
+                    ></v-autocomplete>
                 </v-col>
-                <v-col cols="12" class="form-col">
-                    <v-list-subheader :class="{'text-muted': !enabled && parseInt(payload.mscDisposition_Id) !== 3, 'form-header': true}"> Refered From HCI Code</v-list-subheader>
-                    <v-text-field
-                        v-model="payload.referred_From_HCI_code"
-                        :readonly="clicked_option === 'view'"
-                        :clearable="clicked_option === 'new' || clicked_option === 'edit'"
-                        :disabled="!enabled && parseInt(payload.mscDisposition_Id) !== 3"
-                        variant="outlined"
-                        density="compact"
-                        hide-details
-                    ></v-text-field>
-                </v-col>
-                <v-col cols="12" class="form-col">
-                    <v-list-subheader :class="{'text-muted': !enabled && parseInt(payload.mscDisposition_Id) !== 3, 'form-header': true}">Refered From HCI Address</v-list-subheader>
-                    <v-textarea 
-                        hide-details 
-                        density="compact" 
-                        variant="outlined"
-                        v-model="payload.referred_From_HCI_address"
-                        :disabled="!enabled && parseInt(payload.mscDisposition_Id) !== 3"
-                        :value="!!payload.referred_From_HCI_address ? payload.referred_From_HCI_address : fullFromHCIAddress"
-                        class="cursor-pointer"
-                        readonly
-                        prepend-icon="mdi-plus-box"
-                        @click:prepend="handleOpenAddressForm"
-                    ></v-textarea>
-                </v-col>
-            </fieldset>
-        </v-col>
-        <v-col cols="4">
-            <fieldset class="pa-2 rounded-fieldset">
-                <legend class="pa-2">Refered To</legend>
-                <v-col cols="12" class="form-col">
-                    <v-list-subheader :class="{'text-muted': !enabled && parseInt(payload.mscDisposition_Id) !== 3, 'form-header': true}">Refered To HCI</v-list-subheader>
-                    <v-text-field
-                        v-model="payload.referred_To_HCI"
-                        :readonly="clicked_option === 'view'"
-                        :clearable="clicked_option === 'new' || clicked_option === 'edit'"
-                        :disabled="!enabled && parseInt(payload.mscDisposition_Id) !== 3"
-                        variant="outlined"
-                        density="compact"
-                        hide-details
-                    ></v-text-field>
-                </v-col>
-                <v-col cols="12" class="form-col">
-                    <v-list-subheader :class="{'text-muted': !enabled && parseInt(payload.mscDisposition_Id) !== 3, 'form-header': true}">Refered To HCI Code</v-list-subheader>
-                    <v-text-field
-                        v-model="payload.referred_To_HCI_code"
-                        :readonly="clicked_option === 'view'"
-                        :clearable="clicked_option === 'new' || clicked_option === 'edit'"
-                        :disabled="!enabled && parseInt(payload.mscDisposition_Id) !== 3"
-                        variant="outlined"
-                        density="compact"
-                        hide-details
-                    ></v-text-field>
-                </v-col>
-                <v-col cols="12" class="form-col">
-                    <v-list-subheader :class="{'text-muted': !enabled && parseInt(payload.mscDisposition_Id) !== 3, 'form-header': true}">Refered To HCI Address</v-list-subheader>
-                    <v-textarea 
-                        hide-details 
-                        density="compact" 
-                        variant="outlined"
-                        v-model="payload.referred_To_HCI_address"
-                        :disabled="!enabled && parseInt(payload.mscDisposition_Id) !== 3"
-                        :value="!!payload.referred_To_HCI_address ? payload.referred_To_HCI_address : fullToHCIAddress"
-                        readonly
-                        class="cursor-pointer"
-                        prepend-icon="mdi-plus-box"
-                        @click:prepend="handleOpenAddressFormTo"
-                    ></v-textarea>
-                </v-col>
-            </fieldset>
-        </v-col>
+            </v-col>
+        </v-row>
+        <v-divider class="py-2"></v-divider>
+        <v-row class="py-2">
+            <v-col cols="4">
+                <fieldset class="pa-2 rounded-fieldset">
+                    <legend class="pa-2">Refered From</legend>
+                    <v-col cols="12" class="form-col">
+                        <v-list-subheader :class="{'text-muted': !enabled && parseInt(payload.mscDisposition_Id) !== 3, 'form-header': true}">Refered From HCI</v-list-subheader>
+                        <v-text-field
+                            v-model="payload.referred_From_HCI"
+                            :readonly="clicked_option === 'view'"
+                            :clearable="clicked_option === 'new' || clicked_option === 'edit'"
+                            :disabled="!enabled && parseInt(payload.mscDisposition_Id) !== 3"
+                            variant="outlined"
+                            density="compact"
+                            hide-details
+                        ></v-text-field>
+                    </v-col>
+                    <v-col cols="12" class="form-col">
+                        <v-list-subheader :class="{'text-muted': !enabled && parseInt(payload.mscDisposition_Id) !== 3, 'form-header': true}"> Refered From HCI Code</v-list-subheader>
+                        <v-text-field
+                            v-model="payload.referred_From_HCI_code"
+                            :readonly="clicked_option === 'view'"
+                            :clearable="clicked_option === 'new' || clicked_option === 'edit'"
+                            :disabled="!enabled && parseInt(payload.mscDisposition_Id) !== 3"
+                            variant="outlined"
+                            density="compact"
+                            hide-details
+                        ></v-text-field>
+                    </v-col>
+                    <v-col cols="12" class="form-col">
+                        <v-list-subheader :class="{'text-muted': !enabled && parseInt(payload.mscDisposition_Id) !== 3, 'form-header': true}">Refered From HCI Address</v-list-subheader>
+                        <v-textarea 
+                            hide-details 
+                            density="compact" 
+                            variant="outlined"
+                            v-model="payload.referred_From_HCI_address"
+                            :disabled="!enabled && parseInt(payload.mscDisposition_Id) !== 3"
+                            :value="!!payload.referred_From_HCI_address ? payload.referred_From_HCI_address : fullFromHCIAddress"
+                            class="cursor-pointer"
+                            readonly
+                            prepend-icon="mdi-plus-box"
+                            @click:prepend="handleOpenAddressForm"
+                        ></v-textarea>
+                    </v-col>
+                </fieldset>
+            </v-col>
+            <v-col cols="4">
+                <fieldset class="pa-2 rounded-fieldset">
+                    <legend class="pa-2">Refered To</legend>
+                    <v-col cols="12" class="form-col">
+                        <v-list-subheader :class="{'text-muted': !enabled && parseInt(payload.mscDisposition_Id) !== 3, 'form-header': true}">Refered To HCI</v-list-subheader>
+                        <v-text-field
+                            v-model="payload.referred_To_HCI"
+                            :readonly="clicked_option === 'view'"
+                            :clearable="clicked_option === 'new' || clicked_option === 'edit'"
+                            :disabled="!enabled && parseInt(payload.mscDisposition_Id) !== 3"
+                            variant="outlined"
+                            density="compact"
+                            hide-details
+                        ></v-text-field>
+                    </v-col>
+                    <v-col cols="12" class="form-col">
+                        <v-list-subheader :class="{'text-muted': !enabled && parseInt(payload.mscDisposition_Id) !== 3, 'form-header': true}">Refered To HCI Code</v-list-subheader>
+                        <v-text-field
+                            v-model="payload.referred_To_HCI_code"
+                            :readonly="clicked_option === 'view'"
+                            :clearable="clicked_option === 'new' || clicked_option === 'edit'"
+                            :disabled="!enabled && parseInt(payload.mscDisposition_Id) !== 3"
+                            variant="outlined"
+                            density="compact"
+                            hide-details
+                        ></v-text-field>
+                    </v-col>
+                    <v-col cols="12" class="form-col">
+                        <v-list-subheader :class="{'text-muted': !enabled && parseInt(payload.mscDisposition_Id) !== 3, 'form-header': true}">Refered To HCI Address</v-list-subheader>
+                        <v-textarea 
+                            hide-details 
+                            density="compact" 
+                            variant="outlined"
+                            v-model="payload.referred_To_HCI_address"
+                            :disabled="!enabled && parseInt(payload.mscDisposition_Id) !== 3"
+                            :value="!!payload.referred_To_HCI_address ? payload.referred_To_HCI_address : fullToHCIAddress"
+                            readonly
+                            class="cursor-pointer"
+                            prepend-icon="mdi-plus-box"
+                            @click:prepend="handleOpenAddressFormTo"
+                        ></v-textarea>
+                    </v-col>
+                </fieldset>
+            </v-col>
 
-        <v-col cols="4">
-            <fieldset class="pa-2 rounded-fieldset">
-                <legend class="pa-2">Referral Details</legend>
-                <v-col cols="12" class="form-col">
-                    <v-list-subheader :class="{'text-muted': !enabled && parseInt(payload.mscDisposition_Id) !== 3, 'form-header': true}">Refering Doctor</v-list-subheader>
-                    <v-text-field
-                        v-model="payload.referring_Doctor"
-                        :readonly="clicked_option === 'view'"
-                        :clearable="clicked_option === 'new' || clicked_option === 'edit'"
-                        :disabled="parseInt(payload.mscDisposition_Id) !== 3 && !enabled"
-                        variant="outlined"
-                        density="compact"
-                        hide-details
-                    ></v-text-field>
-                </v-col>
-                <v-col cols="12" class="form-col">
-                    <v-list-subheader :class="{'text-muted': !enabled && parseInt(payload.mscDisposition_Id) !== 3, 'form-header': true}">Reason for Referal</v-list-subheader>
-                    <v-textarea
-                        v-model="payload.referral_Reason"
-                        :readonly="clicked_option === 'view'"
-                        :clearable="clicked_option === 'new' || clicked_option === 'edit'"
-                        :disabled="parseInt(payload.mscDisposition_Id) !== 3 && !enabled"
-                        variant="outlined"
-                        hide-details
-                    ></v-textarea>
-                </v-col>
-            </fieldset>
-        </v-col>
-    </v-row>
-    <e-r-address-details-form :address_form_dialog="address_form_dialog" :payload="payload" @close-dialog="closeAddressForm" @handle-submit="handleSubmitAddress" />
-    <e-r-address-details-form :address_form_dialog="address_form_dialogTo" :payload="payload" @close-dialog="closeAddressFormTo" @handle-submit="handleSubmitAddressTo" />
+            <v-col cols="4">
+                <fieldset class="pa-2 rounded-fieldset">
+                    <legend class="pa-2">Referral Details</legend>
+                    <v-col cols="12" class="form-col">
+                        <v-list-subheader :class="{'text-muted': !enabled && parseInt(payload.mscDisposition_Id) !== 3, 'form-header': true}">Refering Doctor</v-list-subheader>
+                        <v-text-field
+                            v-model="payload.referring_Doctor"
+                            :readonly="clicked_option === 'view'"
+                            :clearable="clicked_option === 'new' || clicked_option === 'edit'"
+                            :disabled="parseInt(payload.mscDisposition_Id) !== 3 && !enabled"
+                            variant="outlined"
+                            density="compact"
+                            hide-details
+                        ></v-text-field>
+                    </v-col>
+                    <v-col cols="12" class="form-col">
+                        <v-list-subheader :class="{'text-muted': !enabled && parseInt(payload.mscDisposition_Id) !== 3, 'form-header': true}">Reason for Referal</v-list-subheader>
+                        <v-textarea
+                            v-model="payload.referral_Reason"
+                            :readonly="clicked_option === 'view'"
+                            :clearable="clicked_option === 'new' || clicked_option === 'edit'"
+                            :disabled="parseInt(payload.mscDisposition_Id) !== 3 && !enabled"
+                            variant="outlined"
+                            hide-details
+                        ></v-textarea>
+                    </v-col>
+                </fieldset>
+            </v-col>
+        </v-row>
+        <e-r-address-details-form :address_form_dialog="address_form_dialog" :payload="payload" @close-dialog="closeAddressForm" @handle-submit="handleSubmitAddress" />
+        <e-r-address-details-form :address_form_dialog="address_form_dialogTo" :payload="payload" @close-dialog="closeAddressFormTo" @handle-submit="handleSubmitAddressTo" />
+    </div>
+
 </template>
 
 <script setup>
@@ -382,7 +385,7 @@ const props = defineProps({
     },
 });
 
-const emits = defineEmits(['hospitalization-plan']);
+const emits = defineEmits(['hospitalization-plan', 'toggle-loader', 'update-progress']);
 
 let referring_hci_code = ref([]);
 const address_form_dialog = ref(false);
@@ -392,6 +395,31 @@ const open_referring_hci_code_table = ref(false);
 const open_referring_hci_address_form = ref(false);
 const open_diet_desc = ref(false);
 const enabled = ref(false)
+const isDataReady = ref(false);
+const value = ref(0)
+const interval = ref(null)
+
+const startLoader = () => {
+    emits('toggle-loader', true);
+    clearInterval(interval.value);
+    value.value = 0;
+    interval.value = setInterval(() => {
+        if (value.value === 100) {
+            value.value = 0 
+        } else {
+            value.value += 10
+        }
+        emits('update-progress', value.value);
+    }, 1000)
+}
+
+const stopLoader = () => {
+    emits('toggle-loader', false);
+    clearInterval(interval.value);
+    value.value = 0; 
+    emits('update-progress', value.value);
+};
+
 
 // if(enabled) {
 //     props.payload.append('payload.isreferredFrom', true)
@@ -559,19 +587,6 @@ const getServiceType = async () => {
     } 
 };
 
-// const patientIdentifiers = ref([
-//     { id: 1, name: 'Hemo Patient' },
-//     { id: 2, name: 'Peritoneal Patient' },
-//     { id: 3, name: 'LINAC' },
-//     { id: 4, name: 'COBALT' },
-//     { id: 5, name: 'Blood Trans Patient' },
-//     { id: 6, name: 'Chemo Patient' },
-//     { id: 7, name: 'Brachytherapy Patient' },
-//     { id: 8, name: 'Debridement' },
-//     { id: 9, name: 'TB DOTS' },
-//     { id: 10, name: 'PAD Patient' },
-//     { id: 11, name: 'Radio Patient' },
-// ]);
 
 const patientIdentifiers = ref([
     "Hemo Patient",
@@ -718,19 +733,50 @@ const getIdTypes = async () => {
     } 
 };
 
+const loadData = async () => {
+    startLoader();
+    try {
+        await getTransactionType();
+        await getDeathTypes();
+        await getHospitalizationPlan();
+        await getPriceGroup();
+        await getPriceScheme();
+        await getIdTypes();
+        await getDisposition();
+        await getPatientBroughtBy();
+        await getNationality();
+        await getServiceType();
+        await registerSource();
+        await registerCaseType();
+        if(
+            transaction_type_data && 
+            death_types_data &&
+            hospitalization_plan_data &&
+            price_group_data &&
+            price_scheme_data &&
+            id_types_data &&
+            disposition_data &&
+            patientBroughtBy &&
+            nationality_data &&
+            service_type_data &&
+            register_source_data &&
+            register_case_type_data
+
+        ) {
+            stopLoader();
+        }
+    } catch(error) {
+        console.log('ERROR! ' + error);
+    } finally {
+        isDataReady.value = true;
+        stopLoader();
+    }
+
+}
+
+
 onMounted(() => {
-    getTransactionType();
-    getDeathTypes();
-    getHospitalizationPlan();
-    getPriceGroup();
-    getPriceScheme();
-    getIdTypes();
-    getDisposition();
-    getPatientBroughtBy();
-    getNationality();
-    getServiceType();
-    registerSource();
-    registerCaseType();
+    loadData();
 });
 
 watch(() => props.payload.mscAccount_Type, (newVal, oldVal) => {
@@ -784,6 +830,25 @@ watch(() => enabled,(newValue) => {
         padding: 16px;
         border-radius: 8px;
         border: 1px solid #c0c0c0;
+    }
+
+    .data-loader {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 80vw;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: rgba(0, 0, 0, 0.1);
+        z-index: 99999;
+    }
+
+    .overlay {
+        display: flex;
+        justify-content: center;
+        align-items: center;
     }
 
 </style>

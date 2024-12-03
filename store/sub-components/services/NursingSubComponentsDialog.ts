@@ -15,7 +15,7 @@ export const NursingSubComponentsDialog = defineStore('NursingSubComponentsDialo
         ViewDrugsAndMedicines: false,
         ViewStatementOfAccount: false,
         ClaimForm4Processing: false,
-        NurseActivit: false
+        NurseActivity: false,
     }),
     actions:{
     setNursingSubComponentsDialog(dialog:any,type:Boolean) {

@@ -8,7 +8,8 @@ export const NursingServicesTemplateDialog = defineStore('NursingServicesTemplat
     NursingEndorsement: false,
     ReferralCauses: false,
     NursingServce: false,
-    NurseActivity: false
+    NurseActivity: false,
+    Requisitions: false,
   }),
   actions: {
     setNursingServicesDialog(dialog: any, type: Boolean) {
