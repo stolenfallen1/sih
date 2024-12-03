@@ -218,7 +218,7 @@ const onSubmit = async (user_details) => {
             if (payload.value.id) {
                 const response = await useMethod("put", "update-outpatient", payload.value, "", payload.value.patient_id);
                 if (response) {
-                    useSnackbar(true, "green", response.message);
+                    useSnackbar(true, "green", "Patient updated successfully.");
                     isLoading.value = false;
                     payload.value = Object.assign({});
                     tab.value = "0";
@@ -230,7 +230,7 @@ const onSubmit = async (user_details) => {
             } else {
                 const response = await useMethod("post", "register-outpatient", payload.value);   
                 if (response) {
-                    useSnackbar(true, "green", response.message);
+                    useSnackbar(true, "green", "Patient registered successfully.");
                     isLoading.value = false;
                     payload.value = Object.assign({});
                     tab.value = "0";

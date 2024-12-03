@@ -29,12 +29,6 @@
   </v-card>
 
   <Snackbar />
-  <!-- Ancillary Services Sub components -->
-  <!-- <PatientProfileDialog :show="PatientProfile" :form_payload="form_payload" @close-dialog="useSubComponents('PatientProfile', false)" />
-  <DirectRenderDialog :show="DirectRender" @close-dialog="useSubComponents('DirectRender', false)" />
-  <DrugAdministrationDialog :show="DrugAdministration" @close-dialog="useSubComponents('DrugAdministration', false)" />
-  <ApplyCreditNoteDialog :show="ApplyCreditNote" @close-dialog="useSubComponents('ApplyCreditNote', false)" />
-  <CentralizedCreditNoteDialog :show="CentralizedCreditNote" @close-dialog="useSubComponents('CentralizedCreditNote', false)" /> -->
 </template>
 
 <script setup>
@@ -42,35 +36,16 @@ import nuxtStorage from 'nuxt-storage';
 import AncillarySupplyPages from './sub-pages/AncillarySupplyPages.vue';
 import AncillaryProcedurePages from './sub-pages/AncillaryProcedurePages.vue';
 
-// const {
-//   PatientProfile,
-//   DirectRender,
-//   DrugAdministration,
-//   ApplyCreditNote,
-//   CentralizedCreditNote,
-// } = storeToRefs(AncillarySubComponentsDialog());
-
-// const { 
-//   PrintPendingRequisition
-// } = storeToRefs(PQAncillaryServicesDialog());
-
 definePageMeta({
 layout: "root-layout",
 });
 
-const { selectedRowDetails, isrefresh } = storeToRefs(useSubcomponentSelectedRowDetailsStore());
-const payload = ref({});
-const items = ref({});
-const isSelectedUser = ref(true);
-const currentTab = ref(1);
-const pageTitle = ref("");
 const showTabs = ref(false);  
 const showSuppliesTab = ref(false); 
 const showProcedureTab = ref(false); 
 const user_detail = ref({});
 const warehouse_dept = ref('');
 const revenueID = ref([]);
-const totalItems = ref(0);
 let tab = ref("0");
 
 onMounted(async () => {

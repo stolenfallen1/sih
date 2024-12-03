@@ -22,9 +22,103 @@
             <span v-if="inPatientCount > 0" class="notification-count">{{ inPatientCount }}</span>
         </v-btn>
     </div>
+    <v-card-actions>
+        <v-spacer></v-spacer>
+        <v-btn prepend-icon="mdi-archive-arrow-down-outline" class="bg-primary text-white">
+            Posted Supplies
+            <v-menu activator="parent">
+                <v-list>
+                    <v-list-item
+                        v-for="(item, index) in menuCodes"
+                        :key="index"
+                        :value="index"
+                        class="hoverable-list-item"
+                        @click="openPostedSupplies(item.code)"
+                    >
+                        <v-list-item-title>{{ item.description }}</v-list-item-title>
+                    </v-list-item>
+                </v-list>
+            </v-menu>
+        </v-btn>
+        <v-btn prepend-icon="mdi-file-document-edit-outline" class="bg-warning text-white">
+            Correction Supplies
+            <v-menu activator="parent">
+                <v-list>
+                    <v-list-item
+                        v-for="(item, index) in menuCodes"
+                        :key="index"
+                        :value="index"
+                        class="hoverable-list-item"
+                        @click="openCorrectionEntry(item.code)"
+                    >
+                        <v-list-item-title>{{ item.description }}</v-list-item-title>
+                    </v-list-item>
+                </v-list>
+            </v-menu>
+        </v-btn>
+        <v-btn prepend-icon="mdi-archive-refresh-outline" class="bg-error text-white">
+            Returned Supplies
+            <v-menu activator="parent">
+                <v-list>
+                    <v-list-item
+                        v-for="(item, index) in menuCodes"
+                        :key="index"
+                        :value="index"
+                        class="hoverable-list-item"
+                        @click="openReturnedMedicines(item.code)"
+                    >
+                        <v-list-item-title>{{ item.description }}</v-list-item-title>
+                    </v-list-item>
+                </v-list>
+            </v-menu>
+        </v-btn>
+        <v-btn
+            prepend-icon="mdi-information-outline"
+            class="bg-info text-white"
+        >
+        Supply Inquiry
+        </v-btn>
+        <v-btn prepend-icon="mdi-chart-bar" class="bg-success text-white">
+            Reports
+            <v-menu activator="parent">
+                <v-list>
+                    <v-list-item
+                    v-for="(item, index) in reportMenuCodes"
+                    class="hoverable-list-item cursor-default"
+                    :key="index"
+                    >
+                    <v-list-item-title>{{ item.description }}</v-list-item-title>
+                    <template v-slot:append>
+                        <v-icon v-if="item.subMenus" icon="mdi-menu-right" size="x-small"></v-icon>
+                    </template>
+
+                    <v-menu v-if="item.subMenus" activator="parent" open-on-hover submenu location="end">
+                        <v-list>
+                        <v-list-item
+                            v-for="(subMenu, subIndex) in item.subMenus"
+                            :key="subIndex"
+                            class="hoverable-list-item cursor-pointer"
+                            @click="openDateSelection(item.id, subMenu.id)"
+                        >
+                            <v-list-item-title>{{ subMenu.description }}</v-list-item-title>
+                        </v-list-item>
+                        </v-list>
+                    </v-menu>
+                    </v-list-item>
+                </v-list>
+            </v-menu>
+        </v-btn>
+        <v-btn
+            prepend-icon="mdi-plus-box-multiple-outline"
+            class="bg-primary text-white"
+        >
+        Manual Posting
+        </v-btn>
+        <v-spacer></v-spacer>
+    </v-card-actions>
     <v-data-table
         density="compact"
-        height="70vh"
+        height="65vh"
         :headers="table_headers"
         :items="medicine_request_data"
         :items-per-page="100"
@@ -51,18 +145,100 @@
         @ordered-carried="handleOrderCarried" 
         @close-dialog="closeCarryOrderForm" />
 
+    <PostedSupplies :open_posted_supply="open_posted_supply" :patient_type="patient_type" @close-dialog="closePostedSupplies"  />
+    <SupplyCorrectionEntry :open_correction_entry="open_correction_entry" :patient_type="patient_type" @close-dialog="closeCorrectionEntry" />
+    <ReturnedSupplies :open_returned_supply="open_returned_supply" :patient_type="patient_type" @close-dialog="closeReturnedSupplies" />
+
+    <v-dialog v-model="showSelectDate" max-width="320px" @update:model-value="closeDateSelection">
+        <v-card>
+            <v-card-title>
+                <span style="font-size: large;">Select Specific {{ menu_id == 1 ? 'Day' : 'Month' }}
+                    <span style="font-weight: bolder;">{{ sub_menu_id == 1 ? '( OPD )' : (sub_menu_id == 2 ? '( ER )' : '( IPD )') }}</span>
+                </span>
+            </v-card-title>
+            <v-card-text>
+                <div>
+                    <v-row justify="center">
+                        <input v-if="menu_id == 1" type="date" v-model="selectedDate" style="text-align: center; border: 1px solid #000; border-radius: 10px; padding: 5px; margin-right: 10px;" />
+                        <input v-if="menu_id == 2" type="month" v-model="selectedMonth" style="text-align: center; border: 1px solid #000; border-radius: 10px; padding: 5px; margin-right: 10px;" />
+                    </v-row>
+                </div>
+            </v-card-text>
+            <v-divider style="margin-top: 20px;"></v-divider>
+            <v-card-actions>
+                <v-btn color="blue-darken-1 border border-info" @click="closeDateSelection"> Close </v-btn>
+                <v-spacer></v-spacer>
+                <v-btn class="bg-primary text-white" @click="handleReportSubMenu">Generate</v-btn>
+            </v-card-actions>
+        </v-card>
+    </v-dialog>
+
 </template>
 
 <script setup>
-import CarrySuppliesOrder from './CarrySuppliesOrder.vue';
+import CarrySuppliesOrder from '../../../../components/services/forms/ancillary/CarrySuppliesOrder.vue';
+import PostedSupplies from '~/components/services/forms/ancillary/PostedSupplies.vue';
+import SupplyCorrectionEntry from '~/components/services/forms/ancillary/SupplyCorrectionEntry.vue';
+import ReturnedSupplies from '~/components/services/forms/ancillary/ReturnedSupplies.vue';
 
 definePageMeta({
     layout: "root-layout",
 });
 
 const open_carry_order_form = ref(false);
+const open_posted_supply = ref(false);
+const open_correction_entry = ref(false);
+const open_returned_supply = ref(false);
 const selected_item = ref([]);
 const patient_type = ref(0);
+const menu_id = ref(0);
+const sub_menu_id = ref(0);
+const showSelectDate = ref(false);
+const selectedDate = ref(new Date().toISOString().substr(0, 10));
+const selectedMonth = ref(new Date().toISOString().substr(0, 7));
+const menuCodes = ref([
+    { id: 1, description: "OPD - Out-Patient", code: 2 },
+    { id: 2, description: "ER - Emergency", code: 5 },
+    { id: 3, description: "IPD - In-Patient", code: 6 },
+]); 
+const reportMenuCodes = ref([
+    {
+        id: 1,
+        description: "Daily Income Report",
+        subMenus: [
+            {
+                id: 1,
+                description: "Out-Patient",
+            },
+            {
+                id: 2,
+                description: "Emergency",
+            },
+            {
+                id: 3,
+                description: "In-Patient",
+            },
+        ],
+    },
+    {
+        id: 2,
+        description: "Monthly Income Report",
+        subMenus: [
+            {
+                id: 1,
+                description: "Out-Patient",
+            },
+            {
+                id: 2,
+                description: "Emergency",
+            },
+            {
+                id: 3,
+                description: "In-Patient",
+            },
+        ],
+    },
+]);
 const table_headers = [
     { title: "Patient ID", align: "start", key: "patient_Id", sortable: false },
     { title: "Case No", align: "start", key: "case_No", sortable: false },
@@ -147,16 +323,117 @@ const handleSelectedItem = (item) => {
     }
 }
 
+const openPostedSupplies = (type) => {
+    patient_type.value = type;
+    open_posted_supply.value = true;
+}
+
+const closePostedSupplies = () => {
+    open_posted_supply.value = false;
+    patient_type.value = 0;
+}
+
+const openCorrectionEntry = (type) => {
+    patient_type.value = type;
+    open_correction_entry.value = true;
+}
+
+const closeCorrectionEntry = () => {
+    open_correction_entry.value = false;
+    patient_type.value = 0;
+}
+
+const openReturnedMedicines = (type) => {
+    patient_type.value = type;
+    open_returned_supply.value = true;
+}
+
+const closeReturnedSupplies = () => {
+    open_returned_supply.value = false;
+    patient_type.value = 0;
+}
+
 const fetchAllCounts = async () => {
     await fetchOutPatientCount();
     await fetchERPatientCount();
     await fetchInPatientCount();
-};
+}
 
 const handleOrderCarried = () => {
     medicine_request_data.value = medicine_request_data.value.filter(item => item.requestNum !== selected_item.value.requestNum);
     fetchAllCounts();
 }
+
+const openDateSelection = (itemId, subMenuId) => {
+    menu_id.value = itemId;
+    sub_menu_id.value = subMenuId;
+    showSelectDate.value = true;
+}
+
+const closeDateSelection = () => {
+    showSelectDate.value = false;
+    selectedDate.value = new Date().toISOString().substr(0, 10);
+    selectedMonth.value = new Date().toISOString().substr(0, 7);
+}
+
+const handleReportSubMenu = async () => { 
+    // NOTE SINCE THIS THE GENERATION FOR CS DEPARTMENT AKOA GI STATIC ANG REVENUE ID
+    let revenueID = "CS";
+    if (menu_id.value && menu_id.value == 1) {
+        switch (sub_menu_id.value) {
+            case 1:
+                const opd_daily_income_res = await useMethod("get", `daily-income-report?revenueID=${revenueID}&patient_Type=${sub_menu_id.value}&date=${selectedDate.value}`, "", "");
+                    if (opd_daily_income_res) {
+                        const blobUrl = URL.createObjectURL(opd_daily_income_res);
+                        window.open(blobUrl, '_blank');
+                    } 
+                    break;
+            case 2:
+                const er_daily_income_res = await useMethod("get", `daily-income-report?revenueID=${revenueID}&patient_Type=${sub_menu_id.value}&date=${selectedDate.value}`, "", "");
+                    if (er_daily_income_res) {
+                        const blobUrl = URL.createObjectURL(er_daily_income_res);
+                        window.open(blobUrl, '_blank');
+                    } 
+                    break;
+            case 3:
+                const ipd_daily_income_res = await useMethod("get", `daily-income-report?revenueID=${revenueID}&patient_Type=${sub_menu_id.value}&date=${selectedDate.value}`, "", "");
+                    if (ipd_daily_income_res) {
+                        const blobUrl = URL.createObjectURL(ipd_daily_income_res);
+                        window.open(blobUrl, '_blank');
+                    } 
+                    break;
+            default:
+                break;
+        }
+    } else if (menu_id.value && menu_id.value == 2) {
+        switch (sub_menu_id.value) {
+            case 1:
+                const opd_daily_income_res = await useMethod("get", `monthly-income-report?revenueID=${revenueID}&patient_Type=${sub_menu_id.value}&month=${selectedMonth.value}`, "", "");
+                    if (opd_daily_income_res) {
+                        const blobUrl = URL.createObjectURL(opd_daily_income_res);
+                        window.open(blobUrl, '_blank');
+                    } 
+                    break;
+            case 2:
+                const er_daily_income_res = await useMethod("get", `monthly-income-report?revenueID=${revenueID}&patient_Type=${sub_menu_id.value}&month=${selectedMonth.value}`, "", "");
+                    if (er_daily_income_res) {
+                        const blobUrl = URL.createObjectURL(er_daily_income_res);
+                        window.open(blobUrl, '_blank');
+                    } 
+                    break;
+            case 3:
+                const ipd_daily_income_res = await useMethod("get", `monthly-income-report?revenueID=${revenueID}&patient_Type=${sub_menu_id.value}&month=${selectedMonth.value}`, "", "");
+                    if (ipd_daily_income_res) {
+                        const blobUrl = URL.createObjectURL(ipd_daily_income_res);
+                        window.open(blobUrl, '_blank');
+                    } 
+                    break;
+            default:
+                break;
+        }
+    }
+};
+
 
 const closeCarryOrderForm = () => {
     open_carry_order_form.value = false;
