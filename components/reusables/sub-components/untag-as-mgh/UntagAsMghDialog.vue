@@ -87,41 +87,28 @@
     }
 
     const onSubmit = async () => {
-
         let response;
         isLoading.value = true;
-
         try{
-
             response = await useMethod("put", "untag-patient-maygohome", payload.value, "", payload.value.case_No);
-
             if(response) {
-
                 useSnackbar(true, "green", response.message);
                 isLoading.value = false;
                 closeConfirmDialog();
                 useSubComponents('UntagAsMgh', false)
-
             } 
         } catch(error) { 
-
             if (error.response && error.response.status === 400) {
-
                 useSnackbar(true, "red", response.message || 'Patient has already been discharged or not been tagged as may go home.');
                 isLoading.value = false;
-
             } else if(error.response && error.response.status === 404) {
-
                 useSnackbar(true, "red", 'Incorrect Username or Passcode');
                 isLoading.value = false;
-
             } else {  
-
                 useSnackbar(true, "red", response.message || 'Tagged Failed');
                 isLoading.value = false;
             }
         } finally {
-
             isLoading.value = false;
         }
     }

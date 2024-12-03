@@ -18,7 +18,6 @@
         emits('close-dialog');
     }
 
-
     const createAccountStatement = async () => {
         let caseNo = selectedRowDetails.value.patient_registry[0].case_No;
         try {
