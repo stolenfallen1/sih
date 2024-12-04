@@ -1655,6 +1655,12 @@ export default [
                     //     form: "PostCharges",
                     //     rule: "",
                     // },
+                    {
+                        label: "Post Medicine / Supplies",
+                        icon:  "mdi-file-document-edit",
+                        form:  "ERPostMedicineSupplies",
+                        rule: "",
+                    },
                     // {
                     //     label: "Apply Credit Note",
                     //     icon: "mdi-file-document-edit",

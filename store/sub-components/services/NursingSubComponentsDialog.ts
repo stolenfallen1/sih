@@ -3,6 +3,7 @@ export const NursingSubComponentsDialog = defineStore('NursingSubComponentsDialo
         PatientProfile: false,
         Requisitions: false,
         PostCharges: false,
+        ERPostMedicineSupplies: false,
         ApplyCreditNote: false,
         ViewExaminationUpshot: false,
         TagAsMgh: false,

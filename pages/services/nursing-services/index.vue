@@ -265,6 +265,7 @@
 	<RequisitionsDialog :show="Requisitions" :form_type="form_type" @close-dialog="useSubComponents('Requisitions', false)" />
 	<PostChargesDialog :show="PostCharges" @close-dialog="useSubComponents('PostCharges', false)" />
   <NurseActivityDialog :show="NurseActivity" :form_type="form_type" @close-dialog="useSubComponents('NurseActivity', false)" /> 
+  <ERPostMedicineSuppliesDialog :show="ERPostMedicineSupplies" @close-dialog="useSubComponents('ERPostMedicineSupplies', false)" />
 </template>
 
 <script setup>
@@ -282,6 +283,7 @@ const {
   Requisitions,
   PostCharges,
   NurseActivity,
+  ERPostMedicineSupplies,
 
 } = storeToRefs(ERSubComponentsDialog());
 

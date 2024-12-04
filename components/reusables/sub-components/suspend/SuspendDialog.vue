@@ -1,5 +1,19 @@
 <template>
-    <v-dialog :model-value="show" rounded="lg" scrollable @update:model-value="closeDialog" max-width="750px">
+    <v-dialog v-if="selectedRowDetails.value?.patient_registry?.[0]?.discharged_Date !== null" :model-value="show" rounded="lg" scrollable @update:model-value="closeDialog" max-width="400px"> 
+        <v-alert
+            border="left"
+            color="red"
+            dismissible
+            elevation="24"
+            icon="mdi-alert-circle"
+        >
+           <div class="note">
+                <span>Note:</span>
+                <p class="message">This action is not available at this time; please call the IT Department when it's necessary.</p>
+           </div>
+        </v-alert>
+    </v-dialog>
+    <v-dialog v-if="selectedRowDetails.value?.patient_registry?.[0]?.discharged_Date === null" :model-value="show" rounded="lg" scrollable @update:model-value="closeDialog" max-width="750px">
         <form @submit.prevent="onSubmit">
             <v-card rounded="lg">
                 <v-toolbar density="compact" color="#107bac" hide-details>
@@ -229,9 +243,18 @@ const closeDialog = () => {
 </script>
 
 <style scoped>
-.toolbar-title {
-    font-size: 16px; 
-    font-style: italic; 
-    text-align: center;
-}
+    .toolbar-title {
+        font-size: 16px; 
+        font-style: italic; 
+        text-align: center;
+    }
+    .note {
+        padding: 20 0px !important;
+    }
+    .note span {
+        font-size: 20px;
+        color: #ffffe0;
+        font-weight: bold;
+        font-style: italic;
+    }
 </style>

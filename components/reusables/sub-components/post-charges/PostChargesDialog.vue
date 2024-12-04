@@ -1,5 +1,20 @@
 <template>
-    <v-dialog :model-value="show" rounded="lg" scrollable @update:model-value="closeDialog" max-width="1120px">
+    <v-dialog v-if="selectedRowDetails.value?.patient_registry?.[0]?.discharged_Date !== null" :model-value="show" rounded="lg" scrollable @update:model-value="closeDialog" max-width="400px">
+        <v-alert
+            border="left"
+            color="red"
+            dismissible
+            elevation="24"
+            icon="mdi-alert-circle"
+        >
+           <div class="note">
+                <span>Note:</span>
+                <p class="message">Cannot post or request charges for patients that have been discharged.</p>
+           </div>
+          
+        </v-alert>
+    </v-dialog>
+    <v-dialog v-if="selectedRowDetails.value?.patient_registry?.[0]?.discharged_Date === null" :model-value="show" rounded="lg" scrollable @update:model-value="closeDialog" max-width="1120px">
         <v-card rounded="lg">
             <v-toolbar density="compact" color="#107bac" hide-details>
                 <v-toolbar-title>Procedure Charges to Patient's Account</v-toolbar-title>
@@ -1309,40 +1324,49 @@ onMounted(() => {
 </script>
 
 <style scoped>
-:deep(.v-expansion-panel-text__wrapper) {
-    padding: 0 !important;
-}
-.styled-table th, .styled-table td {
-    padding: 8px;
-    border: 1px solid #eceaea;
-    margin: 0;
-}
-.input {
-    border-bottom: 1px solid #A9A9A9;
-    padding: 4px 8px;
-}
-.styled-table {
-    overflow-y: auto;
-    scrollbar-width: thin; 
-    scrollbar-color: #727272 #f5f5f5; 
-}
-.styled-table::-webkit-scrollbar {
-    width: 12px;
-}
-.styled-table::-webkit-scrollbar-thumb {
-    background-color: #107bac; 
-    border-radius: 10px; 
-    border: 3px solid #f5f5f5; 
-}
-.styled-table::-webkit-scrollbar-track {
-    background-color: #f5f5f5; 
-    border-radius: 10px; 
-}
-.empty-history-info {
-    text-align: center;
-    font-style: italic;
-    padding: 20px 0 20px 0;
-    font-size: 17.5px;
-    font-weight: 500;
-}
+    :deep(.v-expansion-panel-text__wrapper) {
+        padding: 0 !important;
+    }
+    .styled-table th, .styled-table td {
+        padding: 8px;
+        border: 1px solid #eceaea;
+        margin: 0;
+    }
+    .input {
+        border-bottom: 1px solid #A9A9A9;
+        padding: 4px 8px;
+    }
+    .styled-table {
+        overflow-y: auto;
+        scrollbar-width: thin; 
+        scrollbar-color: #727272 #f5f5f5; 
+    }
+    .styled-table::-webkit-scrollbar {
+        width: 12px;
+    }
+    .styled-table::-webkit-scrollbar-thumb {
+        background-color: #107bac; 
+        border-radius: 10px; 
+        border: 3px solid #f5f5f5; 
+    }
+    .styled-table::-webkit-scrollbar-track {
+        background-color: #f5f5f5; 
+        border-radius: 10px; 
+    }
+    .empty-history-info {
+        text-align: center;
+        font-style: italic;
+        padding: 20px 0 20px 0;
+        font-size: 17.5px;
+        font-weight: 500;
+    }
+    .note {
+        padding: 20 0px !important;
+    }
+    .note span {
+        font-size: 20px;
+        color: #ffffe0;
+        font-weight: bold;
+        font-style: italic;
+    }
 </style>

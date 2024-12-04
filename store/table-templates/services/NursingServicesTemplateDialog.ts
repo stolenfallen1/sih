@@ -10,6 +10,7 @@ export const NursingServicesTemplateDialog = defineStore('NursingServicesTemplat
     NursingServce: false,
     NurseActivity: false,
     Requisitions: false,
+    ERPostMedicineSupplies: false,
   }),
   actions: {
     setNursingServicesDialog(dialog: any, type: Boolean) {
