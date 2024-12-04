@@ -268,9 +268,9 @@
 	<ViewExamUpshotDialog :show="ViewExaminationUpshot" @close-dialog="useSubComponents('ViewExaminationUpshot', false)" />
 	<ApplyPromissoryNoteDialog :show="ApplyPromissoryNote" @close-dialog="useSubComponents('ApplyPromissoryNote', false)" />
 	<ApplyMedicalPackageDialog :show="ApplyMedicalPackage" @close-dialog="useSubComponents('ApplyMedicalPackage', false)" /> -->
-	<TagAsMghDialog :show="TagAsMgh" :form_type="form_type" @close-dialog="useSubComponents('TagAsMgh', false)  " />
-	<UntagAsMghDialog :show="UntagAsMgh" @close-dialog="useSubComponents('UntagAsMgh', false)" />
-	<DischargeDialog :show="Discharge" :form_type="form_type" @close-dialog="useSubComponents('Discharge', false)" />
+	<TagAsMghDialog :show="TagAsMgh" :form_type="form_type" @patient-registered="loadPatient" @close-dialog="useSubComponents('TagAsMgh', false) " />
+	<UntagAsMghDialog :show="UntagAsMgh" @patient-registered="loadPatient" @close-dialog="useSubComponents('UntagAsMgh', false)" />
+	<DischargeDialog :show="Discharge" :form_type="form_type" @patient-registered="loadPatient" @close-dialog="useSubComponents('Discharge', false)" />
 	<DischargeInstructionDialog :show="DischargeInstruction" @close-dialog="useSubComponents('DischargeInstruction', false)" />
 	<PostFinalDiagnosisDialog :show="PostFinalDiagnosis" @close-dialog="useSubComponents('PostFinalDiagnosis', false)" />
 	<SoaBillingDialog :show="SoaBillingStatement" @close-dialog="useSubComponents('SoaBillingStatement', false)" />
@@ -349,6 +349,8 @@ const payload = ref({});
 const selectedPatient = ref({});
 const open_revoke_form = ref(false);
 const open_unrevoke_form = ref(false);
+
+
 
 
 
@@ -737,7 +739,7 @@ const selectedUser = (item) => {
         isrefresh.value = false;
         isSelectedUser.value = true;
     }
-    };
+};
 
 const loadPatient = (patientDetails) => {
   const keyword = patientDetails || "";
@@ -899,8 +901,6 @@ const updateTotalItems = (newTotalItems) => {
 const updateServerItems = (newServerItems) => {
   serverItems.value = newServerItems;
 };
-
-
 
 handleTabChange(currentTab.value);
 </script>

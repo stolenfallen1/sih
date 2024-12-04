@@ -1,5 +1,20 @@
 <template>
-    <v-dialog :model-value="show" rounded="lg" scrollable @update:model-value="closeDialog" max-width="1120px">    
+    <v-dialog v-if="selectedRowDetails.value?.patient_registry?.[0]?.discharged_Date !== null" :model-value="show" rounded="lg" scrollable @update:model-value="closeDialog" max-width="400px"> 
+        <v-alert
+            border="left"
+            color="red"
+            dismissible
+            elevation="24"
+            icon="mdi-alert-circle"
+        >
+           <div class="note">
+                <span>Note:</span>
+                <p class="message">Cannot post or request charges for patients that have been discharged.</p>
+           </div>
+          
+        </v-alert>
+    </v-dialog>
+    <v-dialog v-if="selectedRowDetails.value?.patient_registry?.[0]?.discharged_Date === null" :model-value="show" rounded="lg" scrollable @update:model-value="closeDialog" max-width="1120px">    
         <v-card rounded="lg">
             <v-toolbar density="compact" color="#107bac" hide-details>
                 <v-toolbar-title>Requisitions Charges to Patient's Account</v-toolbar-title>
@@ -471,7 +486,16 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.form-col {
-    margin-top: -16px !important;
-}
+    .form-col {
+        margin-top: -16px !important;
+    }
+    .note {
+        padding: 20 0px !important;
+    }
+    .note span {
+        font-size: 20px;
+        color: #ffffe0;
+        font-weight: bold;
+        font-style: italic;
+    }
 </style>

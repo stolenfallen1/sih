@@ -253,6 +253,7 @@ const updateDateTime = () => {
 
 const computeSubcomponent = (dialog,type) => {
     if(!selectedRowDetails.value.id) return  useSnackbar(true,'red','Please select a record first');
+    // if(selectedRowDetails.value?.patient_registry[0]?.discharged_Date !== null) return useSnackbar(true, 'red', 'Patient Already discharge!');
     if(dialog){
       useSubComponents(dialog)
     }

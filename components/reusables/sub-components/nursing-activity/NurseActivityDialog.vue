@@ -112,11 +112,11 @@
            const data = Array.isArray(response) ? response : response.data;
 
            if(data && Array.isArray(data) && data.length > 0) {
-
-                if(accountType !== 'Self Pay') {
+               if(accountType !== 'Self Pay') {
                     const filteredProcessedData  = data.filter( 
                         item => item.record_Status === 'W' || item.revenue_Id.trim() === 'ER'
                     );
+                   
                     processedChargeList.value = filteredProcessedData.map(item => ({
                         description:    item.description !== null ? toTitleCase(item.description) : '',
                         department:     toTitleCase(item.department),
@@ -124,14 +124,14 @@
                         revenue_id:     item.revenue_Id,
                         requestDate:    getDateTime(item.created_at),
                         requestBy:      item.requestBy 
-                                        ? iten.requestBy 
+                                        ? item.requestBy 
                                         : item.process_By
                                         ? item.process_By
                                         : item.userId 
                                         ? item.userId
                                         : '-',
                         processedBy:    item.requestBy 
-                                        ? iten.requestBy 
+                                        ? item.requestBy 
                                         : item.process_By
                                         ? item.process_By
                                         : item.userId 
@@ -150,7 +150,6 @@
                                         : '-',
                         record_Status:  item.record_Status
                     }));
-
                     const filteredPendingData  = data.filter(
                         item => item.record_Status !== 'W' &&
                                 item.revenue_Id.trim() !== 'ER'
@@ -590,4 +589,42 @@
         padding: 0px 0px 0px 0px !important;
         margin: 0px !important;
     }
+
+    /* General Table Styling */
+    .v-table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+    margin: 20px 0 !important;
+    font-size: 12px !important;
+    text-align: left !important;
+    }
+
+    /* Header Styling */
+    .v-table thead {
+    background-color: #673ab7; /* Deep Purple */
+    color: white;
+    padding: 10px;
+    border: 1px solid #ddd;
+    }
+
+    /* Row Styling */
+    table td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    }
+
+    /* Striped Rows */
+    table tr:nth-child(odd) {
+    background-color: #f9f9f9; /* Light Gray for Odd Rows */
+    }
+
+    table tr:nth-child(even) {
+    background-color: #ffffff; /* White for Even Rows */
+    }
+
+    /* Hover Effect */
+    table tr:hover {
+    background-color: #e0e0e0; /* Light Gray on Hover */
+    }
+
 </style>

@@ -24,7 +24,6 @@
     }
 
     const emits = defineEmits(['close-dialog', 'patient-registered'])
-    const patientDetail = ref({});
     const closeDialog = () => {
         emits('close-dialog');
     }
@@ -76,6 +75,14 @@
         value.value = 0; 
     };
 
+    const dichargedDate = () => {
+        const today = new Date();
+        const year = today.getFullYear();
+        const month = String(today.getMonth() + 1).padStart(2, '0'); 
+        const day = String(today.getDate()).padStart(2, '0'); 
+        payload.value.dicharge_date = `${year}-${month}-${day}`;
+    }
+
     onMounted(() => {
         startLoader();
     })
@@ -92,12 +99,11 @@
         try{
             response = await useMethod("put", "discharge-patient", payload.value, "", payload.value.case_No);
             if(response) {
+                emits('patient-registered');
                 useSnackbar(true, "green", response.message);
                 isLoading.value = false;
                 closeConfirmDialog();
                 useSubComponents('Discharge', false)
-                patientDetail.value = response.data; 
-                emits('patient-registered', patientDetail.value);
             }
         } catch(error) {    
             useSnackbar(true, "red", response.message || 'Tagged Failed');
@@ -167,6 +173,7 @@
                         registry_Date: useDateMMDDYYY(newRow.registry_Date) || ''
                     };
                     getPatientBalance();
+                    dichargedDate();
                     await patientEligibilityForDischarge(newRow.patient_registry?.[0]?.case_No);
                 }
             },
@@ -183,7 +190,7 @@
                 rounded="lg" 
                 scrollable 
                 @update:model-value="closeDialog" 
-                :style="{maxWidth: isProcessed ? '800px' : '500px'}" 
+                max-width="800px" 
                 >
                 <form @submit.prevent="openConfirmDialog">
                     <v-card rounded="lg">
@@ -236,7 +243,7 @@
                                             <v-text-field 
                                                 type="date"
                                                 label="Discharge Date Time" 
-                                                v-model="payload.mgh_Datetime"
+                                                v-model="payload.dicharge_date"
                                                 variant="outlined" 
                                                 density="compact" 
                                                 hide-details 
@@ -347,7 +354,7 @@
                 rounded="lg" 
                 scrollable 
                 @update:model-value="closeDialog" 
-                :style="{maxWidth: isProcessed ? '800px' : '500px'}" 
+                max-width="400px"
                 >
                 <div v-if="!isElible && !isDischarged">
                     <v-alert
@@ -357,7 +364,10 @@
                         elevation="24"
                         icon="mdi-alert-circle"
                         >
-                        You cannot send a discharge order at this time. This patient has not yet been tagged for May Go Home.
+                        <div class="note">
+                            <span>Note:</span>
+                            <p class="message"> You cannot send a discharge order at this time. This patient has not yet been tagged for May Go Home.</p>
+                        </div>
                     </v-alert>
                 </div>
                 <div v-if="!isElible && isDischarged">
@@ -368,7 +378,10 @@
                         elevation="24"
                         icon="mdi-alert-circle"
                         >
-                        The patient already has a discharge order, Please be advise or may call IT Department for futher assistance. Thank you.
+                        <div class="note">
+                            <span>Note:</span>
+                            <p class="message">The patient already has a discharge order, Please be advise or may call IT Department for futher assistance. Thank you.</p>
+                        </div>
                     </v-alert>
                 </div>
             </v-dialog>
@@ -405,7 +418,7 @@
 </template>
 
 <style scoped>
-    .toolbar-title {
+      .toolbar-title {
         font-size: 16px; 
         font-style: italic; 
         text-align: center;
@@ -416,10 +429,19 @@
     .info-icon {
         font-size: 50px !important;
     }
-    .alert-text {
+    /* .alert-text {
         padding: 10px !important;
         font-size: 16px;
         line-height: 2rem;
         color: #F44336 !important;
+    } */
+    .note {
+        padding: 20 0px !important;
+    }
+    .note span {
+        font-size: 20px;
+        color: #ffffe0;
+        font-weight: bold;
+        font-style: italic;
     }
 </style>
