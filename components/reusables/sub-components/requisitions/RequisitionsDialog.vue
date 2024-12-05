@@ -1,5 +1,5 @@
 <template>
-    <v-dialog v-if="selectedRowDetails.value?.patient_registry?.[0]?.discharged_Date !== null" :model-value="show" rounded="lg" scrollable @update:model-value="closeDialog" max-width="400px"> 
+    <v-dialog v-if="isDischarge !== null" :model-value="show" rounded="lg" scrollable @update:model-value="closeDialog" max-width="400px"> 
         <v-alert
             border="left"
             color="red"
@@ -14,7 +14,7 @@
           
         </v-alert>
     </v-dialog>
-    <v-dialog v-if="selectedRowDetails.value?.patient_registry?.[0]?.discharged_Date === null" :model-value="show" rounded="lg" scrollable @update:model-value="closeDialog" max-width="1120px">    
+    <v-dialog v-if="isDischarge === null" :model-value="show" rounded="lg" scrollable @update:model-value="closeDialog" max-width="1120px">    
         <v-card rounded="lg">
             <v-toolbar density="compact" color="#107bac" hide-details>
                 <v-toolbar-title>Requisitions Charges to Patient's Account</v-toolbar-title>
@@ -483,6 +483,12 @@ onMounted(() => {
     user_detail.value = userDetails;
     roleID.value = user_detail.value?.role_id;
 });
+
+const isDischarge = ref('');
+onUpdated(() => {
+    isDischarge.value = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0].discharged_Date;
+    console.log('Is Discharged Values : ', isDischarge.value)
+})
 </script>
 
 <style scoped>
