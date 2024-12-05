@@ -1,5 +1,5 @@
 <template>
-    <v-dialog v-if="selectedRowDetails.value?.patient_registry?.[0]?.discharged_Date !== null" :model-value="show" rounded="lg" scrollable @update:model-value="closeDialog" max-width="400px"> 
+    <v-dialog v-if="selectedRowDetails.value?.patient_registry?.[0]?.discharged_Date !== null || selectedRowDetails.value?.patient_registry?.[0]?.discharged_Date === null" :model-value="show" rounded="lg" scrollable @update:model-value="closeDialog" max-width="400px"> 
         <v-alert
             border="left"
             color="red"
@@ -13,7 +13,7 @@
            </div>
         </v-alert>
     </v-dialog>
-    <v-dialog v-if="selectedRowDetails.value?.patient_registry?.[0]?.discharged_Date === null" :model-value="show" rounded="lg" scrollable @update:model-value="closeDialog" max-width="750px">
+    <v-dialog v-if="selectedRowDetails.value?.patient_registry?.[0]?.discharged_Date === null && selectedRowDetails.value?.patient_registry?.[0]?.discharged_Date !== null" :model-value="show" rounded="lg" scrollable @update:model-value="closeDialog" max-width="750px">
         <form @submit.prevent="onSubmit">
             <v-card rounded="lg">
                 <v-toolbar density="compact" color="#107bac" hide-details>
