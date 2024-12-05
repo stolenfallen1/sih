@@ -1,6 +1,20 @@
 <template>
     <div>
-        <v-dialog :model-value="open_revoke_form" rounded="lg" @update:model-value="closeDialog"  scrollable max-width="600px">
+        <v-dialog v-if="isDischarge !== null" :model-value="open_revoke_form" rounded="lg" @update:model-value="closeDialog"  scrollable max-width="400px"> 
+            <v-alert
+                border="left"
+                color="red"
+                dismissible
+                elevation="24"
+                icon="mdi-alert-circle"
+            >
+            <div class="note">
+                    <span>Note:</span>
+                    <p class="message">Cannot post or request charges for patients that have been discharged.</p>
+            </div>
+            </v-alert>
+        </v-dialog>
+        <v-dialog v-if="isDischarge === null" :model-value="open_revoke_form" rounded="lg" @update:model-value="closeDialog"  scrollable max-width="600px">
             <form @submit.prevent="openConfirmDialog">
                 <v-card rounded="lg">
                     <v-toolbar density="compact" color="#107bac" hide-details>
@@ -100,4 +114,9 @@ const onSubmit = async (user_details) => {
         return useSnackbar(true, "error", "Password incorrect.");
     }
 };
+
+const isDischarge = ref('');
+onUpdated(() => {
+    isDischarge.value = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0].discharged_Date;
+})
 </script>

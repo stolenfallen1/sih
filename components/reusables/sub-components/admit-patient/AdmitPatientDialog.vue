@@ -1,5 +1,19 @@
 <template>
-    <v-dialog :model-value="show" rounded="lg" scrollable @update:model-value="closeDialog" max-width="600px">
+    <v-dialog v-if="isDischarge !== null" :model-value="show" rounded="lg" scrollable @update:model-value="closeDialog" max-width="400px"> 
+        <v-alert
+            border="left"
+            color="red"
+            dismissible
+            elevation="24"
+            icon="mdi-alert-circle"
+        >
+           <div class="note">
+                <span>Note:</span>
+                <p class="message">Cannot admit patient. Patient is already discharged or has already a discharged order.</p>
+           </div>
+        </v-alert>
+    </v-dialog>
+    <v-dialog v-if="isDischarge === null" :model-value="show" rounded="lg" scrollable @update:model-value="closeDialog" max-width="600px">
         <form @submit.prevent="onSubmit">        
             <v-card rounded="lg">
                 <v-toolbar density="compact" color="#107bac" hide-details>
@@ -127,6 +141,11 @@ const emits = defineEmits(['close-dialog'])
 const closeDialog = () => {
     emits('close-dialog');
 }
+
+const isDischarge = ref('');
+onUpdated(() => {
+    isDischarge.value = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0].discharged_Date;
+})
 </script>
 
 <style scoped>

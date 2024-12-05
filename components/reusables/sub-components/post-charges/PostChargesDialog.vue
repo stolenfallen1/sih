@@ -1,5 +1,5 @@
 <template>
-    <v-dialog v-if="selectedRowDetails.value?.patient_registry?.[0]?.discharged_Date !== null" :model-value="show" rounded="lg" scrollable @update:model-value="closeDialog" max-width="400px">
+    <v-dialog v-if="isDischarge !== null" :model-value="show" rounded="lg" scrollable @update:model-value="closeDialog" max-width="400px">
         <v-alert
             border="left"
             color="red"
@@ -14,7 +14,7 @@
           
         </v-alert>
     </v-dialog>
-    <v-dialog v-if="selectedRowDetails.value?.patient_registry?.[0]?.discharged_Date === null" :model-value="show" rounded="lg" scrollable @update:model-value="closeDialog" max-width="1120px">
+    <v-dialog v-if="isDischarge === null" :model-value="show" rounded="lg" scrollable @update:model-value="closeDialog" max-width="1120px">
         <v-card rounded="lg">
             <v-toolbar density="compact" color="#107bac" hide-details>
                 <v-toolbar-title>Procedure Charges to Patient's Account</v-toolbar-title>
@@ -571,6 +571,7 @@ let pf_history_tab = ref("0");
 const { selectedRowDetails } = storeToRefs(useSubcomponentSelectedRowDetailsStore()); 
 const emits = defineEmits(['close-dialog']) 
 
+const isDischarge = ref('');
 const user_input_revenue_code = ref('');
 const open_charges_list = ref(false);
 const open_professionals_list = ref(false);
@@ -1302,7 +1303,7 @@ onUpdated(() => {
             && selectedRowDetails.value.patient_registry[0].guarantor_Credit_Limit !== undefined
             ? usePeso(selectedRowDetails.value.patient_registry[0].guarantor_Credit_Limit) 
             : "OPEN";
-
+    isDischarge.value = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0].discharged_Date;
     // Charges history
     if (payload.value.patient_Id && payload.value.case_No) {
         getChargesHistory();
