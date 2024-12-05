@@ -1,5 +1,5 @@
 <template>
-    <v-dialog v-if="isDischarge !== null" :model-value="show" rounded="lg" scrollable @update:model-value="closeDialog" max-width="400px"> 
+    <v-dialog v-if="isDischarge !== null || isTagAsMgh !== null" :model-value="show" rounded="lg" scrollable @update:model-value="closeDialog" max-width="400px"> 
         <v-alert
             border="left"
             color="red"
@@ -9,11 +9,11 @@
         >
            <div class="note">
                 <span>Note:</span>
-                <p class="message">Cannot admit patient. Patient is already discharged or has already a discharged order.</p>
+                <p class="message">Can't admit patient. Patient have been tagged for May Go Home (MGH) or have been discharged.</p>
            </div>
         </v-alert>
     </v-dialog>
-    <v-dialog v-if="isDischarge === null" :model-value="show" rounded="lg" scrollable @update:model-value="closeDialog" max-width="600px">
+    <v-dialog v-if="isDischarge === null && isTagAsMgh === null" :model-value="show" rounded="lg" scrollable @update:model-value="closeDialog" max-width="600px">
         <form @submit.prevent="onSubmit">        
             <v-card rounded="lg">
                 <v-toolbar density="compact" color="#107bac" hide-details>
@@ -143,8 +143,10 @@ const closeDialog = () => {
 }
 
 const isDischarge = ref('');
+const isTagAsMgh = ref('')
 onUpdated(() => {
     isDischarge.value = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0].discharged_Date;
+    isTagAsMgh.value    = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0].mgh_Datetime
 })
 </script>
 

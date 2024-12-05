@@ -62,6 +62,7 @@
                             :error-messages="formErrors.mscPrice_Groups ? [formErrors.mscPrice_Groups] : []"
                             hide-details
                             density="compact"
+                            readonly
                             variant="outlined"
                         ></v-autocomplete>
                     </v-col>
@@ -76,6 +77,7 @@
                             :disabled="clicked_option === 'view'"
                             :error-messages="formErrors.mscPrice_Schemes ? [formErrors.mscPrice_Schemes] : []"
                             hide-details
+                            readonly
                             density="compact"
                             variant="outlined"
                         ></v-autocomplete>
@@ -550,9 +552,11 @@ const getPatientBroughtBy = async () => {
     const response = await useMethod("get", "patient-brought-by", "", "");
     if(response) {
         patientBroughtBy.value = response;
+        props.payload.mscBroughtBy_Relationship_Id = patientBroughtBy.value[0].id;
         patientBroughtBy_loading.value = false;
     }
 };
+
 
 
 const loadDespostion = async () => {
@@ -707,7 +711,7 @@ const updatePriceGroup = () => {
         if (parseInt(props.payload.mscAccount_Type) === 1) {
             props.payload.mscPrice_Groups = price_group_data.value[1].id;
         } else {
-            props.payload.mscPrice_Groups = price_group_data.value[0].id;
+            props.payload.mscPrice_Groups = price_group_data.value[1].id;
         }
     }
 };

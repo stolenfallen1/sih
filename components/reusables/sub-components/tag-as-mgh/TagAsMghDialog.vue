@@ -274,11 +274,11 @@
                             ornumber: item.ORNumber,
                             code: item.revenue_Id
                         }));
-
+                        console.log('Checked Data Charges : ',  check_charges_data.value);
                         if(accountType === 'Self Pay') {
                             hasUnpaidCharges.value = check_charges_data.value.some(item => 
                                 item.status === "X" || 
-                                item.status === "27" || 
+                                item.status === "27" &&
                                 item.ornumber === null
                             );
                         } else {

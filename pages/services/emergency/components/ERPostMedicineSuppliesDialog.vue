@@ -1,5 +1,5 @@
 <template>
-    <v-dialog v-if="isDischarge !== null" :model-value="show" rounded="lg" scrollable @update:model-value="closeDialog" max-width="400px"> 
+    <v-dialog v-if="isDischarge !== null || isTagAsMgh !== null" :model-value="show" rounded="lg" scrollable @update:model-value="closeDialog" max-width="400px"> 
         <v-alert
             border="left"
             color="red"
@@ -9,11 +9,11 @@
         >
            <div class="note">
                 <span>Note:</span>
-                <p class="message">Cannot post or request charges for patients that have been discharged.</p>
+                <p class="message">Can't post or request charges for patients that have been tagged for May Go Home (MGH) or have been discharged.</p>
            </div>
         </v-alert>
     </v-dialog>
-    <v-dialog v-if="isDischarge === null" :model-value="show" rounded="lg" scrollable @update:model-value="closeDialog" max-width="1120px">    
+    <v-dialog v-if="isDischarge === null && isTagAsMgh === null" :model-value="show" rounded="lg" scrollable @update:model-value="closeDialog" max-width="1120px">    
         <v-card rounded="lg">
             <v-toolbar density="compact" color="#107bac" hide-details>
                 <v-toolbar-title>List Of Items Medicines / Supplies Entry</v-toolbar-title>
@@ -1076,6 +1076,7 @@
     });
 
     const isDischarge = ref('');
+    const isTagAsMgh = ref('')
     onUpdated(() => {
         if (selectedRowDetails.value && selectedRowDetails.value.id) {
             if (payload.value.id !== selectedRowDetails.value.id) { 
@@ -1102,6 +1103,7 @@
                     ? usePeso(selectedRowDetails.value.patient_registry[0].guarantor_Credit_Limit) 
                     : "OPEN";
                 isDischarge.value = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0].discharged_Date;
+                isTagAsMgh.value    = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0].mgh_Datetime;
             }
         }
     })
