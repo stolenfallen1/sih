@@ -363,7 +363,7 @@
                                             <thead>
                                                 <tr>
                                                     <th></th>
-                                                    <th>Status</th>
+                                                    <th></th>
                                                     <th>Reference Number</th>
                                                     <th>Dept Code</th>
                                                     <th>Item Code</th>
@@ -378,7 +378,7 @@
                                                         <td> <input type="checkbox" :checked="isCheckedCashAssessment(item)" @change="toggleCashAssessmentSelection(item)" /></td>
                                                         <td> 
                                                             <span>
-                                                                <v-chip color="green" v-if="payload.account !== 'Company / Insurance'">Paid</v-chip> 
+                                                                <v-chip color="green" v-if="item.ORNumber != null">Paid</v-chip> 
                                                                 <v-chip color="red" v-else>Unpaid</v-chip>
                                                             </span>
                                                         </td>
@@ -473,7 +473,7 @@
                                                         <td> <input type="checkbox" :checked="isCheckedCashAssessment(item)" @change="toggleCashAssessmentSelection(item)" /></td>
                                                         <td> 
                                                             <span>
-                                                                <v-chip color="green" v-if="payload.account !== 'Company / Insurance'">Paid</v-chip> 
+                                                                <v-chip color="green" v-if="item.ORNumber != null">Paid</v-chip> 
                                                                 <v-chip color="red" v-else>Unpaid</v-chip>
                                                             </span>
                                                         </td>
@@ -510,6 +510,26 @@
                 <v-btn :loading="isLoadingBtn" :disabled="isLoadingBtn" class="text-white bg-primary" @click="confirmCharge">Charge and Print</v-btn>
 
             </v-card-actions>
+        </v-card>
+    </v-dialog>
+
+    <v-dialog :model-value="warning_cannot_be_revoked" rounded="lg" max-width="450px" @update:model-value="closeWarningDialog">
+        <v-card elevation="4" rounded="lg">
+            <v-toolbar density="compact" color="red" hide-details>
+                <v-toolbar-title>
+                    <v-icon size="25">mdi-alert</v-icon> WARNING
+                </v-toolbar-title>
+                <v-spacer></v-spacer>
+                <v-btn color="white" @click="closeWarningDialog">
+                    <v-icon>mdi-close</v-icon>
+                </v-btn>
+            </v-toolbar>
+            <v-card-text>
+                <h2 style="text-align: left;">
+                    CAN'T REVOKED ITEMS THAT HAS BEEN PAID! CONTACT CASHIER INSTEAD TO CANCEL
+                    <span style="color: red;">ORNUMBER</span>
+                </h2>
+            </v-card-text>
         </v-card>
     </v-dialog>
 
@@ -553,8 +573,8 @@ import { createApp } from 'vue';
 import nuxtStorage from 'nuxt-storage'; 
 import ChargesList from './sub-forms/ChargesList.vue';
 import PFList from './sub-forms/PFList.vue';
-import ChargeReports from "../../../../public/reports/charges/ChargeReports.vue";
-import CashAssessmentReports from "../../../../public/reports/charges/CashAssessmentReports.vue";
+import ChargeReports from "../../../../public/reports/charges/procedures/ChargeReports.vue";
+import CashAssessmentReports from "../../../../public/reports/charges/procedures/CashAssessmentReports.vue";
 
 const props = defineProps({
     show: {
@@ -582,6 +602,7 @@ const cash_prof_fee_history = ref([]);
 const selected_charges = ref([]);
 const selected_cash_assessment = ref([]);
 const user_attempts = ref(0);
+const warning_cannot_be_revoked = ref(false);
 const error_msg = ref('');
 const charge_to = ref([
     { value: 1, text: "Self-Pay" },
@@ -929,7 +950,8 @@ const confirmCharge = () => {
 
 const postChargeInsurcane = async () => {
     try {
-        credit_limit.value = payload.value.guarantor_Credit_Limit === 'OPEN' ? null : parseFloat(payload.value.guarantor_Credit_Limit.replace(/[^0-9.-]+/g, ''));
+        isLoadingBtn.value = true;
+        credit_limit.value = payload.value.guarantor_Credit_Limit == 'OPEN' ? null : parseFloat(payload.value.guarantor_Credit_Limit.replace(/[^0-9.-]+/g, ''));
         if (credit_limit.value != null && patientExcessAmount.value > credit_limit.value) {
             let excessAmount = patientExcessAmount.value - credit_limit.value;
             const confirmCharge = window.confirm(`Credit limit exceeded for a total of ${usePeso(excessAmount)}. Do you want to continue?`);
@@ -1029,7 +1051,16 @@ const closeConfirmCharge = () => {
     user_attempts.value = 0;
 }
 
+const closeWarningDialog = () => {
+    selected_cash_assessment.value = [];
+    warning_cannot_be_revoked.value = false;
+}
+
 const confirmRevoke = () => {
+    if (selected_cash_assessment.value.some(item => item.ORNumber)) {
+        return warning_cannot_be_revoked.value = true;
+    }
+
     if (selected_charges.value.length > 0 || selected_cash_assessment.value.length > 0) {
         revokeconfirmation.value = true;
     } else {

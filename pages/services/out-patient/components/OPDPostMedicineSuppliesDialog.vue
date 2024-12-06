@@ -256,7 +256,7 @@
                                 <tfoot>
                                     <tr>
                                         <td colspan="6" class="text-right">Total Amount: </td>
-                                        <!-- <td>{{ usePeso(totalAmount) }}</td> -->
+                                        <td>{{ usePeso(totalAmount) }}</td> 
                                     </tr>
                                 </tfoot>
                             </v-table>
@@ -326,7 +326,7 @@
                                 <tfoot>
                                     <tr>
                                         <td colspan="5" class="text-right">Total Amount: </td>
-                                        <!-- <td>{{ usePeso(totalAmount) }}</td> -->
+                                        <td>{{ usePeso(totalAmount) }}</td>
                                     </tr>
                                 </tfoot>
                             </v-table>
@@ -357,55 +357,113 @@
                             </v-btn>
                         </v-expansion-panel-title>
                         <v-expansion-panel-text>
-                            <v-table density="compact" height="40vh" class="styled-table">
-                                <thead>
-                                    <tr>
-                                        <th></th>
-                                        <th></th>
-                                        <th>Code</th>
-                                        <th>Item ID</th>
-                                        <th>Item Description</th>
-                                        <th>Frequency</th>
-                                        <th>Quantity</th> 
-                                        <th>Amount</th> 
-                                        <th>Remarks</th>
-                                        <th>STAT</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <template v-for="(item, index) in charges_history_data" :key="index">
-                                        <tr>
-                                            <td> 
-                                                <input 
-                                                    type="checkbox"
-                                                    :checked="isCheckedCharges(item)" 
-                                                    @change="toggleSelectedCharge(item)"
-                                                />
-                                            </td>
-                                            <td>
-                                                <div 
-                                                    :style="{ width: '10px', height: '15px', backgroundColor: item.dosage ? 'blue' : 'red', marginLeft: '10px' }"
-                                                    :title="item.dosage ? 'Medicine' : 'Supply'">
-                                                </div>
-                                            </td>
-                                            <td> <input readonly :value="item.revenue_Id" /> </td>
-                                            <td> <input readonly :value="item.item_Id" /> </td>
-                                            <td> <input readonly :value="item.description" /> </td>
-                                            <td> <input readonly :value="item.dosage" /> </td>
-                                            <td> <input readonly :value="parseInt(item.Quantity)" /> </td>
-                                            <td> <input readonly :value="usePeso(item.amount)" /> </td>
-                                            <td> <input readonly :value="item.remarks" /> </td>
-                                            <td>
-                                                <input readonly :value="item.stat === 1 ? 'Routine' : item.stat === 2 ? 'Stat' : ''" />
-                                            </td>
-                                        </tr>
-                                    </template>
-                                </tbody>
-                            </v-table>
+                            <v-tabs
+                                v-model="history_tab"
+                                color="primary"
+                                >
+                                    <v-tab value="0" v-if="payload.account == 'Company / Insurance'">Company / Insurance</v-tab>
+                                    <v-tab value="1">Cash Assessment</v-tab>
+                            </v-tabs>
+                            <v-window v-model="history_tab">
+                                <v-window-item value="0">
+                                    <v-table density="compact" height="40vh" class="styled-table">
+                                        <thead>
+                                            <tr>
+                                                <th></th>
+                                                <th></th>
+                                                <th>Ref #</th>
+                                                <th>Item ID</th>
+                                                <th>Item Description</th>
+                                                <th>Frequency</th>
+                                                <th>Quantity</th> 
+                                                <th>Amount</th> 
+                                                <th>STAT</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <template v-for="(item, index) in history_data_insurancesbasis" :key="index">
+                                                <tr>
+                                                    <td> 
+                                                        <input 
+                                                            type="checkbox"
+                                                            :checked="isCheckedCharges(item)" 
+                                                            @change="toggleSelectedCharge(item)"
+                                                        />
+                                                    </td>
+                                                    <td>
+                                                        <div 
+                                                            :style="{ width: '10px', height: '15px', backgroundColor: item.dosage ? 'blue' : 'red', marginLeft: '10px' }"
+                                                            :title="item.dosage ? 'Medicine' : 'Supply'">
+                                                        </div>
+                                                    </td>
+                                                    <td> <input readonly :value="item.refNum ? item.refNum : item.requestNum" /> </td>
+                                                    <td> <input readonly :value="item.itemID ? item.itemID : item.item_Id" /> </td>
+                                                    <td> <input readonly :value="item.description ? item.description : item.requestDescription" /> </td>
+                                                    <td> <input readonly :value="item.dosage ? item.dosage : 'Not Applicable' " /> </td>
+                                                    <td> <input readonly :value="item.quantity ? parseInt(item.quantity) : parseInt(item.Quantity)" /> </td>
+                                                    <td> <input readonly :value="usePeso(item.amount)" /> </td>
+                                                    <td> <input readonly :value="item.stat == 1 || item.stat == null ? 'Routine' : item.stat == 2 ? 'Stat' : ''" /> </td>
+                                                </tr>
+                                            </template>
+                                        </tbody>
+                                    </v-table>
+                                </v-window-item>
+                                <v-window-item value="1">
+                                    <v-table density="compact" height="40vh" class="styled-table">
+                                        <thead>
+                                            <tr>
+                                                <th></th>
+                                                <th></th>
+                                                <th></th>
+                                                <th>Ref #</th>
+                                                <th>Item ID</th>
+                                                <th>Item Description</th>
+                                                <th>Frequency</th>
+                                                <th>Quantity</th> 
+                                                <th>Amount</th> 
+                                                <th>STAT</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <template v-for="(item, index) in history_data_cashbasis" :key="index">
+                                                <tr>
+                                                    <td> 
+                                                        <input 
+                                                            type="checkbox"
+                                                            :checked="isCheckedCharges(item)" 
+                                                            @change="toggleSelectedCharge(item)"
+                                                        />
+                                                    </td>
+                                                    <td>
+                                                        <div 
+                                                            :style="{ width: '10px', height: '15px', backgroundColor: item.dosage ? 'blue' : 'red', marginLeft: '10px' }"
+                                                            :title="item.dosage ? 'Medicine' : 'Supply'">
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <span v-if="item.source != null">
+                                                            <v-chip color="green" v-if="item.source == 'NurseLogBook'">Paid</v-chip>
+                                                            <v-chip color="red" v-else>Unpaid</v-chip>
+                                                        </span>
+                                                    </td>
+                                                    <td> <input readonly :value="item.refNum ? item.refNum : item.requestNum" /> </td>
+                                                    <td> <input readonly :value="item.itemID ? item.itemID : item.item_Id" /> </td>
+                                                    <td> <input readonly :value="item.description ? item.description : item.requestDescription" /> </td>
+                                                    <td> <input readonly :value="item.dosage ? item.dosage : 'Not Applicable' " /> </td>
+                                                    <td> <input readonly :value="item.quantity ? parseInt(item.quantity) : parseInt(item.Quantity)" /> </td>
+                                                    <td> <input readonly :value="usePeso(item.amount)" /> </td>
+                                                    <td> <input readonly :value="item.stat == 1 || item.stat == null ? 'Routine' : item.stat == 2 ? 'Stat' : ''" /> </td>
+                                                </tr>
+                                            </template>
+                                        </tbody>
+                                    </v-table>
+                                </v-window-item>
+                            </v-window>
                         </v-expansion-panel-text>
                     </v-expansion-panel>
                 </v-expansion-panels>
             </v-card-text>
+            <v-divider></v-divider>
             <v-card-actions>
                 <v-btn color="blue-darken-1 border border-info" @click="closeDialog"> Close </v-btn>
                 <v-btn class="text-white bg-error" @click="confirmRevoke">Revoke Charge</v-btn>
@@ -414,6 +472,27 @@
             </v-card-actions>
         </v-card>
     </v-dialog>
+
+    <v-dialog :model-value="warning_cannot_be_revoked" rounded="lg" max-width="450px" @update:model-value="closeWarningDialog">
+        <v-card elevation="4" rounded="lg">
+            <v-toolbar density="compact" color="red" hide-details>
+                <v-toolbar-title>
+                    <v-icon size="25">mdi-alert</v-icon> WARNING
+                </v-toolbar-title>
+                <v-spacer></v-spacer>
+                <v-btn color="white" @click="closeWarningDialog">
+                    <v-icon>mdi-close</v-icon>
+                </v-btn>
+            </v-toolbar>
+            <v-card-text>
+                <h2 style="text-align: left;">
+                    CAN'T REVOKED ITEMS THAT HAS BEEN PAID! CONTACT CASHIER INSTEAD TO CANCEL
+                    <span style="color: red;">ORNUMBER</span>
+                </h2>
+            </v-card-text>
+        </v-card>
+    </v-dialog>
+
     <snackbar />
 
     <list-of-items 
@@ -487,6 +566,7 @@ const open_items_list_for_medicines = ref(false);
 const open_items_list_for_supplies = ref(false);
 const open_frequency_list = ref(false);
 const user_input_revenue_code = ref('');
+const warning_cannot_be_revoked = ref(false);
 const charge_to = ref([
     { value: 1, text: "Self-Pay" },
     { value: 2, text: "Company / Insurance" }, 
@@ -503,7 +583,7 @@ const Medicines = ref([
         price: "",
         amount: "",
         remarks: "",
-        stat: "",
+        stat: 1,
         warehouse_id: "",
     }
 ]);
@@ -517,8 +597,8 @@ const Supplies = ref([
         price: "",
         amount: "",
         remarks: "",
-        stat: "",
         warehouse_id: "",
+        stat: 1,
     }
 ]);
 
@@ -529,6 +609,7 @@ const supplies_revenue_data_display = ref([]);
 const selectedWarehouseID = ref(null); 
 const selected_charge_item = ref([]);
 const itemcodes = ref([]);
+let history_tab = ref("0");
 const getRevenueCode = async () => {
     const revenue_res = await useMethod("get", "get-transaction-codes", "", "");
     if (revenue_res) {
@@ -623,7 +704,7 @@ const handleAddMedicine = (item, index) => {
                     quantity: "",
                     amount: "",
                     remarks: "",
-                    stat: "",
+                    stat: 1,
                     warehouse_id: "",
                     warehouse_medsys_id: "",
             });
@@ -678,7 +759,7 @@ const handleAddSupplies = (item, index) => {
                     quantity: "",
                     amount: "",
                     remarks: "",
-                    stat: "",
+                    stat: 1,
                     warehouse_id: "",
                     warehouse_medsys_id: "",
             });
@@ -743,8 +824,44 @@ const updateAmount = (item) => {
     const cleanedPrice = item.price.replace(/[^\d.-]/g, ''); 
     const quantity = Number(item.quantity) || 0; 
     const price = Number(cleanedPrice) || 0; 
-    item.amount = `₱ ${(quantity * price).toFixed(3)}`; 
+    item.amount = `₱ ${(quantity * price).toFixed(2)}`; 
 }
+
+const totalMedicineAmount = computed(() => {
+    return Medicines.value.reduce((acc, item) => {
+        const cleanAmount = typeof item.amount === 'string'
+            ? parseFloat(item.amount.replace(/[^\d.-]/g, ''))
+            : parseFloat(item.amount) || 0;
+        return acc + (cleanAmount || 0);
+    }, 0);
+});
+
+const totalSupplyAmount = computed(() => {
+    return Supplies.value.reduce((acc, item) => {
+        const cleanAmount = typeof item.amount === 'string'
+            ? parseFloat(item.amount.replace(/[^\d.-]/g, ''))
+            : parseFloat(item.amount) || 0;
+        return acc + (cleanAmount || 0);
+    }, 0);
+});
+
+// const chargeAmountHistory = computed(() => {
+//     return charges_history_data.value ? charges_history_data.value.reduce((acc, item) => acc + parseFloat(item.net_amount), 0) : 0;
+// });
+// const cashAmountHistory = computed(() => {
+//     return cash_assessment_history.value ? cash_assessment_history.value.reduce((acc, item) => acc + parseFloat(item.amount), 0) : 0;
+// });
+// const chargeProfFeeAmountHistory = computed(() => {
+//     return professional_fees_history.value ? professional_fees_history.value.reduce((acc, item) => acc + parseFloat(item.net_amount), 0) : 0;
+// });
+// const cashProfFeeAmountHistory = computed(() => {
+//     return cash_prof_fee_history.value ? cash_prof_fee_history.value.reduce((acc, item) => acc + parseFloat(item.amount), 0) : 0;
+// });
+
+// const totalHistoryAmount = computed(() => chargeAmountHistory.value + cashAmountHistory.value + chargeProfFeeAmountHistory.value + cashProfFeeAmountHistory.value);
+const patientExcessAmount = computed(() => parseFloat((totalHistoryAmount.value ? totalAmount.value + totalHistoryAmount.value : totalAmount.value).toFixed(2)));
+
+const totalAmount = computed(() => totalMedicineAmount.value + totalSupplyAmount.value);
 
 const confirmCharge = () => {
     let medicines = Medicines.value.filter(obj => obj.code !== '');
@@ -793,13 +910,32 @@ const onSubmit = async (user_details) => {
     if (user_details.user_passcode === usePasscode()) {
         try {
             isLoadingBtn.value = true;
-            const response = await useMethod("post", "charge-medicine-supplies", payload.value);
-            if (response) {
-                useSnackbar(true, "success", "Successfully posted charges.");
-                closeDialog();
-                closeConfirmation();
+            credit_limit.value = payload.value.guarantor_Credit_Limit == 'OPEN' ? null : parseFloat(payload.value.guarantor_Credit_Limit.replace(/[^0-9.-]+/g, ''));
+            if (credit_limit.value != null && totalAmount.value > credit_limit.value) {
+                let excessAmount = credit_limit.value;
+                const confirmCharge = window.confirm(`Credit limit exceeded for a total of ${usePeso(excessAmount)}. Do you want to continue?`);
+                if (!confirmCharge) {
+                    isLoadingBtn.value = false;
+                    closeConfirmation();
+                } else {
+                    const response = await useMethod("post", "charge-medicine-supplies", payload.value);
+                    if (response) {
+                        useSnackbar(true, "success", "Successfully posted charges.");
+                        closeDialog();
+                        closeConfirmation();
+                    } else {
+                        useSnackbar(true, "error", "Failed to post charges.");
+                    }
+                }
             } else {
-                useSnackbar(true, "error", "Failed to post charges.");
+                const response = await useMethod("post", "charge-medicine-supplies", payload.value);
+                if (response) {
+                    useSnackbar(true, "success", "Successfully posted charges.");
+                    closeDialog();
+                    closeConfirmation();
+                } else {
+                    useSnackbar(true, "error", "Failed to post charges.");
+                }
             }
         } catch (error) {
             console.log(error);
@@ -852,7 +988,16 @@ const toggleSelectedCharge = (item) => {
     }
 };
 
+const closeWarningDialog = () => {
+    selected_charge_item.value = []; 
+    warning_cannot_be_revoked.value = false;
+}
+
 const confirmRevoke = () => {
+    if (selected_charge_item.value.map(item => item.source).includes("NurseLogBook") && selectedRowDetails.value.patient_registry[0].mscPrice_Schemes == 1) {
+        return warning_cannot_be_revoked.value = true;
+    }
+
     if (selected_charge_item.value.length > 0) {
         revokeconfirmation.value = true;
     } else {
@@ -925,7 +1070,8 @@ const closeDialog = () => {
     ]
 }
 
-const charges_history_data = ref([]); 
+const history_data_insurancesbasis = ref([]);
+const history_data_cashbasis = ref([]); 
 const getChargesHistory = async () => {
     try {
         const response = await fetch(useApiUrl() + "/get-medicine-supplies-charge-history", {
@@ -942,7 +1088,7 @@ const getChargesHistory = async () => {
 
         const responseData = await response.json();
         if (response.ok) {
-            charges_history_data.value = responseData.data;
+            // if the value of the return data souce is from "NurseLogBook" then it is 
         } else {
             return useSnackbar(true, "error", "No data found.");
         }
