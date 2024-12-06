@@ -1881,23 +1881,23 @@ export default [
                     //     form: "DirectRender",
                     //     rule: "",
                     // },
-                    {
-                        label: "Render Requisition",
-                        icon: "mdi-file-document-edit",
-                        rule: "",
-                    },
+                    // {
+                    //     label: "Render Requisition",
+                    //     icon: "mdi-file-document-edit",
+                    //     rule: "",
+                    // },
                     // {
                     //     label: "Drug Administration",
                     //     icon: "mdi-file-document-edit",
                     //     form: "DrugAdministration",
                     //     rule: "",
                     // },
-                    {
-                        label: "Apply Credit Note",
-                        icon: "mdi-file-document-edit",
-                        form: "ApplyCreditNote",
-                        rule: "",
-                    },
+                    // {
+                    //     label: "Apply Credit Note",
+                    //     icon: "mdi-file-document-edit",
+                    //     form: "ApplyCreditNote",
+                    //     rule: "",
+                    // },
                     // {
                     //     label: "Print Cash / Charge / CN Slip",
                     //     icon: "mdi-file-document-edit",
@@ -1908,22 +1908,22 @@ export default [
                     //     icon: "mdi-file-document-edit",
                     //     rule: "",
                     // },
-                    {
-                        label: "Print Requisition Slip",
-                        icon: "mdi-file-document-edit",
-                        rule: "",
-                    },
-                    {
-                        label: "Void Discount",
-                        icon: "mdi-file-document-edit",
-                        rule: "",
-                    },
-                    {
-                        label: "Centralized Credit Note",
-                        icon: "mdi-file-document-edit",
-                        form: "CentralizedCreditNote",
-                        rule: "",
-                    },
+                    // {
+                    //     label: "Print Requisition Slip",
+                    //     icon: "mdi-file-document-edit",
+                    //     rule: "",
+                    // },
+                    // {
+                    //     label: "Void Discount",
+                    //     icon: "mdi-file-document-edit",
+                    //     rule: "",
+                    // },
+                    // {
+                    //     label: "Centralized Credit Note",
+                    //     icon: "mdi-file-document-edit",
+                    //     form: "CentralizedCreditNote",
+                    //     rule: "",
+                    // },
                 ],
                 processing_and_queries: [
                     // {

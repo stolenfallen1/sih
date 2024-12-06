@@ -262,13 +262,20 @@ const confirmCancelOrder = () => {
 
 const onCancel = async (user_details) => {
     if (user_details.user_passcode === usePasscode()) {
-        const response = await useMethod("post", "cancel-pharmacy-order", payload.value);   
-        if (response) {
-            useSnackbar(true, "success", "Order successfully cancelled.");
-            emits("ordered-carried");
-            closeCancellation();
-            closeDialog();
-        } 
+        isLoadingBtn.value = true;
+        try {
+            const response = await useMethod("post", "cancel-pharmacy-order", payload.value);   
+            if (response) {
+                useSnackbar(true, "success", "Order successfully cancelled.");
+                emits("ordered-carried");
+                closeCancellation();
+                closeDialog();
+            } 
+        } catch (error) {
+            useSnackbar(true, "error", "An error occurred while cancelling the order.");
+        } finally {
+            isLoadingBtn.value = false;
+        }
     } else {
         user_attempts.value += 1;
         useSnackbar(true, "error", "Password incorrect.");
@@ -308,13 +315,20 @@ const confirmCarryOrder = () => {
 
 const onSubmit = async (user_details) => {
     if (user_details.user_passcode === usePasscode()) {
-        const response = await useMethod("post", "carry-pharmacy-order", payload.value);   
-        if (response) {
-            useSnackbar(true, "success", "Order successfully carried.");
-            emits("ordered-carried");
-            closeConfirmation();
-            closeDialog();
-        } 
+        isLoadingBtn.value = true;
+        try {
+            const response = await useMethod("post", "carry-pharmacy-order", payload.value);   
+            if (response) {
+                useSnackbar(true, "success", "Order successfully carried.");
+                emits("ordered-carried");
+                closeConfirmation();
+                closeDialog();
+            } 
+        } catch (error) {
+            useSnackbar(true, "error", "An error occurred while carrying the order.");
+        } finally {
+            isLoadingBtn.value = false;
+        }
     } else {
         user_attempts.value += 1;
         useSnackbar(true, "error", "Password incorrect.");

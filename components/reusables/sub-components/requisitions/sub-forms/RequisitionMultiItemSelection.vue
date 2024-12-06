@@ -274,16 +274,16 @@ const props = defineProps({
   open_medical_item_selection: {
       type: Boolean,
       default: () => false,
-      required: true,
+      required: false,
   },
   category: {
       type: String,
       default: () => "",
-      required: true,
+      required: false,
   },
   roleID: {
       type: Number,
-      required: true,
+      required: false,
   }
 })
 
