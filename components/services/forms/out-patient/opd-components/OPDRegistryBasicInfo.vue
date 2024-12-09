@@ -70,9 +70,9 @@
                 <v-col cols="12" class="form-group">
                     <label class="form-label">Price Scheme <span style="color: red;">*</span></label>
                     <div class="select-wrapper">
-                        <select class="form-select" :class="{ 'input-error': formErrors.mscPrice_Schemes }" :disabled="clicked_option === 'view'" v-model="payload.mscPrice_Schemes">
-                            <option v-for="(item, index) in price_scheme_data" :key="index" :value="item.id">
-                                {{ item.description }}
+                        <select class="form-select" :class="{ 'input-error': formErrors.mscPrice_Schemes }" disabled v-model="payload.mscPrice_Schemes">
+                            <option v-if="filteredPriceSchemes.length > 0" :value="filteredPriceSchemes[0].id">
+                                {{ filteredPriceSchemes[0].description }}
                             </option>
                         </select>
                         <span class="arrow-icon mdi mdi-chevron-down"></span>
@@ -364,6 +364,15 @@ const getIdTypes = async () => {
         id_types_loading.value = false;
     } 
 };
+
+const filteredPriceSchemes = computed(() => {
+    const selectedHospPlan = props.payload.mscAccount_type;
+    return price_scheme_data.value.filter((item) => item.id === selectedHospPlan);
+});
+
+watch(filteredPriceSchemes, (newSchemes) => {
+    props.payload.mscPrice_Schemes = newSchemes.length > 0 ? newSchemes[0].id : null;
+});
 
 onMounted(() => {
     getRegisterSource();
