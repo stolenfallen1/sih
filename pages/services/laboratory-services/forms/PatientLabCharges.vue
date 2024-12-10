@@ -333,7 +333,7 @@ onUpdated(() => {
         payload.value.patient_name = 
         (selectedRowDetails.value?.patient_details?.lastname ? selectedRowDetails.value?.patient_details?.lastname : "N/A") + 
         ", " + (selectedRowDetails.value?.patient_details?.firstname ? selectedRowDetails.value?.patient_details?.firstname : "N/A") + 
-        " " + (selectedRowDetails.value?.patient_details?.middlename ? selectedRowDetails.value?.patient_details?.middlename : "N/A");
+        " " + (selectedRowDetails.value?.patient_details?.middlename ? selectedRowDetails.value?.patient_details?.middlename : "");
         payload.value.patient_Id = selectedRowDetails.value?.patient_Id;
         payload.value.case_No = selectedRowDetails.value?.case_No;
         payload.value.patient_Age = selectedRowDetails.value?.patient_Age ? selectedRowDetails.value?.patient_Age : "N/A";

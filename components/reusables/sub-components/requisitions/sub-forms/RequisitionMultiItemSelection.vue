@@ -755,7 +755,7 @@ onUpdated(() => {
     payload.value.account = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0]?.mscPrice_Schemes == 1 ? 'Cash Transaction' : 'Insurance Transaction';
     payload.value.attending_Doctor = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0]?.attending_Doctor || 'N/A';
     payload.value.attending_Doctor_fullname = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0]?.attending_Doctor_fullname || 'N/A';
-    payload.value.guarantor_Id = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0]?.guarantor_Id || '';
+    payload.value.guarantor_Id = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0]?.guarantor_Id ? selectedRowDetails.value.patient_registry[0]?.guarantor_Id : payload.value.patient_Id;
     payload.value.patient_Type = selectedRowDetails.value.patient_registry && 
                                   selectedRowDetails.value.patient_registry[0]?.mscAccount_Trans_Types == 2 ? 'Out-Patient' 
                                   : (selectedRowDetails.value.patient_registry[0]?.mscAccount_Trans_Types == 5 ? 'Emergency' : 'In-Patient');

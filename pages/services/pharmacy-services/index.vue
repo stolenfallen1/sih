@@ -110,11 +110,21 @@
                 </v-list>
             </v-menu>
         </v-btn>
-            <v-btn
-                prepend-icon="mdi-pill-multiple"
-                class="bg-primary text-white"
-            >
-            Manual Posting
+            <v-btn prepend-icon="mdi-pill-multiple" class="bg-primary text-white">
+                Manual Posting
+                <v-menu activator="parent">
+                    <v-list>
+                        <v-list-item
+                            v-for="(item, index) in menuCodes"
+                            :key="index"
+                            :value="index"
+                            class="hoverable-list-item"
+                            @click="openManualPosting(item.code)"
+                        >
+                            <v-list-item-title>{{ item.description }}</v-list-item-title>
+                        </v-list-item>
+                    </v-list>
+                </v-menu>
             </v-btn>
             <v-spacer></v-spacer>
         </v-card-actions>
@@ -151,7 +161,8 @@
     <PharmaPostedMedicines :open_posted_medicine="open_posted_medicine" :patient_type="patient_type" @close-dialog="closePostedMedicine" />
     <PharmaCorrectionEntry :open_correction_entry="open_correction_entry" :patient_type="patient_type" @close-dialog="closeCorrectionEntry" />
     <PharmaReturnedMedicines :open_returned_medicines="open_returned_medicines" :patient_type="patient_type" @close-dialog="closeReturnedMedicines" />
-    
+    <PharmaManualPosting :open_pharma_manual_posting="open_pharma_manual_posting" :patient_type="patient_type" @close-dialog="closeManualPosting" />
+
     <v-dialog v-model="showSelectDate" max-width="320px" @update:model-value="closeDateSelection">
         <v-card>
             <v-card-title>
@@ -184,6 +195,7 @@ import CarryMedicineOrder from '../../../components/services/forms/pharmacy/Carr
 import PharmaPostedMedicines from '../../../components/services/forms/pharmacy/PharmaPostedMedicines.vue';
 import PharmaCorrectionEntry from '../../../components/services/forms/pharmacy/PharmaCorrectionEntry.vue';
 import PharmaReturnedMedicines from '../../../components/services/forms/pharmacy/PharmaReturnedMedicines.vue';
+import PharmaManualPosting from '~/components/services/forms/pharmacy/PharmaManualPosting.vue';
 
 definePageMeta({
     layout: "root-layout",
@@ -193,6 +205,7 @@ const open_carry_order_form = ref(false);
 const open_posted_medicine = ref(false);
 const open_correction_entry = ref(false);
 const open_returned_medicines = ref(false);
+const open_pharma_manual_posting = ref(false);
 const selected_item = ref([]);
 const patient_type = ref(0);
 const menu_id = ref(0);
@@ -376,6 +389,16 @@ const openReturnedMedicines = (type) => {
 
 const closeReturnedMedicines = () => {
     open_returned_medicines.value = false;
+    patient_type.value = 0;
+}
+
+const openManualPosting = (type) => {
+    patient_type.value = type;
+    open_pharma_manual_posting.value = true;
+}
+
+const closeManualPosting = () => {
+    open_pharma_manual_posting.value = false;
     patient_type.value = 0;
 }
 

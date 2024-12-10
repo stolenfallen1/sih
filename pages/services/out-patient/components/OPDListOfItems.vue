@@ -168,7 +168,7 @@ const loadItems = async (page = null, itemsPerPage = null) => {
         headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + useToken()},
         body: { 
             revenuecode: props.user_input_revenue_code,
-            warehouseID:parseInt(props.warehouse_id),
+            warehouseID: parseInt(props.warehouse_id),
             patienttype: props.patienttype,
             itemcodes: props.itemcodes, 
         }
