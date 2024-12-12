@@ -286,10 +286,12 @@ const medicine_request_data = ref([]);
 const outPatientCount = ref(0);
 const outPatientData = ref([]);
 const isOPDBlinking = ref(false);
+
 const fetchOutPatientCount = async () => {
     try {
-        const response = await useMethod("get", "get-opd-pharmacy-orders", "", "");
+        const response = await $fetch("http://localhost:3001/api/get-opd-pharma-orders");
         if (response) {
+            console.log("Out-Patient Data:", response);
             outPatientData.value = response;
             outPatientCount.value = Object.keys(response).length;
             isOPDBlinking.value = outPatientCount.value > 0;
@@ -491,7 +493,7 @@ const printUnitDesoReport = async (subMenuId) => {
     }
 }
 
-onMounted(() => {
+onMounted(async() => {
     const intervalId = setInterval(fetchAllCounts, 5000);
     onBeforeUnmount(() => {
         clearInterval(intervalId);

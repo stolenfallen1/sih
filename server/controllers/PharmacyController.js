@@ -28,8 +28,8 @@ async function getOPDOrders() {
         });
 
         const dosages = await mscDosages.findAll();
-        const dosageMap = dosages.reduce((acc ,dosage) => {
-            acc[dosage.dosage_id] = dosage;
+        const dosageMap = dosages.reduce((acc, dosage) => {
+            acc[dosage.dosage_id] = dosage;  
             return acc;
         }, {});
 
@@ -44,11 +44,11 @@ async function getOPDOrders() {
                 };
             }
 
-            const dosageData = dosageMap[record.dosage_id] || { 
+            const dosageData = dosageMap[record.dosage] || { 
                 dosage_id: 'N/A',
                 description: 'N/A',
                 frequency: 'N/A',
-            }
+            };
 
             acc[record.requestNum].items.push({
                 id: record.id,
