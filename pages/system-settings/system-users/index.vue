@@ -173,7 +173,7 @@ const tableTabs = ref([
     label: "Individual User",
     title: "List of system users",
     value: "one",
-    endpoint: useApiUrl() + `/users`,
+    endpoint: useLaravelAPI() + `/users`,
     columns: [
       {
         title: "User ID",
@@ -197,7 +197,7 @@ const tableTabs = ref([
     label: "User Groups",
     title: "List of user Groups",
     value: "two",
-    endpoint: useApiUrl() + `/roles`,
+    endpoint: useLaravelAPI() + `/roles`,
     columns: [
       { title: "Group Code", key: "id", align: "start", width: "17%", sortable: true },
       { title: "Group Name", key: "display_name", align: "start" },
@@ -426,7 +426,7 @@ const registerUser = async (payload) => {
   console.log(payload);
   console.log(userdetails.passcode, "asd");
   if (userdetails.passcode == payload.user_passcode) {
-    const { data } = await useFetch(useApiUrl() + `/users`, {
+    const { data } = await useFetch(useLaravelAPI() + `/users`, {
       method: "post",
       headers: {
         Authorization: `Bearer `+ useToken(),
@@ -451,7 +451,7 @@ const registerUser = async (payload) => {
 const updateUser = async (payload) => {
   console.log(payload);
   if (userdetails.passcode == payload.user_passcode) {
-    const { data } = await useFetch(useApiUrl() + `/users/` + payload.id, {
+    const { data } = await useFetch(useLaravelAPI() + `/users/` + payload.id, {
       method: "PUT",
       headers: {
         Authorization: `Bearer `+ useToken(),
@@ -480,7 +480,7 @@ const submitUserGroup = async (payload) => {
     method = "PUT";
     id = "/" + payload.id;
   }
-  const { data } = await useFetch(useApiUrl() + `/roles` + id, {
+  const { data } = await useFetch(useLaravelAPI() + `/roles` + id, {
     method: method,
     headers: {
       Authorization: `Bearer `+ useToken(),
@@ -526,7 +526,7 @@ const formatDate = (value) => {
 
 const submitModules = async(payload)=>{
     isLoading.value = true;
-    const response = await $fetch(useApiUrl()  + `/submit-selected-permission`, {
+    const response = await $fetch(useLaravelAPI()  + `/submit-selected-permission`, {
         method: "post",
         headers: {
         Authorization: `Bearer `+ useToken(),

@@ -1,6 +1,6 @@
 import nuxtStorage from 'nuxt-storage';
 export const useMscPriceGroup = async () => {
-    const {data}:any = await useFetch(useApiUrl() + `/list-price-groups`, {
+    const {data}:any = await useFetch(useLaravelAPI() + `/list-price-groups`, {
         headers: { 
             'Content-Type': 'application/json',
             'Authorization': `Bearer `+useToken(),

@@ -135,7 +135,7 @@ const resetTransactionForm = () => {
 
 const onSubmit = async (user_details) => {
     if (user_details.user_passcode === usePasscode()) {
-        const response = await fetch(useApiUrl() + "/cancel-ornumber", {
+        const response = await fetch(useLaravelAPI() + "/cancel-ornumber", {
             method: "put",
             headers: {
                 'Content-Type': 'application/json',

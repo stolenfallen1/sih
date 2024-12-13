@@ -1,6 +1,6 @@
 import nuxtStorage from 'nuxt-storage';
 export const useDoctorCategory = async () => {
-    const { data}: any = await useFetch(useApiUrl() + `/get-doctor-categories`, {
+    const { data}: any = await useFetch(useLaravelAPI() + `/get-doctor-categories`, {
     method: 'GET',
     headers: { 
         'Content-Type': 'application/json',

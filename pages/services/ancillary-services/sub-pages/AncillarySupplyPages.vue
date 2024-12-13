@@ -253,10 +253,10 @@ const outPatientData = ref([]);
 const isOPDBlinking = ref(false);
 const fetchOutPatientCount = async () => {
     try {
-        const response = await useMethod("get", "get-opd-ancillary-orders", "", "");
+        const response = await $fetch(useNodeAPI() + '/get-opd-ancillary-orders');
         if (response) {
             outPatientData.value = response;
-            outPatientCount.value = Object.keys(response).length;
+            outPatientCount.value = response.length;
             isOPDBlinking.value = outPatientCount.value > 0;
         }
     } catch (error) {
@@ -276,7 +276,7 @@ const erData = ref([]);
 const isERBlinking = ref(false);
 const fetchERPatientCount = async () => {
     try {
-        const response = await useMethod("get", "get-er-ancillary-orders", "", "");
+        const response = await $fetch(useNodeAPI() + '/get-er-ancillary-orders');
         if (response) {
             erData.value = response;
             erCount.value = response.length;
@@ -299,7 +299,7 @@ const inPatientData = ref([]);
 const isIPDBlinking = ref(false);
 const fetchInPatientCount = async () => {
     try {
-        const response = await useMethod("get", "get-ipd-ancillary-orders", "", "");
+        const response = await $fetch(useNodeAPI() + '/get-ipd-ancillary-orders');
         if (response) {
             inPatientData.value = response;
             inPatientCount.value = response.length;

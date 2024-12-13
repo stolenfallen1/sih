@@ -1018,7 +1018,7 @@ const onRevoke = async (user_details) => {
             error_msg.value = "";
         }, 20000);
     } else {
-        const response = await fetch(useApiUrl() + "/revoke-medicine-supplies-charge", {
+        const response = await fetch(useLaravelAPI() + "/revoke-medicine-supplies-charge", {
             method: "put",
             headers: {
                 'Content-Type': 'application/json',
@@ -1074,7 +1074,7 @@ const history_data_insurancesbasis = ref([]);
 const history_data_cashbasis = ref([]); 
 const getChargesHistory = async () => {
     try {
-        const response = await fetch(useApiUrl() + "/get-medicine-supplies-charge-history", {
+        const response = await fetch(useLaravelAPI() + "/get-medicine-supplies-charge-history", {
             method: "post",
             headers: {
                 'Content-Type': 'application/json',

@@ -1,6 +1,6 @@
 import nuxtStorage from 'nuxt-storage';
 export const usePositions = async () => {
-    const { data}: any = await useFetch(useApiUrl() + `/positions`, {
+    const { data}: any = await useFetch(useLaravelAPI() + `/positions`, {
     method: 'GET',
     headers: { 
         'Content-Type': 'application/json',

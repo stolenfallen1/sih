@@ -254,7 +254,7 @@ const tableTabs = ref([
     label: "Registered",
     title: "Registered patients today.",
     value: 1,
-    endpoint: useApiUrl() + "/get-inpatient",
+    endpoint: useLaravelAPI() + "/get-inpatient",
     columns: [
               {
                 title: "",
@@ -322,7 +322,7 @@ const tableTabs = ref([
     label: "Revoked",
     title: "Revoked patients today.",
     value: 2,
-    endpoint: useApiUrl() + "/get-revoked-inpatient",
+    endpoint: useLaravelAPI() + "/get-revoked-inpatient",
     columns: [
               {
                 title: "",
@@ -501,7 +501,7 @@ const SearchInpatient = async (payload) => {
   let params = "page=1&per_page=10&lastname=" + lastname + "&firstname=" + firstname + "&middlename=" + middlename + "&birthdate=" + birthdate;
 
   const response = await fetch(
-    useApiUrl() + "/search-patient-master" + "?" + params || "",
+    useLaravelAPI() + "/search-patient-master" + "?" + params || "",
     {
       headers: {
         Authorization: `Bearer ` + useToken(),

@@ -128,7 +128,7 @@ const getAllAssignedStation = async()=>{
         isloading.value = true;
         assign_station.value = [];
         const response = await $fetch(
-            useApiUrl()  + `/assign-station?user_id=` + selectedRowDetails.value.id,
+            useLaravelAPI()  + `/assign-station?user_id=` + selectedRowDetails.value.id,
             {
             headers: {
                 Authorization: `Bearer `+ useToken(),
@@ -202,7 +202,7 @@ const closedialog = () => {
 const submit = async (payload) => {
     if(selectedNurseStation.value.length == 0 && removeNurseStation.value.length == 0)  return useSnackbar(true, "error", "Select Atleast one Station");
         if (usePasscode() == payload.user_passcode) {
-        const response = await $fetch(useApiUrl()  + `/assigned-station`, {
+        const response = await $fetch(useLaravelAPI()  + `/assigned-station`, {
         method: "post",
         headers: {
         Authorization: `Bearer `+ useToken(),

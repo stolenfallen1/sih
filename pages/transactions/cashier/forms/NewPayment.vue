@@ -656,7 +656,7 @@ const getOPDBill = async () => {
         HospitalBill: 'HB',
         case_No: payload.value.case_No,
     };
-    const response = await fetch(useApiUrl() + "/get-opd-bill", {
+    const response = await fetch(useLaravelAPI() + "/get-opd-bill", {
         method: "POST",
         headers: {
             'Content-Type': 'application/json',

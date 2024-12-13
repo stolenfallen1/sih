@@ -343,7 +343,7 @@ const SearchPatient = async (payload) => {
     "&birthdate=" +
     birthdate;
   const response = await fetch(
-    useApiUrl() + "/search-patient-master" + "?" + params || "",
+    useLaravelAPI() + "/search-patient-master" + "?" + params || "",
     {
       headers: {
         Authorization: `Bearer ` + useToken(),
@@ -375,7 +375,7 @@ const loadItems = async (options = null, searchkeyword = null) => {
         options.keyword
       : "page=1&per_page=10&keyword=" + keyword;
     const response = await fetch(
-      useApiUrl() + "/patient-master" + "?" + params.value || "",
+      useLaravelAPI() + "/patient-master" + "?" + params.value || "",
       {
         headers: {
           Authorization: `Bearer ` + useToken(),

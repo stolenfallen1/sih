@@ -175,7 +175,7 @@ const submit = ()=>{
 const addPermission = async (permission, type) => {
   permission.type = type;
   permission.role_id = route.params.id;
-  const { data } = await useFetch(useApiUrl() + `/add-permission`, {
+  const { data } = await useFetch(useLaravelAPI() + `/add-permission`, {
     method: "post",
     headers: {
       Authorization: `Bearer `+ useToken(),

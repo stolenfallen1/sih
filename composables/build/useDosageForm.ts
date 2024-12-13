@@ -1,6 +1,6 @@
 import nuxtStorage from 'nuxt-storage';
 export const useDosageForm = async () => {
-    const {data}: any = await useFetch(useApiUrl() + `/dosage-forms`, {
+    const {data}: any = await useFetch(useLaravelAPI() + `/dosage-forms`, {
     method:"GET",
     headers: { 
         'Content-Type': 'application/json',

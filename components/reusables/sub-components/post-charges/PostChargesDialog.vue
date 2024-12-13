@@ -1109,7 +1109,7 @@ const onRevoke = async (user_details) => {
 
 const revokeSelectedCharges = async (charges, user_passcode, user_userid) => {
     try {
-        const response = await fetch(useApiUrl() + "/revoke-his-charge", {
+        const response = await fetch(useLaravelAPI() + "/revoke-his-charge", {
             method: "put",
             headers: {
                 'Content-Type': 'application/json',
@@ -1132,7 +1132,7 @@ const revokeSelectedCharges = async (charges, user_passcode, user_userid) => {
 
 const revokeSelectedCashAssessment = async (charges, user_passcode, user_userid) => {
     try {
-        const response = await fetch(useApiUrl() + "/revoke-cash-assessment", {
+        const response = await fetch(useLaravelAPI() + "/revoke-cash-assessment", {
             method: "put",
             headers: {
                 'Content-Type': 'application/json',
@@ -1163,7 +1163,7 @@ const closeConfirmRevoke = () => {
 
 const getChargesHistory = async () => {
     try {
-        const charges_res = await fetch(useApiUrl() + "/post-charge-history", {
+        const charges_res = await fetch(useLaravelAPI() + "/post-charge-history", {
             method: "post",
             headers: {
                 'Content-Type': 'application/json',
@@ -1189,7 +1189,7 @@ const getChargesHistory = async () => {
 
 const getCashAssessmentHistory = async () => {
     try {
-        const cash_assessment_res = await fetch(useApiUrl() + "/cash-assessment-history", {
+        const cash_assessment_res = await fetch(useLaravelAPI() + "/cash-assessment-history", {
             method: "post",
             headers: {
                 'Content-Type': 'application/json',
@@ -1215,7 +1215,7 @@ const getCashAssessmentHistory = async () => {
 
 const getProfFeeHistory = async () => {
     try {
-        const prof_fees_res = await fetch(useApiUrl() + "/post-charge-history", {
+        const prof_fees_res = await fetch(useLaravelAPI() + "/post-charge-history", {
             method: "post",
             headers: {
                 'Content-Type': 'application/json',
@@ -1241,7 +1241,7 @@ const getProfFeeHistory = async () => {
 
 const getCashProfHistory = async () => {
     try {
-        const cash_assessment_res = await fetch(useApiUrl() + "/cash-assessment-history", {
+        const cash_assessment_res = await fetch(useLaravelAPI() + "/cash-assessment-history", {
             method: "post",
             headers: {
                 'Content-Type': 'application/json',
@@ -1324,7 +1324,7 @@ onUpdated(() => {
     payload.value.registry_Date = selectedRowDetails.value.patient_registry && useDateMMDDYYY(selectedRowDetails.value.patient_registry[0].registry_Date) || '';
     payload.value.attending_Doctor = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0].attending_Doctor || 'N/A';
     payload.value.attending_Doctor_fullname = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0].attending_Doctor_fullname || 'N/A';
-    payload.value.guarantor_Id = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0].guarantor_Id || payload.value.patient_Id;
+    payload.value.guarantor_Id = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0].guarantor_Id ? selectedRowDetails.value.patient_registry[0].guarantor_Id : payload.value.patient_Id;
     payload.value.guarantor_Name = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0].guarantor_Name || 'PERSONAL';
     payload.value.guarantor_Credit_Limit = selectedRowDetails.value.patient_registry 
             && selectedRowDetails.value.patient_registry[0].guarantor_Credit_Limit !== null 

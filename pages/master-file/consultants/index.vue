@@ -329,7 +329,7 @@ const SearchConsultant = async (payload) => {
     middlename +
     "&birthdate=" +
     birthdate;
-  const response = await fetch(useApiUrl() + "/search-doctors" + "?" + params || "", {
+  const response = await fetch(useLaravelAPI() + "/search-doctors" + "?" + params || "", {
     headers: {
       Authorization: `Bearer ` + useToken(),
     },
@@ -466,7 +466,7 @@ const loadItems = async (options = null, searchkeyword = null) => {
         "&keyword=" +
         options.keyword
       : "page=1&per_page=10&keyword=" + keyword;
-    const response = await fetch(useApiUrl() + "/doctors" + "?" + params.value || "", {
+    const response = await fetch(useLaravelAPI() + "/doctors" + "?" + params.value || "", {
       headers: {
         Authorization: `Bearer ` + useToken(),
       },
@@ -516,7 +516,7 @@ const submitDoctorsForm = async (details) => {
           id = payload.value.id;
           method = "PUT";
         }
-        const response = await $fetch(useApiUrl() + `/consultants/` + id, {
+        const response = await $fetch(useLaravelAPI() + `/consultants/` + id, {
           method: method,
           headers: {
             Authorization: `Bearer ` + useToken(),

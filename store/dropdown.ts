@@ -13,7 +13,7 @@ export const useDropdownOptionStore = defineStore('dropdownoption',{
     async fetchBranch(token:any) {
       // useFetch from nuxt 3
       const config = useRuntimeConfig();
-      const { data}: any = await useFetch(`${config.public.apiBase}` + `/get-branch`, {
+      const { data}: any = await useFetch(`${config.public.laravelAPI}` + `/get-branch`, {
         method: 'GET',
         headers: { 
             'Content-Type': 'application/json',
@@ -28,7 +28,7 @@ export const useDropdownOptionStore = defineStore('dropdownoption',{
     async fetchRoles(token:any) {
       // useFetch from nuxt 3
       const config = useRuntimeConfig();
-      const { data}: any = await useFetch(`${config.public.apiBase}` + `/get-role`, {
+      const { data}: any = await useFetch(`${config.public.laravelAPI}` + `/get-role`, {
         method: 'GET',
         headers: { 
             'Content-Type': 'application/json',
@@ -43,7 +43,7 @@ export const useDropdownOptionStore = defineStore('dropdownoption',{
     async fetchPositions(token:any) {
       // useFetch from nuxt 3
       const config = useRuntimeConfig();
-      const { data}: any = await useFetch(`${config.public.apiBase}` + `/positions`, {
+      const { data}: any = await useFetch(`${config.public.laravelAPI}` + `/positions`, {
         method: 'GET',
         headers: { 
             'Content-Type': 'application/json',
@@ -60,7 +60,7 @@ export const useDropdownOptionStore = defineStore('dropdownoption',{
      async fetchSuffix(token:any) {
       // useFetch from nuxt 3
       const config = useRuntimeConfig();
-      const { data}: any = await useFetch(`${config.public.apiBase}` + `/get-suffix`, {
+      const { data}: any = await useFetch(`${config.public.laravelAPI}` + `/get-suffix`, {
         method: 'GET',
         headers: { 
             'Content-Type': 'application/json',
@@ -75,7 +75,7 @@ export const useDropdownOptionStore = defineStore('dropdownoption',{
     async fetchSystems(token:any) {
       // useFetch from nuxt 3
       const config = useRuntimeConfig();
-      const { data}: any = await useFetch(`${config.public.apiBase}` + `/systems-list`, {
+      const { data}: any = await useFetch(`${config.public.laravelAPI}` + `/systems-list`, {
         method: 'GET',
         headers: { 
             'Content-Type': 'application/json',
@@ -90,7 +90,7 @@ export const useDropdownOptionStore = defineStore('dropdownoption',{
     async fetchBuildings(token:any) {
       // useFetch from nuxt 3
       const config = useRuntimeConfig();
-      const { data}: any = await useFetch(`${config.public.apiBase}` + `/buildings`, {
+      const { data}: any = await useFetch(`${config.public.laravelAPI}` + `/buildings`, {
         method: 'GET',
         headers: { 
             'Content-Type': 'application/json',

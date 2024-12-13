@@ -256,7 +256,7 @@
 
     // const revokeSelectedCharges = async (charges, user_passcode, user_userid) => {
     //     try {
-    //         const response = await fetch(useApiUrl() + "/revoke-his-charge", {
+    //         const response = await fetch(useLaravelAPI() + "/revoke-his-charge", {
     //             method: "put",
     //             headers: {
     //                 'Content-Type': 'application/json',
@@ -285,7 +285,7 @@
 
     // const revokeSelectedCashAssessment = async (charges, user_passcode, user_userid) => {
     //     try {
-    //         const response = await fetch(useApiUrl() + "/revoke-cash-assessment", {
+    //         const response = await fetch(useLaravelAPI() + "/revoke-cash-assessment", {
     //             method: "put",
     //             headers: {
     //                 'Content-Type': 'application/json',

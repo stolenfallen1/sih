@@ -255,7 +255,7 @@ const loadItems = async (page = null, itemsPerPage = null) => {
     let params = `page=${pageno}&per_page=${itemPerpageno}`;
 
     try {
-        const response = await fetch(useApiUrl() + `/get-laboratory-exams?${params}`, {
+        const response = await fetch(useLaravelAPI() + `/get-laboratory-exams?${params}`, {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json',

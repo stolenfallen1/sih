@@ -1,7 +1,7 @@
 import nuxtStorage from 'nuxt-storage';
 export const useRole = async () => {
     const config = useRuntimeConfig();
-    const { data}: any = await useFetch(useApiUrl() + `/get-role`, {
+    const { data}: any = await useFetch(useLaravelAPI() + `/get-role`, {
     method: 'GET',
     headers: { 
         'Content-Type': 'application/json',

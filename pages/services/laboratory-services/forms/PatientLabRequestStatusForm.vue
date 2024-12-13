@@ -547,7 +547,7 @@ const loadItems = async () => {
     if (payload.value?.date_to != null || payload.value?.date_to != undefined) params.append("date_to", payload.value.date_to);
 
     try {
-        const response = await fetch(useApiUrl() + `/get-patient-lab-request-status?${params}`, {
+        const response = await fetch(useLaravelAPI() + `/get-patient-lab-request-status?${params}`, {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json',

@@ -486,7 +486,7 @@ const SearchItemandSupplies = async (payload) => {
   if(itemname.length <= 3)  return useSnackbar(true,"error",'Search atleast 3 characters');
   search_payload.value.isloading = true;
   let params ="itemcode=" +itemcode +"&itemname=" +itemname;
-  const response = await $fetch(useApiUrl() + "/search-item-and-supplies" + "?" + params || "", {
+  const response = await $fetch(useLaravelAPI() + "/search-item-and-supplies" + "?" + params || "", {
     headers: {
       Authorization: `Bearer ` + useToken(),
     },
@@ -522,7 +522,7 @@ const loadItems = async (
               "&keyword=" +
               keyword;
         const response = await fetch(
-            useApiUrl() + "/item-and-supplies" + "?" + params.value || "",
+            useLaravelAPI() + "/item-and-supplies" + "?" + params.value || "",
             {
                 headers: {
                     Authorization: `Bearer ` + useToken(),
@@ -554,7 +554,7 @@ const submitItemandSuppliesForm = async (details) => {
           id = form_payload.value.id;
           method = "PUT";
         }
-        const response = await $fetch(useApiUrl() + `/item-and-supplies/` + id, {
+        const response = await $fetch(useLaravelAPI() + `/item-and-supplies/` + id, {
           method: method,
           headers: {
             Authorization: `Bearer ` + useToken(),
