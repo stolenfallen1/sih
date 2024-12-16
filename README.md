@@ -127,7 +127,8 @@ git checkout <branch_name>
 Then after that in your terminal you have to Run this git command 
 
 ```bash
-git fetch 
+git fetch
+git checkout <branch_name>
 ```
 
 After setting up your own branch for development purposes. Your all set up and ready! 
