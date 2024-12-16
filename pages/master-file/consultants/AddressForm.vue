@@ -171,7 +171,7 @@ const building = ()=>{
 };
 const getProvince = async()=>{
     if(!address_payload.value.region) return;
-    const response = await fetch(useApiUrl() + "/get-province?region_code=" + address_payload.value.region.region_code, {
+    const response = await fetch(useLaravelAPI() + "/get-province?region_code=" + address_payload.value.region.region_code, {
       headers: {
         Authorization: `Bearer ` + useToken(),
       },
@@ -183,7 +183,7 @@ const getProvince = async()=>{
 }
 const getMunicipality = async()=>{
       if(!address_payload.value.province) return;
-      const response = await fetch(useApiUrl() + "/get-municipality?region_code=" +address_payload.value.region.region_code + "&province_code=" +address_payload.value.province.province_code, {
+      const response = await fetch(useLaravelAPI() + "/get-municipality?region_code=" +address_payload.value.region.region_code + "&province_code=" +address_payload.value.province.province_code, {
       headers: {
         Authorization: `Bearer ` + useToken(),
       },
@@ -195,7 +195,7 @@ const getMunicipality = async()=>{
 }
 const getBarangay = async()=>{
       if(!address_payload.value.municipality) return;
-      const response = await fetch(useApiUrl() + "/get-barangays?region_code=" + address_payload.value.region.region_code + "&province_code=" + address_payload.value.province.province_code + "&municipality_code=" + address_payload.value.municipality.municipality_code, {
+      const response = await fetch(useLaravelAPI() + "/get-barangays?region_code=" + address_payload.value.region.region_code + "&province_code=" + address_payload.value.province.province_code + "&municipality_code=" + address_payload.value.municipality.municipality_code, {
       headers: {
         Authorization: `Bearer ` + useToken(),
       },
@@ -208,7 +208,7 @@ const getBarangay = async()=>{
 
 const getZipCode = async()=>{
     if(!address_payload.value.barangay) return;
-     const response = await fetch(useApiUrl() + "/zip-code-list?region_code=" + address_payload.value.region.region_code + "&province_code=" + address_payload.value.province.province_code + "&municipality_code=" + address_payload.value.municipality.municipality_code, {
+     const response = await fetch(useLaravelAPI() + "/zip-code-list?region_code=" + address_payload.value.region.region_code + "&province_code=" + address_payload.value.province.province_code + "&municipality_code=" + address_payload.value.municipality.municipality_code, {
       headers: {
         Authorization: `Bearer ` + useToken(),
       },

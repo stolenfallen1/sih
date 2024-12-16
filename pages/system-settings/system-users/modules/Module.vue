@@ -222,7 +222,7 @@ const check_permission = async () => {
   console.log(route.params);
   loading.value = true;
   const { data } = await useFetch(
-    useApiUrl()  + `/get-role-permission?role_id=` + route.params.id,
+    useLaravelAPI()  + `/get-role-permission?role_id=` + route.params.id,
     {
       headers: {
         
@@ -322,7 +322,7 @@ const check_can_select_permission = (key, table) => {
 const addPermission = async (permission, type) => {
   permission.type = type;
   permission.role_id = route.params.id;
-  const { data } = await useFetch(useApiUrl()  + `/add-permission`, {
+  const { data } = await useFetch(useLaravelAPI()  + `/add-permission`, {
     method: "post",
     headers: {
       Authorization: `Bearer `+ useToken(),
@@ -343,7 +343,7 @@ const openSubModule = async (permission) => {
 };
 
 const getsubmodule_permisson = async (id) => {
-  const response = await fetch(useApiUrl()  + `/get-permissions?id=` + id, {
+  const response = await fetch(useLaravelAPI()  + `/get-permissions?id=` + id, {
     headers: {
       Authorization: `Bearer `+ useToken(),
     },

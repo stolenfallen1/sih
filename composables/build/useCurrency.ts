@@ -1,6 +1,6 @@
 import nuxtStorage from 'nuxt-storage';
 export const useCurrency = async () => {
-    const response: any = await $fetch(useApiUrl() + `/currencies`, {
+    const response: any = await $fetch(useLaravelAPI() + `/currencies`, {
     method: 'GET',
     headers: { 
         'Content-Type': 'application/json',

@@ -213,7 +213,7 @@ const openSubModule = async (permission) => {
 };
 const getsubmodule_permisson = async (id) => {
   isloading.value = true;
-  const response = await $fetch(useApiUrl()  + `/get-permissions?id=` + id, {
+  const response = await $fetch(useLaravelAPI()  + `/get-permissions?id=` + id, {
     headers: {
       Authorization: `Bearer `+ useToken(),
     },
@@ -302,7 +302,7 @@ const check_permission = async () => {
     if(selectedRowDetails.value.id == "") return;
     loading.value = true;
     const response = await $fetch(
-      useApiUrl()  + `/get-role-permission?role_id=` + selectedRowDetails.value.id,
+      useLaravelAPI()  + `/get-role-permission?role_id=` + selectedRowDetails.value.id,
       {
         headers: {
           

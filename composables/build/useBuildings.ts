@@ -1,7 +1,7 @@
 import nuxtStorage from 'nuxt-storage';
 export const useBuildings = async () => {
     const config = useRuntimeConfig();
-    const { data}: any = await useFetch(useApiUrl() + `/buildings`, {
+    const { data}: any = await useFetch(useLaravelAPI() + `/buildings`, {
     method: 'GET',
     headers: { 
         'Content-Type': 'application/json',

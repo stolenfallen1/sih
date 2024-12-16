@@ -236,7 +236,7 @@ watch(() => props.currentTabValue, () => {
 const getcategory = async ()=>{
     category_list.value = [];
     if(!props.form_payload.msc_item_group) return;
-    let response = await $fetch(useApiUrl()+'/services-categories?invgroup_id='+props.form_payload.msc_item_group,
+    let response = await $fetch(useLaravelAPI()+'/services-categories?invgroup_id='+props.form_payload.msc_item_group,
     {
         headers: {
             Authorization: `Bearer ` + useToken(),
@@ -251,7 +251,7 @@ const getSection = async ()=>{
     if(!props.form_payload.msc_item_category_ID) return;
     sectionLoading.value = true;
     var categoryid = props.form_payload.msc_item_category_ID.fms_transaction_id || props.form_payload.msc_item_category_ID
-    let response = await $fetch(useApiUrl()+'/services-section?revenue_id='+categoryid,
+    let response = await $fetch(useLaravelAPI()+'/services-section?revenue_id='+categoryid,
     {
         headers: {
             Authorization: `Bearer ` + useToken(),

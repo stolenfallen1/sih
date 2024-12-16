@@ -1,7 +1,7 @@
 // import nuxtStorage from 'nuxt-storage';
 // export const useRoomStatus = async () => {
 //     const config = useRuntimeConfig();
-//     const { data}: any = await useFetch(useApiUrl() + `/get-room-status`, {
+//     const { data}: any = await useFetch(useLaravelAPI() + `/get-room-status`, {
 //     method: 'GET',
 //     headers: { 
 //         'Content-Type': 'application/json',

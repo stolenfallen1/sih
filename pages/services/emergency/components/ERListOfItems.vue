@@ -179,7 +179,7 @@
         let pageno = page || 1;
         let itemPerpageno = itemsPerPage || 15;
 
-        const response = await $fetch( useApiUrl() + `/er-get-medicine-suplies?page=${pageno}&per_page=${itemPerpageno}&keyword=${data.value.keyword}`, {
+        const response = await $fetch( useLaravelAPI() + `/er-get-medicine-suplies?page=${pageno}&per_page=${itemPerpageno}&keyword=${data.value.keyword}`, {
             method: 'post',
             headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + useToken()},
             body: { 

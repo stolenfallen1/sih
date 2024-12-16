@@ -1,44 +1,16 @@
-import { Op } from "sequelize";
-
 import NurseLogBook from "../models/cdg_patient_data/NurseLogBook.js";
-import fmsTransactionCodes from "../models/cdg_core/fmsTransactionCodes.js";
-import mscDosages from "../models/cdg_core/mscDosages.js";
 
-async function getMedicineCodes() {
+async function getOPDOrders () {
     try {
-        const medicineCodes = await fmsTransactionCodes.findAll({
-            where: {
-                isMedicine: 1,
-            },
-            attributes: ['code'],
-        });
-
-        return medicineCodes.map(code => code.code);
-    } catch(err) {
-        console.error('Error fetching Medicine Codes: ', err);
-    }
-}
-
-async function getOPDOrders() {
-    try {
-        const medicineCodeList = await getMedicineCodes();
-
         const nurseLogData = await NurseLogBook.findAll({
             where: {
                 patient_Type: 'O',
                 record_Status: 'X',
-                revenue_Id: {
-                    [Op.in]: medicineCodeList,
-                },
+                revenue_Id: 'CS',
+                issupplies: 1,
             },
             order: [['createdAt', 'DESC']]
         });
-
-        const dosages = await mscDosages.findAll();
-        const dosageMap = dosages.reduce((acc, dosage) => {
-            acc[dosage.dosage_id] = dosage;  
-            return acc;
-        }, {});
 
         const groupedData = nurseLogData.reduce((acc, record) => {
             if (!acc[record.requestNum]) {
@@ -50,12 +22,6 @@ async function getOPDOrders() {
                     items: [],
                 };
             }
-
-            const dosageData = dosageMap[record.dosage] || { 
-                dosage_id: 'N/A',
-                description: 'N/A',
-                frequency: 'N/A',
-            };
 
             acc[record.requestNum].items.push({
                 id: record.id,
@@ -69,16 +35,14 @@ async function getOPDOrders() {
                 Quantity: record.Quantity,
                 item_OnHand: record.item_OnHand,
                 item_ListCost: record.item_ListCost,
-                dosage: dosageData,
                 section_Id: record.section_Id,
                 price: record.price,
                 amount: record.amount,
                 record_Status: record.record_Status,
                 user_Id: record.user_Id,
                 request_Date: record.request_Date,
-                station_Id: record.station_Id,
+                user_Id: record.user_Id,
                 remarks: record.remarks,
-                stat: record.stat,
                 dcrdate: record.dcrdate,
             });
 
@@ -88,31 +52,22 @@ async function getOPDOrders() {
         const formattedData = Object.values(groupedData);
         return formattedData;
 
-    } catch (err) {
-        console.error('Error fetching OPD Orders: ', err);
+    } catch (error) {
+        console.error('Error fetching OPD Orders: ', error);
     }
 }
 
-async function getEROrders() {
+async function getEROrders () {
     try {
-        const medicineCodeList = await getMedicineCodes();
-
         const nurseLogData = await NurseLogBook.findAll({
             where: {
                 patient_Type: 'E',
                 record_Status: 'X',
-                revenue_Id: {
-                    [Op.in]: medicineCodeList,
-                },
+                revenue_Id: 'CS',
+                issupplies: 1,
             },
             order: [['createdAt', 'DESC']]
         });
-
-        const dosages = await mscDosages.findAll();
-        const dosageMap = dosages.reduce((acc, dosage) => {
-            acc[dosage.dosage_id] = dosage;  
-            return acc;
-        }, {});
 
         const groupedData = nurseLogData.reduce((acc, record) => {
             if (!acc[record.requestNum]) {
@@ -124,12 +79,6 @@ async function getEROrders() {
                     items: [],
                 };
             }
-
-            const dosageData = dosageMap[record.dosage] || { 
-                dosage_id: 'N/A',
-                description: 'N/A',
-                frequency: 'N/A',
-            };
 
             acc[record.requestNum].items.push({
                 id: record.id,
@@ -143,16 +92,14 @@ async function getEROrders() {
                 Quantity: record.Quantity,
                 item_OnHand: record.item_OnHand,
                 item_ListCost: record.item_ListCost,
-                dosage: dosageData,
                 section_Id: record.section_Id,
                 price: record.price,
                 amount: record.amount,
                 record_Status: record.record_Status,
                 user_Id: record.user_Id,
                 request_Date: record.request_Date,
-                station_Id: record.station_Id,
+                user_Id: record.user_Id,
                 remarks: record.remarks,
-                stat: record.stat,
                 dcrdate: record.dcrdate,
             });
 
@@ -162,32 +109,22 @@ async function getEROrders() {
         const formattedData = Object.values(groupedData);
         return formattedData;
 
-
-    } catch(err) {
-        console.error('Error fetching ER Orders: ', err);
+    } catch (error) {
+        console.error('Error fetching ER Orders: ', error);
     }
 }
 
-async function getIPDOrders() {
+async function getIPDOrders () {
     try {
-        const medicineCodeList = await getMedicineCodes();
-
         const nurseLogData = await NurseLogBook.findAll({
             where: {
                 patient_Type: 'I',
                 record_Status: 'X',
-                revenue_Id: {
-                    [Op.in]: medicineCodeList,
-                },
+                revenue_Id: 'CS',
+                issupplies: 1,
             },
             order: [['createdAt', 'DESC']]
         });
-
-        const dosages = await mscDosages.findAll();
-        const dosageMap = dosages.reduce((acc, dosage) => {
-            acc[dosage.dosage_id] = dosage;  
-            return acc;
-        }, {});
 
         const groupedData = nurseLogData.reduce((acc, record) => {
             if (!acc[record.requestNum]) {
@@ -199,12 +136,6 @@ async function getIPDOrders() {
                     items: [],
                 };
             }
-
-            const dosageData = dosageMap[record.dosage] || { 
-                dosage_id: 'N/A',
-                description: 'N/A',
-                frequency: 'N/A',
-            };
 
             acc[record.requestNum].items.push({
                 id: record.id,
@@ -218,16 +149,14 @@ async function getIPDOrders() {
                 Quantity: record.Quantity,
                 item_OnHand: record.item_OnHand,
                 item_ListCost: record.item_ListCost,
-                dosage: dosageData,
                 section_Id: record.section_Id,
                 price: record.price,
                 amount: record.amount,
                 record_Status: record.record_Status,
                 user_Id: record.user_Id,
                 request_Date: record.request_Date,
-                station_Id: record.station_Id,
+                user_Id: record.user_Id,
                 remarks: record.remarks,
-                stat: record.stat,
                 dcrdate: record.dcrdate,
             });
 
@@ -237,14 +166,13 @@ async function getIPDOrders() {
         const formattedData = Object.values(groupedData);
         return formattedData;
 
-
-    } catch(err) {
-        console.error('Error fetching IPD Orders: ', err);
+    } catch (error) {
+        console.error('Error fetching IPD Orders: ', error);
     }
 }
 
-export default { 
-    getOPDOrders, 
+export default {
+    getOPDOrders,
     getEROrders,
-    getIPDOrders, 
+    getIPDOrders,
 };

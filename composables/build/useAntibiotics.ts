@@ -1,6 +1,6 @@
 import nuxtStorage from 'nuxt-storage';
 export const useAntibiotics = async () => {
-    const {data}: any = await useFetch(useApiUrl() + `/antibiotic`, {
+    const {data}: any = await useFetch(useLaravelAPI() + `/antibiotic`, {
     method: 'GET',
     headers: { 
         'Content-Type': 'application/json',

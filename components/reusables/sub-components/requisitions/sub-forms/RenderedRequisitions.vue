@@ -146,7 +146,7 @@ const data = ref({
 });
 
 const fetchRenderedTransactions = async () => {
-    const response = await fetch(useApiUrl() + "/get-rendered-transactions", {
+    const response = await fetch(useLaravelAPI() + "/get-rendered-transactions", {
         method: "POST",
         headers: {
             'Content-Type': 'application/json',

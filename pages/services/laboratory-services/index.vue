@@ -160,7 +160,7 @@ const tableTabs = ref([
     label: "Out-Patient",
     title: "Out-Patient's Record",
     value: 1,
-    endpoint: useApiUrl() + "/get-opd-patients",
+    endpoint: useLaravelAPI() + "/get-opd-patients",
     columns: [
               {
                 title: "Patient ID",
@@ -204,7 +204,7 @@ const tableTabs = ref([
     label: "Emergency",
     title: "Emergency's Record",
     value: 2,
-    endpoint: useApiUrl() + "/get-er-patients",
+    endpoint: useLaravelAPI() + "/get-er-patients",
     columns: [
               {
                 title: "Patient ID",
@@ -254,7 +254,7 @@ const tableTabs = ref([
     label: "In-Patient",
     title: "In-Patient's Record",
     value: 3,
-    endpoint: useApiUrl() + "/get-ipd-patients",
+    endpoint: useLaravelAPI() + "/get-ipd-patients",
     columns: [
               {
                 title: "Patient ID",

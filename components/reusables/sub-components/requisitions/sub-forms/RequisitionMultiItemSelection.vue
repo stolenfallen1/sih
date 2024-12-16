@@ -374,7 +374,7 @@ const handleSelectWarehouse = async (selectedRow, page = 1, itemsPerPage = wareh
         warehouse_item_loading.value = true;
         
         if (props.category === 'medicine' || props.category === 'supply') {
-          const response = await $fetch(useApiUrl() + `/get-warehouse-items?page=${page}&per_page=${itemsPerPage}&keyword=${warehouse_item_keyword.value}`, {
+          const response = await $fetch(useLaravelAPI() + `/get-warehouse-items?page=${page}&per_page=${itemsPerPage}&keyword=${warehouse_item_keyword.value}`, {
               method: 'post',
               headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + useToken()},
               body: { 
@@ -397,7 +397,7 @@ const handleSelectWarehouse = async (selectedRow, page = 1, itemsPerPage = wareh
             warehouse_item_loading.value = false;
           }
         } else if (props.category === 'procedure') {
-          const response = await $fetch(useApiUrl() + `/get-his-charges?page=${page}&per_page=${itemsPerPage}&keyword=${warehouse_item_keyword.value}`, {
+          const response = await $fetch(useLaravelAPI() + `/get-his-charges?page=${page}&per_page=${itemsPerPage}&keyword=${warehouse_item_keyword.value}`, {
               method: 'post',
               headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + useToken()},
               body: { 

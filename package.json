@@ -4,13 +4,13 @@
   "type": "module",
   "scripts": {
     "build": "nuxt build",
-    "dev": "concurrently \"nuxt dev\" \"nodemon server/server.js\"", 
+    "dev": "concurrently \"npm run dev:nuxt\" \"npm run dev:server\"",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
     "start": "node server/server.js",
-    "dev:nuxt": "nuxt dev",
-    "dev:server": "nodemon server/server.js"
+    "dev:nuxt": "nuxt dev --port 3000", 
+    "dev:server": "nodemon server/server.js" 
   },
   "devDependencies": {
     "@nuxtjs/google-fonts": "^3.2.0",
@@ -27,12 +27,13 @@
     "@nuxt/image": "^1.3.0",
     "@pinia/nuxt": "^0.5.1",
     "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "moment": "^2.30.1",
     "mssql": "^11.0.1",
     "nuxt-storage": "^1.2.2",
     "pinia": "^2.1.7",
     "sass": "^1.70.0",
-    "tedious": "^18.6.1"
+    "sequelize": "^6.37.5"
   }
 }

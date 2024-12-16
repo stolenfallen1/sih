@@ -440,7 +440,7 @@ const handleBranch = async () => {
     return;
   }
   const response = await fetch(
-    `${config.public.apiBase}` + `/get-branch-warehouse?branch_id=` + payload.branch_id,
+    `${config.public.laravelAPI}` + `/get-branch-warehouse?branch_id=` + payload.branch_id,
     {
       headers: {
         Authorization: `Bearer ${token.value}`,

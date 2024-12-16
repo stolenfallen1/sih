@@ -93,7 +93,7 @@ const loadItems = async (page = null, itemsPerPage = null) => {
     data.value.loading = true;
     let pageno = page || 1;
     let itemPerpageno = itemsPerPage || 15;
-    const response = await $fetch( useApiUrl() + `/get-his-professional-details?page=${pageno}&per_page=${itemPerpageno}&keyword=${data.value.keyword}`, { 
+    const response = await $fetch( useLaravelAPI() + `/get-his-professional-details?page=${pageno}&per_page=${itemPerpageno}&keyword=${data.value.keyword}`, { 
         method: 'get',
         headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + useToken()},
     });

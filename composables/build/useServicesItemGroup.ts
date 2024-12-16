@@ -1,6 +1,6 @@
 import nuxtStorage from 'nuxt-storage';
 export const useServicesItemGroup = async () => {
-    const {data}:any = await useFetch(useApiUrl() + `/services-items-group`, {
+    const {data}:any = await useFetch(useLaravelAPI() + `/services-items-group`, {
         headers: { 
             'Content-Type': 'application/json',
             'Authorization': `Bearer `+useToken(),

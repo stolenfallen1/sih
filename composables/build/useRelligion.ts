@@ -1,7 +1,7 @@
 import nuxtStorage from 'nuxt-storage';
 export const useReligion = async () => {
     const config = useRuntimeConfig();
-    const { data}: any = await useFetch(useApiUrl() + `/get-religions`, {
+    const { data}: any = await useFetch(useLaravelAPI() + `/get-religions`, {
     method: 'GET',
     headers: { 
         'Content-Type': 'application/json',

@@ -108,11 +108,21 @@
                 </v-list>
             </v-menu>
         </v-btn>
-        <v-btn
-            prepend-icon="mdi-plus-box-multiple-outline"
-            class="bg-primary text-white"
-        >
-        Manual Posting
+        <v-btn prepend-icon="mdi-pill-multiple" class="bg-primary text-white">
+            Manual Posting
+            <v-menu activator="parent">
+                <v-list>
+                    <v-list-item
+                        v-for="(item, index) in menuCodes"
+                        :key="index"
+                        :value="index"
+                        class="hoverable-list-item"
+                        @click="openManualPosting(item.code)"
+                    >
+                        <v-list-item-title>{{ item.description }}</v-list-item-title>
+                    </v-list-item>
+                </v-list>
+            </v-menu>
         </v-btn>
         <v-spacer></v-spacer>
     </v-card-actions>
@@ -148,6 +158,7 @@
     <PostedSupplies :open_posted_supply="open_posted_supply" :patient_type="patient_type" @close-dialog="closePostedSupplies"  />
     <SupplyCorrectionEntry :open_correction_entry="open_correction_entry" :patient_type="patient_type" @close-dialog="closeCorrectionEntry" />
     <ReturnedSupplies :open_returned_supply="open_returned_supply" :patient_type="patient_type" @close-dialog="closeReturnedSupplies" />
+    <AncillaryManualPosting :open_ancillary_manual_posting="open_ancillary_manual_posting" :patient_type="patient_type" @close-dialog="closeManualPosting" />
 
     <v-dialog v-model="showSelectDate" max-width="320px" @update:model-value="closeDateSelection">
         <v-card>
@@ -180,6 +191,7 @@ import CarrySuppliesOrder from '../../../../components/services/forms/ancillary/
 import PostedSupplies from '~/components/services/forms/ancillary/PostedSupplies.vue';
 import SupplyCorrectionEntry from '~/components/services/forms/ancillary/SupplyCorrectionEntry.vue';
 import ReturnedSupplies from '~/components/services/forms/ancillary/ReturnedSupplies.vue';
+import AncillaryManualPosting from '~/components/services/forms/ancillary/AncillaryManualPosting.vue';
 
 definePageMeta({
     layout: "root-layout",
@@ -189,6 +201,7 @@ const open_carry_order_form = ref(false);
 const open_posted_supply = ref(false);
 const open_correction_entry = ref(false);
 const open_returned_supply = ref(false);
+const open_ancillary_manual_posting = ref(false);
 const selected_item = ref([]);
 const patient_type = ref(0);
 const menu_id = ref(0);
@@ -253,10 +266,10 @@ const outPatientData = ref([]);
 const isOPDBlinking = ref(false);
 const fetchOutPatientCount = async () => {
     try {
-        const response = await useMethod("get", "get-opd-ancillary-orders", "", "");
+        const response = await $fetch(useNodeAPI() + '/get-opd-ancillary-orders');
         if (response) {
             outPatientData.value = response;
-            outPatientCount.value = Object.keys(response).length;
+            outPatientCount.value = response.length;
             isOPDBlinking.value = outPatientCount.value > 0;
         }
     } catch (error) {
@@ -276,7 +289,7 @@ const erData = ref([]);
 const isERBlinking = ref(false);
 const fetchERPatientCount = async () => {
     try {
-        const response = await useMethod("get", "get-er-ancillary-orders", "", "");
+        const response = await $fetch(useNodeAPI() + '/get-er-ancillary-orders');
         if (response) {
             erData.value = response;
             erCount.value = response.length;
@@ -299,7 +312,7 @@ const inPatientData = ref([]);
 const isIPDBlinking = ref(false);
 const fetchInPatientCount = async () => {
     try {
-        const response = await useMethod("get", "get-ipd-ancillary-orders", "", "");
+        const response = await $fetch(useNodeAPI() + '/get-ipd-ancillary-orders');
         if (response) {
             inPatientData.value = response;
             inPatientCount.value = response.length;
@@ -350,6 +363,16 @@ const openReturnedMedicines = (type) => {
 
 const closeReturnedSupplies = () => {
     open_returned_supply.value = false;
+    patient_type.value = 0;
+}
+
+const openManualPosting = (type) => {
+    patient_type.value = type;
+    open_ancillary_manual_posting.value = true;
+}
+
+const closeManualPosting = () => {
+    open_ancillary_manual_posting.value = true;
     patient_type.value = 0;
 }
 

@@ -1,22 +1,21 @@
-// https://nuxt.com/docs/api/configuration/nuxt-config
 import vuetify, { transformAssetUrls } from "vite-plugin-vuetify";
+
 export default defineNuxtConfig({
   runtimeConfig: {
-    apiSecret:"1234",
+    apiSecret: process.env.NUXT_API_SECRET,
     public: {
-      apiBase: "http://10.4.15.12:8000/api" // Llyodieeee
-      // apiBase: "http://10.4.15.15:8005/api" // Sir Jucel Gwapooo
-      // apiBase: "http://10.4.15.23:8000/api" // Charlie,
+      laravelAPI: process.env.NUXT_LARAVEL_API_BASE,
+      nodeAPI: process.env.NUXT_NODE_API_BASE,
     },
   },
 
   app: {
-      head: {
-        title: "CDG HIS",
-        meta: [{ name: "description", content: "CDG HIS" }],
-        charset: "utf-8",
-        viewport: "width=device-width, initial-scale=1",
-      },
+    head: {
+      title: "CDG HIS",
+      meta: [{ name: "description", content: "CDG HIS" }],
+      charset: "utf-8",
+      viewport: "width=device-width, initial-scale=1",
+    },
   },
 
   devtools: { enabled: true },
@@ -36,7 +35,7 @@ export default defineNuxtConfig({
     }
   ],
 
-  imports:{
+  imports: {
     dirs: [
       'store', 
       'store/table-templates/master-file', 
@@ -47,8 +46,6 @@ export default defineNuxtConfig({
       'store/sub-components/transactions',
       'store/processing-queries/master-file',
       'store/processing-queries/services',
-      // 'store/processing-queries/services',
-      // 'store/processing-queries/transactions',
       "composables/build",
       "composables/address"
     ]

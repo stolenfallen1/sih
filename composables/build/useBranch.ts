@@ -1,7 +1,7 @@
 import nuxtStorage from 'nuxt-storage';
 export const useBranch = async () => {
     const config = useRuntimeConfig();
-    const { data}: any = await useFetch(useApiUrl() + `/get-branch`, {
+    const { data}: any = await useFetch(useLaravelAPI() + `/get-branch`, {
     method: 'GET',
     headers: { 
         'Content-Type': 'application/json',

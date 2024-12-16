@@ -470,7 +470,7 @@ watch(() => props.currentTabValue, () => {
 const getcategory = async ()=>{
     category_list.value = [];
     if(!props.form_payload.item_InventoryGroup_Id) return;
-    let response = await $fetch(useApiUrl()+'/categories?invgroup_id='+props.form_payload.item_InventoryGroup_Id,
+    let response = await $fetch(useLaravelAPI()+'/categories?invgroup_id='+props.form_payload.item_InventoryGroup_Id,
     {
         headers: {
             Authorization: `Bearer ` + useToken(),
@@ -484,7 +484,7 @@ const getsubcategory = async ()=>{
     sub_category_list.value = [];
     // props.form_payload.item_SubCategory_Id = '';
     if(!props.form_payload.item_Category_Id) return;
-    let response = await $fetch(useApiUrl()+'/sub-categories?category_id='+props.form_payload.item_Category_Id,
+    let response = await $fetch(useLaravelAPI()+'/sub-categories?category_id='+props.form_payload.item_Category_Id,
     {
         headers: {
             Authorization: `Bearer ` + useToken(),

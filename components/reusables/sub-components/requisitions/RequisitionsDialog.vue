@@ -338,7 +338,7 @@ const getPatientRequisitions = async () => {
         };
         data.value.loading = true;
         try {
-            const response = await fetch(useApiUrl() + `/get-patients-requisitions?keyword=${data.value.keyword}`, {
+            const response = await fetch(useLaravelAPI() + `/get-patients-requisitions?keyword=${data.value.keyword}`, {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json',

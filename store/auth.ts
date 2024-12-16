@@ -18,7 +18,7 @@ export const useAuthStore = defineStore('auth', {
     async authenticateUser({ idnumber, password }: UserPayloadInterface) {
       // useFetch from nuxt 3
       const config = useRuntimeConfig();
-      const { data, pending }: any = await useFetch(`${config.public.apiBase}` + `/login`, {
+      const { data, pending }: any = await useFetch(`${config.public.laravelAPI}` + `/login`, {
         method: 'post',
         headers: { 'Content-Type': 'application/json' },
         body: {

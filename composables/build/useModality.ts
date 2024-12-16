@@ -1,6 +1,6 @@
 import nuxtStorage from 'nuxt-storage';
 export const useModality = async () => {
-    const {data}:any = await useFetch(useApiUrl() + `/get-modalities`, {
+    const {data}:any = await useFetch(useLaravelAPI() + `/get-modalities`, {
         headers: { 
             'Content-Type': 'application/json',
             'Authorization': `Bearer `+useToken(),

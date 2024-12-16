@@ -146,7 +146,7 @@ const data = ref({
 });
 
 const fetchRenderedTransactions = async () => {
-    const response = await fetch(useApiUrl() + "/get-cancelled-transactions", {
+    const response = await fetch(useLaravelAPI() + "/get-cancelled-transactions", {
         method: "POST",
         headers: {
             'Content-Type': 'application/json',

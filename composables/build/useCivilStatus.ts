@@ -1,6 +1,6 @@
 import nuxtStorage from 'nuxt-storage';
 export const useCivilstatus = async () => {
-    const { data}: any = await useFetch(useApiUrl() + `/get-civil-status`, {
+    const { data}: any = await useFetch(useLaravelAPI() + `/get-civil-status`, {
     method: 'GET',
     headers: { 
         'Content-Type': 'application/json',

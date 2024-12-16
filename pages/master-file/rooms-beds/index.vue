@@ -310,7 +310,7 @@ const submitRoomsandBedForm = async(details)=>{
           id = form_payload.value.id;
           method = "PUT";
         }
-        const response = await $fetch(useApiUrl() + `/submit-rooms-and-beds/` + id, {
+        const response = await $fetch(useLaravelAPI() + `/submit-rooms-and-beds/` + id, {
           method: method,
           headers: {
             Authorization: `Bearer ` + useToken(),
@@ -344,7 +344,7 @@ const loadItems = async (options = null, searchkeyword = null) => {
     let keyword = searchkeyword || "";
       params.value = options  ? "page=" + options.page + "&per_page=" + options.itemsPerPage + "&keyword=" + options.keyword
     : "page=1&per_page=10&keyword=" + keyword;
-    const response = await fetch(useApiUrl()+'/rooms-and-beds'+ "?" + params.value || "", {
+    const response = await fetch(useLaravelAPI()+'/rooms-and-beds'+ "?" + params.value || "", {
       headers: {
         Authorization: `Bearer `+ useToken(),
       },

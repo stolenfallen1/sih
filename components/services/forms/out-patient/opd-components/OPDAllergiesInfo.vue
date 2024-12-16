@@ -99,7 +99,7 @@ const getPatientAllergyHistory = async () => {
     const items = {
         patient_Id: props.payload.patient_id
     };
-    const response = await fetch(useApiUrl() + "/get-patient-allergy-history", {
+    const response = await fetch(useLaravelAPI() + "/get-patient-allergy-history", {
         method: "POST",
         headers: {
             'Content-Type': 'application/json',

@@ -1,6 +1,6 @@
 export const useMethod = async (method:any, url:any, payload:any, params:any = null, id:any = null) => {
 
-    let apiurl = useApiUrl() + "/" + url;
+    let apiurl = useLaravelAPI() + "/" + url;
     
     if(method == 'get'){
         const response = await $fetch(apiurl + params, {

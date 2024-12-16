@@ -305,7 +305,7 @@ const submitItemandSuppliesForm = async (details) => {
           id = form_payload.value.id;
           method = "PUT";
         }
-        const response = await $fetch(useApiUrl() + `/item-and-services/` + id, {
+        const response = await $fetch(useLaravelAPI() + `/item-and-services/` + id, {
           method: method,
           headers: {
             Authorization: `Bearer ` + useToken(),
@@ -345,7 +345,7 @@ const SearchExamsandProcedures = async (payload) => {
     return useSnackbar(true, "error", "Search atleast 3 characters");
   search_payload.value.isloading = true;
   let params = "itemcode=" + itemcode + "&itemname=" + itemname;
-  const response = await $fetch(useApiUrl() + "/search-services" + "?" + params || "", {
+  const response = await $fetch(useLaravelAPI() + "/search-services" + "?" + params || "", {
     headers: {
       Authorization: `Bearer ` + useToken(),
     },
@@ -507,7 +507,7 @@ const loadItems = async (options = null, searchkeyword = null, item_group_id = n
         "&keyword=" +
         options.keyword
       : "page=1&per_page=10&item_group_id=" + itemgroup + "&keyword=" + keyword;
-    const response = await fetch(useApiUrl() + "/item-and-services" + "?" + params.value || "", {
+    const response = await fetch(useLaravelAPI() + "/item-and-services" + "?" + params.value || "", {
       headers: {
         Authorization: `Bearer ` + useToken(),
       },

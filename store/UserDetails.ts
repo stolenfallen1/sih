@@ -7,7 +7,7 @@ export const useUserDetailsStore = defineStore('user',{
     async fetchUserDetails(token:any) {
       // useFetch from nuxt 3
       const config = useRuntimeConfig();
-      const { data, pending }: any = await useFetch(`${config.public.apiBase}` + `/user-details`, {
+      const { data, pending }: any = await useFetch(`${config.public.laravelAPI}` + `/user-details`, {
         method: 'GET',
         headers: { 
             'Content-Type': 'application/json',

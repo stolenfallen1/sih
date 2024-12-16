@@ -1,7 +1,7 @@
 import nuxtStorage from 'nuxt-storage';
 export const useCountry = async () => {
     const config = useRuntimeConfig();
-    const { data}: any = await useFetch(useApiUrl() + `/get-country-list`, {
+    const { data}: any = await useFetch(useLaravelAPI() + `/get-country-list`, {
     method: 'GET',
     headers: { 
         'Content-Type': 'application/json',
