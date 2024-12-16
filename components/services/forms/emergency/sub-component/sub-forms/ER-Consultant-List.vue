@@ -31,7 +31,7 @@
                     @update:options="initialize"
                     @update:model-value="handleSelectedRow"
                     show-select
-                    select-strategy="single"
+                    select-strategy="mutiple"
                     density="compact" 
                     height="50vh"
                     >

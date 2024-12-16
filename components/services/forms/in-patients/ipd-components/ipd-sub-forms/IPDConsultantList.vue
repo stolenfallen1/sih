@@ -98,6 +98,7 @@ const loadItems = async(page = null,itemsPerPage = null,sortBy = null)=>{
     let params = "page=" +pageno + "&per_page=" + itemPerpageno + "&keyword=" + data.value.keyword;
     const response = await useMethod("get","get-his-doctors?","",params);
     if(response){
+        console.log('DOCTORS LIST : ', response.data);
         serverItems.value = response.data;
         totalItems.value = response.total;
         data.value.loading = false;

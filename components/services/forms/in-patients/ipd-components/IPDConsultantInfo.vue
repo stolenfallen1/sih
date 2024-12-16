@@ -7,13 +7,29 @@
                         <tr>
                             <th>Consultant Code</th>
                             <th>Consultant Name</th>
+                            <th>specialization</th>
+                            <th>Doctors Role</th>
                             <th width="4"></th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="(item, index) in payload.selectedConsultant" :key="index">
-                            <td> <input v-model="item.attending_doctor" readonly/> </td>
-                            <td> <p> {{ item.attending_doctor_fullname }} </p> </td>
+                        <tr v-for="(item, index) in props.payload.selectedConsultant" :key="index">
+                            <td><input v-model="item.attending_Doctor" readonly/> </td>
+                            <td><p> {{ item.attending_Doctor_fullname }} </p></td>
+                            <td> 
+                                <select v-model="item.Doctors_Specialization_Id" class="select-items">
+                                    <option v-for="specialization in doctorsSpecialization" :key="specialization.id" :value="specialization.id">
+                                        {{ specialization.specialization_description }}
+                                    </option>
+                                </select>
+                            </td>
+                            <td> 
+                                <select v-model="item.Doctors_Role_Id" class="select-items">
+                                    <option v-for="role in doctors_role" :key="role.id" :value="role.id">
+                                        {{ role.category_description }}
+                                    </option>
+                                </select>
+                            </td>
                             <td><v-icon color="red" @click="removeConsultant(index)">mdi-delete</v-icon></td>
                         </tr>
                     </tbody>
@@ -29,7 +45,8 @@
             </v-btn>
         </v-card-actions>
     </v-card>
-    <o-p-d-consultant-list :open_consultants_list="open_consultants_list" @close-dialog="closeConsultantsList" @handle-select="handleSelectConsultants" />
+    <ER-Consultant-List :open_consultants_list="open_consultants_list" @close-dialog="closeConsultantsList" @handle-select="handleSelectConsultants" />
+    <ConsultantRoleTypeForm :open_consultant_role="open_consultant_role_list" @close-dialog="closeConsultantRoleList" @handle-select="handleSelectConsultantRole" />
 </template>
 
 <script setup>
@@ -46,13 +63,25 @@ const props = defineProps({
 })
 
 const open_consultants_list = ref(false);
+const open_consultant_role_list = ref(false);
 
+const openConsultantsRole = () => {
+    open_consultant_role_list.value = true;
+}
 const openConsultantsList = () => {
     open_consultants_list.value = true;
 }
 
+const closeConsultantRoleList = () => {
+    open_consultants_list.value = false;
+}
+
 const handleSelectConsultants = (selected_item) => {
     props.payload.selectedConsultant = selected_item;
+}
+
+const handleSelectConsultantRole = () => {
+    alert('test')
 }
 
 const removeConsultant = (index) => {
@@ -62,6 +91,46 @@ const removeConsultant = (index) => {
 const closeConsultantsList = () => {
     open_consultants_list.value = false;
 }
+
+const loading = ref(false);
+
+const doctors_role = ref([]);
+const handleDoctorsRole = async () => {
+    let response;
+    loading.value = true;
+    try {
+        response = await useMethod("get", "doctors-categories", "", "");
+        if(response) {
+            doctors_role.value = response;
+            console.log('Doctors role : ', doctors_role.value);
+            loading.value = false;
+        }
+    } catch(error) {
+        console.log('ERROR! ', + error);
+    }
+}
+
+const doctorsSpecialization = ref([]);
+const handleDoctorsSpecialization = async () => {
+    loading.value = true;
+    let response;
+    try {
+        response = await useMethod("get", "doctors-specialization", "", "");
+        if(response) {
+            doctorsSpecialization.value = response;
+            console.log('Doctors Specializations : ', doctorsSpecialization.value);
+        }
+    } catch(error) {
+        console.log('ERROR! ', + error);
+    } finally {
+        loading.value = false;
+    }
+}
+
+onMounted(() => {
+    handleDoctorsRole();
+    handleDoctorsSpecialization();
+})
 
 </script>
 
@@ -103,5 +172,8 @@ const closeConsultantsList = () => {
 .styled-table::-webkit-scrollbar-track {
     background-color: #f5f5f5; 
     border-radius: 10px; 
+}
+.select-items {
+    width: 100%;
 }
 </style>

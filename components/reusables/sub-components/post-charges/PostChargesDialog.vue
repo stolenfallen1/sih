@@ -11,7 +11,6 @@
                 <span>Note:</span>
                 <p class="message">Can't post or request charges for patients that have been tagged for May Go Home (MGH) or have been discharged.</p>
            </div>
-          
         </v-alert>
     </v-dialog>
     <v-dialog v-if="isDischarge === null && isTagAsMgh === null " :model-value="show" rounded="lg" scrollable @update:model-value="closeDialog" max-width="1120px">

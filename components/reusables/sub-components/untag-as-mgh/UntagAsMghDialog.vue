@@ -1,5 +1,33 @@
 <template>
-    <v-dialog :model-value="show" rounded="lg" scrollable @update:model-value="closeDialog" max-width="600px">
+     <v-dialog v-if="isDischarge !== null && isTagAsMgh !== null" :model-value="show" rounded="lg" scrollable @update:model-value="closeDialog" max-width="400px">
+        <v-alert
+            border="left"
+            color="red"
+            dismissible
+            elevation="24"
+            icon="mdi-alert-circle"
+        >
+           <div class="note">
+                <span>Note:</span>
+                <p class="message">Can't Untag May Go Home (MGH) for patients that have been already discharged.</p>
+           </div>
+        </v-alert>
+     </v-dialog>
+     <v-dialog v-if="isDischarge === null && isTagAsMgh === null" :model-value="show" rounded="lg" scrollable @update:model-value="closeDialog" max-width="400px">
+        <v-alert
+            border="left"
+            color="red"
+            dismissible
+            elevation="24"
+            icon="mdi-alert-circle"
+        >
+           <div class="note">
+                <span>Note:</span>
+                <p class="message">Can't Untag May Go Home (MGH) for patients that have not been tagged yet for May Go Home (MGH).</p>
+           </div>
+        </v-alert>
+     </v-dialog>
+    <v-dialog v-if="isDischarge === null && isTagAsMgh !== null" :model-value="show" rounded="lg" scrollable @update:model-value="closeDialog" max-width="600px">
         <form @submit.prevent="openConfirmDialog">        
             <v-card rounded="lg">
                 <v-toolbar density="compact" color="#107bac" hide-details>
@@ -18,17 +46,6 @@
                             </p>
                         </v-card-text>
                     </v-card>
-                    <!-- <v-row class="mt-2">
-                        <v-col cols="12">
-                            <v-textarea
-                                label="Remarks"
-                                v-model="payload.remarks"
-                                variant="outlined"
-                                density="compact"
-                                hide-details
-                            ></v-textarea>
-                        </v-col>
-                    </v-row> -->
                 </v-card-text>
                 <v-divider></v-divider>
                 <v-card-actions>
@@ -113,6 +130,8 @@
         }
     }
 
+    const isDischarge = ref('');
+    const isTagAsMgh = ref('')
     onUpdated(() => {
         if (selectedRowDetails.value && selectedRowDetails.value.id) {
             if (payload.value.id !== selectedRowDetails.value.id) { 
@@ -120,6 +139,10 @@
                 payload.value.patient_Id        = selectedRowDetails.value.patient_Id ? selectedRowDetails.value.patient_Id : '';
                 payload.value.suffix_id         = parseInt(selectedRowDetails.value.suffix_id) ? parseInt(selectedRowDetails.value.suffix_id) : '';
                 payload.value.case_No           = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0].case_No ? selectedRowDetails.value.patient_registry[0].case_No : '';
+
+                isDischarge.value   = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0].discharged_Date;
+                isTagAsMgh.value    = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0].mgh_Datetime;
+ 
             }
         } 
     })
@@ -127,4 +150,13 @@
 </script>
 
 <style scoped>
+    .note {
+        padding: 20 0px !important;
+    }
+    .note span {
+        font-size: 20px;
+        color: #ffffe0;
+        font-weight: bold;
+        font-style: italic;
+    }
 </style>
