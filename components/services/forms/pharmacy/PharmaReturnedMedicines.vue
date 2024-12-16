@@ -197,16 +197,24 @@
                                 {{ useDateMMDDYYY(item.nurse_logbook.process_Date) }}
                             </template>
 
-                            <template v-slot:item.transaction_Qty="{ item }">
-                                {{ parseInt(item.transaction_Qty) || "N/A" }}
-                            </template>
-
                             <template v-slot:item.transaction_Item_SellingAmount="{ item }">
                                 {{ usePeso(item.transaction_Item_SellingAmount) || "N/A" }}
                             </template>
 
+                            <template v-slot:item.transaction_Qty="{ item }">
+                                {{ item.transaction_Qty > 0 
+                                    ? parseInt(item.transaction_Qty) 
+                                    : (item.transaction_Qty < 0 
+                                        ? `(${Math.abs(parseInt(item.transaction_Qty))})` 
+                                        : 'N/A') }}
+                            </template>
+
                             <template v-slot:item.transaction_Item_TotalAmount="{ item }">
-                                {{ usePeso(item.transaction_Item_TotalAmount) }}
+                                {{ item.transaction_Item_TotalAmount > 0 
+                                    ? usePeso(item.transaction_Item_TotalAmount) 
+                                    : (item.transaction_Item_TotalAmount < 0 
+                                        ? `(${(usePeso(Math.abs(item.transaction_Item_TotalAmount)))})` 
+                                        : 'N/A') }}
                             </template>
 
                             <template #bottom />

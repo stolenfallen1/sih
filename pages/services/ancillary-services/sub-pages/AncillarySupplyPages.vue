@@ -372,7 +372,7 @@ const openManualPosting = (type) => {
 }
 
 const closeManualPosting = () => {
-    open_ancillary_manual_posting.value = true;
+    open_ancillary_manual_posting.value = false;
     patient_type.value = 0;
 }
 

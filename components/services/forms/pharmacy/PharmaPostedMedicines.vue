@@ -163,11 +163,19 @@
                             </template>
 
                             <template v-slot:item.transaction_Qty="{ item }">
-                                {{ parseInt(item.transaction_Qty) || "N/A" }}
+                                {{ item.transaction_Qty > 0 
+                                    ? parseInt(item.transaction_Qty) 
+                                    : (item.transaction_Qty < 0 
+                                        ? `(${Math.abs(parseInt(item.transaction_Qty))})` 
+                                        : 'N/A') }}
                             </template>
 
                             <template v-slot:item.transaction_Item_TotalAmount="{ item }">
-                                {{ usePeso(item.transaction_Item_TotalAmount) }}
+                                {{ item.transaction_Item_TotalAmount > 0 
+                                    ? usePeso(item.transaction_Item_TotalAmount) 
+                                    : (item.transaction_Item_TotalAmount < 0 
+                                        ? `(${(usePeso(Math.abs(item.transaction_Item_TotalAmount)))})` 
+                                        : 'N/A') }}
                             </template>
 
                             <template #bottom />
@@ -325,14 +333,13 @@ const totalAmount = computed(() => {
 
 const totalPosted = computed(() => {
     if (serverItems.value.length === 0) return null;
-    return serverItems.value.reduce((acc, item) => acc + parseInt(item.transaction_Qty || 0), 0);
+    const totalPostedValue = serverItems.value.reduce((acc, item) => acc + parseFloat(item.transaction_Qty || 0), 0);
+    return totalPostedValue;
 });
 
 const totalReturned = computed(() => {
     if (serverItems.value.length === 0) return null;
-    // Use logic quantity and amount less than zero ( negative to get the returned items )
-    // But don't return negative values
-    const totalReturnedValue = serverItems.value.reduce((acc, item) => acc + (parseInt(item.transaction_Qty) < 0 ? parseInt(item.transaction_Qty) : 0), 0);
+    const totalReturnedValue = serverItems.value.reduce((acc, item) => acc + parseFloat(item.transaction_Qty < 0 ? item.transaction_Qty : 0), 0);
     return Math.abs(totalReturnedValue);
 });
 

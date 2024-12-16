@@ -556,14 +556,14 @@ const handleAddSupply = (item, index) => {
 };
 
 const confirmCharge = () => {
-    let medicines = Supplies.value.filter(obj => obj.code !== '');
-    payload.value.Supplies = medicines;
+    let supplies = Supplies.value.filter(obj => obj.code !== '');
+    payload.value.Supplies = supplies;
 
     if (payload.value.Supplies.length === 0) {
-        return useSnackbar(true, "error", "Please add medicines.");
+        return useSnackbar(true, "error", "Please add supplies.");
     } 
 
-    for (const item of medicines) {
+    for (const item of supplies) {
         const quantity = parseInt(item.quantity) || 0;  
         if (quantity === 0) {
             useSnackbar(true, "error", "Specify the Quantity before proceeding");
@@ -662,7 +662,6 @@ const totalAmount = computed(() => {
 const closeDialog = () => {
     clearData();
     emits('close-dialog');
-
 }
 
 onMounted(() => {
