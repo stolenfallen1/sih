@@ -20,7 +20,7 @@
                             <td> {{ item?.revenueID }} </td>
                             <td> {{ item?.itemID }} </td>
                             <td> 
-                                {{ item?.exam_description }} 
+                                {{ item?.exam_description ? item?.exam_description : item?.items.exam_description }} 
                             </td>
                             <td> 
                                 {{ parseInt(item?.quantity) }} 
@@ -648,7 +648,7 @@ const getOPDBill = async () => {
         HospitalBill: 'HB',
         case_No: payload.value.case_No,
     };
-    const response = await fetch(useApiUrl() + "/get-opd-bill", {
+    const response = await fetch(useLaravelAPI() + "/get-opd-bill", {
         method: "POST",
         headers: {
             'Content-Type': 'application/json',

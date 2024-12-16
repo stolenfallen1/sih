@@ -192,7 +192,7 @@
                             </template>
 
                             <template v-slot:item.nurse_logbook.process_Date="{ item }">
-                                {{ useDateMMDDYYY(item.nurse_logbook.process_Date) }}
+                                {{ useDateTimeFormater(item.nurse_logbook.process_Date) }}
                             </template>
 
                             <template v-slot:item.transaction_Qty="{ item }">

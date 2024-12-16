@@ -194,7 +194,7 @@
                             </template>
 
                             <template v-slot:item.transaction_Date="{ item }">
-                                {{ useDateMMDDYYY(item.transaction_Date) }}
+                                {{ useDateTimeFormater(item.transaction_Date) }}
                             </template>
 
                             <template v-slot:item.transaction_Item_SellingAmount="{ item }">
