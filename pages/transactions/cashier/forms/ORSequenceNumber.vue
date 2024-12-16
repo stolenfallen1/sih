@@ -151,7 +151,7 @@ const onSubmit = async () => {
     });
 };
 
-const shift_data = ref({});
+const shift_data = ref([]);
 const shift_loading = ref(false);
 const getShiftSchedule = async () => {
     shift_loading.value = true;

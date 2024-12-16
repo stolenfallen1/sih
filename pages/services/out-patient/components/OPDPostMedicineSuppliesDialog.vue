@@ -442,7 +442,7 @@
                                                     </td>
                                                     <td>
                                                         <span v-if="item.source != null">
-                                                            <v-chip color="green" v-if="item.source == 'NurseLogBook'">Paid</v-chip>
+                                                            <v-chip color="green" v-if="item.source == 'CashAssessment' && item.ORNumber != null">Paid</v-chip>
                                                             <v-chip color="red" v-else>Unpaid</v-chip>
                                                         </span>
                                                     </td>
@@ -994,7 +994,10 @@ const closeWarningDialog = () => {
 }
 
 const confirmRevoke = () => {
-    if (selected_charge_item.value.map(item => item.source).includes("NurseLogBook") && selectedRowDetails.value.patient_registry[0].mscPrice_Schemes == 1) {
+    const hasCashAssessment = selected_charge_item.value.some(item => item.source === "CashAssessment");
+    const allORNumbersPresent = selected_charge_item.value.every(item => item.ORNumber != null);
+
+    if (hasCashAssessment && allORNumbersPresent) {
         return warning_cannot_be_revoked.value = true;
     }
 
@@ -1003,7 +1006,7 @@ const confirmRevoke = () => {
     } else {
         return useSnackbar(true, "error", "Please select items to revoke.");
     }
-}
+};
 
 const onRevoke = async (user_details) => {
     if (user_details.user_passcode !== usePasscode() && user_attempts.value < 5) {
@@ -1088,7 +1091,8 @@ const getChargesHistory = async () => {
 
         const responseData = await response.json();
         if (response.ok) {
-            // if the value of the return data souce is from "NurseLogBook" then it is 
+            history_data_insurancesbasis.value = responseData.data.filter(item => item.source === "NurseLogBook");
+            history_data_cashbasis.value = responseData.data.filter(item => item.source === "CashAssessment");
         } else {
             return useSnackbar(true, "error", "No data found.");
         }

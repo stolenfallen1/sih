@@ -330,7 +330,10 @@ const totalPosted = computed(() => {
 
 const totalReturned = computed(() => {
     if (serverItems.value.length === 0) return null;
-    return serverItems.value.reduce((acc, item) => acc + parseInt(item.transaction_Returned_Qty || 0), 0);
+    // Use logic quantity and amount less than zero ( negative to get the returned items )
+    // But don't return negative values
+    const totalReturnedValue = serverItems.value.reduce((acc, item) => acc + (parseInt(item.transaction_Qty) < 0 ? parseInt(item.transaction_Qty) : 0), 0);
+    return Math.abs(totalReturnedValue);
 });
 
 const totalDiscount = computed(() => {

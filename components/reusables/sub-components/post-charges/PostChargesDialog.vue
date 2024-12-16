@@ -252,8 +252,8 @@
                                             </td>
                                             <td>
                                                 <select class="input charge-focus" v-model="item.specimen">
-                                                    <option v-for="(specimen, sIndex) in item.specimens" :key="sIndex" :value="specimen.id">
-                                                        {{ specimen.description }}
+                                                    <option v-for="(specimen, sIndex) in item.specimens" :key="sIndex" :value="specimen?.id">
+                                                        {{ specimen?.description }}
                                                     </option>
                                                 </select>
                                             </td>
@@ -836,8 +836,8 @@ const handleSelectedChargeItem = async (selected_item) => {
     if (lastRow.map_item_id && lastRow.code === 'LB') {
         const response = await useMethod("get", "get-charges-specimen?map_item_id=", "", lastRow.map_item_id);
         if (response && response.data && response.data.length > 0) {
-            lastRow.specimens = response.data.map(item => item.specimens) || [];
-            lastRow.specimen = lastRow.specimens.length > 0 ? lastRow.specimens[0].id : '';
+            lastRow.specimens = response?.data.map(item => item?.specimens) || [];
+            lastRow.specimen = lastRow?.specimens.length > 0 ? lastRow?.specimens[0].id : '';
         } 
     } 
 };

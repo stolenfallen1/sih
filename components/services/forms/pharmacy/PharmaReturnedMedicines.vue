@@ -421,6 +421,7 @@ const getPatientPostedMeds = async () => {
                 serverItems.value = response.patient_details.inventory_data;
                 isDischargedDate.value = response.patient_details.discharged_Date;
                 isDischargedUserID.value = response.patient_details.discharged_Userid;
+                payload.value.patient_Type = props.patient_type;
                 if (isDischargedDate.value != null && isDischargedUserID.value != null) {
                     warning_already_discharge_dialog.value = true;
                 }

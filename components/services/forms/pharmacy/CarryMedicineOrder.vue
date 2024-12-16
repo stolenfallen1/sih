@@ -221,6 +221,7 @@ const setPayloadProperties = () => {
     payload.value.patient_Id = props.item.patient_Id;
     payload.value.case_No = props.item.case_No;
     payload.value.requestNum = props.item.requestNum;
+    console.log(props.item.items)
 
     payload.value.Orders = props.item.items
         .filter(order => selectedOrders.value.includes(order.item_Id))
