@@ -355,6 +355,7 @@ const handleSelectedItem = (item) => {
         open_carry_order_form.value = true;
         patient_type.value = item.patient_type;
         selected_item.value = item;
+        console.log("Selected Item: ", selected_item.value);
     }
 }
 

@@ -647,6 +647,8 @@ const confirmRequisition = () => {
     return;
   }
 
+  console.log('payload', payload.value);
+
   requisitionconfirmation.value = true;
 };
 

@@ -464,7 +464,6 @@ const focusOrder = {
 
 const focusNextField = (currentField, paymentCode) => {
     const formFields = focusOrder[paymentCode].map(ref => {
-        // console.log('Current Ref:', ref);
         if (ref && ref.value) {
             return ref.value;
         } else {
@@ -472,24 +471,17 @@ const focusNextField = (currentField, paymentCode) => {
             return null; 
         }
     }).filter(Boolean);
-    // console.log('Current Field:', currentField);
-    // console.log('Form Fields:', formFields);
     if (formFields.length === 0) {
         console.warn('No fields to focus on for payment code:', paymentCode);
         return; 
     }
     const currentFieldIndex = formFields.indexOf(currentField);
-    // console.log('Current Field Index:', currentFieldIndex);
     if (currentFieldIndex !== -1 && currentFieldIndex < formFields.length - 1) {
         nextTick(() => {
             const nextField = formFields[currentFieldIndex + 1];
-            // console.log('Focusing next field:', nextField);
             if (nextField && nextField.focus) {
                 nextField.focus();
             } 
-            // else {
-            //     console.error('Next field is not valid or does not have focus method:', nextField);
-            // }
         });
     }
 };
@@ -656,7 +648,7 @@ const getOPDBill = async () => {
         HospitalBill: 'HB',
         case_No: payload.value.case_No,
     };
-    const response = await fetch(useLaravelAPI() + "/get-opd-bill", {
+    const response = await fetch(useApiUrl() + "/get-opd-bill", {
         method: "POST",
         headers: {
             'Content-Type': 'application/json',
@@ -741,10 +733,8 @@ const handleKeyEnter = async () => {
 }
 
 const resetTransactionForm = () => {
-    // Reset table data
     table_data.value = [];
 
-    // Reset payload values
     payload.value = {
         patient_Id: null,
         case_No: null,
@@ -776,13 +766,11 @@ const resetTransactionForm = () => {
         check_amount: null,
     };
 
-    // Reset temporary variables for input fields
     tempCashAmount.value = null;
     tempCashTendered.value = null;
     tempCardAmount.value = null;
     tempCheckAmount.value = null;
 
-    // Reset form errors
     formErrors.value = {};
 };
 
