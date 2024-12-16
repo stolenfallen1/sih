@@ -114,7 +114,7 @@
 							backgroundColor: 
 								item.patient_registry && 
 								item.patient_registry[0].guarantor_Name !== 'Self Pay' && 
-                item.patient_registry[0].guarantor_Name !== null
+                				item.patient_registry[0].guarantor_Name !== null
 								? 'yellow' 
 								: 'orange' 
 						}" 
@@ -122,7 +122,7 @@
 						:title="
 							item.patient_registry && 
 							item.patient_registry[0].guarantor_Name !== 'Self Pay' && 
-              item.patient_registry[0].guarantor_Name !== null
+              				item.patient_registry[0].guarantor_Name !== null
 							? 'HMO ' 
 							: 'Self Pay'
 						"
@@ -302,41 +302,42 @@
 	import { usePatientStore } from '@/store/selectedPatient';
 
 	const patientStore = usePatientStore();
+	const patientDataStore = loadPatientDataStore();
 
 	import ReusableTable from "~/components/reusables/ReusableTable.vue";
 	import Snackbar from "~/components/reusables/snackbar.vue";
 	const {
-	PatientProfile,
-	Suspend, 
-	Requisitions,
-	PostCharges,
-	ERPostMedicineSupplies,
-	PostCorporateMedicalPackage, 
-	PostDiagnosticMedicalPackage,
-	NurseActivity,
-	PostAdjustments, 
-	PostProfessionalFees, 
-	PostDiscounts,
-	PostArTransfer, 
-	ViewExaminationUpshot, 
-	ApplyPromissoryNote, 
-	ApplyMedicalPackage, 
-	TagAsMgh, 
-	UntagAsMgh, 
-	Discharge, 
-	DischargeInstruction, 
-	PostFinalDiagnosis, 
-	SoaBillingStatement, 
-	ViewPrintReports, 
-	AdmitPatient, 
-	PrintClaimForms,
-	ClaimForm4Processing, 
+		PatientProfile,
+		Suspend, 
+		Requisitions,
+		PostCharges,
+		ERPostMedicineSupplies,
+		PostCorporateMedicalPackage, 
+		PostDiagnosticMedicalPackage,
+		NurseActivity,
+		PostAdjustments, 
+		PostProfessionalFees, 
+		PostDiscounts,
+		PostArTransfer, 
+		ViewExaminationUpshot, 
+		ApplyPromissoryNote, 
+		ApplyMedicalPackage, 
+		TagAsMgh, 
+		UntagAsMgh, 
+		Discharge, 
+		DischargeInstruction, 
+		PostFinalDiagnosis, 
+		SoaBillingStatement, 
+		ViewPrintReports, 
+		AdmitPatient, 
+		PrintClaimForms,
+		ClaimForm4Processing, 
 	} = storeToRefs(ERSubComponentsDialog());
 
 	const { 
-	MayGoHomePatientList,
-	DocumentArchives,
-	Cf4ForDischargedPatients,
+		MayGoHomePatientList,
+		DocumentArchives,
+		Cf4ForDischargedPatients,
 	} = storeToRefs(PQEmergencyPatientDialog());
 
 	definePageMeta({
@@ -667,11 +668,11 @@
 
 	const serverItems = ref([]);
 	const handleRefresh = () => {
-	loadItems();
+		loadItems();
 	};
 
 	const handleSearch = (keyword) => {
-	loadItems(null, keyword);
+		loadItems(null, keyword);
 	};
 
 	const openFilterOptions = () => {
@@ -684,69 +685,69 @@
 	open_filter_options.value = false;
 	};
 
-const headers = [
-  {
-    title: "Patient ID",
-    align: "start",
-    sortable: false,
-    key: "patient_Id",
-  },
-  {
-    title: "Case No.",
-    align: "start",
-    sortable: false,
-    key: "case_No",
-  },
-  {
-    title: "Last Name",
-    key: "lastname",
-    align: "start",
-    sortable: false,
-  },
-  {
-    title: "First Name",
-    key: "firstname",
-    align: "start",
-    sortable: false,
-  },
-  {
-    title: "Sex",
-    key: "sex",
-    align: "start",
-    sortable: false,
-  },
-  {
-    title: "Birth Date",
-    key: "birthdate",
-    align: "start",
-    sortable: false,
-  },
-  {
-    title: "Registry Date",
-    key: "patient_registry",
-    align: "start",
-    sortable: false,
-  },
-];
+	const headers = [
+	{
+		title: "Patient ID",
+		align: "start",
+		sortable: false,
+		key: "patient_Id",
+	},
+	{
+		title: "Case No.",
+		align: "start",
+		sortable: false,
+		key: "case_No",
+	},
+	{
+		title: "Last Name",
+		key: "lastname",
+		align: "start",
+		sortable: false,
+	},
+	{
+		title: "First Name",
+		key: "firstname",
+		align: "start",
+		sortable: false,
+	},
+	{
+		title: "Sex",
+		key: "sex",
+		align: "start",
+		sortable: false,
+	},
+	{
+		title: "Birth Date",
+		key: "birthdate",
+		align: "start",
+		sortable: false,
+	},
+	{
+		title: "Registry Date",
+		key: "patient_registry",
+		align: "start",
+		sortable: false,
+	},
+	];
 
-const applyFilters = () => {
-  console.log('Filters applied:', filter.value);
-};
-const selectedUser = (item) => {
-    isSelectedUser.value = true;
-    isrefresh.value = false;
-    selectedRowDetails.value.id = ""; 
-    selectedRowDetails.value.role_id = ""; 
-    selectedRowDetails.value = Object.assign({}, item); 
-    if(item){
-        selectedRowDetails.value =  Object.assign({}, item);;
-        isrefresh.value = true;
-        isSelectedUser.value = false;
-    } else{
-        isrefresh.value = false;
-        isSelectedUser.value = true;
-    }
-    };
+	const applyFilters = () => {
+	console.log('Filters applied:', filter.value);
+	};
+	const selectedUser = (item) => {
+		isSelectedUser.value = true;
+		isrefresh.value = false;
+		selectedRowDetails.value.id = ""; 
+		selectedRowDetails.value.role_id = ""; 
+		selectedRowDetails.value = Object.assign({}, item); 
+		if(item){
+			selectedRowDetails.value =  Object.assign({}, item);;
+			isrefresh.value = true;
+			isSelectedUser.value = false;
+		} else{
+			isrefresh.value = false;
+			isSelectedUser.value = true;
+		}
+	};
 
 const loadPatient = (patientDetails) => {
   const keyword = patientDetails || "";
@@ -785,7 +786,6 @@ const openAddFormDialog = (type) => {
         // if(curDate == useDateMMDDYYY(patientStore?.selectedPatient?.updated_at)) {
         //     return useSnackbar(true, 'error', 'Patient is already registered.')
         // } else {
-          // console.log(patientStore.selectedPatient.created_at)
           patientStore.setSelectedPatient(selectedPatient.value);
           if (patientStore.selectedPatient && patientStore.selectedPatient.id) {  
               form_dialog.value = true;
@@ -880,7 +880,6 @@ const loadItems = async (options = null, searchkeyword = null) => {
 		if (data && data.data) {
 			updateTotalItems(data.total);
 			updateServerItems(data.data);
-      console.log("TEST");
 		} else {
 			console.log("Data not found or response error");
 		}

@@ -1,6 +1,6 @@
 <template>
   <v-dialog
-    :model-value="open_form_dialog"
+    :model-value="open_consultant_role"
     @update:model-value="closeDialog"
     rounded="lg"
     scrollable
@@ -50,7 +50,7 @@
 
 <script setup>
 const props = defineProps({
-  open_form_dialog: {
+  open_consultant_role: {
     type: Boolean,
     default: () => false,
     required: true,

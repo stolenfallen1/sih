@@ -9,7 +9,7 @@
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
     "start": "node server/server.js",
-    "dev:nuxt": "nuxt dev --port 3000", 
+    "dev:nuxt": "nuxt dev --port 3002", 
     "dev:server": "nodemon server/server.js" 
   },
   "devDependencies": {

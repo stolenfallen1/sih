@@ -131,7 +131,6 @@
         value.value = progress;
     };
 
-    
     let tab = ref("0");
     const formErrors = ref({});
     const formType = ref('emergency');
@@ -144,6 +143,7 @@
             case "civilstatus_id": return "0";
             case "birthdate": return "0";
             case "mscAccount_Trans_Types": return "1";
+            case "dateOfDeath": return "1";
             case "registry_Date": return "0";
             case "mscAccount_Type": return "1";
             case "mscPrice_Groups": return "1";
@@ -159,6 +159,7 @@
             fieldRef.focus();
         }
     }
+
     const payload = ref({
         address: {},
         referred_From_HCI_address: {},
@@ -167,8 +168,6 @@
     });
 
     const isLoading = ref(false);
-
-    // const emits = defineEmits(['close-dialog']);
     const emits = defineEmits(['close-dialog', 'patient-registered']);
     const patientDetail = ref({});
 
@@ -232,7 +231,9 @@
             formErrors.value.chief_Complaint_Description = "Clinical chief complaint is required";
             valid.value = false;
         }
-
+        if(payload.value.dead_on_arrival && !payload.value.dateOfDeath) {
+            formErrors.value.dateOfDeath = "Date of Death is Required"
+        }
         if (!valid.value) {
             const firstErrorField = Object.keys(formErrors.value)[0];
             tab.value = findTabIndexByError(firstErrorField);
@@ -241,20 +242,17 @@
             focusField(firstErrorField);
             return;
         }
-
         showDialog.value = true;
     }
-
     const closeConfirmDialog = () => {
         showDialog.value = false;
     }
-
     const onSubmit = async () => {
         try {
             isLoading.value = true;
             let response;
             if (payload.value.id) {
-                response = await useMethod("put", "update-emergency", payload.value, "", payload.value.patient_Id);
+                response = await useMethod("put", "update-patient", payload.value, "", payload.value.patient_Id);
                 if (response) {
                     useSnackbar(true, "green", response.message);
                     patientDetail.value = response.data; 
@@ -262,7 +260,7 @@
                 }
             } else {
                 console.log('Payload : ', payload.value);
-                response = await useMethod("post", "register-emergency", payload.value);
+                response = await useMethod("post", "register-patient", payload.value);
                 if (response) {
                     useSnackbar(true, "green", response.message);
                     payload.value = {};
@@ -421,11 +419,8 @@
                     }
                 });
             }
-
             payload.value.selectedAllergy = Allergy.value;
-            
             payload.value.registry_Remarks = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0].registry_Remarks ? selectedRowDetails.value.patient_registry[0].registry_Remarks : '';
-        
         } else {
             if (patientStore.selectedPatient && patientStore.selectedPatient.id) { 
                 payload.value                   = Object.assign({}, patientStore.selectedPatient);

@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<v-dialog :model-value="show" rounded="lg" @update:model-value="handleclose"  scrollable max-width="350px">
+		<v-dialog :model-value="show" rounded="lg" @update:model-value="handleclose" scrollable max-width="350px">
 			<form @submit.prevent="handleSubmit(payload)">
 				<v-card rounded="lg">
 					<v-toolbar density="compact" color="#107bac" hide-details>
@@ -68,81 +68,79 @@
 	</div>
 </template>
 <script setup>
-import nuxtStorage from 'nuxt-storage'; 
-const props = defineProps({
-	show: {
-		type: Boolean,
-		default: () => false,
-		required: false,
-	},
-	loading: {
-		type: Boolean,
-		default: () => false,
-		required: false,
-	},
-	payload: {
-		type: Object,
-		default: () => {},
-		required: false,
-	},
-	error_msg:{
-		type: String,
-		default: () => '',
-		required: false,
-	}
-});
-
-
-const emits = defineEmits(["close", "submit"]);
-const showPassword = ref(false);
-const user_detail = ref({});
-const roleID = ref('');
-const rememberMe = ref(false);
-
-const handleclose = () => {
-	emits("close");
-};
-
-
-const handleSubmit = (payload) => {
-	emits("submit", payload);
-};
-
-const handleRememberMe = () => {
-	if (rememberMe.value) {
-		const rememberMeData = {
-			user_userid: props.payload.user_userid,
-			user_passcode: props.payload.user_passcode,
+	import nuxtStorage from 'nuxt-storage'; 
+	const props = defineProps({
+		show: {
+			type: Boolean,
+			default: () => false,
+			required: false,
+		},
+		loading: {
+			type: Boolean,
+			default: () => false,
+			required: false,
+		},
+		payload: {
+			type: Object,
+			default: () => {},
+			required: false,
+		},
+		error_msg:{
+			type: String,
+			default: () => '',
+			required: false,
 		}
-		nuxtStorage.localStorage.setData('remember_me_auth', rememberMeData, "24", "h");
-	} else {
-		nuxtStorage.localStorage.removeItem('remember_me_auth');
-	}
-}
+	});
 
-watchEffect(() => {
-    if (rememberMe.value) {
-		const rememberMeData = {
-			user_userid: props.payload?.user_userid,
-			user_passcode: props.payload?.user_passcode,
+	const emits = defineEmits(["close", "submit"]);
+	const showPassword = ref(false);
+	const user_detail = ref({});
+	const roleID = ref('');
+	const rememberMe = ref(false);
+
+	const handleclose = () => {
+		emits("close");
+	};
+
+	const handleSubmit = (payload) => {
+		emits("submit", payload);
+	};
+
+	const handleRememberMe = () => {
+		if (rememberMe.value) {
+			const rememberMeData = {
+				user_userid: props.payload.user_userid,
+				user_passcode: props.payload.user_passcode,
+			}
+			nuxtStorage.localStorage.setData('remember_me_auth', rememberMeData, "24", "h");
+		} else {
+			nuxtStorage.localStorage.removeItem('remember_me_auth');
 		}
-		nuxtStorage.localStorage.setData('remember_me_auth', rememberMeData, "24", "h");
-		console.log('rememberMeData', rememberMeData);
-	} else {
-		nuxtStorage.localStorage.removeItem('remember_me_auth');
-    }
-})
-
-onMounted(() => {
-    const userDetails = JSON.parse(nuxtStorage.localStorage.getData('user_details') || '{}');
-    user_detail.value = userDetails;
-    roleID.value = user_detail.value?.role_id;
-
-	const savedRememberMeData = JSON.parse(nuxtStorage.localStorage.getData('remember_me_auth') || '{}');
-	if (savedRememberMeData && savedRememberMeData.user_passcode) {
-		props.payload.user_userid = savedRememberMeData.user_userid;
-		props.payload.user_passcode = savedRememberMeData.user_passcode;
-		rememberMe.value = true;
 	}
-});
+
+	watchEffect(() => {
+		if (rememberMe.value) {
+			const rememberMeData = {
+				user_userid: props.payload?.user_userid,
+				user_passcode: props.payload?.user_passcode,
+			}
+			nuxtStorage.localStorage.setData('remember_me_auth', rememberMeData, "24", "h");
+			console.log('rememberMeData', rememberMeData);
+		} else {
+			nuxtStorage.localStorage.removeItem('remember_me_auth');
+		}
+	})
+
+	onMounted(() => {
+		const userDetails = JSON.parse(nuxtStorage.localStorage.getData('user_details') || '{}');
+		user_detail.value = userDetails;
+		roleID.value = user_detail.value?.role_id;
+
+		const savedRememberMeData = JSON.parse(nuxtStorage.localStorage.getData('remember_me_auth') || '{}');
+		if (savedRememberMeData && savedRememberMeData.user_passcode) {
+			props.payload.user_userid = savedRememberMeData.user_userid;
+			props.payload.user_passcode = savedRememberMeData.user_passcode;
+			rememberMe.value = true;
+		}
+	});
 </script>
