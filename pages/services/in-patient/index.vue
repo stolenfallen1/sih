@@ -1,6 +1,14 @@
 <template>
 	<v-card class="mb-2" elevation="4">
 		<v-card-actions>
+			<v-btn
+				@click="handlePatientForAdmission"
+				class="bg-error text-white blink-button"
+				size="large"
+				prepend-icon="mdi-eye-outline"
+			>
+			{{count}} Patient For Admission 
+			</v-btn>
 			<v-spacer></v-spacer>
 			<v-btn
 				@click="handleView('view')"
@@ -107,7 +115,7 @@
 				</span>
 			</template>
 		</ReusableTable>
-  	</v-card>
+	</v-card>
 
 	<CentralLookUpForm 
 		:central_form_dialog="central_form_dialog"
@@ -117,6 +125,14 @@
 		:search_results="search_results"
 		:search_payload="search_payload"
 		@open-form="openAddFormDialog"
+	/>
+
+	<PatientForAdmissionWindow 
+		:patient_for_admission_dialog="patient_for_admission_dialog"
+		@close-main-dialog="closePatientForAdmission"
+		@patient-count="handlegetPatientCount"
+		@patient-registered="handleLoadPatient"
+		@open-inpatient-form="openInPatientFormDialog"
 	/>
 
 	<SummaryModal 
@@ -156,10 +172,10 @@
 				<v-btn class="bg-primary text-white" @click="applyFilters">Apply Filters</v-btn>
 			</v-card-actions>
 		</v-card>
-  	</v-menu>
+	</v-menu>
 
-  	<InPatientRegistration :clicked_option="clicked_option" :form_dialog="form_dialog" @patient-registered="handleLoadPatient" @close-dialog="closeAddFormDialog" />
-  
+	<InPatientRegistration :clicked_option="clicked_option" :form_dialog="form_dialog" @patient-registered="handleLoadPatient" @close-dialog="closeAddFormDialog" />
+
 	<!-- In-patients Sub components -->
 	<PatientProfileDialog :show="PatientProfile" :form_payload="payload" @close-dialog="useSubComponents('PatientProfile', false)" />
 	<RoomInquiryDialog :show="RoomInquiry" @close-dialog="useSubComponents('RoomInquiry', false)" />
@@ -202,6 +218,7 @@
 	const patientStore = usePatientStore();
 
 	import ReusableTable from "~/components/reusables/ReusableTable.vue";
+	import PatientForAdmissionWindow from "~/components/reusables/PatientForAdmissionWindow.vue";
 	const {
 		PatientProfile,
 		RoomInquiry,
@@ -250,12 +267,27 @@
 	const currentTab = ref(1);
 	const showTabs = ref(true);
 	const columns = ref([]);
+	const patient_for_admission_dialog = ref(false);
+	const count = ref(0);
+
+	const handlePatientForAdmission = () => {
+		patient_for_admission_dialog.value = true;
+	};
+
+	const closePatientForAdmission = (value) => {
+		patient_for_admission_dialog.value = value;
+	};
+
+	const handlegetPatientCount = (value) => {
+		count.value = value;
+	};
+	
 	const tableTabs = ref([
 	{
 		label: "Registered",
 		title: "Registered patients today.",
 		value: 1,
-		endpoint: useApiUrl() + "/get-inpatient",
+		endpoint: useLaravelAPI() + "/get-inpatient",
 		columns: [
 			{
 				title: "",
@@ -323,7 +355,7 @@
 		label: "Revoked",
 		title: "Revoked patients today.",
 		value: 2,
-		endpoint: useApiUrl() + "/get-revoked-inpatient",
+		endpoint: useLaravelAPI() + "/get-revoked-inpatient",
 		columns: [
 			{
 				title: "",
@@ -417,31 +449,35 @@
 	const serverItems = ref([]);
 
 	const handleRefresh = () => {
-	loadItems();
+		loadItems();
 	};
+
 	const handleSearch = (keyword) => {
-	loadItems(null, keyword);
+		loadItems(null, keyword);
 	};
+
 	const openFilterOptions = () => {
-	setTimeout(() => {
-		open_filter_options.value = true;
-	}, 100);
+		setTimeout(() => {
+			open_filter_options.value = true;
+		}, 100);
 	};
+
 	const closeFilterOptions = () => {
-	open_filter_options.value = false;
+		open_filter_options.value = false;
 	};
+
 	const applyFilters = () => {
-	console.log('Filters applied:', filter.value);
+		console.log('Filters applied:', filter.value);
 	};
+
 	const selectedUser = (item) => {
-		console.log('Datails Info : ', item);
 		isSelectedUser.value = true;
 		isrefresh.value = false;
-		selectedRowDetails.value.id = ""; //clear state id for subcomponents ?id=''
-		selectedRowDetails.value.role_id = ""; //clear state id for subcomponents ?id=''
+		selectedRowDetails.value.id = ""; 
+		selectedRowDetails.value.role_id = "";
 		selectedRowDetails.value = Object.assign({}, item);
 		if(item){
-			selectedRowDetails.value =  Object.assign({}, item);; //set state id for subcomponents ?id=item.id value
+			selectedRowDetails.value =  Object.assign({}, item);
 			isrefresh.value = true;
 			isSelectedUser.value = false;
 		}else{
@@ -449,24 +485,33 @@
 			isSelectedUser.value = true;
 		}
 	};
+
 	const handleView = (clickedOption) => {
-	clicked_option.value = clickedOption;
-	form_dialog.value = true;
+		clicked_option.value = clickedOption;
+		form_dialog.value = true;
 	};
+
 	const handleEdit = (clickedOption) => {
-	clicked_option.value = clickedOption;
-	form_dialog.value = true;
+		clicked_option.value = clickedOption;
+		form_dialog.value = true;
 	};
+
 	const handleNew = (clickedOption) => {
-	clicked_option.value = clickedOption;
-	central_form_dialog.value = true;
+		clicked_option.value = clickedOption;
+		central_form_dialog.value = true;
 	};
+
 	const closeCentralFormDialog = () => {
-	central_form_dialog.value = false;
-	search_payload.value = {};
-	search_results.value = [];
-	selectedPatient.value = {};
+		central_form_dialog.value = false;
+		search_payload.value = {};
+		search_results.value = [];
+		selectedPatient.value = {};
 	};
+
+	const openInPatientFormDialog = () => {
+		form_dialog.value = true;
+	};
+
 	const openAddFormDialog = (type) => {
 		if (type === 'new') {
 			form_dialog.value = true;
@@ -481,14 +526,17 @@
 			}
 		} 
 	};
+
 	const closeAddFormDialog = () => {
 		form_dialog.value = false;
 		search_payload.value = {};
 		search_results.value = [];
 	};
+
 	const selectedInpatient = (item) => {
 		selectedPatient.value = item;
 	};
+
 	const SearchInpatient = async (payload) => {
 		search_payload.value.isloading = true;
 		let lastname = payload.lastname || "";
@@ -498,33 +546,34 @@
 		let params = "page=1&per_page=10&lastname=" + lastname + "&firstname=" + firstname + "&middlename=" + middlename + "&birthdate=" + birthdate;
 
 		const response = await fetch(
-			useApiUrl() + "/search-patient-master" + "?" + params || "",
+			useLaravelAPI() + "/search-patient-master" + "?" + params || "",
 			{
 			headers: {
 				Authorization: `Bearer ` + useToken(),
 			},
 			}
 		);
+		if (response) {
+			const data = await response.json();
+			search_results.value = data;
+			search_payload.value.isloading = false;
+		}
+	};
+
+	const response = await fetch(
+		useLaravelAPI() + "/search-patient-master" + "?" + params || "",
+		{
+			headers: {
+				Authorization: `Bearer ` + useToken(),
+			},
+		}
+	);
+
 	if (response) {
 		const data = await response.json();
 		search_results.value = data;
 		search_payload.value.isloading = false;
 	}
-	};
-
-  const response = await fetch(
-    useLaravelAPI() + "/search-patient-master" + "?" + params || "",
-    {
-      headers: {
-        Authorization: `Bearer ` + useToken(),
-      },
-    }
-  );
-  if (response) {
-    const data = await response.json();
-    search_results.value = data;
-    search_payload.value.isloading = false;
-  }
 
 	const ViewSummary = () => {
 		open_summary_modal.value = true;
@@ -534,31 +583,31 @@
 	}
 
 	const loadItems = async (options = null, searchkeyword = null) => {
-	try {
-		loading.value = true;
-		const keyword = searchkeyword || "";
-		params.value = options
-			? `page=${options.page}&per_page=${options.itemsPerPage}&keyword=${options.keyword}`
-			: `page=1&per_page=50&keyword=${keyword}`;
-			const currentTabInfo = tableTabs.value.find((tab) => tab.value === currentTab.value);
-		const response = await fetch(currentTabInfo?.endpoint + "?" + params.value || "", {
-		headers: {
-			Authorization: `Bearer `+ useToken(),
-		},
-		});
-		const data = await response.json();
-			if (data && data.data) {
-				updateTotalItems(data.total);
-				updateServerItems(data.data);
-			} else {
-				console.log("Data not found or response error");
-			}
-	} catch (error) {
-		console.error("Error fetching data:", error);
-		loading.value = false;
-	} finally {
-		loading.value = false;
-	}
+		try {
+			loading.value = true;
+			const keyword = searchkeyword || "";
+			params.value = options
+				? `page=${options.page}&per_page=${options.itemsPerPage}&keyword=${options.keyword}`
+				: `page=1&per_page=50&keyword=${keyword}`;
+				const currentTabInfo = tableTabs.value.find((tab) => tab.value === currentTab.value);
+			const response = await fetch(currentTabInfo?.endpoint + "?" + params.value || "", {
+			headers: {
+				Authorization: `Bearer `+ useToken(),
+			},
+			});
+			const data = await response.json();
+				if (data && data.data) {
+					updateTotalItems(data.total);
+					updateServerItems(data.data);
+				} else {
+					console.log("Data not found or response error");
+				}
+		} catch (error) {
+			console.error("Error fetching data:", error);
+			loading.value = false;
+		} finally {
+			loading.value = false;
+		}
 	};
 
 	const handleLoadPatient = (patientDetails) => {
@@ -567,28 +616,86 @@
 	}
 
 	const handleTabChange = (tabValue) => {
-	selectedRowDetails.value.id = "";
-	payload.value = Object.assign({}, {});
-	currentTab.value = tabValue;
-	columns.value = tableTabs.value.find((tab) => tab.value === tabValue).columns;
-	const currentTabInfo = tableTabs.value.find((tab) => tab.value === tabValue);
-	pageTitle.value = currentTabInfo.title || "";
-	loadItems();
+		selectedRowDetails.value.id = "";
+		payload.value = Object.assign({}, {});
+		currentTab.value = tabValue;
+		columns.value = tableTabs.value.find((tab) => tab.value === tabValue).columns;
+		const currentTabInfo = tableTabs.value.find((tab) => tab.value === tabValue);
+		pageTitle.value = currentTabInfo.title || "";
+		loadItems();
 	}
 
 	const updateTotalItems = (newTotalItems) => {
-	totalItems.value = newTotalItems;
+		totalItems.value = newTotalItems;
 	};
 
 	const updateServerItems = (newServerItems) => {
-	serverItems.value = newServerItems;
+		serverItems.value = newServerItems;
 	};
 
 	handleTabChange(currentTab.value);
+
+	const handlePatientCount = async () => {
+		loading.value = true;
+		let response;
+        try {
+        	response = await useMethod("get", "patient-for-admission", "", "");
+            if (response) {
+                const data = Array.isArray(response) ? response : response.data;
+				count.value = data.length;
+            } else {
+                useSnackbar(true, "error", "No data found.");
+            }
+        } catch (error) {
+            useSnackbar(true, "error", "Failed to load patient list.");
+        } finally {
+            loading.value = false;
+        }
+	}
+
+	onMounted(() => {
+		handlePatientCount();
+	});
+
 </script>
 
 <style>
-.v-data-table {
-  overflow-x: auto;
-}
+	.v-data-table {
+		overflow-x: auto;
+	}
+
+	.button-container {
+		text-align: center;
+	}
+
+	.blink-button {
+		padding: 12px 24px;
+		font-size: 16px;
+		color: white;
+		background-color: #673AB7;
+		border: none;
+		border-radius: 8px;
+		cursor: pointer;
+		outline: none;
+		font-weight: bold;
+		animation: blink 1s infinite;
+	}
+
+	@keyframes blink {
+		0% {
+			opacity: 1;
+		}
+		50% {
+			opacity: 0;
+		}
+		100% {
+			opacity: 1;
+		}
+	}
+
+	.blink-button:hover {
+		animation: none; 
+		background-color: #5E35B1;
+	}
+
 </style>

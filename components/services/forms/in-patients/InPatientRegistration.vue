@@ -80,6 +80,9 @@
                     <v-btn v-if="clicked_option === 'new' || clicked_option === 'edit'" class="bg-primary text-white" type="submit">
                         {{ clicked_option === 'new' ? 'Register Patient' : 'Update Patient' }}
                     </v-btn>
+                    <v-btn v-else class="bg-primary text-white" type="submit">
+                        Register Patient
+                    </v-btn>
                 </v-card-actions>
             </v-card>
         </v-form>
@@ -109,6 +112,7 @@
         }
     });
 
+    const isForDirectAdmission = ref(false);
     const isVisible = ref(false);
     const value = ref(0);
     const handleLoader = (status) => {
@@ -278,6 +282,7 @@
 
     watchEffect(() => {
         if (selectedRowDetails.value && selectedRowDetails.value.id) {
+            console.log('naa ko sa if selectedRowDetails.value');
             payload.value = Object.assign({}, selectedRowDetails.value);
             payload.value.sex_id = parseInt(selectedRowDetails.value.sex_id) ? parseInt(selectedRowDetails.value.sex_id) : '';
             payload.value.suffix_id = parseInt(selectedRowDetails.value.suffix_id) ? parseInt(selectedRowDetails.value.suffix_id) : '';
@@ -320,9 +325,15 @@
             payload.value.registry_remarks = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry.registry_remarks ? selectedRowDetails.value.patient_registry.registry_remarks : '';
         } else {
             if (patientStore.selectedPatient && patientStore.selectedPatient.id != null) { 
-                // console.log('Selected Patient : ', patientStore.selectedPatient.patient_Id)
                 payload.value                   = Object.assign({}, patientStore.selectedPatient);
+                if(parseInt(patientStore.selectedPatient.patient_registry[0].mscAccount_Trans_Types) === 5) {
+                    payload.value.registrationFrom = "inpatient";
+                    payload.value.old_case_No = patientStore.selectedPatient.patient_registry[0].case_No;
+                    payload.value.old_HospNum = patientStore.selectedPatient.patient_registry[0].case_No.replace(/\s+/g, '') + "B";
+                    payload.value.old_registry_id = patientStore.selectedPatient.patient_registry[0].id;
+                }
                 payload.value.patient_Id        = patientStore.selectedPatient.patient_Id ? patientStore.selectedPatient.patient_Id : '';
+                payload.value.case_No           = patientStore.selectedPatient.patient_registry && patientStore.selectedPatient.patient_registry[0].case_No ? patientStore.selectedPatient.patient_registry[0].case_No : '';
                 payload.value.sex_id            = parseInt(patientStore.selectedPatient.sex_id) ? parseInt(patientStore.selectedPatient.sex_id) : '';
                 payload.value.suffix_id         = parseInt(patientStore.selectedPatient.suffix_id) ? parseInt(patientStore.selectedPatient.suffix_id) : '';
                 payload.value.civilstatus_id    = parseInt(patientStore.selectedPatient.civilstatus_id) ? parseInt(patientStore.selectedPatient.civilstatus_id) : '';
@@ -350,7 +361,7 @@
                 }
                 payload.value.selectedConsultant    = Consultant.value;
                 payload.value.registry_remarks      = patientStore.selectedPatient.patient_registry_details && patientStore.selected
-            }
+            } 
         }
     });
 </script>
