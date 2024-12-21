@@ -82,7 +82,7 @@
     ]);
 
     const pendingData = ref([
-  
+
         { title: "Description",         key: "description",     sortable: false },
         { title: 'Quantity',            key: 'quantity',        sortable: false },
         { title: 'Department',          key: 'department',      sortable: false },
@@ -108,15 +108,15 @@
         cashAssessnentChargeList.value  = [];
         let response;
         try {
-           response = await useMethod("get", "get-charges-list/", "", case_No)
-           const data = Array.isArray(response) ? response : response.data;
+            response = await useMethod("get", "get-charges-list/", "", case_No)
+            const data = Array.isArray(response) ? response : response.data;
 
-           if(data && Array.isArray(data) && data.length > 0) {
-               if(accountType !== 'Self Pay') {
+            if(data && Array.isArray(data) && data.length > 0) {
+                if(accountType !== 'Self Pay') {
                     const filteredProcessedData  = data.filter( 
                         item => item.record_Status === 'W' || item.revenue_Id.trim() === 'ER'
                     );
-                   
+                
                     processedChargeList.value = filteredProcessedData.map(item => ({
                         description:    item.description !== null ? toTitleCase(item.description) : '',
                         department:     toTitleCase(item.department),

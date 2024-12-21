@@ -207,6 +207,79 @@
 				</span>
 			</template>
 		</ReusableTable>
+		<v-dialog v-model="show_has_unpaid_message" persistent max-width="400">
+			<v-card
+				color="red"
+			>
+				<v-card-title
+					class="bg-error text-white"
+				>
+				Alert Message
+				</v-card-title>
+				<v-card-text>
+					<v-alert
+						color="red"
+						dismissible
+						elevation="24"
+						icon="mdi-alert-circle"
+					>
+						<div class="note">
+							<span>Note:</span>
+							<p>
+								You can't send discharge order at this time. There are still pending requests.
+								Please cancel pending requests first or notify concered cost
+								centers to process requests for this patient.
+							</p>
+						</div>
+					</v-alert>
+				</v-card-text>
+				<v-card-actions
+					class="bg-error text-white"
+					elevation="24"
+				>
+					<v-spacer></v-spacer>
+					<v-btn 
+						bg-color="primary" text
+						@click="CloseAlertMessageDialog">Close</v-btn>
+				</v-card-actions>
+			</v-card>
+		</v-dialog>
+		<v-dialog v-model="show_istag_as_mgh_message" persistent max-width="400">
+			<v-card
+				color="red"
+			>
+				<v-card-title
+					class="bg-error text-white"
+				>
+				Alert Message
+				</v-card-title>
+				<v-card-text>
+					<v-alert
+						border="left"
+						color="red"
+						dismissible
+						elevation="24"
+						icon="mdi-alert-circle"
+					>
+					<div class="note">
+						<span>Note:</span>
+						<p>
+							This patient has already been tagged for MayGoHome or may already have a discharge order. Thank you.
+						</p>
+					</div>
+					</v-alert>
+				</v-card-text>
+				<v-card-actions
+					class="bg-error text-white"
+					elevation="24"
+				>
+					<v-spacer></v-spacer>
+					<v-btn 
+						bg-color="primary" text
+						@click="CloseAlertMessageDialog">Close</v-btn>
+				</v-card-actions>
+			</v-card>
+		</v-dialog>
 	</v-card>
 
 	<CentralLookUpForm 
@@ -257,18 +330,14 @@
 		</v-card-actions>
 		</v-card>
 	</v-menu>
-
-
-
-  <EmergencyRegistration :clicked_option="clicked_option" :form_dialog="form_dialog" @patient-registered="loadPatient" @close-dialog="closeAddFormDialog" />
-  
+	<EmergencyRegistration :clicked_option="clicked_option" :form_dialog="form_dialog" @patient-registered="loadPatient" @close-dialog="closeAddFormDialog" />
 	<!-- Emergency Sub components -->
 	<PatientProfileDialog :show="PatientProfile" :form_payload="payload" @close-dialog="useSubComponents('PatientProfile', false)" />
 	<SuspendDialog :show="Suspend" :form_type="form_type" @close-dialog="useSubComponents('Suspend', false)" />
 	<RequisitionsDialog :show="Requisitions" :form_type="form_type" @close-dialog="handleClose('Requisitions')" />
 	<PostChargesDialog :show="PostCharges" @close-dialog="useSubComponents('PostCharges', false)" />
-  	<ERPostMedicineSuppliesDialog :show="ERPostMedicineSupplies" @close-dialog="useSubComponents('ERPostMedicineSupplies', false)" />
-  	<!-- <NurseActivityDialog :show="NurseActivity" :form_type="form_type" @close-dialog="useSubComponents('NurseActivity', false)" />  -->
+	<ERPostMedicineSuppliesDialog :show="ERPostMedicineSupplies" @close-dialog="useSubComponents('ERPostMedicineSupplies', false)" />
+	<!-- <NurseActivityDialog :show="NurseActivity" :form_type="form_type" @close-dialog="useSubComponents('NurseActivity', false)" />  -->
 	<!-- <PostCorporatePackageDialog :show="PostCorporateMedicalPackage" @close-dialog="useSubComponents('PostCorporateMedicalPackage', false)"/>
 	<PostDiagnosticPackageDialog :show="PostDiagnosticMedicalPackage" @close-dialog="useSubComponents('PostDiagnosticMedicalPackage', false)"/> 
 	<PostAdjustmentDialog :show="PostAdjustments" @close-dialog="useSubComponents('PostAdjustments', false)" />
@@ -278,7 +347,7 @@
 	<ViewExamUpshotDialog :show="ViewExaminationUpshot" @close-dialog="useSubComponents('ViewExaminationUpshot', false)" />
 	<ApplyPromissoryNoteDialog :show="ApplyPromissoryNote" @close-dialog="useSubComponents('ApplyPromissoryNote', false)" />
 	<ApplyMedicalPackageDialog :show="ApplyMedicalPackage" @close-dialog="useSubComponents('ApplyMedicalPackage', false)" /> -->
-	<TagAsMghDialog :show="TagAsMgh" :form_type="form_type" @patient-registered="loadPatient" @close-dialog="useSubComponents('TagAsMgh', false) " />
+	<TagAsMghDialog :show="TagAsMgh" :form_type="form_type" @patient-registered="loadPatient" @has-unpaid-charges="handleAlert" @close-dialog="useSubComponents('TagAsMgh', false) " />
 	<UntagAsMghDialog :show="UntagAsMgh" @patient-registered="loadPatient" @close-dialog="useSubComponents('UntagAsMgh', false)" />
 	<DischargeDialog :show="Discharge" :form_type="form_type" @patient-registered="loadPatient" @close-dialog="useSubComponents('Discharge', false)" />
 	<DischargeInstructionDialog :show="DischargeInstruction" @close-dialog="useSubComponents('DischargeInstruction', false)" />
@@ -302,7 +371,6 @@
 	import { usePatientStore } from '@/store/selectedPatient';
 
 	const patientStore = usePatientStore();
-	const patientDataStore = loadPatientDataStore();
 
 	import ReusableTable from "~/components/reusables/ReusableTable.vue";
 	import Snackbar from "~/components/reusables/snackbar.vue";
@@ -360,7 +428,27 @@
 	const selectedPatient = ref({});
 	const open_revoke_form = ref(false);
 	const open_unrevoke_form = ref(false);
+	const hasUnpaidCharges = ref(false); 
+	const show_has_unpaid_message = ref(false);
+	const show_istag_as_mgh_message = ref(false);
+	const istagmgh = ref(false);
 
+	const handleAlert = (hasPendingCharges, isTagAsMgh) => {
+		hasUnpaidCharges.value = hasPendingCharges;
+		istagmgh.value = isTagAsMgh;
+		if (hasPendingCharges && !isTagAsMgh) {
+			show_has_unpaid_message.value = true;
+		}
+		if (isTagAsMgh) {
+			show_istag_as_mgh_message.value = true;
+		}
+	};
+
+	const CloseAlertMessageDialog = () => {
+		show_has_unpaid_message.value = false;
+		hasUnpaidCharges.value = false;
+		istagmgh.value = false;
+	};
 	const tableTabs = ref([
 		{
 			label: "Registered",
@@ -786,47 +874,47 @@ const openAddFormDialog = (type) => {
         // if(curDate == useDateMMDDYYY(patientStore?.selectedPatient?.updated_at)) {
         //     return useSnackbar(true, 'error', 'Patient is already registered.')
         // } else {
-          patientStore.setSelectedPatient(selectedPatient.value);
-          if (patientStore.selectedPatient && patientStore.selectedPatient.id) {  
-              form_dialog.value = true;
-              closeCentralFormDialog();
-          } else {
-              return useSnackbar(true, "error", "No item selected.");
-          }
+		patientStore.setSelectedPatient(selectedPatient.value);
+		if (patientStore.selectedPatient && patientStore.selectedPatient.id) {  
+			form_dialog.value = true;
+			closeCentralFormDialog();
+		} else {
+			return useSnackbar(true, "error", "No item selected.");
+		}
         // }
     } 
 };
 const closeAddFormDialog = () => {
-  form_dialog.value = false;
-  search_payload.value = {};
-  search_results.value = [];
+	form_dialog.value = false;
+	search_payload.value = {};
+	search_results.value = [];
 };
 
 const selectedEmergencyPatient = (item) => {
-  selectedPatient.value = item;
+	selectedPatient.value = item;
 };
 
 const SearchEmergencyPatient = async (payload) => {
-  search_payload.value.isloading = true;
-  let lastname = payload.lastname || "";
-  let firstname = payload.firstname || "";
-  let middlename = payload.middlename || "";
-  let birthdate = payload.birthdate || "";
-  let params = "page=1&per_page=10&lastname=" + lastname + "&firstname=" + firstname + "&middlename=" + middlename + "&birthdate=" + birthdate;
+	search_payload.value.isloading = true;
+	let lastname = payload.lastname || "";
+	let firstname = payload.firstname || "";
+	let middlename = payload.middlename || "";
+	let birthdate = payload.birthdate || "";
+	let params = "page=1&per_page=10&lastname=" + lastname + "&firstname=" + firstname + "&middlename=" + middlename + "&birthdate=" + birthdate;
 
-  const response = await fetch(
-    useLaravelAPI() + "/search-patient-master" + "?" + params || "",
-    {
-      headers: {
-        Authorization: `Bearer ` + useToken(),
-      },
-    }
-  );
-  if (response) {
-    const data = await response.json();
-    search_results.value = data;
-    search_payload.value.isloading = false;
-  }
+	const response = await fetch(
+		useLaravelAPI() + "/search-patient-master" + "?" + params || "",
+	{
+		headers: {
+		Authorization: `Bearer ` + useToken(),
+		},
+	}
+	);
+	if (response) {
+		const data = await response.json();
+		search_results.value = data;
+		search_payload.value.isloading = false;
+	}
 };
 
 // const RevokeUser = async () => {
@@ -839,26 +927,26 @@ const SearchEmergencyPatient = async (payload) => {
 // };
 
 const RevokeUser = () => {
-  open_revoke_form.value = true;
+	open_revoke_form.value = true;
 };
 
 const closeRevokeUser = () => {
-  open_revoke_form.value = false;
+	open_revoke_form.value = false;
 };
 
 const UnrevokeUser = () => {
-  open_unrevoke_form.value = true;
+	open_unrevoke_form.value = true;
 }
 const closeUnrevokeUser = () => {
-  open_unrevoke_form.value = false;
+	open_unrevoke_form.value = false;
 }
 
 
 const ViewSummary = () => {
-  open_summary_modal.value = true;
+	open_summary_modal.value = true;
 }
 const closeViewSummary = () => {
-  open_summary_modal.value = false;
+	open_summary_modal.value = false;
 }
 
 
@@ -885,9 +973,9 @@ const loadItems = async (options = null, searchkeyword = null) => {
 		}
 	} catch (error) {
     console.error("Error fetching data:", error);
-  } finally {
-    loading.value = false;
-  }
+	} finally {
+		loading.value = false;
+	}
 };
 
 	// const RevokeUser = async () => {
@@ -901,26 +989,26 @@ const loadItems = async (options = null, searchkeyword = null) => {
 
 
 const handleTabChange = (tabValue) => {
-  selectedRowDetails.value.id = "";
-  payload.value = Object.assign({}, {});
-  currentTab.value = tabValue;
-  columns.value = tableTabs.value.find((tab) => tab.value === tabValue).columns;
-  const currentTabInfo = tableTabs.value.find((tab) => tab.value === tabValue);
-  pageTitle.value = currentTabInfo.title || "";
-  loadItems();
+	selectedRowDetails.value.id = "";
+	payload.value = Object.assign({}, {});
+	currentTab.value = tabValue;
+	columns.value = tableTabs.value.find((tab) => tab.value === tabValue).columns;
+	const currentTabInfo = tableTabs.value.find((tab) => tab.value === tabValue);
+	pageTitle.value = currentTabInfo.title || "";
+	loadItems();
 }
 
 const handleClose = (dialogName) => {
-  useSubComponents(dialogName, false);
-  loadItems();
+	useSubComponents(dialogName, false);
+	loadItems();
 }
 
 const updateTotalItems = (newTotalItems) => {
-  totalItems.value = newTotalItems;
+	totalItems.value = newTotalItems;
 };
 
 const updateServerItems = (newServerItems) => {
-  serverItems.value = newServerItems;
+	serverItems.value = newServerItems;
 };
 
 
@@ -928,7 +1016,16 @@ const updateServerItems = (newServerItems) => {
 </script>
 
 <style>
-.v-data-table {
-  overflow-x: auto;
-}
+	.v-data-table {
+		overflow-x: auto;
+	}
+	.note {
+        padding: 20 0px !important;
+    }
+    .note span {
+        font-size: 20px;
+        color: #ffffe0;
+        font-weight: bold;
+        font-style: italic;
+    }
 </style>

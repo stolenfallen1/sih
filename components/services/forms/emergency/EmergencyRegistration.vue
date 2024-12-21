@@ -357,7 +357,7 @@
             payload.value.pulseRate                     = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0].pulseRate ? selectedRowDetails.value.patient_registry[0].pulseRate : '';
             payload.value.respiratoryRate               = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0].respiratoryRate ? selectedRowDetails.value.patient_registry[0].respiratoryRate : '';
             payload.value.oxygenSaturation              = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0].oxygenSaturation ? selectedRowDetails.value.patient_registry[0].oxygenSaturation : '';
-           
+
             // For HMO GUARANTORS
             const Guarantor = ref([]);
             if (selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0].guarantor_Id != null) {
