@@ -203,13 +203,15 @@ const handleSearch = () => {
 
 const handleSelectedInput = (selected) => {
 	let seletedrow = props.search_results.find(item=>item.id === selected[0]);
+	console.log('SELECTED ROW', seletedrow);
     selectedRows.value = [];
     const index = selectedRows.value.indexOf(selected[0]);
     selectedRows.value = [];
     let item = seletedrow;
 	console.log('HOY NAA KO DRE', item);
     if (index === -1) {
-        selectedRows.value.push(selected[0]);
+        // selectedRows.value.push(selected[0]);
+		selectedRows.value.push(seletedrow);
     } else {
         item = "";
         selectedRows.value.splice(index, 1);

@@ -1,5 +1,19 @@
 <template>
-     <v-dialog v-if="isDischarge !== null && isTagAsMgh !== null" :model-value="show" rounded="lg" scrollable @update:model-value="closeDialog" max-width="400px">
+    <v-dialog v-if="isDischarge !== null && isTagAsMgh !== null" :model-value="show" rounded="lg" scrollable @update:model-value="closeDialog" max-width="400px">
+    <v-alert
+        border="left"
+        color="red"
+        dismissible
+        elevation="24"
+        icon="mdi-alert-circle"
+    >
+        <div class="note">
+            <span>Note:</span>
+            <p class="message">Can't Untag May Go Home (MGH) for patients that have been already discharged.</p>
+        </div>
+    </v-alert>
+    </v-dialog>
+    <v-dialog v-if="isDischarge === null && isTagAsMgh === null" :model-value="show" rounded="lg" scrollable @update:model-value="closeDialog" max-width="400px">
         <v-alert
             border="left"
             color="red"
@@ -7,26 +21,12 @@
             elevation="24"
             icon="mdi-alert-circle"
         >
-           <div class="note">
-                <span>Note:</span>
-                <p class="message">Can't Untag May Go Home (MGH) for patients that have been already discharged.</p>
-           </div>
-        </v-alert>
-     </v-dialog>
-     <v-dialog v-if="isDischarge === null && isTagAsMgh === null" :model-value="show" rounded="lg" scrollable @update:model-value="closeDialog" max-width="400px">
-        <v-alert
-            border="left"
-            color="red"
-            dismissible
-            elevation="24"
-            icon="mdi-alert-circle"
-        >
-           <div class="note">
+            <div class="note">
                 <span>Note:</span>
                 <p class="message">Can't Untag May Go Home (MGH) for patients that have not been tagged yet for May Go Home (MGH).</p>
-           </div>
+            </div>
         </v-alert>
-     </v-dialog>
+    </v-dialog>
     <v-dialog v-if="isDischarge === null && isTagAsMgh !== null" :model-value="show" rounded="lg" scrollable @update:model-value="closeDialog" max-width="600px">
         <form @submit.prevent="openConfirmDialog">        
             <v-card rounded="lg">
@@ -132,6 +132,7 @@
 
     const isDischarge = ref('');
     const isTagAsMgh = ref('')
+    
     onUpdated(() => {
         if (selectedRowDetails.value && selectedRowDetails.value.id) {
             if (payload.value.id !== selectedRowDetails.value.id) { 
@@ -142,7 +143,7 @@
 
                 isDischarge.value   = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0].discharged_Date;
                 isTagAsMgh.value    = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0].mgh_Datetime;
- 
+
             }
         } 
     })

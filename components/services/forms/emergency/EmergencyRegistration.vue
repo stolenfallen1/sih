@@ -254,28 +254,29 @@
             if (payload.value.id) {
                 response = await useMethod("put", "update-patient", payload.value, "", payload.value.patient_Id);
                 if (response) {
-                    useSnackbar(true, "green", response.message);
-                    patientDetail.value = response.data; 
-                    emits('patient-registered', patientDetail.value);
+                    showSuccessResponse(response);
                 }
             } else {
-                console.log('Payload : ', payload.value);
                 response = await useMethod("post", "register-patient", payload.value);
                 if (response) {
-                    useSnackbar(true, "green", response.message);
-                    payload.value = {};
-                    patientDetail.value = response.data;
-                    emits('patient-registered', patientDetail.value);
+                    showSuccessResponse(response);
                 }
             }
         } catch (error) {
-            console.error("Error in submission:", error);
             useSnackbar(true, "red", error.message || 'An error occurred');
         } finally {
             isLoading.value = false;
-            closeDialog();
         }
     };
+
+    const showSuccessResponse = (response) => {
+        useSnackbar(true, "green", response.message);
+        payload.value = {};
+        patientDetail.value = response.data;
+        emits('patient-registered', patientDetail.value);
+        closeConfirmDialog();
+        closeDialog();
+    }
 
     onUpdated(() => {
         if (selectedRowDetails.value && selectedRowDetails.value.id) {

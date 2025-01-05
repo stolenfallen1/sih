@@ -9,6 +9,10 @@
 			>
 			{{count}} Patient For Admission 
 			</v-btn>
+			<span 
+				class="mdi mdi-sync rotating-icon"
+				:class="{ 'paused': !isLoading }"
+				></span>
 			<v-spacer></v-spacer>
 			<v-btn
 				@click="handleView('view')"
@@ -174,7 +178,7 @@
 		</v-card>
 	</v-menu>
 
-	<InPatientRegistration :clicked_option="clicked_option" :form_dialog="form_dialog" @patient-registered="handleLoadPatient" @close-dialog="closeAddFormDialog" />
+	<InPatientRegistration :clicked_option="clicked_option" :form_dialog="form_dialog" @open-form="openAddFormDialog" @patient-registered="handleLoadPatient" @close-dialog="closeAddFormDialog" />
 
 	<!-- In-patients Sub components -->
 	<PatientProfileDialog :show="PatientProfile" :form_payload="payload" @close-dialog="useSubComponents('PatientProfile', false)" />
@@ -518,6 +522,7 @@
 			closeCentralFormDialog();
 		} else if (type === 'old') {
 			patientStore.setSelectedPatient(selectedPatient.value);
+			console.log('SELECTED PATIENT:', patientStore.selectedPatient);
 			if (patientStore.selectedPatient && patientStore.selectedPatient.id) {
 				form_dialog.value = true;
 				closeCentralFormDialog();
@@ -553,6 +558,7 @@
 			},
 			}
 		);
+
 		if (response) {
 			const data = await response.json();
 			search_results.value = data;
@@ -634,9 +640,10 @@
 	};
 
 	handleTabChange(currentTab.value);
-
+	
+	const isLoading = ref(false);
 	const handlePatientCount = async () => {
-		loading.value = true;
+		isLoading.value = true;
 		let response;
         try {
         	response = await useMethod("get", "patient-for-admission", "", "");
@@ -649,12 +656,21 @@
         } catch (error) {
             useSnackbar(true, "error", "Failed to load patient list.");
         } finally {
-            loading.value = false;
+            isLoading.value = false;
         }
 	}
 
+	let interval = null; 
+
 	onMounted(() => {
 		handlePatientCount();
+		interval = setInterval(async () => {
+			await handlePatientCount();
+		}, 5000);
+	});
+
+	onUnmounted(() => {
+		clearInterval(interval);
 	});
 
 </script>
@@ -698,4 +714,22 @@
 		background-color: #5E35B1;
 	}
 
+	@keyframes rotate {
+		0% {
+			transform: rotate(0deg);
+		}
+		100% {
+			transform: rotate(360deg);
+		}
+	}
+
+	.rotating-icon {
+		display: inline-block;
+		animation: rotate 5s linear infinite; 
+		font-size: 30px !important;
+	}
+
+	.rotating-icon.paused {
+		animation-play-state: paused;
+	}
 </style>
