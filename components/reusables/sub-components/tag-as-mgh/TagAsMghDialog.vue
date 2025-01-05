@@ -11,9 +11,17 @@
             type: String,
             default: () => '',
         },
+        show_has_unpaid_message: {
+            type: Boolean,
+            default: () => false,
+        },
+        show_istag_as_mgh_message: {
+            type: Boolean,
+            default: () => false,
+        },
     });
 
-    const emits = defineEmits(['close-dialog', 'has-unpaid-charges', 'patient-registered']);
+    const emits = defineEmits(['close-dialog', 'check-pending-charges', 'patient-registered']);
 
     const payload = ref([{
         mgh_queue_no: 0,
@@ -181,6 +189,12 @@
 
     const closeDialog = () => {
         emits('close-dialog');
+        emits('patient-registered');
+    }
+
+    const CloseAlertMessageDialog = () => {
+        show_has_unpaid_message.value = false;
+        closeDialog();
     }
 
     const onSubmit = async () => {
@@ -230,18 +244,20 @@
         }
     }
 
-    watch(() => payload.value.mscDisposition_Id, (value) => {
-        updateErResult();
-        if (parseInt(value) !== 10){
-            hasUnpaidCharges.value = checkPendingCharges(case_No.value, guarantor_Name.value);
-            if(hasUnpaidCharges.value) {
-                emits('close-dialog');
-                emits('has-unpaid-charges', hasUnpaidCharges.value, istagmgh.value);
+    const show_has_unpaid_message = ref(false);
+    watch(
+        () => payload.value.mscDisposition_Id,
+        async (newValue) => {
+            if (newValue === undefined || isNaN(parseInt(newValue))) return;
+            updateErResult();
+            if (parseInt(newValue) !== 10) {
+                hasUnpaidCharges.value = await checkPendingCharges(case_No.value, guarantor_Name.value);
+                show_has_unpaid_message.value = hasUnpaidCharges.value;
+            } else {
+                show_has_unpaid_message.value = false;
             }
-        } else {
-            hasUnpaidCharges.value = false;
         }
-    });
+    );
 
     const startLoader = () => {
         clearInterval(interval.value);
@@ -281,7 +297,6 @@
                             ornumber: item.ORNumber,
                             code: item.revenue_Id
                         }));
-                        console.log('Checked Data Charges : ',  check_charges_data.value);
                         if(accountType === 'Self Pay') {
                             hasUnpaidCharges.value = check_charges_data.value.some(item => 
                                 item.status === "X" || 
@@ -304,7 +319,6 @@
                 hasUnpaidCharges.value = false; 
             }
         } catch (error) {
-            console.error("Error fetching charges data:", error);
             hasUnpaidCharges.value = false;
         } finally {
             pageLoader.value = false;
@@ -321,13 +335,14 @@
         getErResult();
         getDeathTypes();
         getPatientStatus();
-        startLoader();
     });
 
     onBeforeUnmount(() => {
         stopLoader();
     })
 
+    const isDischarge = ref('');
+    const isTagAsMgh = ref('')
     watch(() => selectedRowDetails.value, async (newRow, oldRow) => {
             if (newRow && newRow.id && (!oldRow || newRow.id !== oldRow.id)) {
                 payload.value = {
@@ -343,6 +358,11 @@
                 };
                 case_No.value = newRow.patient_registry?.[0]?.case_No;
                 guarantor_Name.value = newRow.patient_registry?.[0]?.guarantor_Name;
+
+                isDischarge.value   = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0].discharged_Date;
+                isTagAsMgh.value    = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0].mgh_Datetime;
+                console.log('IS DISCHARGE : ', isDischarge.value);
+                console.log('IS TAG AS MGH : ', isTagAsMgh.value);
             }
         },
         { immediate: true } 
@@ -351,11 +371,93 @@
 
 <template>
     <v-dialog 
+        v-if="isDischarge !== null && isTagAsMgh !== null"
+        :model-value="show" 
+        rounded="lg" 
+        scrollable 
+        @update:model-value="closeDialog" 
+        max-width="400px"
+        >
+        <v-card
+            color="red"
+            >
+            <v-card-title
+                class="bg-error text-white"
+                >
+                Alert Message
+            </v-card-title>
+            <v-card-text>
+                <v-alert
+                    border="left"
+                    color="red"
+                    dismissible
+                    elevation="24"
+                    icon="mdi-alert-circle"
+                    >
+                    <div class="note">
+                        <span>Note:</span>
+                        <p class="message">Can't Untag May Go Home (MGH) for patients that have been already discharged.</p>
+                    </div>
+                </v-alert>
+            </v-card-text>
+            <v-card-actions
+                    class="bg-error text-white"
+                    elevation="24"
+                >
+                    <v-spacer></v-spacer>
+                    <v-btn 
+                        bg-color="primary" text
+                        @click="CloseAlertMessageDialog">Close</v-btn>
+                </v-card-actions>
+        </v-card>
+    </v-dialog>
+    <v-dialog 
+        v-if="isDischarge === null && isTagAsMgh !== null" 
+        :model-value="show" 
+        rounded="lg" 
+        scrollable 
+        @update:model-value="closeDialog" 
+        max-width="400px">
+        <v-card
+            color="red"
+        >
+            <v-card-title
+                class="bg-error text-white"
+                >
+                Alert Message
+            </v-card-title>
+            <v-card-text>
+                <v-alert
+                    border="left"
+                    color="red"
+                    dismissible
+                    elevation="24"
+                    icon="mdi-alert-circle"
+                >
+                    <div class="note">
+                        <span>Note:</span>
+                        <p class="message">Can't Tag May Go Home (MGH) for patients that have already been tagged for May Go Home (MGH).</p>
+                    </div>
+                </v-alert>
+            </v-card-text>
+            <v-card-actions
+                    class="bg-error text-white"
+                    elevation="24"
+                >
+                    <v-spacer></v-spacer>
+                    <v-btn 
+                        bg-color="primary" text
+                        @click="CloseAlertMessageDialog">Close</v-btn>
+                </v-card-actions>
+        </v-card> 
+    </v-dialog>
+
+    <v-dialog 
         :model-value="show" 
         rounded="lg" scrollable 
         @update:model-value="closeDialog" 
         max-width="800px" 
-        v-if="show"
+        v-if="isDischarge === null && isTagAsMgh === null"
     >
         <form @submit.prevent="openConfirmDialog">
             <v-card rounded="lg">
@@ -688,6 +790,89 @@
                 </v-card-actions>
             </v-card>
         </form>
+    </v-dialog>
+
+    <v-dialog 
+        :model-value="show_has_unpaid_message" 
+        persistent 
+        max-width="400"
+        >
+        <v-card
+            color="red"
+        >
+            <v-card-title
+                class="bg-error text-white"
+            >
+            Alert Message
+            </v-card-title>
+            <v-card-text>
+                <v-alert
+                    color="red"
+                    dismissible
+                    elevation="24"
+                    icon="mdi-alert-circle"
+                >
+                    <div class="note">
+                        <span>Note:</span>
+                        <p>
+                            You can't send discharge order at this time. There are still pending requests.
+                            Please cancel pending requests first or notify concered cost
+                            centers to process requests for this patient.
+                        </p>
+                    </div>
+                </v-alert>
+            </v-card-text>
+            <v-card-actions
+                class="bg-error text-white"
+                elevation="24"
+            >
+                <v-spacer></v-spacer>
+                <v-btn 
+                    bg-color="primary" text
+                    @click="CloseAlertMessageDialog">Close</v-btn>
+            </v-card-actions>
+        </v-card>
+    </v-dialog>
+
+    <v-dialog 
+        :model-value="show_istag_as_mgh_message" 
+        persistent 
+        max-width="400"
+        >
+        <v-card
+            color="red"
+        >
+            <v-card-title
+                class="bg-error text-white"
+            >
+            Alert Message
+            </v-card-title>
+            <v-card-text>
+                <v-alert
+                    border="left"
+                    color="red"
+                    dismissible
+                    elevation="24"
+                    icon="mdi-alert-circle"
+                >
+                <div class="note">
+                    <span>Note:</span>
+                    <p>
+                        This patient has already been tagged for MayGoHome or may already have a discharge order. Thank you.
+                    </p>
+                </div>
+                </v-alert>
+            </v-card-text>
+            <v-card-actions
+                class="bg-error text-white"
+                elevation="24"
+            >
+                <v-spacer></v-spacer>
+                <v-btn 
+                    bg-color="primary" text
+                    @click="CloseAlertMessageDialog">Close</v-btn>
+            </v-card-actions>
+        </v-card>
     </v-dialog>
     
     <e-r-address-details-form 

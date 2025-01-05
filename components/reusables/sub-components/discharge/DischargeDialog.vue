@@ -51,7 +51,7 @@
                 charges.value = response.Charges;
             }
         } catch (error) {
-      
+    
             useSnackbar(true, "red", error.message || 'Failed to fetch result');
         } finally {
             balance_loading.value = false; // Ensure loading state is reset
@@ -102,8 +102,8 @@
                 emits('patient-registered');
                 useSnackbar(true, "green", response.message);
                 isLoading.value = false;
-                closeConfirmDialog();
                 useSubComponents('Discharge', false)
+                closeConfirmDialog();
             }
         } catch(error) {    
             useSnackbar(true, "red", response.message || 'Tagged Failed');

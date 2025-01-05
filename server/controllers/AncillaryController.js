@@ -39,7 +39,6 @@ async function getOPDOrders () {
                 price: record.price,
                 amount: record.amount,
                 record_Status: record.record_Status,
-                user_Id: record.user_Id,
                 request_Date: record.request_Date,
                 user_Id: record.user_Id,
                 remarks: record.remarks,
@@ -98,7 +97,6 @@ async function getEROrders () {
                 record_Status: record.record_Status,
                 user_Id: record.user_Id,
                 request_Date: record.request_Date,
-                user_Id: record.user_Id,
                 remarks: record.remarks,
                 dcrdate: record.dcrdate,
             });
@@ -155,7 +153,6 @@ async function getIPDOrders () {
                 record_Status: record.record_Status,
                 user_Id: record.user_Id,
                 request_Date: record.request_Date,
-                user_Id: record.user_Id,
                 remarks: record.remarks,
                 dcrdate: record.dcrdate,
             });

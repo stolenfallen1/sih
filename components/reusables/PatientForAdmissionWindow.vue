@@ -34,6 +34,7 @@
         emits('close-dialog');
         showDialog.value = false;
         payload.value = {};
+        handleLoadPatientList();
     }
 
     const patientForAdmission = ref([
@@ -45,7 +46,6 @@
         { title: 'Discharge Date',      key: 'discharge_date', sortable: false },
     ]);
 
-    let interval = null;
     let data = [];
     const patientList = ref([]);
     const serverItems = ref([]);
@@ -82,13 +82,6 @@
     watch(() => props.patient_for_admission_dialog, (value) => {
         if (value) {
             props.patient_for_admission_dialog = value;
-            interval = setInterval(async () => {
-                await handleLoadPatientList();
-            }, 5000);
-        } else {
-            clearInterval(interval);
-            interval = null;
-            loading.value = false;
         }
     });
 
@@ -125,12 +118,6 @@
         await handleLoadPatientList();
     });
     
-    onUnmounted(() => {
-        if (interval) {
-            clearInterval(interval);
-        }
-    });
-
 </script>
 
 <template>

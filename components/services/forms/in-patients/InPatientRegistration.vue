@@ -242,7 +242,6 @@
         showDialog.value = false;
         emits('close-dialog');
         tab.value = "0";
-        payload.value = {};
         formErrors.value = {};
     }
 
@@ -253,22 +252,12 @@
                 if (payload.value.id) {
                     const response = await useMethod("put", "update-patient", payload.value, "", payload.value.patient_Id);
                     if (response) {
-                        useSnackbar(true, "green", response.message);
-                        isLoading.value = false;
-                        payload.value = Object.assign({});
-                        closeDialog();
-                        tab.value = "0";
-                        emits('patient-registered');
+                        showSuccessResponse(response);
                     } 
                 } else {
                     response = await useMethod("post", "register-patient", payload.value);
                     if (response) {
-                        useSnackbar(true, "green", response.message);
-                        isLoading.value = false;
-                        payload.value = Object.assign({});
-                        closeDialog();
-                        tab.value = "0";
-                        emits('patient-registered');
+                        showSuccessResponse(response);
                     }
                 }
             } catch (error) {
@@ -278,6 +267,16 @@
         } else {
             return useSnackbar(true, "error", "Password incorrect.");
         }
+    }
+
+    const showSuccessResponse = (response) => {
+        useSnackbar(true, "green", response.message);
+        isLoading.value = false;
+        payload.value = Object.assign({});
+        tab.value = "0";
+        emits('patient-registered');
+        closeConfirmDialog();
+        closeDialog();
     }
 
     watchEffect(() => {
@@ -326,11 +325,12 @@
         } else {
             if (patientStore.selectedPatient && patientStore.selectedPatient.id != null) { 
                 payload.value                   = Object.assign({}, patientStore.selectedPatient);
-                if(parseInt(patientStore.selectedPatient.patient_registry[0].mscAccount_Trans_Types) === 5) {
+                if(patientStore.selectedPatient.patient_registry && parseInt(patientStore.selectedPatient.patient_registry[0].mscAccount_Trans_Types) === 5) {
                     payload.value.registrationFrom = "inpatient";
                     payload.value.old_case_No = patientStore.selectedPatient.patient_registry[0].case_No;
-                    payload.value.old_HospNum = patientStore.selectedPatient.patient_registry[0].case_No.replace(/\s+/g, '') + "B";
+                    payload.value.OPDIDnum = patientStore.selectedPatient.patient_registry[0].case_No.replace(/\s+/g, '') + "B";
                     payload.value.old_registry_id = patientStore.selectedPatient.patient_registry[0].id;
+                    payload.value.discharged_Date = patientStore.selectedPatient.patient_registry[0].discharged_Date;
                 }
                 payload.value.patient_Id        = patientStore.selectedPatient.patient_Id ? patientStore.selectedPatient.patient_Id : '';
                 payload.value.case_No           = patientStore.selectedPatient.patient_registry && patientStore.selectedPatient.patient_registry[0].case_No ? patientStore.selectedPatient.patient_registry[0].case_No : '';

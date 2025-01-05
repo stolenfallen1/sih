@@ -140,6 +140,16 @@
 				</span>
 
 				<span 
+					v-if="column.key === 'room_Code'" 
+					:key="column.key">
+					{{ 
+						item.patient_registry 
+						? item.patient_registry[0].room_Code 
+						: "..." 
+					}}
+				</span>
+
+				<span 
 					v-if="column.key === 'sex'" 
 					:key="column.key" style="display: flex;">
 
@@ -207,79 +217,6 @@
 				</span>
 			</template>
 		</ReusableTable>
-		<v-dialog v-model="show_has_unpaid_message" persistent max-width="400">
-			<v-card
-				color="red"
-			>
-				<v-card-title
-					class="bg-error text-white"
-				>
-				Alert Message
-				</v-card-title>
-				<v-card-text>
-					<v-alert
-						color="red"
-						dismissible
-						elevation="24"
-						icon="mdi-alert-circle"
-					>
-						<div class="note">
-							<span>Note:</span>
-							<p>
-								You can't send discharge order at this time. There are still pending requests.
-								Please cancel pending requests first or notify concered cost
-								centers to process requests for this patient.
-							</p>
-						</div>
-					</v-alert>
-				</v-card-text>
-				<v-card-actions
-					class="bg-error text-white"
-					elevation="24"
-				>
-					<v-spacer></v-spacer>
-					<v-btn 
-						bg-color="primary" text
-						@click="CloseAlertMessageDialog">Close</v-btn>
-				</v-card-actions>
-			</v-card>
-		</v-dialog>
-		<v-dialog v-model="show_istag_as_mgh_message" persistent max-width="400">
-			<v-card
-				color="red"
-			>
-				<v-card-title
-					class="bg-error text-white"
-				>
-				Alert Message
-				</v-card-title>
-				<v-card-text>
-					<v-alert
-						border="left"
-						color="red"
-						dismissible
-						elevation="24"
-						icon="mdi-alert-circle"
-					>
-					<div class="note">
-						<span>Note:</span>
-						<p>
-							This patient has already been tagged for MayGoHome or may already have a discharge order. Thank you.
-						</p>
-					</div>
-					</v-alert>
-				</v-card-text>
-				<v-card-actions
-					class="bg-error text-white"
-					elevation="24"
-				>
-					<v-spacer></v-spacer>
-					<v-btn 
-						bg-color="primary" text
-						@click="CloseAlertMessageDialog">Close</v-btn>
-				</v-card-actions>
-			</v-card>
-		</v-dialog>
 	</v-card>
 
 	<CentralLookUpForm 
@@ -337,17 +274,8 @@
 	<RequisitionsDialog :show="Requisitions" :form_type="form_type" @close-dialog="handleClose('Requisitions')" />
 	<PostChargesDialog :show="PostCharges" @close-dialog="useSubComponents('PostCharges', false)" />
 	<ERPostMedicineSuppliesDialog :show="ERPostMedicineSupplies" @close-dialog="useSubComponents('ERPostMedicineSupplies', false)" />
-	<!-- <NurseActivityDialog :show="NurseActivity" :form_type="form_type" @close-dialog="useSubComponents('NurseActivity', false)" />  -->
-	<!-- <PostCorporatePackageDialog :show="PostCorporateMedicalPackage" @close-dialog="useSubComponents('PostCorporateMedicalPackage', false)"/>
-	<PostDiagnosticPackageDialog :show="PostDiagnosticMedicalPackage" @close-dialog="useSubComponents('PostDiagnosticMedicalPackage', false)"/> 
-	<PostAdjustmentDialog :show="PostAdjustments" @close-dialog="useSubComponents('PostAdjustments', false)" />
-	<PostProfessionalFeesDialog :show="PostProfessionalFees" @close-dialog="useSubComponents('PostProfessionalFees', false)" />
-	<PostDiscountsDialog :show="PostDiscounts" @close-dialog="useSubComponents('PostDiscounts', false)" />
-	<PostArTransferDialog :show="PostArTransfer" :form_type="form_type" @close-dialog="useSubComponents('PostArTransfer', false)" />
-	<ViewExamUpshotDialog :show="ViewExaminationUpshot" @close-dialog="useSubComponents('ViewExaminationUpshot', false)" />
-	<ApplyPromissoryNoteDialog :show="ApplyPromissoryNote" @close-dialog="useSubComponents('ApplyPromissoryNote', false)" />
-	<ApplyMedicalPackageDialog :show="ApplyMedicalPackage" @close-dialog="useSubComponents('ApplyMedicalPackage', false)" /> -->
-	<TagAsMghDialog :show="TagAsMgh" :form_type="form_type" @patient-registered="loadPatient" @has-unpaid-charges="handleAlert" @close-dialog="useSubComponents('TagAsMgh', false) " />
+	
+	<TagAsMghDialog :show="TagAsMgh" :form_type="form_type" @patient-registered="loadPatient" @close-dialog="useSubComponents('TagAsMgh', false) " />
 	<UntagAsMghDialog :show="UntagAsMgh" @patient-registered="loadPatient" @close-dialog="useSubComponents('UntagAsMgh', false)" />
 	<DischargeDialog :show="Discharge" :form_type="form_type" @patient-registered="loadPatient" @close-dialog="useSubComponents('Discharge', false)" />
 	<DischargeInstructionDialog :show="DischargeInstruction" @close-dialog="useSubComponents('DischargeInstruction', false)" />
@@ -409,7 +337,7 @@
 	} = storeToRefs(PQEmergencyPatientDialog());
 
 	definePageMeta({
-	layout: "root-layout",
+		layout: "root-layout",
 	});
 
 	const { selectedRowDetails, isrefresh } = storeToRefs(useSubcomponentSelectedRowDetailsStore());
@@ -428,27 +356,6 @@
 	const selectedPatient = ref({});
 	const open_revoke_form = ref(false);
 	const open_unrevoke_form = ref(false);
-	const hasUnpaidCharges = ref(false); 
-	const show_has_unpaid_message = ref(false);
-	const show_istag_as_mgh_message = ref(false);
-	const istagmgh = ref(false);
-
-	const handleAlert = (hasPendingCharges, isTagAsMgh) => {
-		hasUnpaidCharges.value = hasPendingCharges;
-		istagmgh.value = isTagAsMgh;
-		if (hasPendingCharges && !isTagAsMgh) {
-			show_has_unpaid_message.value = true;
-		}
-		if (isTagAsMgh) {
-			show_istag_as_mgh_message.value = true;
-		}
-	};
-
-	const CloseAlertMessageDialog = () => {
-		show_has_unpaid_message.value = false;
-		hasUnpaidCharges.value = false;
-		istagmgh.value = false;
-	};
 	const tableTabs = ref([
 		{
 			label: "Registered",
@@ -661,79 +568,79 @@
 	//   ],
 	// },
 	// {
-	//   label: "Admitted",
-	//   title: "Admitted patients today.",
-	//   value: 4,
-	//   endpoint: useLaravelAPI() + "/get-revoked-emergency-patient",
-	//   columns: [
+	// 	label: "Admitted",
+	// 	title: "Admitted patients today.",
+	// 	value: 4,
+	// 	endpoint: useLaravelAPI() + "/get-inpatient",
+	// 	columns: [
 	//             {
-	//               title: "",
-	//               align: "start",
-	//               sortable: false,
-	//               key: "registry_status",
+	// 				title: "",
+	// 				align: "start",
+	// 				sortable: false,
+	// 				key: "registry_status",
 	//             },
 	//             {
-	//               title: "",
-	//               align: "start",
-	//               sortable: false,
-	//               key: "isHMO",
+	// 				title: "",
+	// 				align: "start",
+	// 				sortable: false,
+	// 				key: "isHMO",
 	//             },
 	//             {
-	//               title: "Patient ID",
-	//               align: "start",
-	//               sortable: false,
-	//               key: "patient_id",
+	// 				title: "Patient ID",
+	// 				align: "start",
+	// 				sortable: false,
+	// 				key: "patient_Id",
 	//             },
 	//             {
-	//               title: "Admission No.",
-	//               align: "start",
-	//               sortable: false,
-	//               key: "admission_no",
+	// 				title: "Admission No.",
+	// 				align: "start",
+	// 				sortable: false,
+	// 				key: "case_No",
 	//             },
 	//             {
-	//               title: "Room No.",
-	//               align: "start",
-	//               sortable: false,
-	//               key: "room_no",
+	// 				title: "Room No.",
+	// 				align: "start",
+	// 				sortable: false,
+	// 				key: "room_Code",
 	//             },
 	//             {
-	//               title: "Last Name",
-	//               key: "lastname",
-	//               align: "start",
-	//               sortable: false,
+	// 				title: "Last Name",
+	// 				key: "lastname",
+	// 				align: "start",
+	// 				sortable: false,
 	//             },
 	//             {
-	//               title: "First Name",
-	//               key: "firstname",
-	//               align: "start",
-	//               sortable: false,
+	// 				title: "First Name",
+	// 				key: "firstname",
+	// 				align: "start",
+	// 				sortable: false,
 	//             },
 	//             {
-	//               title: "Sex",
-	//               key: "sex",
-	//               align: "start",
-	//               sortable: false,
+	// 				title: "Sex",
+	// 				key: "sex",
+	// 				align: "start",
+	// 				sortable: false,
 	//             },
 	//             {
-	//               title: "Birth Date",
-	//               key: "birthdate",
-	//               align: "start",
-	//               sortable: false,
+	// 				title: "Birth Date",
+	// 				key: "birthdate",
+	// 				align: "start",
+	// 				sortable: false,
 	//             },
 	//             {
-	//               title: "Registry Date",
-	//               key: "registry_date",
-	//               align: "start",
-	//               sortable: false,
+	// 				title: "Admission Date",
+	// 				key: "registry_date",
+	// 				align: "start",
+	// 				sortable: false,
 	//             },
 	//             {
-	//               title: "Discharged Date",
-	//               key: "discharged_date",
-	//               align: "start",
-	//               sortable: false,
+	// 				title: "Discharged Date",
+	// 				key: "discharged_date",
+	// 				align: "start",
+	// 				sortable: false,
 	//             },
-	//   ],
-	// },
+	// 	    ],
+	// 	},
 	]);
 
 	const totalItems = ref(0);
@@ -817,6 +724,8 @@
 		sortable: false,
 	},
 	];
+
+	console.log('Tabs:', tableTabs.value);
 
 	const applyFilters = () => {
 	console.log('Filters applied:', filter.value);
