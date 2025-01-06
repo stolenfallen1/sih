@@ -127,7 +127,7 @@
 			nuxtStorage.localStorage.setData('remember_me_auth', rememberMeData, "24", "h");
 			console.log('rememberMeData', rememberMeData);
 		} else {
-			nuxtStorage.localStorage.removeItem('remember_me_auth');
+			// nuxtStorage.localStorage.removeItem('remember_me_auth');
 		}
 	})
 
