@@ -336,19 +336,23 @@
                             Posted Medicine
                         </v-expansion-panel-title>
                         <v-expansion-panel-text>
-                            <v-data-table 
-                                :items="chargeMedicineList" 
-                                :headers="medicineHeaders" 
-                                density="compact" 
-                                height="40vh" 
-                                class="styled-table"
-                            >
-                            <template v-slot:item.status="{ item }">
-                                {{ console.log('Retrieved Items : ', item) }}
-                                <span :style="{ color: item.status === 'Paid' ? 'green' : item.status === 'Unpaid' ? 'orange' : 'red' }">
-                                    {{ item.status }}
-                                </span>
-                            </template>
+                            <v-data-table
+                                :headers="medicineHeaders"
+                                :items="chargeMedicineList"
+                                :items-per-page="10"
+                                class="elevation-1"
+                                item-value="request_num"
+                                height="48vh"
+                                density="compact"
+                                show-select
+                                select-strategy="single"
+                                @update:modelValue="handleSelectedRowCharges"
+                                >
+                                <template v-slot:item.status="{ item }">
+                                    <span :style="{ color: item.status === 'Paid' ? 'green' : item.status === 'Unpaid' ? 'orange' : 'red' }">
+                                        {{ item.status }}
+                                    </span>
+                                </template>
                                 <template v-slot:item.selected="{ item }">
                                     <input 
                                         type="checkbox" 
@@ -401,7 +405,11 @@
                                 :headers="supplyHeaders" 
                                 density="compact" 
                                 height="40vh" 
+                                item-value="request_num"
                                 class="styled-table"
+                                show-select
+                                select-strategy="single"
+                                @update:modelValue="handleSelectedRowCharges"
                             >
                                 <template v-slot:item.status="{ item }">
                                     <span :style="{ color: item.status === 'Paid' ? 'green' : item.status === 'Unpaid' ? 'orange' : 'red' }">
@@ -459,6 +467,13 @@
             <v-card-actions>
                 <v-btn color="blue-darken-1 border border-info" @click="closeDialog"> Close </v-btn>
                 <v-spacer></v-spacer>
+                <v-btn 
+                    class="bg-error text-white" 
+                    :disabled="reference_id.value === 0" 
+                    @click="openConfirmDialog"
+                    > 
+                    Cancel Charges 
+                </v-btn>
                 <v-btn class="bg-primary text-white" @click="openConfirmDialog"> Save Entry </v-btn>
             </v-card-actions>
         </v-card>
@@ -571,6 +586,7 @@
     const Medicines = ref([
         {
             code: "",
+            item_id: "",
             item_name: "",
             frequency: "",
             quantity: "",
@@ -584,6 +600,7 @@
     const Supplies = ref([
         {
             code: "",
+            item_id: "",
             item_name: "",
             frequency: "",
             selling_price: "",
@@ -680,6 +697,7 @@
                 if(!isItemCodeAndRevenueAlreadyExists) {
                     Medicines.value.push({
                         code: "",
+                        item_id: "",
                         item_name: "",
                         frequency: "",
                         quantity: "",
@@ -726,7 +744,9 @@
                 if(!isItemCodeAndRevenueAlreadyExists) {
                     Supplies.value.push({
                         code: "",
+                        item_id: "",
                         item_name: "",
+                        frequency: "",
                         quantity: "",
                         amount: "",
                         remarks: "",
@@ -746,13 +766,16 @@
     };
 
     const handleSelectedItem = (selected_item, listType) => {
+        console.log('Selected Item ni ha: ', selected_item);
         if (listType === 'medicines') {
             const lastRow = Medicines.value[Medicines.value.length - 1];
+            lastRow.item_id = selected_item.ware_house_items ? selected_item.ware_house_items[0].item_Id : '';
             lastRow.map_item_id = selected_item.map_item_id;
             lastRow.item_name = selected_item.item_name + ' ' + selected_item.item_Description;
             lastRow.price = selected_item.ware_house_items ? usePeso(selected_item.ware_house_items[0].price) : '0';
         } else if (listType === 'supplies') {
             const lastRow = Supplies.value[Supplies.value.length - 1];
+            lastRow.item_id = selected_item.ware_house_items ? selected_item.ware_house_items[0].item_Id : '';
             lastRow.map_item_id = selected_item.map_item_id;
             lastRow.item_name = selected_item.item_name + ' ' + selected_item.item_Description;
             lastRow.price = selected_item.ware_house_items ? usePeso(selected_item.ware_house_items[0].price) : '0';
@@ -831,14 +854,13 @@
     }
     const reference_id = ref(0);
     const medsys_assess_id = ref(0);
-    const handleCancelCharges = async (request_id, assess_num) => {
-       reference_id.value = request_id;
-       medsys_assess_id.value = assess_num;
-       openConfirmDialog()
-        
-    }
+    // const handleCancelCharges = async (request_id, assess_num) => {
+    //     reference_id.value = request_id;
+    //     medsys_assess_id.value = assess_num;
+    //     openConfirmDialog()
+            
+    // }
     const onSubmit = async () => {
-
         isLoading.value = true;
         isLoadingBtn.value = true;
 
@@ -992,6 +1014,7 @@
     );
 
     const medicineHeaders = ref([
+        { title: "",                    key: "select",      sortable: false },
         { title: "Status",              key: "status",      sortable: false },
         { title: 'Code',                key: 'code',        sortable: false },
         { title: 'Reference Number',    key: 'request_num', sortable: false },
@@ -999,7 +1022,7 @@
         { title: 'Quantity',            key: 'quantity',    sortable: false },
         { title: 'Frequency',           key: 'dosage',      sortable: false },
         { title: 'Amount',              key: 'net_amount',  sortable: false },
-        { title: 'Action',              key: 'action',      sortable: false }
+        // { title: 'Action',              key: 'action',      sortable: false }
     ]);
 
     const supplyHeaders = ref([
@@ -1009,7 +1032,7 @@
         { title: 'Item Name',           key: 'item_name',   sortable: false },
         { title: 'Quantity',            key: 'quantity',    sortable: false },
         { title: 'Net Amount',          key: 'net_amount',  sortable: false },
-        { title: 'Action',              key: 'action',      sortable: false }
+        // { title: 'Action',              key: 'action',      sortable: false }
     ]);
 
     const allCharges = ref([]);
@@ -1059,6 +1082,11 @@
         } catch (error) {
             console.error("An error occurred while fetching charges:", error);
         }
+    };
+
+    const handleSelectedRowCharges = (selectedRow) => {
+        reference_id.value = selectedRow[0]
+        console.log('reference_id na ni ha : ', reference_id.value);
     };
 
     watchEffect(() => {

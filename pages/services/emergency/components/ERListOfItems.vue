@@ -138,7 +138,7 @@
             title: "Code",
             align: "start",
             sortable: false,
-            key: "id",
+            key: "map_item_id",
         },
         { title: 
             "Description", 
@@ -212,8 +212,8 @@
         price_array.value = selectedItems.map(item => item.ware_house_items[0].price);
         
         const validSelectedItems = selectedItems.filter(item => item !== undefined && parseInt(item.ware_house_items[0].item_OnHand) > 0)
-        
-        if(validSelectedItems) {
+        console.log('VALID SELECTED ITEMS', validSelectedItems);
+        if(validSelectedItems) {            
             if(props.user_input_revenue_code === 'EM') {
                 medicine_stocks.value = selectedItems.map(
                     item => item.ware_house_items[0].item_OnHand,
