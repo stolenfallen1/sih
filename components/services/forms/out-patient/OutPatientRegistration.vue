@@ -216,7 +216,7 @@ const onSubmit = async (user_details) => {
         isLoading.value = true;
         try {
             if (payload.value.id) {
-                const response = await useMethod("put", "update-outpatient", payload.value, "", payload.value.patient_id);
+                const response = await useMethod("put", "update-patient", payload.value, "", payload.value.patient_id);
                 if (response) {
                     useSnackbar(true, "green", "Patient updated successfully.");
                     isLoading.value = false;
@@ -228,7 +228,7 @@ const onSubmit = async (user_details) => {
                     closeConfirmDialog();
                 } 
             } else {
-                const response = await useMethod("post", "register-outpatient", payload.value);   
+                const response = await useMethod("post", "register-patient", payload.value);   
                 if (response) {
                     useSnackbar(true, "green", "Patient registered successfully.");
                     isLoading.value = false;
