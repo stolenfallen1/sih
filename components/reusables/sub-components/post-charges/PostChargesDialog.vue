@@ -825,6 +825,7 @@ const focusPFTransaction = (index) => {
 
 const handleSelectedChargeItem = async (selected_item) => {
     const lastRow = Charges.value[Charges.value.length - 1];
+    lastRow.id = selected_item.id;
     lastRow.map_item_id = selected_item.map_item_id;
     lastRow.exam_description = selected_item.exam_description;
     lastRow.form = selected_item.form;
