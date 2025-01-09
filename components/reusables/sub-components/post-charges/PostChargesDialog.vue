@@ -1344,12 +1344,12 @@ onUpdated(() => {
 
 // FOR ER ONLY ( SIR CHARLES )
 const user_detail = ref({});
-const roleID = ref('');
+const roleID = ref(0);
 onMounted(() => {
     getRevenueCode();
     const userDetails = JSON.parse(nuxtStorage.localStorage.getData('user_details') || '{}');
     user_detail.value = userDetails;
-    roleID.value = user_detail.value?.role_id;
+    roleID.value = parseInt(user_detail.value?.role_id);
 });
 </script>
 

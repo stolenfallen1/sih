@@ -276,11 +276,11 @@
                                                             </tr>
                                                         </thead>
                                                         <tbody>
-                                                            <template>
+                                                            <!-- <template> -->
                                                                 <tr class="cursor-pointer">
                                                                     <!-- contents -->
                                                                 </tr>
-                                                            </template>
+                                                            <!-- </template> -->
                                                         </tbody>
                                                         <v-divider></v-divider>
                                                     </v-table>

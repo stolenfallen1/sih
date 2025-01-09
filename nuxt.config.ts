@@ -27,7 +27,9 @@ export default defineNuxtConfig({
   css: [
     "~/assets/css/main.css",
   ],
-
+  router: {
+    middleware: ['auth.global'], // Run the auth middleware on all routes
+  },
   components: [
     {
       path: "~/components/",

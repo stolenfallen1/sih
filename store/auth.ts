@@ -1,7 +1,8 @@
 // store/auth.ts
 
 import { defineStore } from 'pinia';
-// import nuxtStorage from 'nuxt-storage';
+import nuxtStorage from 'nuxt-storage';
+
 interface UserPayloadInterface {
   idnumber: string;
   password: string;
@@ -39,10 +40,42 @@ export const useAuthStore = defineStore('auth', {
         await fetchPositions(token.value); 
       }
     },
+
     logUserOut() {
+      const router = useRouter();
       const token = useCookie('token'); // useCookie new hook in nuxt 3
       this.authenticated = false; // set authenticated  state value to false
+      nuxtStorage.localStorage.clear();
       token.value = null; // clear the token cookie
+      router.push('/login')
     },
+
+    async getUser() {
+      const token = useCookie('token'); // Access token cookie
+      if (!token.value) {
+        this.user = null;
+        token.value = null; // Clear the token cookie
+        this.authenticated = false;
+        return navigateTo('/login'); // Redirect to login if no token
+      }
+    
+      try {
+        const config = useRuntimeConfig();
+        const { data, error }: any = await useFetch(`${config.public.laravelAPI}/user-details`, {
+          headers: {
+            Authorization: `Bearer ${token.value}`,
+          },
+        });
+        if (data.value) {
+          this.user = data.value;
+          this.authenticated = true;
+        }else{
+          this.logUserOut();
+        }
+      } catch (err: any) {
+        this.logUserOut();
+      }
+    }
+    
   },
 });

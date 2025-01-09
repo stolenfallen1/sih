@@ -61,7 +61,7 @@
           </v-card-actions>
       </v-card>
   </v-dialog>
-  <consultant-role-type-form :open_form_dialog="open_form_dialog" @close-dialog="closeFormDialog" @handle-submit="onSubmit" />
+  <consultant-role-type-form :open_consultant_role="open_consultant_role" :open_form_dialog="open_form_dialog" @close-dialog="closeFormDialog" @handle-submit="onSubmit" />
   <deleteConfirmation :show="confirmation" @confirm="confirm" @close="closeconfirmation" />
 </template>
 
@@ -79,6 +79,7 @@ const props = defineProps({
 const confirmation = ref(false);
 const emits = defineEmits(['close-dialog'])
 const payload = ref({});
+const open_consultant_role = ref(false);
 const isloading = ref(false);
 const open_form_dialog = ref(false)
 const headers = [
