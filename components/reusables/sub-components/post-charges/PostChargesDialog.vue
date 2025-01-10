@@ -911,6 +911,9 @@ const printCharges = (payload, charges) => {
             newWindow.onafterprint = () => {
                 newWindow.close();
             }
+            setTimeout(()=>{
+                newWindow.close();   
+            },100);
         });
     }
 }
@@ -928,6 +931,9 @@ const printCashAssessment = (payload, charges) => {
             newWindow.onafterprint = () => {
                 newWindow.close();
             }
+            setTimeout(()=>{
+                newWindow.close();   
+            },100);
         });
     }
 }

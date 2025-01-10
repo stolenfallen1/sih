@@ -5,7 +5,7 @@
 		<img src="/cdg_logo.png" width="50" height="50" @click="router.push('/dashboard')" class="cursor-pointer" />
 		<img src="/cduh_logo.png" width="50" height="50" @click="router.push('/dashboard')" class="cursor-pointer" />
 		<div class="ml-4 cursor-pointer" @click="router.push('/dashboard')">
-		<p>Cebu Doctors University Hospital</p>
+		<p>{{ useGetUserDetails('branch') ?? "" }}</p>
 		<span class="title-span">Hospital Information System</span>
 		</div>
 		<v-spacer></v-spacer>
