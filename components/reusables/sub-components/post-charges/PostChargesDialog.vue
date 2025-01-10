@@ -240,7 +240,7 @@
                                 <tbody>
                                     <template v-for="(item,index) in Charges">
                                         <tr>
-                                            <td> <input class="input charge-focus" v-model="item.code" @keypress="handleChangeRevenueCode(item)" @keyup.enter="handleAddCharge(item,index)" :readonly="item.isReadonly" /> </td>
+                                            <td> <input class="input charge-focus" v-model="item.code"  @keyup.enter="handleAddCharge(item,index)" :readonly="item.isReadonly" /> </td>
                                             <td> <input class="input charge-focus" v-model="item.map_item_id" @keyup.enter="handleAddCharge(item,index)" readonly /> </td> 
                                             <td> <input class="input charge-focus" v-model="item.exam_description" @keyup.enter="handleAddCharge(item,index)" readonly /> </td>
                                             <td>
@@ -739,12 +739,13 @@ const totalHistoryAmount = computed(() => chargeAmountHistory.value + cashAmount
 const patientExcessAmount = computed(() => parseFloat((totalHistoryAmount.value ? totalAmount.value + totalHistoryAmount.value : totalAmount.value).toFixed(2)));
 
 const handleChangeRevenueCode = (item) => {
-    if(item.code){
+    if(item.code != item.revenucode){
         item.map_item_id = '';
         item.exam_description = '';
     }
 }
 const handleAddCharge = (item, index) => {
+    handleChangeRevenueCode(item);
     item.code = item.code.toUpperCase();
     const lastRow = Charges.value[Charges.value.length - 1];
     if (!item.code) {
@@ -766,10 +767,10 @@ const handleAddCharge = (item, index) => {
         item.drcr = "";
         item.lgrp = "";
     }
-
+    
     user_input_revenue_code.value = item.code;
     if(item.code && !item.map_item_id && !item.exam_description){
-
+        
         open_charges_list.value = true;
         let charges = Charges.value.filter(function (obj) {
             return obj.code !== '' && obj.map_item_id !== '' && obj.exam_description !== '';
@@ -838,7 +839,7 @@ const handleSelectedChargeItem = async (selected_item) => {
     lastRow.price = selected_item.prices ? usePeso(selected_item.prices[0].price) : '0';
     lastRow.totalamount = selected_item.price;
     lastRow.barcode_prefix = selected_item?.sections?.barcodeid_prefix ? selected_item.sections.barcodeid_prefix : null;
-
+    lastRow.revenucode = lastRow.code;
     if (lastRow.map_item_id && lastRow.code === 'LB') {
         const response = await useMethod("get", "get-charges-specimen?map_item_id=", "", lastRow.map_item_id);
         if (response && response.data && response.data.length > 0) {
@@ -1332,7 +1333,7 @@ onUpdated(() => {
     payload.value.birthdate = useDateMMDDYYY(selectedRowDetails.value.birthdate) || '';
     payload.value.age = selectedRowDetails.value.age || '';
     payload.value.case_No = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0].case_No || '';
-    payload.value.account = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0].mscPrice_Schemes == 1 ? "Self-Pay" : "Company / Insurance";
+    payload.value.account = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0].mscPrice_Schemes == 2 ? "Company / Insurance" : "Self-Pay";
     payload.value.registry_Date = selectedRowDetails.value.patient_registry && useDateMMDDYYY(selectedRowDetails.value.patient_registry[0].registry_Date) || '';
     payload.value.attending_Doctor = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0].attending_Doctor || 'N/A';
     payload.value.attending_Doctor_fullname = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0].attending_Doctor_fullname || 'N/A';
