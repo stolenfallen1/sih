@@ -196,10 +196,6 @@ const openConfirmDialog = async () => {
         formErrors.value.mscPrice_Schemes = "Required field";
         valid.value = false;
     }
-    if (!payload.value.guarantor_name) {
-        formErrors.value.guarantor_name = "Required field";
-        valid.value = false;
-    }
     
 
     if (!valid.value) {
