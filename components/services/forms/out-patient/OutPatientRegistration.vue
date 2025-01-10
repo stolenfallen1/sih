@@ -133,7 +133,7 @@ const findTabIndexByError = (field) => {
         case "register_Source": return "1";
         case "register_Casetype": return "1";
         case "mscAccount_Trans_Types": return "1";
-        case "mscAccount_type": return "1";
+        case "mscAccount_Type": return "1";
         case "mscPrice_Groups": return "1";
         case "mscPrice_Schemes": return "1";
         default: return "0";
@@ -183,8 +183,8 @@ const openConfirmDialog = async () => {
         formErrors.value.mscAccount_Trans_Types = "Required field";
         valid.value = false;
     }
-    if (!payload.value.mscAccount_type) {
-        formErrors.value.mscAccount_type = "Required field";
+    if (!payload.value.mscAccount_Type) {
+        formErrors.value.mscAccount_Type = "Required field";
         valid.value = false;
     }
     if (!payload.value.mscPrice_Groups) {

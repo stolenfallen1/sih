@@ -106,30 +106,30 @@
 		emits("submit", payload);
 	};
 
-	const handleRememberMe = () => {
-		if (rememberMe.value) {
-			const rememberMeData = {
-				user_userid: props.payload.user_userid,
-				user_passcode: props.payload.user_passcode,
-			}
-			// nuxtStorage.localStorage.setData('remember_me_auth', rememberMeData, "24", "h");
-		} else {
-			// nuxtStorage.localStorage.removeItem('remember_me_auth');
-		}
-	}
+	// const handleRememberMe = () => {
+	// 	if (rememberMe.value) {
+	// 		const rememberMeData = {
+	// 			user_userid: props.payload.user_userid,
+	// 			user_passcode: props.payload.user_passcode,
+	// 		}
+	// 		nuxtStorage.localStorage.setData('remember_me_auth', rememberMeData, "24", "h");
+	// 	} else {
+	// 		nuxtStorage.localStorage.removeItem('remember_me_auth');
+	// 	}
+	// }
 
-	watchEffect(() => {
-		if (rememberMe.value) {
-			const rememberMeData = {
-				user_userid: props.payload?.user_userid,
-				user_passcode: props.payload?.user_passcode,
-			}
-			// nuxtStorage.localStorage.setData('remember_me_auth', rememberMeData, "24", "h");
-			console.log('rememberMeData', rememberMeData);
-		} else {
-			// nuxtStorage.localStorage.removeItem('remember_me_auth');
-		}
-	})
+	// watchEffect(() => {
+	// 	if (rememberMe.value) {
+	// 		const rememberMeData = {
+	// 			user_userid: props.payload?.user_userid,
+	// 			user_passcode: props.payload?.user_passcode,
+	// 		}
+	// 		nuxtStorage.localStorage.setData('remember_me_auth', rememberMeData, "24", "h");
+	// 		console.log('rememberMeData', rememberMeData);
+	// 	} else {
+	// 		nuxtStorage.localStorage.removeItem('remember_me_auth');
+	// 	}
+	// })
 
 	onMounted(() => {
 		const userDetails = JSON.parse(nuxtStorage.localStorage.getData('user_details') || '{}');
