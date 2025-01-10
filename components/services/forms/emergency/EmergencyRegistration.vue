@@ -172,6 +172,7 @@
     const patientDetail = ref({});
 
     const closeDialog = () => {
+        patientStore.clearSelectedPatient();
         showDialog.value = false;
         emits('close-dialog');
         tab.value = "0";
@@ -272,7 +273,7 @@
     const showSuccessResponse = (response) => {
         useSnackbar(true, "green", response.message);
         payload.value = {};
-        patientDetail.value = response.data;
+        patientDetail.value = payload.value.lastname;
         emits('patient-registered', patientDetail.value);
         closeConfirmDialog();
         closeDialog();

@@ -44,7 +44,7 @@
                 <v-col cols="12" class="form-group">
                     <label class="form-label">Hospital Plan <span style="color: red;">*</span></label>
                     <div class="select-wrapper">
-                        <select class="form-select" :class="{ 'input-error': formErrors.mscAccount_type }" :disabled="clicked_option === 'view'" v-model="payload.mscAccount_type">
+                        <select class="form-select" :class="{ 'input-error': formErrors.mscAccount_type }" :disabled="clicked_option === 'view'" v-model="payload.mscAccount_Type">
                             <option v-for="(item, index) in hospitalization_plan_data" :key="index" :value="item.id">
                                 {{ item.description }}
                             </option>
@@ -366,7 +366,7 @@ const getIdTypes = async () => {
 };
 
 const filteredPriceSchemes = computed(() => {
-    const selectedHospPlan = props.payload.mscAccount_type;
+    const selectedHospPlan = props.payload.mscAccount_Type;
     return price_scheme_data.value.filter((item) => item.id === selectedHospPlan);
 });
 
