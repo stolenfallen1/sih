@@ -240,7 +240,7 @@
                                 <tbody>
                                     <template v-for="(item,index) in Charges">
                                         <tr>
-                                            <td> <input class="input charge-focus" v-model="item.code" @keyup.enter="handleAddCharge(item,index)" :readonly="item.isReadonly" /> </td>
+                                            <td> <input class="input charge-focus" v-model="item.code" @keypress="handleChangeRevenueCode(item)" @keyup.enter="handleAddCharge(item,index)" :readonly="item.isReadonly" /> </td>
                                             <td> <input class="input charge-focus" v-model="item.map_item_id" @keyup.enter="handleAddCharge(item,index)" readonly /> </td> 
                                             <td> <input class="input charge-focus" v-model="item.exam_description" @keyup.enter="handleAddCharge(item,index)" readonly /> </td>
                                             <td>
@@ -738,6 +738,12 @@ const totalAmount = computed(() => totalChargesAmount.value + totalDoctorCharges
 const totalHistoryAmount = computed(() => chargeAmountHistory.value + cashAmountHistory.value + chargeProfFeeAmountHistory.value + cashProfFeeAmountHistory.value);
 const patientExcessAmount = computed(() => parseFloat((totalHistoryAmount.value ? totalAmount.value + totalHistoryAmount.value : totalAmount.value).toFixed(2)));
 
+const handleChangeRevenueCode = (item) => {
+    if(item.code){
+        item.map_item_id = '';
+        item.exam_description = '';
+    }
+}
 const handleAddCharge = (item, index) => {
     item.code = item.code.toUpperCase();
     const lastRow = Charges.value[Charges.value.length - 1];
