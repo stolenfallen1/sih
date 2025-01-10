@@ -240,7 +240,7 @@
                                 <tbody>
                                     <template v-for="(item,index) in Charges">
                                         <tr>
-                                            <td> <input class="input charge-focus" v-model="item.code" @keyup.enter="handleAddCharge(item,index)" :readonly="item.isReadonly" /> </td>
+                                            <td> <input class="input charge-focus" v-model="item.code" @keypress="handleChangeRevenueCode(item)" @keyup.enter="handleAddCharge(item,index)" :readonly="item.isReadonly" /> </td>
                                             <td> <input class="input charge-focus" v-model="item.map_item_id" @keyup.enter="handleAddCharge(item,index)" readonly /> </td> 
                                             <td> <input class="input charge-focus" v-model="item.exam_description" @keyup.enter="handleAddCharge(item,index)" readonly /> </td>
                                             <td>
@@ -738,6 +738,12 @@ const totalAmount = computed(() => totalChargesAmount.value + totalDoctorCharges
 const totalHistoryAmount = computed(() => chargeAmountHistory.value + cashAmountHistory.value + chargeProfFeeAmountHistory.value + cashProfFeeAmountHistory.value);
 const patientExcessAmount = computed(() => parseFloat((totalHistoryAmount.value ? totalAmount.value + totalHistoryAmount.value : totalAmount.value).toFixed(2)));
 
+const handleChangeRevenueCode = (item) => {
+    if(item.code){
+        item.map_item_id = '';
+        item.exam_description = '';
+    }
+}
 const handleAddCharge = (item, index) => {
     item.code = item.code.toUpperCase();
     const lastRow = Charges.value[Charges.value.length - 1];
@@ -825,6 +831,7 @@ const focusPFTransaction = (index) => {
 
 const handleSelectedChargeItem = async (selected_item) => {
     const lastRow = Charges.value[Charges.value.length - 1];
+    lastRow.id = selected_item.id;
     lastRow.map_item_id = selected_item.map_item_id;
     lastRow.exam_description = selected_item.exam_description;
     lastRow.form = selected_item.form;
@@ -910,6 +917,9 @@ const printCharges = (payload, charges) => {
             newWindow.onafterprint = () => {
                 newWindow.close();
             }
+            setTimeout(()=>{
+                newWindow.close();   
+            },100);
         });
     }
 }
@@ -927,6 +937,9 @@ const printCashAssessment = (payload, charges) => {
             newWindow.onafterprint = () => {
                 newWindow.close();
             }
+            setTimeout(()=>{
+                newWindow.close();   
+            },100);
         });
     }
 }
@@ -1343,12 +1356,12 @@ onUpdated(() => {
 
 // FOR ER ONLY ( SIR CHARLES )
 const user_detail = ref({});
-const roleID = ref('');
+const roleID = ref(0);
 onMounted(() => {
     getRevenueCode();
     const userDetails = JSON.parse(nuxtStorage.localStorage.getData('user_details') || '{}');
     user_detail.value = userDetails;
-    roleID.value = user_detail.value?.role_id;
+    roleID.value = parseInt(user_detail.value?.role_id);
 });
 </script>
 

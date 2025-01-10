@@ -477,11 +477,11 @@ watch(() => props.show, (newVal) => {
 });
 
 const user_detail = ref({});
-const roleID = ref('');
+const roleID = ref(0);
 onMounted(() => {
     const userDetails = JSON.parse(nuxtStorage.localStorage.getData('user_details') || '{}');
     user_detail.value = userDetails;
-    roleID.value = user_detail.value?.role_id;
+    roleID.value = parseInt(user_detail.value?.role_id);
 });
 
 const isDischarge = ref('');

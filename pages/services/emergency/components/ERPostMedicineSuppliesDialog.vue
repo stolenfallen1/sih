@@ -555,7 +555,7 @@
     const medicine_revenue_data_display = ref([]);
     const supplies_revenue_data = ref([]);
     const supplies_revenue_data_display = ref([]);
-    const selectedWarehouseID = ref(null); 
+    const selectedWarehouseID = ref(0); 
 
     const getRevenueCode = async () => {
         const revenue_res = await useMethod("get", "get-transaction-codes", "", "");

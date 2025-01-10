@@ -95,7 +95,7 @@
 	const emits = defineEmits(["close", "submit"]);
 	const showPassword = ref(false);
 	const user_detail = ref({});
-	const roleID = ref('');
+	const roleID = ref(0);
 	const rememberMe = ref(false);
 
 	const handleclose = () => {
@@ -134,7 +134,7 @@
 	onMounted(() => {
 		const userDetails = JSON.parse(nuxtStorage.localStorage.getData('user_details') || '{}');
 		user_detail.value = userDetails;
-		roleID.value = user_detail.value?.role_id;
+		roleID.value = parseInt(user_detail.value?.role_id);
 
 		// const savedRememberMeData = JSON.parse(nuxtStorage.localStorage.getData('remember_me_auth') || '{}');
 		// if (savedRememberMeData && savedRememberMeData.user_passcode) {

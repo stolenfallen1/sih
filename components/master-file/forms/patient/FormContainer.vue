@@ -103,7 +103,7 @@ import ContactsAddress from "./ContactsAddress.vue";
 import FamilyInfo from "./FamilyInfo.vue";
 import MedicalCases from "./MedicalCases.vue";
 import BadHabits from "./BadHabits.vue";
-import DrugsMedicines from "./DrugsMedicines.vue";
+import DrugsMedicines from "./Medicines.vue";
 import Procedures from "./Procedures.vue";
 import Allergies from "./Allergies.vue";
 import FamilyMedical from "./FamilyMedical.vue";

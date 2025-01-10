@@ -44,8 +44,9 @@
                 <v-col cols="12" class="form-group">
                     <label class="form-label">Hospital Plan <span style="color: red;">*</span></label>
                     <div class="select-wrapper">
-                        <select class="form-select" :class="{ 'input-error': formErrors.mscAccount_type }" :disabled="clicked_option === 'view'" v-model="payload.mscAccount_Type">
-                            <option v-for="(item, index) in hospitalization_plan_data" :key="index" :value="item.id">
+                        <select class="form-select" :class="{ 'input-error': formErrors.mscAccount_Type }" :disabled="clicked_option === 'view'" v-model="payload.mscAccount_Type">
+                            <option v-for="(item, index) in hospitalization_plan_data" :key="index" :value="item.id" :selected="payload.mscAccount_Type === item.id ? true : false">
+
                                 {{ item.description }}
                             </option>
                         </select>
@@ -58,7 +59,7 @@
                     <label class="form-label">Price Group <span style="color: red;">*</span></label>
                     <div class="select-wrapper">
                         <select class="form-select" :class="{ 'input-error': formErrors.mscPrice_Groups }" :disabled="clicked_option === 'view'" v-model="payload.mscPrice_Groups">
-                            <option v-for="(item, index) in price_group_data" :key="index" :value="item.id">
+                            <option v-for="(item, index) in price_group_data" :key="index" :value="item.id" >
                                 {{ item.description }}
                             </option>
                         </select>
@@ -70,10 +71,16 @@
                 <v-col cols="12" class="form-group">
                     <label class="form-label">Price Scheme <span style="color: red;">*</span></label>
                     <div class="select-wrapper">
-                        <select class="form-select" :class="{ 'input-error': formErrors.mscPrice_Schemes }" disabled v-model="payload.mscPrice_Schemes">
-                            <option v-if="filteredPriceSchemes.length > 0" :value="filteredPriceSchemes[0].id">
-                                {{ filteredPriceSchemes[0].description }}
+                        <select class="form-select" :class="{ 'input-error': formErrors.mscPrice_Schemes }"  v-model="payload.mscPrice_Schemes">
+                            <option 
+                                v-for="scheme in price_scheme_data" 
+                                :key="scheme.id" 
+                                :value="scheme.id" :selected="scheme.id == filteredPriceSchemes[0].id ? true : false">
+                                {{ scheme.description }}
                             </option>
+                           <!-- <option v-if="filteredPriceSchemes.length > 0" :value="filteredPriceSchemes[0].id">
+                                {{ filteredPriceSchemes[0].description }} {{ filteredPriceSchemes.length }}
+                            </option> -->
                         </select>
                         <span class="arrow-icon mdi mdi-chevron-down"></span>
                     </div>
@@ -372,6 +379,11 @@ const filteredPriceSchemes = computed(() => {
 
 watch(filteredPriceSchemes, (newSchemes) => {
     props.payload.mscPrice_Schemes = newSchemes.length > 0 ? newSchemes[0].id : null;
+});
+
+watch(() => props.payload.mscPrice_Schemes, (newSchemeValue) => {
+    const newHospitalPlan = newSchemeValue === 2 ? 2 : 1;
+    props.payload.mscAccount_type = parseInt(newHospitalPlan); 
 });
 
 onMounted(() => {

@@ -2,9 +2,9 @@
     <main style="margin: 0; padding: 0;">
         <header class="header" style="display: flex; justify-content: space-between; align-items: center; flex-direction: row; gap: 8px; margin-bottom: 5px;">
             <div>
-                <p style="margin: 0; font-weight: bold; font-size: 22px;">CEBU DOCTORS UNIVERSITY HOSPITAL, INC.</p>
-                <p style="margin: 0; font-weight: bold;">Osmeña Blvd, Cebu City, 6000 Cebu</p>
-                <p style="margin: 0; font-weight: bold;">TIN: 000-309-908-000-NV</p>
+                <p style="margin: 0; font-weight: bold; font-size: 22px;">{{ useGetUserDetails('branch')}}</p>
+                <p style="margin: 0; font-weight: bold;">{{ useGetUserDetails('address') }}</p>
+                <p style="margin: 0; font-weight: bold;">TIN: {{ useGetUserDetails('TIN') }}</p>
             </div>
             <div>
                 <img src="/cdg_logo.png" width="80" height="80" style="margin-right: 12px;" />

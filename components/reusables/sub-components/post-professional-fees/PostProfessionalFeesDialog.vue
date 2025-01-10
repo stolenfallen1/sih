@@ -121,11 +121,11 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <template>
+                                            <!-- <template> -->
                                                 <tr class="cursor-pointer">
                                                     <!-- contents -->
                                                 </tr>
-                                            </template>
+                                            <!-- </template> -->
                                         </tbody>
                                     </v-table>
                                 </v-col>
