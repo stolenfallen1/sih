@@ -17,6 +17,7 @@
                 prepend-inner-icon="mdi-magnify"
                 v-model="data.keyword"
                 @keyup.enter="search"
+                autofocus="true"
                 >
                 </v-text-field>
                 <v-divider></v-divider>

@@ -42,7 +42,7 @@
                                     <o-p-d-other-details-info :clicked_option="clicked_option" :payload="payload" :form_type="formType" />
                                 </v-window-item>
                                 <v-window-item class="pa-1">
-                                    <o-p-d-hmo-info :clicked_option="clicked_option" :payload="payload" />
+                                    <o-p-d-hmo-info :clicked_option="clicked_option" :payload="payload" :formErrors="formErrors" />
                                 </v-window-item>
                                 <v-window-item class="pa-1">
                                     <o-p-d-consultant-info :clicked_option="clicked_option" :payload="payload" />
@@ -136,6 +136,7 @@ const findTabIndexByError = (field) => {
         case "mscAccount_Type": return "1";
         case "mscPrice_Groups": return "1";
         case "mscPrice_Schemes": return "1";
+        case "guarantor_name": return "3";
         default: return "0";
     }
 }
@@ -195,6 +196,7 @@ const openConfirmDialog = async () => {
         formErrors.value.mscPrice_Schemes = "Required field";
         valid.value = false;
     }
+    
 
     if (!valid.value) {
         const firstErrorField = Object.keys(formErrors.value)[0];

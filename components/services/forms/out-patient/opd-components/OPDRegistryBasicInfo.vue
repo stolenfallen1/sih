@@ -382,7 +382,7 @@ watch(filteredPriceSchemes, (newSchemes) => {
 });
 
 watch(() => props.payload.mscPrice_Schemes, (newSchemeValue) => {
-    const newHospitalPlan = newSchemeValue === 2 ? 2 : 1;
+    const newHospitalPlan = newSchemeValue === 1 ? 1 : 2;
     props.payload.mscAccount_type = parseInt(newHospitalPlan); 
 });
 
