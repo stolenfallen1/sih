@@ -46,7 +46,6 @@
                     <div class="select-wrapper">
                         <select class="form-select" :class="{ 'input-error': formErrors.mscAccount_Type }" :disabled="clicked_option === 'view'" v-model="payload.mscAccount_Type">
                             <option v-for="(item, index) in hospitalization_plan_data" :key="index" :value="item.id" :selected="payload.mscAccount_Type === item.id ? true : false">
-
                                 {{ item.description }}
                             </option>
                         </select>
@@ -377,13 +376,54 @@ const filteredPriceSchemes = computed(() => {
     return price_scheme_data.value.filter((item) => item.id === selectedHospPlan);
 });
 
-watch(filteredPriceSchemes, (newSchemes) => {
-    props.payload.mscPrice_Schemes = newSchemes.length > 0 ? newSchemes[0].id : null;
+// watch(filteredPriceSchemes, (newSchemes) => {
+//     props.payload.mscPrice_Schemes = newSchemes.length > 0 ? newSchemes[0].id : null;
+// });
+
+watch(() => props.payload.mscAccount_Type, (newMscAccountTypeValue) => {
+    let newPriceScheme;
+    switch (newMscAccountTypeValue) {
+        case 1:
+            newPriceScheme = 1;// self pay
+            props.payload.selectedGuarantor = [];
+            break;
+        case 2:
+            newPriceScheme = 2; // HMO / Company / Pre-Payment
+            break;
+        case 3:
+            newPriceScheme = 4; // Government Assistance
+            break;
+        default:
+            newPriceScheme = null; // Handle other cases or defaults if needed
+    }
+    if (newPriceScheme !== null) {
+        props.payload.mscPrice_Schemes = parseInt(newPriceScheme);
+    }
 });
 
 watch(() => props.payload.mscPrice_Schemes, (newSchemeValue) => {
-    const newHospitalPlan = newSchemeValue === 1 ? 1 : 2;
-    props.payload.mscAccount_type = parseInt(newHospitalPlan); 
+    let newHospitalPlan;
+    switch (newSchemeValue) {
+        case 1:
+            newHospitalPlan = 1; // self pay
+            props.payload.selectedGuarantor = [];
+            break;
+        case 2:
+            newHospitalPlan = 2; // HMO / Company  / Pre-Payment
+            break;
+        case 3:
+            newHospitalPlan = 2; // HMO / Company  / Pre-Payment
+            break;
+        case 4:
+            newHospitalPlan = 3; // Government Assistance
+            break;
+        default:
+            newHospitalPlan = null; // Handle other cases or defaults if needed
+    }
+
+    if (newHospitalPlan !== null) {
+        props.payload.mscAccount_Type = parseInt(newHospitalPlan);
+    }
 });
 
 onMounted(() => {

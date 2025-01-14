@@ -13,28 +13,29 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="(item, index) in payload.selectedAllergy" :key="index">
-                            <td> <input v-model="item.allergy_name" readonly /> </td>
-                            <td> <p> {{ item.cause }} </p> </td>
-                            <td> 
-                                <p v-if="item.symptoms && item.symptoms.length > 0">
-                                    {{ item.symptoms.map(symptom => symptom.description).join(', ') }}
-                                </p>
-                                <p v-else>
-                                    No symptoms recorded
-                                </p>
-                            </td>
-                            <td>
-                                <p>
-                                    {{ item.drugUsed }}
-                                </p>
-                            </td>
-                            <td> 
-                                <v-icon v-if="clicked_option !== 'view'" color="red" class="cursor-pointer" @click="deleteRow(index)">
-                                    mdi-delete
-                                </v-icon> 
-                            </td>
-                        </tr>
+                            <tr v-for="(item, index) in payload.selectedAllergy" :key="index">
+                                <td> <input v-model="item.allergy_name" readonly /> </td>
+                                <td> <p> {{ item.cause }} </p> </td>
+                                <td> 
+                                    <p v-if="item.symptoms && item.symptoms.length > 0">
+                                        {{ item.symptoms.map(symptom => symptom.description).join(', ') }}
+                                    </p>
+                                    <p v-else>
+                                        No symptoms recorded
+                                    </p>
+                                </td>
+                                <td>
+                                    <p>
+                                        {{ item.drugUsed }}
+                                    </p>
+                                </td>
+                                <td> 
+                                    <v-icon v-if="clicked_option !== 'view'" color="red" class="cursor-pointer" @click="deleteRow(index)">
+                                        mdi-delete
+                                    </v-icon> 
+                                </td>
+                            </tr>
+                   
                     </tbody>
                     <v-divider></v-divider>
                 </v-table>
