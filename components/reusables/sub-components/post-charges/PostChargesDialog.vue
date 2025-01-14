@@ -23,104 +23,77 @@
             </v-toolbar>
             <v-divider></v-divider>
             <v-card-text>
-                <v-card elevation="4" class="mb-4">
+                <v-card elevation="2" class="mb-4">
                     <v-card-text>
-                        <p style="font-style: italic; font-weight: bold; font-size: 16px;">Patient Info</p>
-                        <v-row class="mt-1">
-                            <v-col cols="6">
-                                <v-row>
-                                    <v-col cols="12">
+                        <!-- <p style="font-style: italic; font-weight: bold; font-size: 16px;">Patient Info</p> -->
+                        <table class="charging-header">
+                            <tbody>
+                                <tr>
+                                    <td width="10%" class="text-right">PATIENT ID : </td>
+                                    <td width="5%" class="text-right">
                                         <v-text-field 
-                                            label="Patient Name"
-                                            v-model="payload.patient_Name"
-                                            variant="solo"
-                                            density="compact"
-                                            hide-details
-                                            readonly
-                                        ></v-text-field>
-                                    </v-col>
-                                    <v-col cols="12">
-                                        <v-text-field 
-                                            label="ID No."
                                             v-model="payload.patient_Id"
                                             variant="solo"
                                             density="compact"
                                             hide-details
                                             readonly
                                         ></v-text-field>
-                                    </v-col>
-                                </v-row>
-                                <v-row>
-                                    <v-col cols="6">
+                                    </td>
+                                    <td width="5%" class="text-right">CASE NO : </td>
+                                    <td width="10%" class="text-right">
                                         <v-text-field 
-                                            label="Civil Status"
-                                            v-model="payload.civil_status"
-                                            variant="solo"
-                                            density="compact"
-                                            hide-details
-                                            readonly
-                                        ></v-text-field>
-                                    </v-col>
-                                    <v-col cols="6">
-                                        <v-text-field 
-                                            label="Gender"
-                                            v-model="payload.sex"
-                                            variant="solo"
-                                            density="compact"
-                                            hide-details
-                                            readonly
-                                        ></v-text-field>
-                                    </v-col>
-                                </v-row>
-                                <v-row>
-                                    <v-col cols="4">
-                                        <v-text-field 
-                                            label="Age"
-                                            v-model="payload.age"
-                                            type="number"
-                                            variant="solo"
-                                            density="compact"
-                                            hide-details
-                                            readonly
-                                        ></v-text-field>
-                                    </v-col>
-                                    <v-col cols="4">
-                                        <v-text-field 
-                                            label="Birthdate"
-                                            v-model="payload.birthdate"
-                                            type="date"
-                                            variant="solo"
-                                            density="compact"
-                                            hide-details
-                                            readonly
-                                        ></v-text-field>
-                                    </v-col>
-                                    <v-col cols="4">
-                                        <v-text-field 
-                                            label="Registry Case Date"
-                                            v-model="payload.registry_Date"
-                                            type="date"
-                                            variant="solo"
-                                            density="compact"
-                                            hide-details
-                                            readonly
-                                        ></v-text-field>
-                                    </v-col>
-                                </v-row>
-                            </v-col>
-                            <v-col cols="6">
-                                <v-row>
-                                    <v-col cols="6">
-                                        <v-text-field 
-                                            label="Case No."
                                             v-model="payload.case_No"
                                             variant="solo"
                                             density="compact"
                                             hide-details
                                             readonly
                                         ></v-text-field>
-                                    </v-col>
-                                    <v-col cols="6">
+                                    </td>
+                                    <td width="10%" class="text-right"> PHYSICIAN : </td>
+                                    <td width="4%" colspan="1">
+                                        <v-text-field 
+                                            v-model="payload.attending_Doctor"
+                                            variant="solo"
+                                            density="compact"
+                                            hide-details
+                                            readonly
+                                        ></v-text-field>
+                                    </td>
+                                    <td width="20%" colspan="3">
+                                        <v-text-field 
+                                            v-model="payload.attending_Doctor_fullname"
+                                            variant="solo"
+                                            density="compact"
+                                            hide-details
+                                            readonly
+                                        ></v-text-field>
+                                    </td>
+                                    
+                                </tr>
+                                <tr class="mb-1">
+                                    <td width="10%" class="text-right">PATIENT NAME : </td>
+                                    <td width="35%" colspan="3">
+                                        <v-text-field 
+                                            v-model="payload.patient_Name"
+                                            variant="solo"
+                                            density="compact"
+                                            hide-details
+                                            readonly
+                                        ></v-text-field>
+                                    </td>
+                                    
+                                    <td width="10%" class="text-right">REGISTRY CASE DATE : </td>
+                                    <td width="10%" >
+                                        <v-text-field 
+                                            v-model="payload.registry_Date"
+                                            variant="solo"
+                                            density="compact"
+                                            type="date"
+                                            hide-details
+                                            readonly
+                                        ></v-text-field>
+                                    </td>
+                                    <td width="10%" colspan="3">
                                         <v-text-field 
                                             label="Account"
                                             v-model="payload.account"
@@ -129,61 +102,109 @@
                                             hide-details
                                             readonly
                                         ></v-text-field>
-                                    </v-col>
-                                    <v-col cols="3">
-                                        <v-text-field
-                                            label="ID"
-                                            v-model="payload.attending_Doctor"
+                                        
+                                    </td>
+                                </tr>
+                                <tr class="mb-1">
+                                    <td width="10%" class="text-right">BIRTHDATE : </td>
+                                    <td width="5%" class="text-right">
+                                        <v-text-field 
+                                            v-model="payload.birthdate"
+                                            variant="solo"
+                                            type="date"
+                                            density="compact"
+                                            hide-details
+                                            readonly
+                                        ></v-text-field>
+                                    </td>
+                                    <td width="5%" class="text-right">AGE : </td>
+                                    <td width="10%" class="text-right">
+                                        <v-text-field 
+                                            v-model="payload.age"
                                             variant="solo"
                                             density="compact"
                                             hide-details
                                             readonly
                                         ></v-text-field>
-                                    </v-col>
-                                    <v-col cols="9">
-                                        <v-text-field
-                                            label="Physician Name"
-                                            v-model="payload.attending_Doctor_fullname"
-                                            variant="solo"
-                                            density="compact"
-                                            hide-details
-                                            readonly
-                                        ></v-text-field>
-                                    </v-col>
-                                    <v-col cols="3">
-                                        <v-text-field
-                                            label="ID"
+                                    </td>
+                                    <td width="10%" class="text-right">GUARANTOR : </td>
+                                    <td width="5%" colspan="1">
+                                        <v-text-field 
                                             v-model="payload.guarantor_Id"
                                             variant="solo"
                                             density="compact"
                                             hide-details
                                             readonly
                                         ></v-text-field>
-                                    </v-col>
-                                    <v-col cols="9">
-                                        <v-text-field
-                                            label="Guarantor Name"
+                                    </td>
+                                    <td width="10%" colspan="3">
+                                        <v-text-field 
                                             v-model="payload.guarantor_Name"
                                             variant="solo"
                                             density="compact"
                                             hide-details
                                             readonly
                                         ></v-text-field>
-                                    </v-col>
-                                    <v-col cols="6" v-if="payload.account == 'Company / Insurance'">
-                                        <v-text-field
+                                    </td>
+                                </tr>
+                                <tr class="mb-1">
+                                    <td width="10%" class="text-right">CIVIL STATUS : </td>
+                                    <td width="10%" class="text-right">
+                                        <v-text-field 
+                                            v-model="payload.civil_status"
+                                            variant="solo"
+                                            density="compact"
+                                            hide-details
+                                            readonly
+                                        ></v-text-field>
+                                    </td>
+                                    <td width="5%" class="text-right">GENDER : </td>
+                                    <td width="10%" class="text-right">
+                                        <v-text-field 
+                                            v-model="payload.sex"
+                                            variant="solo"
+                                            density="compact"
+                                            hide-details
+                                            readonly
+                                        ></v-text-field>
+                                    </td>
+                                    <td width="10%" class="text-right">ACCOUNT : </td>
+                                    <td width="5%" :colspan="payload.account == 'Self-Pay' ? 4 : 2">
+                                        <v-text-field 
+                                            v-model="payload.account"
+                                            variant="solo"
+                                            density="compact"
+                                            hide-details
+                                            readonly
+                                        ></v-text-field>
+                                    </td>
+                                    <td width="10%" colspan="2" v-if="payload.account != 'Self-Pay'">
+                                        <v-text-field 
                                             label="Credit Limit"
+                                            v-if="payload.account == 'Company / Insurance'"
                                             v-model="payload.guarantor_Credit_Limit"
                                             variant="solo"
                                             density="compact"
                                             hide-details
                                             readonly
-                                        />
-                                    </v-col>
-                                    <v-col cols="6">
+                                        ></v-text-field>
+                                    </td>
+                                </tr>
+                                <tr class="mb-1">
+                                    <td width="10%" class="text-right">ADDRESS : </td>
+                                    <td width="35%" colspan="3">
+                                        <v-text-field 
+                                            v-model="payload.bldgstreet"
+                                            variant="solo"
+                                            density="compact"
+                                            hide-details
+                                            readonly
+                                        ></v-text-field>
+                                    </td>
+                                    
+                                    <td width="10%" class="text-right">CHARGE TO : </td>
+                                    <td width="10%" colspan="4">
                                         <v-autocomplete
-                                            bg-color="#C0C0C0"
-                                            label="Charge To"
                                             item-title="text"
                                             item-value="id"
                                             v-model="payload.charge_to"
@@ -193,10 +214,11 @@
                                             density="compact"
                                             hide-details
                                         ></v-autocomplete>
-                                    </v-col>
-                                </v-row>
-                            </v-col>
-                        </v-row>
+                                    </td>
+                                    
+                                </tr>
+                            </tbody>
+                        </table>
                     </v-card-text>
                 </v-card>
                 <v-expansion-panels
@@ -1309,6 +1331,22 @@ const closeDialog = () => {
     payload.value.charge_to = payload.value.account;
 }
 
+watch(() => payload.value.charge_to, (newCharge) => {
+    if(newCharge){
+        Charges.value = [
+            {
+                code: "",
+                map_item_id: "",
+                exam_description: "",
+                charge_type: 1,
+                specimen: "",
+                quantity: 1,
+                price: 0,
+            }
+        ];
+    }
+});
+
 watchEffect(() => {
     charge_history_tab.value = payload.value.account == 'Company / Insurance' ? "0" : "1";
     pf_history_tab.value = payload.value.account == 'Company / Insurance' ? "0" : "1";
@@ -1346,14 +1384,14 @@ onUpdated(() => {
             : "OPEN";
     isDischarge.value   = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0].discharged_Date;
     isTagAsMgh.value    = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0].mgh_Datetime;
- 
+    payload.value.bldgstreet = selectedRowDetails.value.bldgstreet ?? '';
     if (payload.value.patient_Id && payload.value.case_No) {
         getChargesHistory();
         getProfFeeHistory();
         getCashAssessmentHistory();
         getCashProfHistory(); 
     }
-})
+});
 
 // FOR ER ONLY ( SIR CHARLES )
 const user_detail = ref({});
@@ -1412,4 +1450,15 @@ onMounted(() => {
         font-weight: bold;
         font-style: italic;
     }
+    .charging-header{
+        width: 100%;
+    }
+    .charging-header>tbody td{
+        padding: 3px;
+    }
+    .charging-header>tbody td.text-right{
+        font-weight: bold;
+        vertical-align: middle;
+    }                    
+
 </style>

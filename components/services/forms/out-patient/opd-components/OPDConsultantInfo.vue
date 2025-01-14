@@ -56,10 +56,12 @@ const openConsultantsList = () => {
 }
 
 const handleSelectConsultants = (selected_item) => {
+    props.payload.isRequiredConsultant = 1;
     props.payload.selectedConsultant = selected_item;
 }
 
 const removeConsultant = (index) => {
+    props.payload.isRequiredConsultant = 0;
     props.payload.selectedConsultant.splice(index, 1);
 }
 

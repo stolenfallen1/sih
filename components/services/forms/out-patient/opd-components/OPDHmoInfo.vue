@@ -16,20 +16,20 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="(item, index) in payload.selectedGuarantor" :key="index">
-                            <td style="margin: 0; padding: 1px;" width="100%"> <input   v-model="item.guarantor_name" class="hmo-input" readonly/> </td>
-                            <td style="margin: 0; padding: 1px;" width="100%"> <input v-model="item.guarantor_Approval_code" :readonly="clicked_option === 'view'" class="hmo-input fillable"/> </td>
-                            <td style="margin: 0; padding: 1px;" width="100%"> <input v-model="item.guarantor_Approval_no" :readonly="clicked_option === 'view'" class="hmo-input fillable"/> </td>
-                            <td style="margin: 0; padding: 1px;" width="100%"> <input v-model="item.guarantor_Approval_date" :readonly="clicked_option === 'view'" type="date" class="hmo-input fillable"/> </td>
-                            <td style="margin: 0; padding: 1px;" width="100%"> <input v-model="item.guarantor_Validity_date" :readonly="clicked_option === 'view'" type="date" class="hmo-input fillable"/> </td>
-                            <td style="margin: 0; padding: 1px;" width="100%"> <input v-model="item.guarantor_Credit_Limit" :readonly="item.isOpen === true || clicked_option=== 'view'" class="hmo-input fillable" />  </td>
-                            <td style="text-align: center"><input type="checkbox" v-model="item.isOpen" :checked="item.isOpen === true" /></td>
-                            <td> 
-                                <v-icon v-if="clicked_option !== 'view'" color="red" class="cursor-pointer" @click="removeGuarantor(index)">
-                                    mdi-delete
-                                </v-icon> 
-                            </td>
-                        </tr>
+                            <tr v-for="(item, index) in payload.selectedGuarantor" :key="index">
+                                <td style="margin: 0; padding: 1px;" width="100%"> <input   v-model="item.guarantor_name" class="hmo-input" readonly/> </td>
+                                <td style="margin: 0; padding: 1px;" width="100%"> <input v-model="item.guarantor_Approval_code" :readonly="clicked_option === 'view'" class="hmo-input fillable"/> </td>
+                                <td style="margin: 0; padding: 1px;" width="100%"> <input v-model="item.guarantor_Approval_no" :readonly="clicked_option === 'view'" class="hmo-input fillable"/> </td>
+                                <td style="margin: 0; padding: 1px;" width="100%"> <input v-model="item.guarantor_Approval_date" :readonly="clicked_option === 'view'" type="date" class="hmo-input fillable"/> </td>
+                                <td style="margin: 0; padding: 1px;" width="100%"> <input v-model="item.guarantor_Validity_date" :readonly="clicked_option === 'view'" type="date" class="hmo-input fillable"/> </td>
+                                <td style="margin: 0; padding: 1px;" width="100%"> <input v-model="item.guarantor_Credit_Limit" :readonly="item.isOpen === true || clicked_option=== 'view'" class="hmo-input fillable" />  </td>
+                                <td style="text-align: center"><input type="checkbox" v-model="item.isOpen" :checked="item.isOpen === true" /></td>
+                                <td> 
+                                    <v-icon v-if="clicked_option !== 'view'" color="red" class="cursor-pointer" @click="removeGuarantor(index)">
+                                        mdi-delete
+                                    </v-icon> 
+                                </td>
+                            </tr>
                     </tbody>
                     <v-divider></v-divider>
                 </v-table>
@@ -40,7 +40,7 @@
             <v-btn 
                 color="blue-darken-1 border border-info" 
                 @click="openHmoList" 
-                :disabled="payload.mscAccount_type !== 2"
+                :disabled="payload.mscAccount_Type !== 2"
             >
                 <v-icon class="mr-2">mdi-account-multiple-plus-outline</v-icon>
                 Add HMO Guarantor
@@ -74,10 +74,12 @@ const openHmoList = () => {
 }
 
 const handleHmoList = (selected_item) => {
+    props.payload.isRequiredGuarantor = 1;
     props.payload.selectedGuarantor = selected_item;
 };
 
 const removeGuarantor = (index) => {
+    props.payload.isRequiredGuarantor = 0;
     props.payload.selectedGuarantor.splice(index, 1);
 }
 

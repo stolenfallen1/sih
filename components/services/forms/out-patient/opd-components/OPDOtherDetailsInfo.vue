@@ -3,7 +3,7 @@
     <v-divider color="#000" style="margin-bottom: 15px;"></v-divider>
     <v-row style="margin-bottom: 25px;">
         <v-col cols="4">
-            <v-row>
+            <v-row no-gutters class="mt-2">
                 <v-col cols="12" class="form-group">
                     <label class="form-label">Birth Place</label>
                     <input
@@ -14,7 +14,7 @@
                     />
                 </v-col>
             </v-row>
-            <v-row>
+            <v-row  no-gutters class="mt-2"> 
                 <v-col cols="12" class="form-group">
                     <label class="form-label">Religion</label>
                     <div class="select-wrapper">
@@ -27,7 +27,7 @@
                     </div>
                 </v-col>
             </v-row>
-            <v-row>
+            <v-row no-gutters class="mt-2">
                 <v-col cols="12" class="form-group">
                     <label class="form-label">Nationality</label>
                     <div class="select-wrapper">
@@ -42,7 +42,7 @@
             </v-row>
         </v-col>
         <v-col cols="4">
-            <v-row>
+            <v-row no-gutters class="mt-2">
                 <v-col cols="12" class="form-group">
                     <label class="form-label">Temperature</label>
                     <input
@@ -53,7 +53,7 @@
                     />
                 </v-col>
             </v-row>
-            <v-row>
+            <v-row no-gutters class="mt-2">
                 <v-col cols="12" class="form-group">
                     <label class="form-label">BP Sys</label>
                     <input
@@ -64,7 +64,7 @@
                     />
                 </v-col>
             </v-row>
-            <v-row>
+            <v-row no-gutters class="mt-2">
                 <v-col cols="12" class="form-group">
                     <label class="form-label">BP Dias</label>
                     <input
@@ -77,7 +77,7 @@
             </v-row>
         </v-col>
         <v-col cols="4">
-            <v-row>
+            <v-row no-gutters class="mt-2">
                 <v-col cols="12" class="form-group">
                     <label class="form-label">Weight (kg)</label>
                     <input
@@ -89,7 +89,7 @@
                     />
                 </v-col>
             </v-row>
-            <v-row>
+            <v-row no-gutters class="mt-2">
                 <v-col cols="12" class="form-group">
                     <label class="form-label">Height (cm)</label>
                     <input
@@ -101,7 +101,7 @@
                     />
                 </v-col>
             </v-row>
-            <v-row>
+            <v-row no-gutters class="mt-2">
                 <v-col cols="12" class="form-group">
                     <label class="form-label">BMI</label>
                     <input
@@ -117,9 +117,9 @@
     </v-row>
     <p style="margin-top: 25px; font-weight: bold; font-style: italic; font-size: large;">Parent's / Spouse Information</p>
     <v-divider color="#000" style="margin-bottom: 15px;"></v-divider>
-    <v-row>
+    <v-row >
         <v-col cols="4">
-            <v-row>
+            <v-row no-gutters class="mt-2">
                 <v-col cols="12" class="form-group">
                     <label class="form-label">Father Lastname</label>
                     <input
@@ -130,7 +130,7 @@
                     />
                 </v-col>
             </v-row>
-            <v-row>
+            <v-row no-gutters class="mt-2">
                 <v-col cols="12" class="form-group">
                     <label class="form-label">Father Firstname</label>
                     <input
@@ -141,7 +141,7 @@
                     />
                 </v-col>
             </v-row>
-            <v-row>
+            <v-row no-gutters class="mt-2">
                 <v-col cols="12" class="form-group">
                     <label class="form-label">Father Middlename</label>
                     <input
@@ -152,7 +152,7 @@
                     />
                 </v-col>
             </v-row>
-            <v-row>
+            <v-row no-gutters class="mt-2">
                 <v-col cols="12" class="form-group">
                     <label class="form-label">Father Birthdate</label>
                     <input
@@ -164,7 +164,7 @@
                     />
                 </v-col>
             </v-row>
-            <v-row>
+            <v-row no-gutters class="mt-2">
                 <v-col cols="12" class="form-group">
                     <label class="form-label">Father Age</label>
                     <input
@@ -178,7 +178,7 @@
             </v-row>
         </v-col>
         <v-col cols="4">
-            <v-row>
+            <v-row no-gutters class="mt-2">
                 <v-col cols="12" class="form-group">
                     <label class="form-label">Mother Lastname</label>
                     <input
@@ -189,7 +189,7 @@
                     />
                 </v-col>
             </v-row>
-            <v-row>
+            <v-row no-gutters class="mt-2">
                 <v-col cols="12" class="form-group">
                     <label class="form-label">Mother Firstname</label>
                     <input
@@ -200,7 +200,7 @@
                     />
                 </v-col>
             </v-row>
-            <v-row>
+            <v-row no-gutters class="mt-2">
                 <v-col cols="12" class="form-group">
                     <label class="form-label">Mother Middlename</label>
                     <input
@@ -211,7 +211,7 @@
                     />
                 </v-col>
             </v-row>
-            <v-row>
+            <v-row no-gutters class="mt-2">
                 <v-col cols="12" class="form-group">
                     <label class="form-label">Mother Birthdate</label>
                     <input
@@ -223,7 +223,7 @@
                     />
                 </v-col>
             </v-row>
-            <v-row>
+            <v-row no-gutters class="mt-2">
                 <v-col cols="12" class="form-group">
                     <label class="form-label">Mother Age</label>
                     <input
@@ -237,7 +237,7 @@
             </v-row>
         </v-col>
         <v-col cols="4">
-            <v-row>
+            <v-row no-gutters class="mt-2">
                 <v-col cols="12" class="form-group">
                     <label class="form-label">Spouse Lastname</label>
                     <input
@@ -247,7 +247,7 @@
                     />
                 </v-col>
             </v-row>
-            <v-row>
+            <v-row no-gutters class="mt-2">
                 <v-col cols="12" class="form-group">
                     <label class="form-label">Spouse Firstname</label>
                     <input
@@ -257,7 +257,7 @@
                     />
                 </v-col>
             </v-row>
-            <v-row>
+            <v-row no-gutters class="mt-2">
                 <v-col cols="12" class="form-group">
                     <label class="form-label">Spouse Middlename</label>
                     <input
@@ -267,7 +267,7 @@
                     />
                 </v-col>
             </v-row>
-            <v-row>
+            <v-row no-gutters class="mt-2">
                 <v-col cols="12" class="form-group">
                     <label class="form-label">Spouse Birthdate</label>
                     <input
@@ -277,7 +277,7 @@
                     />
                 </v-col>
             </v-row>
-            <v-row>
+            <v-row no-gutters class="mt-2">
                 <v-col cols="12" class="form-group">
                     <label class="form-label">Spouse Age</label>
                     <input

@@ -204,6 +204,7 @@
 	<Snackbar />
 	<GlobalTemplateDialog />
 	<UserProfile :open_user_profile="open_user_profile" @close-dialog="closeUserProfile" />
+    <snack-bar-error-message />
 	</v-app>
 </template>
 

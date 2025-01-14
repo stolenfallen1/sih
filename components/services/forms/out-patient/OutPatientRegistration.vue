@@ -39,7 +39,7 @@
                                     <o-p-d-registry-basic-info :clicked_option="clicked_option" :payload="payload" :formErrors="formErrors" :form_type="formType" />
                                 </v-window-item>
                                 <v-window-item class="pa-1">
-                                    <o-p-d-other-details-info :clicked_option="clicked_option" :payload="payload" :form_type="formType" />
+                                    <o-p-d-other-details-info :clicked_option="clicked_option" :payload="payload" :formErrors="formErrors" :form_type="formType" />
                                 </v-window-item>
                                 <v-window-item class="pa-1">
                                     <o-p-d-hmo-info :clicked_option="clicked_option" :payload="payload" :formErrors="formErrors" />
@@ -54,6 +54,7 @@
                                     <o-p-d-remarks-info :clicked_option="clicked_option" :payload="payload" />
                                 </v-window-item>
                             </v-window>
+                            
                         </v-col>
                     </v-row>
                 </v-card-text>
@@ -112,7 +113,7 @@ const payload = ref({
 });
 const confirmDialog = ref(false);
 const isLoading = ref(false);
-
+const requiredFieldMessage = ref([]); // Array to collect all required fields
 const emits = defineEmits(['close-dialog', 'patient-registered']);
 
 const closeDialog = () => {
@@ -133,15 +134,17 @@ const findTabIndexByError = (field) => {
         case "register_Source": return "1";
         case "register_Casetype": return "1";
         case "mscAccount_Trans_Types": return "1";
-        case "mscAccount_type": return "1";
+        case "mscAccount_Type": return "1";
         case "mscPrice_Groups": return "1";
         case "mscPrice_Schemes": return "1";
-        case "guarantor_name": return "3";
+        case "guarantor": return "3";
+        case "consultant": return "4";
         default: return "0";
     }
 }
 
 const focusField = (fieldName) => {
+    
     const fieldRef = $refs[fieldName];
     if (fieldRef && fieldRef.focus) {
         fieldRef.focus();
@@ -151,59 +154,129 @@ const focusField = (fieldName) => {
 const openConfirmDialog = async () => {
     formErrors.value = {};
     let valid = ref(true);
+   
+    // Define the required fields and their error messages
+    const requiredFields = [
+        { key: "lastname",               message: "Last name is required." },
+        { key: "firstname",              message: "First name is required." },
+        { key: "sex_id",                 message: "Sex is required." },
+        { key: "civilstatus_id",         message: "Civil status is required." },
+        { key: "birthdate",              message: "Birthdate is required." },
+        { key: "register_Source",        message: "Register source is required." },
+        { key: "register_Casetype",      message: "Register case type is required." },
+        { key: "mscAccount_Trans_Types", message: "Account transaction type is required." },
+        { key: "mscAccount_Type",        message: "Account type is required." },
+        { key: "mscPrice_Groups",        message: "Price group is required." },
+        { key: "mscPrice_Schemes",       message: "Price scheme is required." },
+    ];
+    // Validate required fields
+    requiredFields.forEach((field) => {
+        if (!payload.value[field.key]) {
+        // Add error if the field is invalid
+        formErrors.value[field.key] = field.message;
+        valid.value = false;
 
-    if (!payload.value.lastname) {
-        formErrors.value.lastname = "Required field";
-        valid.value = false;
+        // Add the message if not already present
+        if (!requiredFieldMessage.value.includes(field.message)) {
+            requiredFieldMessage.value.push(field.message);
+        }
+    } else {
+        // Remove error if the field is valid
+        delete formErrors.value[field.key];
+
+        // Remove the corresponding message
+        const messageIndex = requiredFieldMessage.value.indexOf(field.message);
+        if (messageIndex > -1) {
+            requiredFieldMessage.value.splice(messageIndex, 1);
+        }
     }
-    if (!payload.value.firstname) {
-        formErrors.value.firstname = "Required field";
+    });
+    // Special validations
+    if (payload && payload.value.mscAccount_Type !== 1) {
+    // Check if selectedGuarantor is not provided or is empty
+    if (!payload.value.selectedGuarantor || payload.value.selectedGuarantor.length === 0) {
+        formErrors.value.guarantor = 'Required Guarantor';
         valid.value = false;
+
+        // Add the guarantor error message if not already present
+        if (!requiredFieldMessage.value.includes(formErrors.value.guarantor)) {
+            requiredFieldMessage.value.push(formErrors.value.guarantor);
+        }
+        } else {
+            // Remove guarantor error if valid
+            delete formErrors.value.guarantor;
+            const guarantorIndex = requiredFieldMessage.value.indexOf('Required Guarantor');
+            if (guarantorIndex > -1) {
+                requiredFieldMessage.value.splice(guarantorIndex, 1);
+            }
+
+            // Validate each guarantor in the array
+            payload.value.selectedGuarantor.forEach((guarantor, index) => {
+                const errorKey = `guarantor_${index}_guarantor_Credit_Limit`;
+
+                if (!guarantor.isOpen) {
+                    // If isOpen is false, guarantor_Credit_Limit is required
+                   
+                    if (!guarantor.guarantor_Credit_Limit || guarantor.guarantor_Credit_Limit === '') {
+                        formErrors.value.guarantor = 'Required Guarantor';
+                        formErrors.value[errorKey] = `Credit limit is required for guarantor `;
+                        valid.value = false;
+
+                        // Add error message if not already present
+                        if (!requiredFieldMessage.value.includes(formErrors.value[errorKey])) {
+                            requiredFieldMessage.value.push(formErrors.value[errorKey]);
+                        }
+                    } else {
+                        // Remove error if guarantor_Credit_Limit is valid
+                        formErrors.value.consultant = 'Required Consultant';
+                        delete formErrors.value[errorKey];
+                        const creditLimitIndex = requiredFieldMessage.value.indexOf(
+                            `Credit limit is required for guarantor `
+                        );
+                        if (creditLimitIndex > -1) {
+                            requiredFieldMessage.value.splice(creditLimitIndex, 1);
+                        }
+                    }
+                } else {
+                    // Remove guarantor_Credit_Limit error if isOpen is true
+                    delete formErrors.value[errorKey];
+                    const creditLimitIndex = requiredFieldMessage.value.indexOf(
+                        `Credit limit is required for guarantor `
+                    );
+                    if (creditLimitIndex > -1) {
+                        requiredFieldMessage.value.splice(creditLimitIndex, 1);
+                    }
+                }
+            });
+        }
     }
-    if (!payload.value.sex_id) {
-        formErrors.value.sex_id = "Required field";
+
+
+    if (payload && (!payload.value.selectedConsultant || payload.value.selectedConsultant.length === 0)) {
+        formErrors.value.consultant = 'Required Consultant';
         valid.value = false;
-    }
-    if (!payload.value.civilstatus_id) {
-        formErrors.value.civilstatus_id = "Required field";
-        valid.value = false;
-    }
-    if (!payload.value.birthdate) {
-        formErrors.value.birthdate = "Required field";
-        valid.value = false;
-    }
-    if (!payload.value.register_Source) {
-        formErrors.value.register_Source = "Required field";
-        valid.value = false;
-    }
-    if (!payload.value.register_Casetype) {
-        formErrors.value.register_Casetype = "Required field";
-        valid.value = false;
-    }
-    if (!payload.value.mscAccount_Trans_Types) {
-        formErrors.value.mscAccount_Trans_Types = "Required field";
-        valid.value = false;
-    }
-    if (!payload.value.mscAccount_type) {
-        formErrors.value.mscAccount_type = "Required field";
-        valid.value = false;
-    }
-    if (!payload.value.mscPrice_Groups) {
-        formErrors.value.mscPrice_Groups = "Required field";
-        valid.value = false;
-    }
-    if (!payload.value.mscPrice_Schemes) {
-        formErrors.value.mscPrice_Schemes = "Required field";
-        valid.value = false;
+
+        // Add the consultant error message if not already present
+        if (!requiredFieldMessage.value.includes(formErrors.value.consultant)) {
+            requiredFieldMessage.value.push(formErrors.value.consultant);
+        }
+    } else {
+        // Remove consultant error if valid
+        delete formErrors.value.consultant;
+        const consultantIndex = requiredFieldMessage.value.indexOf('Required Consultant');
+        if (consultantIndex > -1) {
+            requiredFieldMessage.value.splice(consultantIndex, 1);
+        }
     }
     
-
     if (!valid.value) {
+        if(requiredFieldMessage.value.length > 0){
+            useMultipleSnackbar(true, "error", requiredFieldMessage.value);
+        }
         const firstErrorField = Object.keys(formErrors.value)[0];
         tab.value = findTabIndexByError(firstErrorField);
-
         await nextTick();
-        focusField(firstErrorField);
+        // focusField(firstErrorField);
         return;
     } 
     confirmDialog.value = true;
@@ -273,7 +346,7 @@ watchEffect(() => {
         payload.value.register_Source = selectedRowDetails.value.patient_registry && parseInt(selectedRowDetails.value.patient_registry[0].register_Source) ? parseInt(selectedRowDetails.value.patient_registry[0].register_Source) : '';
         payload.value.register_Casetype = selectedRowDetails.value.patient_registry && parseInt(selectedRowDetails.value.patient_registry[0].register_Casetype) ? parseInt(selectedRowDetails.value.patient_registry[0].register_Casetype) : '';
         payload.value.mscAccount_Trans_Types = selectedRowDetails.value.patient_registry && parseInt(selectedRowDetails.value.patient_registry[0].mscAccount_Trans_Types) ? parseInt(selectedRowDetails.value.patient_registry[0].mscAccount_Trans_Types) : '';
-        payload.value.mscAccount_type = selectedRowDetails.value.patient_registry && parseInt(selectedRowDetails.value.patient_registry[0].mscAccount_Type) ? parseInt(selectedRowDetails.value.patient_registry[0].mscAccount_Type) : '';
+        payload.value.mscAccount_Type = selectedRowDetails.value.patient_registry && parseInt(selectedRowDetails.value.patient_registry[0].mscAccount_Type) ? parseInt(selectedRowDetails.value.patient_registry[0].mscAccount_Type) : '';
         payload.value.mscPrice_Groups = selectedRowDetails.value.patient_registry && parseInt(selectedRowDetails.value.patient_registry[0].mscPrice_Groups) ? parseInt(selectedRowDetails.value.patient_registry[0].mscPrice_Groups) : '';
         payload.value.mscPrice_Schemes = selectedRowDetails.value.patient_registry && parseInt(selectedRowDetails.value.patient_registry[0].mscPrice_Schemes) ? parseInt(selectedRowDetails.value.patient_registry[0].mscPrice_Schemes) : '';
         payload.value.mscService_Type = selectedRowDetails.value.patient_registry && parseInt(selectedRowDetails.value.patient_registry[0].mscService_Type) ? parseInt(selectedRowDetails.value.patient_registry[0].mscService_Type) : '';
