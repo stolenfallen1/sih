@@ -24,6 +24,7 @@
     }
 
     const emits = defineEmits(['close-dialog', 'patient-registered'])
+    
     const closeDialog = () => {
         emits('close-dialog');
     }
@@ -90,8 +91,6 @@
     onBeforeUnmount(() => {
         stopLoader();
     })
-
-
 
     const onSubmit = async () => {
         isLoading.value = true;
@@ -179,6 +178,11 @@
             },
         { immediate: true } 
     );
+
+    const CloseAlertMessageDialog = () => {
+        emits('patient-registered');
+        closeDialog();
+    }
 
 </script>
 
@@ -356,34 +360,52 @@
                 @update:model-value="closeDialog" 
                 max-width="400px"
                 >
-                <div v-if="!isElible && !isDischarged">
-                    <v-alert
-                        border="left"
-                        color="red"
-                        dismissible
-                        elevation="24"
-                        icon="mdi-alert-circle"
+                <v-card
+                    color="red"
+                    >
+                    <v-card-title
+                        class="bg-error text-white"
                         >
-                        <div class="note">
-                            <span>Note:</span>
-                            <p class="message"> You cannot send a discharge order at this time. This patient has not yet been tagged for May Go Home.</p>
+                        Alert Message
+                    </v-card-title>
+                    <v-card-text>
+                        <div v-if="!isElible && !isDischarged">
+                            <v-alert
+                                border="left"
+                                dismissible
+                                elevation="24"
+                                icon="mdi-alert-circle"
+                                >
+                                <div class="note">
+                                    <span>Note:</span>
+                                    <p class="message">You cannot send a discharge order at this time. This patient has not yet been tagged for May Go Home.</p>
+                                </div>
+                            </v-alert>
                         </div>
-                    </v-alert>
-                </div>
-                <div v-if="!isElible && isDischarged">
-                    <v-alert
-                        border="left"
-                        color="red"
-                        dismissible
-                        elevation="24"
-                        icon="mdi-alert-circle"
+                        <div v-if="!isElible && isDischarged">
+                            <v-alert
+                                border="left"
+                                dismissible
+                                elevation="24"
+                                icon="mdi-alert-circle"
+                                >
+                                <div class="note">
+                                    <span>Note:</span>
+                                    <p class="message">The patient already has a discharge order, Please be advise or may call IT Department for futher assistance. Thank yo.</p>
+                                </div>
+                            </v-alert>
+                        </div>
+                    </v-card-text>
+                    <v-card-actions
+                            class="bg-error text-white"
+                            elevation="24"
                         >
-                        <div class="note">
-                            <span>Note:</span>
-                            <p class="message">The patient already has a discharge order, Please be advise or may call IT Department for futher assistance. Thank you.</p>
-                        </div>
-                    </v-alert>
-                </div>
+                            <v-spacer></v-spacer>
+                            <v-btn 
+                                bg-color="primary" text
+                                @click="CloseAlertMessageDialog">Close</v-btn>
+                        </v-card-actions>
+                </v-card>
             </v-dialog>
         </div>
     </div>
@@ -440,7 +462,7 @@
     }
     .note span {
         font-size: 20px;
-        color: #ffffe0;
+        color: #000;
         font-weight: bold;
         font-style: italic;
     }

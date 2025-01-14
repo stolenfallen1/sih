@@ -1,5 +1,14 @@
 <template>
-    <v-card rounded="lg">
+    <v-card rounded="lg" 
+        :style="{
+            border: 
+                payload.mscAccount_Type === 2 && clicked_option === 'new' 
+                ? '1px solid #ff0000'
+                : payload.mscAccount_Type === 2
+                ? '1px solid #ff0000'
+                : ''
+        }
+    ">
         <v-row>
             <v-col cols="12">
                 <v-table density="compact" height="40vh" class="styled-table">
@@ -56,6 +65,7 @@ const props = defineProps({
         default: () => ''
     },
 })
+
 
 const open_hmo_list = ref(false);
 

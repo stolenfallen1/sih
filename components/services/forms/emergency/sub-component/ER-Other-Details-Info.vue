@@ -163,6 +163,31 @@
                             </v-col>
                         </v-row>
                     </fieldset>
+                    <fieldset class="pa-3 rounded-fieldset">
+                        <legend class="pa-2">Chief Complaints</legend>
+                        <v-row>
+                            <v-col cols="5">
+                                <v-list-subheader class="form-header">Chief Complaints</v-list-subheader>
+                            </v-col>
+                            <v-col>
+                                <v-col>
+                                <v-autocomplete
+                                    ref="chief_Complaint_Description"
+                                    item-title="description"
+                                    item-value="id"
+                                    v-model="payload.chief_Complaint_Description"
+                                    :readonly="clicked_option === 'view'"
+                                    hide-details
+                                    :clearable="clicked_option === 'new' || clicked_option === 'edit'"
+                                    :items="mscComplaint_data"
+                                    density="compact"
+                                    variant="outlined"
+                                    :error-messages="formErrors.chief_Complaint_Description ? [formErrors.chief_Complaint_Description] : []"
+                                ></v-autocomplete>
+                            </v-col>
+                            </v-col>
+                        </v-row>
+                    </fieldset>
                 </v-col>
                 <v-col cols="6">
                     <fieldset class="pa-3 rounded-fieldset">
@@ -256,7 +281,7 @@
             </v-row>
         </v-card-text>
     </v-card>
-    <v-divider class="py-2"></v-divider>
+    <!-- <v-divider class="py-2"></v-divider>
     <v-row class="px-2">
         <v-col cols="12">
             <v-col cols="12" class="form-col">
@@ -272,7 +297,7 @@
                 ></v-textarea>
             </v-col>
         </v-col>
-    </v-row>
+    </v-row> -->
     <medical-package-list :medical_package_dialog="medical_package_dialog" @close-dialog="closeMedicalPackage" @handle-select="handleSelectPackage" />
 </template>
 
@@ -393,8 +418,8 @@ onMounted(() => {
 <style scoped>
     .form-header {
         color: #000;
-        margin: -12px 04px -12px 0px;
-        padding-left: 10px;
+        /* margin: -12px 04px -12px 0px; */
+        /* padding-left: 10px; */
         font-weight: 500;
     }
     .form-col {
@@ -412,6 +437,13 @@ onMounted(() => {
         height: 150px; /* Adjust height as needed */
         padding-bottom: 10px; /* Add padding if needed */
         box-sizing: border-box; /* Ensure padding is included in the height */
+    }
+    .fieldset-title {
+        font-weight: bold;
+        text-transform: uppercase;
+        border-bottom: 1px solid #ccc;
+        padding-bottom: 8px;
+        margin-bottom: 16px;
     }
     .truncate-text .v-input__control {
         overflow: hidden;
@@ -434,14 +466,20 @@ onMounted(() => {
         border: 1px solid #c0c0c0;
     }
 
+    .overlay {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
     .v-row {
         margin: -18px !important;
     }
-
+/* 
     legend {
         padding-left: 10px;
         padding-right: 2px;
         font-size: 1.1rem;
-    }
+    } */
 
 </style>

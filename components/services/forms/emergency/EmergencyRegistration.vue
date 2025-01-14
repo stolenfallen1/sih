@@ -148,6 +148,8 @@
             case "mscAccount_Type": return "1";
             case "mscPrice_Groups": return "1";
             case "mscPrice_Schemes": return "1";
+            case "selectedGuarantor": return "3";
+            case "selectedConsultant": return "4";
             case "chief_Complaint_Description": return "2";
             default: return "0";
         }
@@ -171,12 +173,17 @@
     const emits = defineEmits(['close-dialog', 'patient-registered']);
     const patientDetail = ref({});
 
+    const closeConfirmDialog = () => {
+        showDialog.value = false;
+    }
+
     const closeDialog = () => {
         showDialog.value = false;
-        emits('close-dialog');
-        tab.value = "0";
         payload.value = {};
         formErrors.value = {};
+        patientStore.clearSelectedPatient();
+        props.clicked_option = '';
+        emits('close-dialog');
     }
 
     const openConfirmDialog = async () => {
@@ -231,6 +238,14 @@
             formErrors.value.chief_Complaint_Description = "Clinical chief complaint is required";
             valid.value = false;
         }
+        if(payload && payload.value.selectedConsultant && payload.value.selectedConsultant.length == 0) {
+            formErrors.value.selectedConsultant = "Consultant is required";
+            valid.value = false;
+        }
+        if(payload && payload.value.selectedGuarantor && (payload.value.selectedGuarantor.length === 0 || payload.value.selectedGuarantor[0].guarantor_name === 'Self Pay') && payload.value.mscAccount_Type == 2) {
+            formErrors.value.selectedGuarantor = "Guarantor is required";
+            valid.value = false;
+        }
         if(payload.value.dead_on_arrival && !payload.value.dateOfDeath) {
             formErrors.value.dateOfDeath = "Date of Death is Required"
         }
@@ -240,12 +255,8 @@
 
             await nextTick();
             focusField(firstErrorField);
-            return;
         }
         showDialog.value = true;
-    }
-    const closeConfirmDialog = () => {
-        showDialog.value = false;
     }
     const onSubmit = async () => {
         try {
@@ -271,9 +282,7 @@
 
     const showSuccessResponse = (response) => {
         useSnackbar(true, "green", response.message);
-        payload.value = {};
-        patientDetail.value = response.data;
-        emits('patient-registered', patientDetail.value);
+        emits('patient-registered', '');
         closeConfirmDialog();
         closeDialog();
     }
@@ -351,7 +360,7 @@
             payload.value.referral_Reason               = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0].referral_Reason ? selectedRowDetails.value.patient_registry[0].referral_Reason : '';
             
             // OTHER DETAILS
-            payload.value.chief_Complaint_Description   = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0].chief_Complaint_Description ? selectedRowDetails.value.patient_registry[0].chief_Complaint_Description : '';
+            payload.value.chief_Complaint_Description   = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0].chief_Complaint_Description ? parseInt(selectedRowDetails.value.patient_registry[0].chief_Complaint_Description) : '';
             payload.value.bloodPressureSystolic         = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0].bloodPressureSystolic ? selectedRowDetails.value.patient_registry[0].bloodPressureSystolic : '';
             payload.value.bloodPressureDiastolic        = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0].bloodPressureDiastolic ? selectedRowDetails.value.patient_registry[0].bloodPressureDiastolic : '';
             payload.value.temperature                   = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0].temperatute ? selectedRowDetails.value.patient_registry[0].temperatute : '';
@@ -427,7 +436,7 @@
                 payload.value                   = Object.assign({}, patientStore.selectedPatient);
                 payload.value.sex_id            = parseInt(patientStore.selectedPatient.sex_id) ? parseInt(patientStore.selectedPatient.sex_id) : '';
                 payload.value.suffix_id         = parseInt(patientStore.selectedPatient.suffix_id) ? parseInt(patientStore.selectedPatient.suffix_id) : '';
-                payload.value.civilstatus_id    = parseInt(patientStore.selectedPatient.civilstatus_id) ? parseInt(patientStore.selectedPatient.civilstatus_id) : '';
+                payload.value.civilstatus_id    = parseInt(patientStore.selectedPatient.civil_status_id) ? parseInt(patientStore.selectedPatient.civil_status_id) : '';
                 payload.value.birthdate         = useDateMMDDYYY(patientStore.selectedPatient.birthdate) ? useDateMMDDYYY(patientStore.selectedPatient.birthdate) : '';
                 payload.value.case_No           = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0].case_No ? selectedRowDetails.value.patient_registry[0].case_No : '';
                 payload.value.registry_Date     = useDateMMDDYYY(patientStore.selectedPatient.registry_Date) ? useDateMMDDYYY(patientStore.selectedPatient.registry_Date) : '';

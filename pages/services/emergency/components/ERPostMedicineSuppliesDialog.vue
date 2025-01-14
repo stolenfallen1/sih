@@ -345,46 +345,18 @@
                                 height="48vh"
                                 density="compact"
                                 show-select
-                                select-strategy="single"
-                                @update:modelValue="handleSelectedRowCharges"
+                                select-strategy="multiple"
+                                v-model="selectedMedicineItems"
+                                @update:modelValue="handleSelectionChangeMedicine"
                                 >
                                 <template v-slot:item.status="{ item }">
                                     <span :style="{ color: item.status === 'Paid' ? 'green' : item.status === 'Unpaid' ? 'orange' : 'red' }">
                                         {{ item.status }}
                                     </span>
                                 </template>
-                                <template v-slot:item.selected="{ item }">
-                                    <input 
-                                        type="checkbox" 
-                                        :checked="isCheckedCashAssessment(item)" 
-                                        @change="toggleCashAssessmentSelection(item)" 
-                                    />
+                                <template v-slot:item.net_amount="{ item }">
+                                    {{ usePeso(item.net_amount) }}
                                 </template>
-                                <template v-slot:item.amount>
-                                    {{ usePeso(item.amount) }}
-                                </template>
-
-                                <template v-slot:item.action="{ item }">
-                                    <v-btn
-                                        flat
-                                        size="medium"
-                                        class="p-2 text-capitalize"
-                                        desity="default"
-                                        :id="item.request_num"
-                                        @click.prevent="handleCancelCharges(item.request_num, item.assess_num)"
-                                        :disabled="item.status !== 'Paid' && item.status !== 'Unpaid'" 
-                                    >
-                                        <v-icon color="#D50000">mdi-trash-can-outline</v-icon>
-                                        <v-tooltip
-                                            activator="parent"
-                                            location="top"
-                                        >
-                                            Cancel Charges
-
-                                        </v-tooltip>
-                                    </v-btn>
-                                </template>
-
                                 <template v-slot:footer>
                                     <tr>
                                         <td colspan="6" class="text-right">Total Amount:</td>
@@ -400,59 +372,27 @@
                             Posted Supply
                         </v-expansion-panel-title>
                         <v-expansion-panel-text>
-                            <v-data-table 
+                            <v-data-table
                                 :items="chargeSupplyList" 
                                 :headers="supplyHeaders" 
-                                density="compact" 
-                                height="40vh" 
+                                :items-per-page="10"
+                                class="elevation-1"
                                 item-value="request_num"
-                                class="styled-table"
+                                height="48vh"
+                                density="compact"
                                 show-select
-                                select-strategy="single"
-                                @update:modelValue="handleSelectedRowCharges"
-                            >
+                                select-strategy="multiple"
+                                v-model="selectedSupplyItems"
+                                @update:modelValue="handleSelectionChangeSupply"
+                                >
                                 <template v-slot:item.status="{ item }">
                                     <span :style="{ color: item.status === 'Paid' ? 'green' : item.status === 'Unpaid' ? 'orange' : 'red' }">
                                         {{ item.status }}
                                     </span>
                                 </template>
-                                
-                                <template v-slot:item.selected="{ item }">
-                                    <input 
-                                        type="checkbox" 
-                                        :checked="isCheckedCashAssessment(item)" 
-                                        @change="toggleCashAssessmentSelection(item)" 
-                                    />
+                                <template v-slot:item.net_amount="{ item }">
+                                    {{ usePeso(item.net_amount) }}
                                 </template>
-                                
-                                <template v-slot:item.amount>
-                                    {{ usePeso(item.amount) }}
-                                </template>
-            
-                                <template v-slot:item.action="{ item }">
-                                    <v-btn
-                                        flat
-                                        size="medium"
-                                        class="p-2 text-capitalize"
-                                        desity="default"
-                                        @click.prevent="handleCancelCharges(item.request_num, item.assess_num)"
-                                        :disabled="item.status !== 'Paid' && item.status !== 'Unpaid'" 
-                                    >
-                                    <v-icon 
-                                        color="#D50000">
-                                        mdi-trash-can-outline
-                                    </v-icon>
-
-                                        <v-tooltip
-                                            activator="parent"
-                                            location="top"
-                                        >
-                                            Cancel Charges 
-
-                                        </v-tooltip>
-                                    </v-btn>
-                                </template>
-
                                 <template v-slot:footer>
                                     <tr>
                                         <td colspan="6" class="text-right">Total Amount:</td>
@@ -466,7 +406,6 @@
             </v-card-text>
             <v-card-actions>
                 <v-btn color="blue-darken-1 border border-info" @click="closeDialog"> Close </v-btn>
-                <v-spacer></v-spacer>
                 <v-btn 
                     class="bg-error text-white" 
                     :disabled="reference_id.value === 0" 
@@ -474,6 +413,7 @@
                     > 
                     Cancel Charges 
                 </v-btn>
+                <v-spacer></v-spacer>
                 <v-btn class="bg-primary text-white" @click="openConfirmDialog"> Save Entry </v-btn>
             </v-card-actions>
         </v-card>
@@ -559,7 +499,9 @@
     const isLoading = ref(false);
     const credit_limit = ref(null);
     let panel = ref([0, 1, 2, 3]);
-    const payload = ref({});
+    const payload = ref({
+        reference_id: []
+    });
     const chargecode = ref([]);
     const open_items_list_for_medicines = ref(false);
     const open_items_list_for_supplies = ref(false);
@@ -569,6 +511,10 @@
     const showDialog = ref(false);
     const showWarning = ref(false);
     const postCharges = ref([]);
+    const charge_to = ref([
+        { value: 1, text: "Self-Pay" },
+        { value: 2, text: "Company / Insurance" }, 
+    ]);
 
     const openConfirmDialog = async () => {
         showDialog.value = true;
@@ -577,11 +523,6 @@
     const closeConfirmDialog = () => {
         showDialog.value = false;
     }
-
-    const charge_to = ref([
-        { value: 1, text: "Self-Pay" },
-        { value: 2, text: "Company / Insurance" }, 
-    ]);
 
     const Medicines = ref([
         {
@@ -830,7 +771,6 @@
         })
     }
 
-  
     const handleSelectedFrequency = (selected_item) => {
         const lastRow = Medicines.value[Medicines.value.length - 1];
         lastRow.frequency = selected_item.dosage_id; 
@@ -874,9 +814,9 @@
         payload.value.Supplies = supplies;
         payload.value.reference_id = reference_id.value;
         payload.value.medsys_AssessNum = medsys_assess_id.value;
-
+        console.log('Payload: ', payload.value);
         try {
-            if(parseInt(reference_id.value) !== 0) {
+            if(parseInt(defineProcess.value) === 1) {
                 await processCharges();
             } else {
                 if (payload.value.medicine_stocks_OnHand !== undefined) {
@@ -909,6 +849,7 @@
         } catch (error) {
             handleErrorResponse(error);
         } finally {
+            defineProcess.value = 0;
             isLoadingBtn.value = false;
             isLoading.value = false;
             clearFields();
@@ -935,7 +876,7 @@
     const processCharges = async () => {
         let response = {};
         try{
-            if(parseInt(reference_id.value) !== 0) {
+            if(parseInt(defineProcess.value) === 1) {
                 response = await useMethod("post", "er-cancel-charge", payload.value);
             } else {
                 response = await useMethod("post", "er-medicine-supplies-charges", payload.value);
@@ -975,9 +916,36 @@
     };
 
 
+    // const closeDialog = () => {
+    //     emits('close-dialog');
+    //     panel.value = [0, 1, 2, 3];
+    // }
     const closeDialog = () => {
         emits('close-dialog');
-        panel.value = [0, 1, 2, 3];
+        panel.value = [0, 1];
+        Medicines.value = [
+            {
+                code: "",
+                item_name: "",
+                frequency: "",
+                item_OnHand: "",
+                quantity: "",
+                price: "",
+                remarks: "",
+                stat: "",
+            }
+        ];
+        Supplies.value = [
+            {
+                code: "",
+                item_name: "",
+                item_OnHand: "",
+                quantity: "",
+                price: "",
+                remarks: "",
+                stat: "",
+            }
+        ]
     }
 
     const clearFields = () => {
@@ -1044,7 +1012,9 @@
             const data = Array.isArray(response) ? response : response.data;
             if (data && Array.isArray(data) && data.length > 0) {
                 const filteredMedicineData = data.filter(
-                    item => item.revenue_Id === 'EM' &&
+                    item => (item.revenue_Id === 'EM' ||
+                            item.revenue_Id === 'PH' ||
+                            parseInt(item.isMedicine) === 1) &&
                             item.record_Status !== 'R'
                 );
                 chargeMedicineList.value = filteredMedicineData.map(item => ({
@@ -1062,7 +1032,9 @@
                 }));
 
                 const filteredSupplyData = data.filter(
-                    item => item.revenue_Id === 'RS' &&
+                    item => (item.revenue_Id === 'RS' ||
+                            item.revenue_Id === 'PH' ||
+                            parseInt(item.isSupplies) === 1) &&
                             item.record_Status !== 'R'
                 );
                 chargeSupplyList.value = filteredSupplyData.map(item => ({
@@ -1084,9 +1056,45 @@
         }
     };
 
-    const handleSelectedRowCharges = (selectedRow) => {
-        reference_id.value = selectedRow[0]
-        console.log('reference_id na ni ha : ', reference_id.value);
+    const defineProcess = ref(0)
+    const selectedMedicineItems = ref([]);
+    const ItemsMedicineSelected = ref([]);
+    const handleSelectionChangeMedicine = (newSelectedItems) => {
+        defineProcess.value = 1;
+        reference_id.value = newSelectedItems;
+        const selectedReferenceIds = new Set(newSelectedItems.map(item => item.reference_id));
+        chargeMedicineList.value.forEach(item => {
+            if (selectedReferenceIds.has(item.reference_id)) {
+                if (!selectedMedicineItems.value.includes(item)) {
+                    ItemsMedicineSelected.value.push(item); 
+                }
+            } else {
+                const index = selectedMedicineItems.value.indexOf(item);
+                if (index > -1) {
+                    selectedMedicineItems.value.splice(index, 1); 
+                }
+            }
+        });
+    };
+
+    const selectedSupplyItems = ref([]);
+    const ItemsSupplySelected = ref([]);
+    const handleSelectionChangeSupply = (newSelectedItems) => {
+        defineProcess.value = 1;
+        reference_id.value = newSelectedItems;
+        const selectedReferenceIds = new Set(newSelectedItems.map(item => item.reference_id));
+        chargeSupplyList.value.forEach(item => {
+            if (selectedReferenceIds.has(item.reference_id)) {
+                if (!selectedSupplyItems.value.includes(item)) {
+                    ItemsSupplySelected.value.push(item); 
+                }
+            } else {
+                const index = selectedSupplyItems.value.indexOf(item);
+                if (index > -1) {
+                    selectedSupplyItems.value.splice(index, 1); 
+                }
+            }
+        });
     };
 
     watchEffect(() => {
@@ -1108,10 +1116,6 @@
     onUpdated(() => {
         if (selectedRowDetails.value && selectedRowDetails.value.id) {
             if (payload.value.id !== selectedRowDetails.value.id) { 
-                payload.value       = Object.assign({}, selectedRowDetails.value);
-                payload.value.name  = selectedRowDetails.value.lastname && selectedRowDetails.value.firstname 
-                    ? `${selectedRowDetails.value.lastname}, ${selectedRowDetails.value.firstname} ${selectedRowDetails.value.middlename || ''}` 
-                    : '';
                 payload.value.patient_Name = selectedRowDetails.value.lastname + ', ' + selectedRowDetails.value.firstname + ' ' + selectedRowDetails.value.middlename || '';
                 payload.value.patient_Id = selectedRowDetails.value.patient_Id || '';
                 payload.value.civil_status = selectedRowDetails.value.civil_status && selectedRowDetails.value.civil_status.civil_status_description || '';
@@ -1139,6 +1143,11 @@
     onMounted(() => {
         getRevenueCode();
         getMedicineCharges(); 
+    });
+
+    onBeforeUnmount(() => {
+        chargeMedicineList.value = [];
+        chargeSupplyList.value = [];
     });
 
 </script>
