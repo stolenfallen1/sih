@@ -87,7 +87,6 @@
         address_form_dialogTo.value = true;
     }
 
-    
     const fullFromHCIAddress = ref("");
         const handleSubmitAddress = (referred_From_HCI_address) => {
             console.log('FROM HCI ADDRESS : ', referred_From_HCI_address.region_name);
@@ -190,6 +189,7 @@
     const closeDialog = () => {
         emits('close-dialog');
         emits('patient-registered');
+        payload.value = {};
     }
 
     const CloseAlertMessageDialog = () => {
@@ -389,7 +389,6 @@
             <v-card-text>
                 <v-alert
                     border="left"
-                    color="red"
                     dismissible
                     elevation="24"
                     icon="mdi-alert-circle"
@@ -429,7 +428,6 @@
             <v-card-text>
                 <v-alert
                     border="left"
-                    color="red"
                     dismissible
                     elevation="24"
                     icon="mdi-alert-circle"
@@ -807,7 +805,6 @@
             </v-card-title>
             <v-card-text>
                 <v-alert
-                    color="red"
                     dismissible
                     elevation="24"
                     icon="mdi-alert-circle"
@@ -959,7 +956,7 @@
     }
     .note span {
         font-size: 20px;
-        color: #ffffe0;
+        color: #000;
         font-weight: bold;
         font-style: italic;
     }
