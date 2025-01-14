@@ -114,7 +114,7 @@
 							backgroundColor: 
 								item.patient_registry && 
 								item.patient_registry[0].guarantor_Name !== 'Self Pay' && 
-                				item.patient_registry[0].guarantor_Name !== null
+								item.patient_registry[0].guarantor_Name !== null
 								? 'yellow' 
 								: 'orange' 
 						}" 
@@ -122,7 +122,7 @@
 						:title="
 							item.patient_registry && 
 							item.patient_registry[0].guarantor_Name !== 'Self Pay' && 
-              				item.patient_registry[0].guarantor_Name !== null
+							item.patient_registry[0].guarantor_Name !== null
 							? 'HMO ' 
 							: 'Self Pay'
 						"
@@ -747,34 +747,34 @@
 	};
 
 const loadPatient = (patientDetails) => {
-  const keyword = patientDetails || "";
-  loadItems(null, keyword);
+	const keyword = patientDetails || "";
+	loadItems(null, keyword);
 };
 
 const handleView = (clickedOption) => {
-  clicked_option.value = clickedOption;
-  form_dialog.value = true;
+	clicked_option.value = clickedOption;
+	form_dialog.value = true;
 };
 
 const handleEdit = (clickedOption) => {
-  clicked_option.value = clickedOption;
-  form_dialog.value = true;
+	clicked_option.value = clickedOption;
+	form_dialog.value = true;
 };
 
 const handleNew = (clickedOption) => {
-  clicked_option.value = clickedOption;
-  central_form_dialog.value = true;
+	clicked_option.value = clickedOption;
+	central_form_dialog.value = true;
 };
 
 const closeCentralFormDialog = () => {
-  central_form_dialog.value = false;
-  search_payload.value = {};
-  search_results.value = [];
-  selectedPatient.value = {};
+	central_form_dialog.value = false;
+	search_payload.value = {};
+	search_results.value = [];
+	selectedPatient.value = {};
 };
 
 const openAddFormDialog = (type) => {
-  if (type === 'new') {
+	if (type === 'new') {
         form_dialog.value = true;
         closeCentralFormDialog();
     } else if (type === 'old') {  

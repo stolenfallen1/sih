@@ -1,5 +1,12 @@
 <template>
-    <v-card rounded="lg">
+    <v-card rounded="lg" ref="selectedConsultant" 
+        :style="{
+            border: 
+                payload.mscAccount_Type !== '' && !payload.selectedConsultant
+                ? '1px solid #ff0000'
+                : ''
+        }
+    ">
         <v-row>
             <v-col cols="12">
                 <v-table density="compact" height="40vh" class="styled-table">
@@ -103,5 +110,9 @@ const closeConsultantsList = () => {
 .styled-table::-webkit-scrollbar-track {
     background-color: #f5f5f5; 
     border-radius: 10px; 
+}
+.custom-border {
+    /* box-shadow: 0 2px 1px 1px rgba(255,0,0,1.00) !important; */
+    border: 1px solid #ff0000 !important;
 }
 </style>

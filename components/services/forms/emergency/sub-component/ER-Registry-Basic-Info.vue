@@ -94,10 +94,8 @@
                                     item-title="description"
                                     item-value="id"
                                     v-model="payload.mscPrice_Schemes"
-                                    :disabled="clicked_option === 'view'"
                                     :error-messages="formErrors.mscPrice_Schemes ? [formErrors.mscPrice_Schemes] : []"
                                     hide-details
-                                    readonly
                                     density="compact"
                                     variant="outlined"
                                 ></v-autocomplete>
@@ -782,6 +780,7 @@
         const response = await useMethod("get", "list-price-schemes", "", "");
         if (response) {
             price_scheme_data.value = response;
+            console.log('Price Scheme : ', price_scheme_data);
             updatePriceScheme();
         } 
         price_scheme_loading.value = false;
@@ -801,9 +800,23 @@
         if (price_scheme_data.value.length > 0) {
             if (parseInt(props.payload.mscAccount_Type) === 1) {
                 props.payload.mscPrice_Schemes = price_scheme_data.value[0].id;
-            } else {
+            } else if (parseInt(props.payload.mscAccount_Type) === 2) {
                 props.payload.mscPrice_Schemes = price_scheme_data.value[1].id;
+            } else if (parseInt(props.payload.mscAccount_Type) === 3) {
+                props.payload.mscPrice_Schemes = price_scheme_data.value[3].id;
             }
+        }
+    };
+
+    const updateHospPlan = () => {
+        if (hospitalization_plan_data.value.length > 0) {
+            if (parseInt(props.payload.mscPrice_Schemes) === 1) {
+                props.payload.mscAccount_Type = hospitalization_plan_data.value[0].id;
+            } else if (parseInt(props.payload.mscPrice_Schemes) === 2 || parseInt(props.payload.mscPrice_Schemes) === 3) {
+                props.payload.mscAccount_Type = hospitalization_plan_data.value[1].id;
+            } else {
+                props.payload.mscAccount_Type = hospitalization_plan_data.value[2].id;
+            } 
         }
     };
 
@@ -916,17 +929,26 @@
     }
 
     onMounted(() => {
-       runCheckerFunction();
+        runCheckerFunction();
         if(props.payload.mscAccount_Type) {
             updatePriceGroup();
             updatePriceScheme();
         }
     });
-
+    
     watch(() => props.payload.mscAccount_Type, (newVal, oldVal) => {
         if (newVal !== oldVal) {
             updatePriceGroup();
             updatePriceScheme();
+            if(newVal !== 2) {
+                props.payload.selectedGuarantor = [];
+            }
+        }
+    });
+
+    watch(() => props.payload.mscPrice_Schemes, (newVal, oldVal) => {
+        if (newVal !== oldVal) {
+            updateHospPlan();
         }
     });
 
