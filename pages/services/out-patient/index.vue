@@ -86,7 +86,7 @@
       @open-filter="openFilterOptions"
     >
       <template v-for="column in columns" v-slot:[`column-${column.key}`]="{ item }">
-        <div v-if="column.key === 'SOA' && item.patient_registry && item.patient_registry[0].mscPrice_Schemes == 2" >
+        <div v-if="column.key === 'SOA' && item.patient_registry && item.patient_registry[0].mscPrice_Schemes != 1" >
           <v-tooltip text="Statement of Account">
             <template v-slot:activator="{ props }">
               <v-btn v-bind="props" density="compact" hide-details @click="openPatientSOA(item)">
@@ -103,8 +103,8 @@
         </div>
         <div v-if="column.key === 'isHMO'" :key="column.key" class="isHMO">
           <span 
-            :style="{ cursor: 'default', display: 'block', height: '26px', width: '9px', backgroundColor: item.patient_registry && item.patient_registry[0].mscPrice_Schemes == 2 ? 'yellow' : 'orange' }" 
-            :title="item.patient_registry && item.patient_registry[0].mscPrice_Schemes == 2 ? 'HMO ' : 'Self Pay'" 
+            :style="{ cursor: 'default', display: 'block', height: '26px', width: '9px', backgroundColor: item.patient_registry && item.patient_registry[0].mscPrice_Schemes != 1 ? 'yellow' : 'orange' }" 
+            :title="item.patient_registry && item.patient_registry[0].mscPrice_Schemes != 1 ? 'HMO' : 'Self Pay'" 
             />
         </div>
         <span v-if="column.key === 'case_No'" :key="column.key">
@@ -568,6 +568,8 @@ const handleSearch = (keyword) => {
 };
 const loadPatient = (patientDetails) =>{
   const keyword = patientDetails;
+
+  console.log(patientDetails,'patient de')
   loadItems(null, keyword);
 }
 const openFilterOptions = () => {
@@ -741,7 +743,7 @@ const updateServerItems = (newServerItems) => {
 };
 
 const handleClose = (dialogName) => {
-  selectedRowDetails.value = Object.assign({}, {});
+  selectedRowDetails.value = Object.assign({}); 
   selectedRows.value = [];
   test.value = [];
   isSelectedUser.value = true;

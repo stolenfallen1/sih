@@ -250,7 +250,7 @@ const props = defineProps({
     },
 });
 
-const payload = ref();
+const payload = ref({});
 const headers = [
     { title: "Date", key: "transDate", align: "start", sortable: false, width: "15%" },
     { title: "Ref #", key: "refNum", align: "start", sortable: false, width: "10%" },
@@ -303,10 +303,10 @@ const getPatientSOA = async () => {
 };
 
 onUpdated(() => {
-    if (props.patient != null) {
+    if (props.patient) {
         payload.value = Object.assign({}, props.patient);
         payload.value.patient_Id = props.patient.patient_Id ? props.patient.patient_Id : '';
-        payload.value.patient_Name = props.patient.lastname + ", " + props.patient.firstname + " " + props.patient.middlename;
+        payload.value.patient_Name = props.patient.name;
         payload.value.case_No = props.patient.patient_registry ? props.patient.patient_registry[0]?.case_No : "";
         payload.value.birthdate = useDateMMDDYYY(props.patient.birthdate) ? useDateMMDDYYY(props.patient.birthdate) : '';
         payload.value.sex = props.patient.sex ? props.patient.sex?.sex_description : 'TEST'; 

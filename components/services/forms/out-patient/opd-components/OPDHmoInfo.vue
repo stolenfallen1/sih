@@ -40,7 +40,7 @@
             <v-btn 
                 color="blue-darken-1 border border-info" 
                 @click="openHmoList" 
-                :disabled="payload.mscAccount_Type !== 2"
+                :disabled="payload.mscAccount_Type == 1"
             >
                 <v-icon class="mr-2">mdi-account-multiple-plus-outline</v-icon>
                 Add HMO Guarantor

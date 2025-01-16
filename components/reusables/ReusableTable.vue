@@ -50,6 +50,7 @@
             :show-select="showSelect ? true : false"
             select-strategy="single"
             @update:modelValue="handleSelectedInput"
+            @click:row="handleSelectedRow"
             item-value="id"
             :hover="true"
             :prev-icon="prevIcon"
@@ -168,18 +169,17 @@ const handleSelectedInput = (selected) => {
     emits("selected-row", item);
 };
 
-// const handleSelectedRow = (event, selectedRow) => {
-//     const index = selectedRows.value.indexOf(selectedRow?.item.id);
-//     selectedRows.value = [];
-//     let item = selectedRow.item;
-//     if (index === -1) {
-//         selectedRows.value.push(selectedRow?.item.id);
-//     } else {
-//         item = "";
-//         selectedRows.value.splice(index, 1);
-//     }
-//     emits("selected-row", item);
-// };
+const handleSelectedRow = (event, selectedRow) => {
+    const index = selectedRows.value.indexOf(selectedRow?.item.id);
+    selectedRows.value = [];
+    let item = selectedRow.item;
+    if (index === -1) {
+        handleSelectedInput([selectedRow.item.id]);
+    } else {
+        item = "";
+        handleSelectedInput([0]);
+    }
+};
 
 const handleActionClick = (action) => {
     emits(`action-${action}`);

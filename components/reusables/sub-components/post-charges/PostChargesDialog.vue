@@ -95,8 +95,8 @@
                                     </td>
                                     <td width="10%" colspan="3">
                                         <v-text-field 
-                                            label="Account"
-                                            v-model="payload.account"
+                                            label="Guarantor Code"
+                                            v-model="payload.guarantor_Id"
                                             variant="solo"
                                             density="compact"
                                             hide-details
@@ -127,17 +127,8 @@
                                             readonly
                                         ></v-text-field>
                                     </td>
-                                    <td width="10%" class="text-right">GUARANTOR : </td>
-                                    <td width="5%" colspan="1">
-                                        <v-text-field 
-                                            v-model="payload.guarantor_Id"
-                                            variant="solo"
-                                            density="compact"
-                                            hide-details
-                                            readonly
-                                        ></v-text-field>
-                                    </td>
-                                    <td width="10%" colspan="3">
+                                    <td width="10%" class="text-right">GUARANTOR NAME : </td>
+                                    <td width="10%" colspan="4">
                                         <v-text-field 
                                             v-model="payload.guarantor_Name"
                                             variant="solo"
@@ -169,7 +160,7 @@
                                         ></v-text-field>
                                     </td>
                                     <td width="10%" class="text-right">ACCOUNT : </td>
-                                    <td width="5%" :colspan="payload.account == 'Self-Pay' ? 4 : 2">
+                                    <td width="5%" :colspan="payload.guarantor_Id != payload.patient_Id ? 2 : 4">
                                         <v-text-field 
                                             v-model="payload.account"
                                             variant="solo"
@@ -178,10 +169,10 @@
                                             readonly
                                         ></v-text-field>
                                     </td>
-                                    <td width="10%" colspan="2" v-if="payload.account != 'Self-Pay'">
+                                    <td width="10%" colspan="2" v-if="payload.guarantor_Id != payload.patient_Id">
                                         <v-text-field 
                                             label="Credit Limit"
-                                            v-if="payload.account == 'Company / Insurance'"
+                                            v-if="payload.guarantor_Id != payload.patient_Id"
                                             v-model="payload.guarantor_Credit_Limit"
                                             variant="solo"
                                             density="compact"
@@ -205,11 +196,11 @@
                                     <td width="10%" class="text-right">CHARGE TO : </td>
                                     <td width="10%" colspan="4">
                                         <v-autocomplete
-                                            item-title="text"
+                                            item-title="description"
                                             item-value="id"
                                             v-model="payload.charge_to"
                                             :items="charge_to"
-                                            :readonly="payload.account == 'Self-Pay'"
+                                            :readonly="payload.mscPrice_Schemes == 2 ? false : true"
                                             variant="solo"
                                             density="compact"
                                             hide-details
@@ -262,24 +253,24 @@
                                 <tbody>
                                     <template v-for="(item,index) in Charges">
                                         <tr>
-                                            <td> <input class="input charge-focus" v-model="item.code"  @keyup.enter="handleAddCharge(item,index)" :readonly="item.isReadonly" /> </td>
-                                            <td> <input class="input charge-focus" v-model="item.map_item_id" @keyup.enter="handleAddCharge(item,index)" readonly /> </td> 
-                                            <td> <input class="input charge-focus" v-model="item.exam_description" @keyup.enter="handleAddCharge(item,index)" readonly /> </td>
+                                            <td> <input class="input input-dept-code charge-focus" autofocus v-model="item.code"  @keyup.enter="handleAddCharge(item,index)" :readonly="item.isReadonly" /></td>
+                                            <td> <input class="input input-item-code charge-focus" v-model="item.map_item_id" @keyup.enter="handleAddCharge(item,index)" readonly /> </td> 
+                                            <td> <input class="input input-item-desc charge-focus" v-model="item.exam_description" @keyup.enter="handleAddCharge(item,index)" readonly /> </td>
                                             <td>
-                                                <select class="input charge-focus" v-model="item.charge_type">
+                                                <select class="input input-item-type chargingselect charge-focus" v-model="item.charge_type">
                                                     <option value="1">Routine</option>
                                                     <option value="2">Stat</option>
                                                 </select>
                                             </td>
                                             <td>
-                                                <select class="input charge-focus" v-model="item.specimen">
+                                                <select class="input input-item-specimen charge-focus" v-model="item.specimen">
                                                     <option v-for="(specimen, sIndex) in item.specimens" :key="sIndex" :value="specimen?.id">
                                                         {{ specimen?.description }}
                                                     </option>
                                                 </select>
                                             </td>
-                                            <td> <input class="input charge-focus" v-model="item.quantity" readonly /> </td>
-                                            <td> <input class="input charge-focus" v-model="item.price" readonly /> </td>
+                                            <td> <input class="input input-item-qty charge-focus" v-model="item.quantity" readonly /> </td>
+                                            <td> <input class="input input-item-price charge-focus" v-model="item.price" readonly /> </td>
                                             <td v-if="!item.isAdd" class="cursor-pointer" ><v-icon @click="handleAddCharge(item,index)" color="primary">mdi-plus-box</v-icon></td>
                                             <td v-if="item.isDelete" class="cursor-pointer"><v-icon @click="removeChargeItem(item)" color="red">mdi-delete</v-icon></td> 
                                         </tr>
@@ -289,6 +280,7 @@
                                     <tr>
                                         <td colspan="6" class="text-right">Total Amount: </td>
                                         <td>{{ usePeso(totalAmount) }}</td>
+                                        <td></td>
                                     </tr>
                                 </tfoot>
                             </v-table>
@@ -310,7 +302,7 @@
                                 <tbody>
                                     <template v-for="(item, index) in DoctorCharges">
                                         <tr>
-                                            <td> <input class="input pf-focus" v-model="item.code" @keyup.enter="handleAddProfessionalFee(item, index)" readonly /> </td>
+                                            <td> <input class="input input-dept-code pf-focus" v-model="item.code" @keyup.enter="handleAddProfessionalFee(item, index)" readonly /> </td>
                                             <td> <input class="input pf-focus" v-model="item.doctor_code" @keyup.enter="handleAddProfessionalFee(item, index)" readonly /> </td>
                                             <td> <input class="input pf-focus" v-model="item.doctor_name" @keyup.enter="handleAddProfessionalFee(item, index)" readonly/> </td>
                                             <td> <input class="input pf-focus" v-model="item.amount" type="number" /> </td>
@@ -323,6 +315,7 @@
                                     <tr>
                                         <td colspan="3" class="text-right">Total Amount: </td>
                                         <td>{{ usePeso(totalAmount) }}</td>
+                                        <td></td>
                                     </tr>
                                 </tfoot>
                             </v-table>
@@ -336,7 +329,7 @@
                             v-model="charge_history_tab"
                             color="primary"
                             >
-                                <v-tab value="0" v-if="payload.account == 'Company / Insurance'"><v-icon start>mdi-form-select</v-icon>Company / Insurance</v-tab>
+                                <v-tab value="0" v-if="payload.mscPrice_Schemes != 1"><v-icon start>mdi-form-select</v-icon>Company / Insurance</v-tab>
                                 <v-tab value="1"><v-icon start>mdi-form-select</v-icon>Cash Assessment</v-tab>
                             </v-tabs>
                             <v-window v-model="charge_history_tab">
@@ -355,8 +348,8 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <template v-for="item in charges_history_data">
-                                                    <tr>
+                                                <template v-if="charges_history_data.length > 0">
+                                                    <tr v-for="(item, index) in charges_history_data" :key="index">
                                                         <td> <input type="checkbox" :checked="isCheckedCharges(item)" @change="toggleChargeSelection(item)" /></td>
                                                         <td> <input readonly :value="item.refNum" /> </td>
                                                         <td> <input readonly :value="item.revenueID" /> </td>
@@ -364,6 +357,11 @@
                                                         <td> <input readonly :value="item?.items?.exam_description" /> </td>
                                                         <td> <input readonly :value="parseInt(item.quantity)" /> </td>
                                                         <td> <input readonly :value="usePeso(item.net_amount)" /> </td>
+                                                    </tr>
+                                                </template>
+                                                <template v-else>
+                                                    <tr>
+                                                        <td colspan="8">No Record found!</td>
                                                     </tr>
                                                 </template>
                                             </tbody>
@@ -394,8 +392,8 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <template v-for="item in cash_assessment_history">
-                                                    <tr>
+                                                <template v-if="cash_assessment_history.length > 0">
+                                                    <tr v-for="(item,index) in cash_assessment_history" :key="index">
                                                         <td> <input type="checkbox" :checked="isCheckedCashAssessment(item)" @change="toggleCashAssessmentSelection(item)" /></td>
                                                         <td> 
                                                             <span>
@@ -409,6 +407,11 @@
                                                         <td> <input readonly :value="item?.items?.exam_description" /> </td>
                                                         <td> <input readonly :value="parseInt(item.quantity)" /> </td>
                                                         <td> <input readonly :value="usePeso(item.amount)" /> </td>
+                                                    </tr>
+                                                </template>
+                                                <template v-else>
+                                                    <tr>
+                                                        <td colspan="8">No Record found!</td>
                                                     </tr>
                                                 </template>
                                             </tbody>
@@ -434,7 +437,7 @@
                             v-model="pf_history_tab"
                             color="primary"
                             >
-                                <v-tab value="0" v-if="payload.account == 'Company / Insurance'"><v-icon start>mdi-form-select</v-icon>Company / Insurance</v-tab>
+                                <v-tab value="0" v-if="payload.mscPrice_Schemes != 1"><v-icon start>mdi-form-select</v-icon>Company / Insurance</v-tab>
                                 <v-tab value="1"><v-icon start>mdi-form-select</v-icon>Cash Assessment</v-tab>
                             </v-tabs>
                             <v-window v-model="pf_history_tab">
@@ -452,14 +455,19 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <template v-for="item in professional_fees_history">
-                                                    <tr>
+                                                <template v-if="professional_fees_history.length > 0">
+                                                    <tr  v-for="(item,index) in professional_fees_history" :key="index">
                                                         <td> <input type="checkbox" :checked="isCheckedCharges(item)" @change="toggleChargeSelection(item)" /></td>
                                                         <td> <input readonly :value="item.refNum" /> </td>
                                                         <td> <input readonly :value="item.revenueID" /> </td>
                                                         <td> <input readonly :value="item.itemID" /> </td>
                                                         <td> <input readonly :value="item?.doctor_details?.doctor_name" /> </td>
                                                         <td> <input readonly :value="usePeso(item.net_amount)" /> </td>
+                                                    </tr>
+                                                </template>
+                                                <template v-else>
+                                                    <tr>
+                                                        <td colspan="5">No Record found!</td>
                                                     </tr>
                                                 </template>
                                             </tbody>
@@ -489,8 +497,8 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <template v-for="item in cash_prof_fee_history">
-                                                    <tr>
+                                                <template v-if="cash_prof_fee_history.length > 0">
+                                                    <tr  v-for="(item,index) in cash_prof_fee_history" :key="index">
                                                         <td> <input type="checkbox" :checked="isCheckedCashAssessment(item)" @change="toggleCashAssessmentSelection(item)" /></td>
                                                         <td> 
                                                             <span>
@@ -503,6 +511,11 @@
                                                         <td> <input readonly :value="item.itemID" /> </td>
                                                         <td> <input readonly :value="item?.doctor_details?.doctor_name" /> </td>
                                                         <td> <input readonly :value="usePeso(item.amount)" /> </td>
+                                                    </tr>
+                                                </template>
+                                                <template v-else>
+                                                    <tr>
+                                                        <td colspan="5">No Record found!</td>
                                                     </tr>
                                                 </template>
                                             </tbody>
@@ -556,7 +569,7 @@
 
     <charges-list 
         :open_charges_list="open_charges_list" 
-        :patienttype="payload.charge_to === 'Self-Pay' ? 1 : 2" 
+        :patienttype="payload.charge_to" 
         @handle-select="handleSelectedChargeItem"
         :user_input_revenue_code="user_input_revenue_code" 
         :chargecode="chargecode"
@@ -625,10 +638,8 @@ const selected_cash_assessment = ref([]);
 const user_attempts = ref(0);
 const warning_cannot_be_revoked = ref(false);
 const error_msg = ref('');
-const charge_to = ref([
-    { value: 1, text: "Self-Pay" },
-    { value: 2, text: "Company / Insurance" }, 
-]);
+const charge_to = ref([]);
+
 const credit_limit = ref(null);
 
 const chargeconfirmation = ref(false);
@@ -724,6 +735,27 @@ const getRevenueCode = async () => {
     }
 };
 
+const price_scheme_data = ref([]);
+const price_scheme_loading = ref(false);
+const getPriceScheme = async () => {
+    price_scheme_loading.value = true;
+    const response = await useMethod("get", "list-price-schemes", "", "");
+    if (response) {
+        charge_to.value = response;
+        price_scheme_loading.value = false;
+    } 
+};
+
+const hospitalization_plan_data = ref([]);
+const hospitalization_plan_loading = ref(false);
+const getHospitalizationPlan = async () => {
+    hospitalization_plan_loading.value = true;
+    const response = await useMethod("get", "get-hospital-plan", "", "");
+    if (response) {
+        hospitalization_plan_data.value = response;
+        hospitalization_plan_loading.value = false;
+    } 
+};
 
 const totalChargesAmount = computed(() => {
     return Charges.value.reduce((acc, item) => {
@@ -853,20 +885,20 @@ const focusPFTransaction = (index) => {
 };
 
 const handleSelectedChargeItem = async (selected_item) => {
-    const lastRow = Charges.value[Charges.value.length - 1];
-    lastRow.id = selected_item.id;
-    lastRow.map_item_id = selected_item.map_item_id;
-    lastRow.exam_description = selected_item.exam_description;
-    lastRow.form = selected_item.form;
-    lastRow.price = selected_item.prices ? usePeso(selected_item.prices[0].price) : '0';
-    lastRow.totalamount = selected_item.price;
-    lastRow.barcode_prefix = selected_item?.sections?.barcodeid_prefix ? selected_item.sections.barcodeid_prefix : null;
-    lastRow.revenucode = lastRow.code;
+    const lastRow               = Charges.value[Charges.value.length - 1];
+    lastRow.id                  = selected_item.id;
+    lastRow.map_item_id         = selected_item.map_item_id;
+    lastRow.exam_description    = selected_item.exam_description;
+    lastRow.form                = selected_item.form;
+    lastRow.price               = selected_item.prices ? usePeso(selected_item.prices[0].price) : '0';
+    lastRow.totalamount         = selected_item.price;
+    lastRow.barcode_prefix      = selected_item?.sections?.barcodeid_prefix ? selected_item.sections.barcodeid_prefix : null;
+    lastRow.revenucode          = lastRow.code;
     if (lastRow.map_item_id && lastRow.code === 'LB') {
         const response = await useMethod("get", "get-charges-specimen?map_item_id=", "", lastRow.map_item_id);
         if (response && response.data && response.data.length > 0) {
             lastRow.specimens = response?.data.map(item => item?.specimens) || [];
-            lastRow.specimen = lastRow?.specimens.length > 0 ? lastRow?.specimens[0].id : '';
+            lastRow.specimen  = lastRow?.specimens.length > 0 ? lastRow?.specimens[0].id : '';
         } 
     } 
 };
@@ -1049,7 +1081,7 @@ const postChargeCash = async () => {
 const onSubmit = async (user_details) => {
     switch (roleID.value) {
         case '27':
-            if (payload.value.charge_to === "Company / Insurance") {
+            if (payload.value.charge_to !== 1) { // 1 is self pay 
                 postChargeInsurcane();
             } else {
                 postChargeCash();
@@ -1059,7 +1091,7 @@ const onSubmit = async (user_details) => {
             // Default should check if it is authorized or matches the password of the user
             if (user_details.user_passcode === usePasscode()) {
                 isLoadingBtn.value = true;
-                if (payload.value.charge_to === "Company / Insurance") {
+                if (payload.value.charge_to !== 1) { // 1 is self pay 
                     postChargeInsurcane();
                 } else {
                     postChargeCash();
@@ -1299,10 +1331,7 @@ const getCashProfHistory = async () => {
         return useSnackbar(true, "error", "Failed to fetch cash assessment history.");
     }
 }
-
-const closeDialog = () => {
-    emits('close-dialog');
-    panel.value = [0, 1];
+const clearCharges = ()=> {
     Charges.value = [
         {
             code: "",
@@ -1314,6 +1343,11 @@ const closeDialog = () => {
             price: 0,
         }
     ];
+}
+const closeDialog = () => {
+    emits('close-dialog');
+    panel.value = [0, 1];
+    clearCharges();
     DoctorCharges.value = [
         {
             code: "MD",
@@ -1328,63 +1362,55 @@ const closeDialog = () => {
     totalHistoryAmount.value = null;
     credit_limit.value = null;
     user_attempts.value = 0;
-    payload.value.charge_to = payload.value.account;
+    payload.value.charge_to = payload.value.mscPrice_Schemes || 1;
 }
 
 watch(() => payload.value.charge_to, (newCharge) => {
     if(newCharge){
-        Charges.value = [
-            {
-                code: "",
-                map_item_id: "",
-                exam_description: "",
-                charge_type: 1,
-                specimen: "",
-                quantity: 1,
-                price: 0,
-            }
-        ];
+        clearCharges();
     }
 });
 
 watchEffect(() => {
-    charge_history_tab.value = payload.value.account == 'Company / Insurance' ? "0" : "1";
-    pf_history_tab.value = payload.value.account == 'Company / Insurance' ? "0" : "1";
-    if (payload.value.account == 'Self-Pay') {
-        payload.value.charge_to = 'Self-Pay';
-    } else {
-        payload.value.charge_to = 'Company / Insurance';
-    }
+    charge_history_tab.value = payload.value.patient_Id != payload.value.guarantor_Id ? "0" : "1";
+    pf_history_tab.value     = payload.value.patient_Id != payload.value.guarantor_Id ? "0" : "1";
+    payload.value.charge_to  = payload.value.mscPrice_Schemes
 })
 
 // const pendingStatus = await useStatus("Pending");
 const isDischarge = ref('');
 const isTagAsMgh = ref('')
+const getAccountType = (id) => {
+    const AccountType = hospitalization_plan_data.value.find((item) => item.id === parseInt(id));
+    return AccountType.description || '';
+};
 onUpdated(() => {
-    payload.value.patient_Name = selectedRowDetails.value.lastname + ', ' + selectedRowDetails.value.firstname + ' ' + selectedRowDetails.value.middlename || '';
-    payload.value.patient_Type = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry.length > 0 && selectedRowDetails.value.patient_registry[0].mscAccount_Trans_Types == 2 
-            ? 'Out-Patient' : (selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry.length > 0 && selectedRowDetails.value.patient_registry[0].mscAccount_Trans_Types == 5 
-            ? 'Emergency' : 'In-Patient');
-    payload.value.patient_Id = selectedRowDetails.value.patient_Id || '';
-    payload.value.civil_status = selectedRowDetails.value.civil_status && selectedRowDetails.value.civil_status.civil_status_description || '';
-    payload.value.sex = selectedRowDetails.value.sex && selectedRowDetails.value.sex.sex_description || '';
-    payload.value.birthdate = useDateMMDDYYY(selectedRowDetails.value.birthdate) || '';
-    payload.value.age = selectedRowDetails.value.age || '';
-    payload.value.case_No = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0].case_No || '';
-    payload.value.account = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0].mscPrice_Schemes == 1 ? "Self-Pay" : "Company / Insurance";
-    payload.value.registry_Date = selectedRowDetails.value.patient_registry && useDateMMDDYYY(selectedRowDetails.value.patient_registry[0].registry_Date) || '';
-    payload.value.attending_Doctor = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0].attending_Doctor || 'N/A';
-    payload.value.attending_Doctor_fullname = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0].attending_Doctor_fullname || 'N/A';
-    payload.value.guarantor_Id = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0].guarantor_Id ? selectedRowDetails.value.patient_registry[0].guarantor_Id : payload.value.patient_Id;
-    payload.value.guarantor_Name = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0].guarantor_Name || 'PERSONAL';
-    payload.value.guarantor_Credit_Limit = selectedRowDetails.value.patient_registry 
-            && selectedRowDetails.value.patient_registry[0].guarantor_Credit_Limit !== null 
-            && selectedRowDetails.value.patient_registry[0].guarantor_Credit_Limit !== undefined
-            ? usePeso(selectedRowDetails.value.patient_registry[0].guarantor_Credit_Limit) 
-            : "OPEN";
-    isDischarge.value   = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0].discharged_Date;
-    isTagAsMgh.value    = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0].mgh_Datetime;
-    payload.value.bldgstreet = selectedRowDetails.value.bldgstreet ?? '';
+    if(!selectedRowDetails.value) return;
+    let patient_details = selectedRowDetails.value;
+    let registry        = selectedRowDetails.value.patient_registry;
+
+    payload.value.patient_Name              = patient_details.name || '';
+    payload.value.patient_Type              = registry && registry.length > 0 && registry[0].mscAccount_Trans_Types == 2  ? 'Out-Patient' :  (registry && registry.length > 0 && registry[0].mscAccount_Trans_Types == 5 ? 'Emergency' : 'In-Patient');
+    payload.value.patient_Id                = patient_details.patient_Id || '';
+    payload.value.civil_status              = patient_details.civil_status && patient_details.civil_status.civil_status_description || '';
+    payload.value.sex                       = patient_details.sex && patient_details.sex.sex_description || '';
+    payload.value.birthdate                 = useDateMMDDYYY(patient_details.birthdate) || '';
+    payload.value.age                       = patient_details.age || '';
+    payload.value.mscPrice_Schemes          = registry && registry[0] ? parseInt(registry[0].mscPrice_Schemes) : 1; 
+    payload.value.case_No                   = registry && registry[0].case_No || '';
+    payload.value.account                   = registry && getAccountType(registry[0].mscAccount_Type);
+    payload.value.registry_Date             = registry && useDateMMDDYYY(registry[0].registry_Date) || '';
+    payload.value.attending_Doctor          = registry && registry[0].attending_Doctor || 'N/A';
+    payload.value.attending_Doctor_fullname = registry && registry[0].attending_Doctor_fullname || 'N/A';
+    payload.value.guarantor_Id              = registry && registry[0].guarantor_Id ? registry[0].guarantor_Id : payload.value.patient_Id;
+    payload.value.guarantor_Name            = registry && registry[0].guarantor_Name || 'PERSONAL';
+    payload.value.guarantor_Credit_Limit    = registry && registry[0].guarantor_Credit_Limit !== null && registry[0].guarantor_Credit_Limit !== undefined ? usePeso(registry[0].guarantor_Credit_Limit) : "OPEN";
+    isDischarge.value                       = registry && registry[0].discharged_Date;
+    isTagAsMgh.value                        = registry && registry[0].mgh_Datetime;
+    payload.value.bldgstreet                = patient_details.bldgstreet ?? '';
+
+    
+    
     if (payload.value.patient_Id && payload.value.case_No) {
         getChargesHistory();
         getProfFeeHistory();
@@ -1398,6 +1424,8 @@ const user_detail = ref({});
 const roleID = ref(0);
 onMounted(() => {
     getRevenueCode();
+    getPriceScheme();
+    getHospitalizationPlan();
     const userDetails = JSON.parse(nuxtStorage.localStorage.getData('user_details') || '{}');
     user_detail.value = userDetails;
     roleID.value = parseInt(user_detail.value?.role_id);
@@ -1414,11 +1442,15 @@ onMounted(() => {
         margin: 0;
     }
     .input {
-        border-bottom: 1px solid #A9A9A9;
+        border: none;
+        /* outline: none; */
+        border-bottom: 1px solid #eeeaea;
         padding: 4px 8px;
     }
+   
     .styled-table {
         overflow-y: auto;
+        width: 100%;
         scrollbar-width: thin; 
         scrollbar-color: #727272 #f5f5f5; 
     }
@@ -1458,7 +1490,23 @@ onMounted(() => {
     }
     .charging-header>tbody td.text-right{
         font-weight: bold;
+        font-size: 13px;
         vertical-align: middle;
     }                    
-
+    .input-dept-code,
+    .input-item-code,
+    .input-item-type,
+    .input-item-specimen
+    {
+        width: 80px;
+    }
+    .input-item-desc{
+        width: 300px;
+    }
+    .input-item-qty{
+        width: 50px;
+    }
+    .input-item-price{
+        width: 110px;
+    }
 </style>
