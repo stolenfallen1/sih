@@ -8,7 +8,164 @@
                 </v-btn>
             </v-toolbar>
             <v-card-text>
-                <v-row>
+                <table class="charging-header">
+                    <tbody>
+                        <tr>
+                            <td width="10%" class="text-right">PATIENT ID : </td>
+                            <td width="5%" class="text-right">
+                                <v-text-field 
+                                    v-model="payload.patient_Id"
+                                    variant="solo"
+                                    density="compact"
+                                    hide-details
+                                    readonly
+                                ></v-text-field>
+                            </td>
+                            <td width="5%" class="text-right">CASE NO : </td>
+                            <td width="10%" class="text-right">
+                                <v-text-field 
+                                    v-model="payload.case_No"
+                                    variant="solo"
+                                    density="compact"
+                                    hide-details
+                                    readonly
+                                ></v-text-field>
+                            </td>
+                            <td width="10%" class="text-right"> PHYSICIAN : </td>
+                            <td width="4%" colspan="1">
+                                <v-text-field 
+                                    v-model="payload.attending_Doctor"
+                                    variant="solo"
+                                    density="compact"
+                                    hide-details
+                                    readonly
+                                ></v-text-field>
+                            </td>
+                            <td width="20%" colspan="3">
+                                <v-text-field 
+                                    v-model="payload.attending_Doctor_fullname"
+                                    variant="solo"
+                                    density="compact"
+                                    hide-details
+                                    readonly
+                                ></v-text-field>
+                            </td>
+                            
+                        </tr>
+                        <tr class="mb-1">
+                            <td width="10%" class="text-right">PATIENT NAME : </td>
+                            <td width="35%" colspan="3">
+                                <v-text-field 
+                                    v-model="payload.patient_Name"
+                                    variant="solo"
+                                    density="compact"
+                                    hide-details
+                                    readonly
+                                ></v-text-field>
+                            </td>
+                            
+                            <td width="10%" class="text-right">REGISTRY CASE DATE : </td>
+                            <td width="10%" >
+                                <v-text-field 
+                                    v-model="payload.registry_Date"
+                                    variant="solo"
+                                    density="compact"
+                                    type="date"
+                                    hide-details
+                                    readonly
+                                ></v-text-field>
+                            </td>
+                            <td width="10%" colspan="3">
+                                <v-text-field 
+                                    label="Guarantor Code"
+                                    v-model="payload.guarantor_Id"
+                                    variant="solo"
+                                    density="compact"
+                                    hide-details
+                                    readonly
+                                ></v-text-field>
+                                
+                            </td>
+                        </tr>
+                        <tr class="mb-1">
+                            <td width="10%" class="text-right">BIRTHDATE : </td>
+                            <td width="5%" class="text-right">
+                                <v-text-field 
+                                    v-model="payload.birthdate"
+                                    variant="solo"
+                                    type="date"
+                                    density="compact"
+                                    hide-details
+                                    readonly
+                                ></v-text-field>
+                            </td>
+                            <td width="5%" class="text-right">AGE : </td>
+                            <td width="10%" class="text-right">
+                                <v-text-field 
+                                    v-model="payload.age"
+                                    variant="solo"
+                                    density="compact"
+                                    hide-details
+                                    readonly
+                                ></v-text-field>
+                            </td>
+                            <td width="10%" class="text-right">GUARANTOR NAME : </td>
+                            <td width="10%" colspan="4">
+                                <v-text-field 
+                                    v-model="payload.guarantor_Name"
+                                    variant="solo"
+                                    density="compact"
+                                    hide-details
+                                    readonly
+                                ></v-text-field>
+                            </td>
+                        </tr>
+                        <tr class="mb-1">
+                            <td width="10%" class="text-right">CIVIL STATUS : </td>
+                            <td width="10%" class="text-right">
+                                <v-text-field 
+                                    v-model="payload.civil_status"
+                                    variant="solo"
+                                    density="compact"
+                                    hide-details
+                                    readonly
+                                ></v-text-field>
+                            </td>
+                            <td width="5%" class="text-right">GENDER : </td>
+                            <td width="10%" class="text-right">
+                                <v-text-field 
+                                    v-model="payload.sex"
+                                    variant="solo"
+                                    density="compact"
+                                    hide-details
+                                    readonly
+                                ></v-text-field>
+                            </td>
+                            <td width="10%" class="text-right">ACCOUNT : </td>
+                            <td width="5%" :colspan="payload.guarantor_Id != payload.patient_Id ? 2 : 4">
+                                <v-text-field 
+                                    v-model="payload.account"
+                                    variant="solo"
+                                    density="compact"
+                                    hide-details
+                                    readonly
+                                ></v-text-field>
+                            </td>
+                            <td width="10%" colspan="2" v-if="payload.guarantor_Id != payload.patient_Id">
+                                <v-text-field 
+                                    label="Credit Limit"
+                                    v-if="payload.guarantor_Id != payload.patient_Id"
+                                    v-model="payload.guarantor_Credit_Limit"
+                                    variant="solo"
+                                    density="compact"
+                                    hide-details
+                                    readonly
+                                ></v-text-field>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <!-- <v-row>
                     <v-col cols="6">
                         <v-row>
                             <v-col cols="12" class="pa-1">
@@ -170,7 +327,7 @@
                             </v-col>
                         </v-row>
                     </v-col>
-                </v-row>
+                </v-row> -->
                 <v-row class="mt-5">
                     <v-divider></v-divider>
                     <v-data-table-server
@@ -315,10 +472,10 @@ onUpdated(() => {
         payload.value.attending_Doctor_fullname = props.patient.patient_registry ? props.patient.patient_registry[0]?.attending_Doctor_fullname : '';
         payload.value.guarantor_Id = props.patient.patient_registry ? props.patient.patient_registry[0]?.guarantor_Id : '';
         payload.value.guarantor_Name = props.patient.patient_registry ? props.patient.patient_registry[0]?.guarantor_Name : '';
-        payload.value.registry_Date = props.patient.patient_registry ? useDateTimeFormater(props.patient.patient_registry[0]?.registry_Date) : '';
+        payload.value.registry_Date = props.patient.patient_registry ? useDateMMDDYYY(props.patient.patient_registry[0]?.registry_Date) : '';
         payload.value.billed_Date = useDateTimeFormater(props.patient.patient_registry ? props.patient.patient_registry[0]?.billed_Date: null) || '';
         payload.value.account = props.patient.patient_registry && props.patient.patient_registry[0].mscPrice_Schemes == 1 ? "Self-Pay" : "Company / Insurance";
-
+        payload.value.guarantor_Credit_Limit = props.patient.patient_registry && props.patient.patient_registry[0].guarantor_Credit_Limit  ? props.patient.patient_registry[0].guarantor_Credit_Limit : "Open";
         getPatientSOA();
     } else {
         return;
@@ -334,4 +491,15 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
+    .charging-header{
+        width: 100%;
+    }
+    .charging-header>tbody td{
+        padding: 3px;
+    }
+    .charging-header>tbody td.text-right{
+        font-weight: bold;
+        font-size: 13px;
+        vertical-align: middle;
+    }     
 </style>
