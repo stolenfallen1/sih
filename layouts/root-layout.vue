@@ -292,6 +292,7 @@ const computeProcessingQueries = (dialog,type) => {
 		subcomponents.value = item.subcomponents;
 		table_and_template.value = item.table_and_template;
 		processing_and_queries.value = item.processing_and_queries;
+		nuxtStorage.localStorage.setData("subcomponents",JSON.stringify(item.subcomponents));
 	};
 
 	let userdetails = ref(null);
@@ -307,13 +308,24 @@ const computeProcessingQueries = (dialog,type) => {
 onUpdated(() => {
 	if (route.path !== "/dashboard") {
 		rightSidebarDisplay.value = true;
+		const data = JSON.parse(nuxtStorage.localStorage.getData("subcomponents"));
+		if(data){
+			subcomponents.value = data;
+		}
 	}
 });
 
 onMounted(async () => {
+	if (route.path !== "/dashboard") {
+		rightSidebarDisplay.value = true;
+		const data = JSON.parse(nuxtStorage.localStorage.getData("subcomponents"));
+		if(data){
+			subcomponents.value = data;
+		}
+	}
 	if (import.meta.client) {
 		try {
-		const data = nuxtStorage.localStorage.getData("user_details");
+			const data = nuxtStorage.localStorage.getData("user_details");
 			userdetails.value = data ? JSON.parse(data) : {};
 		} catch (error) {
 		console.error("Failed to parse user details:", error);

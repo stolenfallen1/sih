@@ -295,8 +295,8 @@ const onSubmit = async (user_details) => {
                 if (response) {
                     useSnackbar(true, "green", "Patient updated successfully.");
                     isLoading.value = false;
-                    payload.value = Object.assign({});
                     tab.value = "0";
+                    payload.value = Object.assign({});
                     const patientDetail = payload.value.lastname;
                     emits('patient-registered', patientDetail);
                     closeDialog();
@@ -307,8 +307,8 @@ const onSubmit = async (user_details) => {
                 if (response) {
                     useSnackbar(true, "green", "Patient registered successfully.");
                     isLoading.value = false;
-                    payload.value = Object.assign({});
                     tab.value = "0";
+                    payload.value = Object.assign({});
                     const patientDetail = payload.value.lastname;
                     emits('patient-registered', patientDetail);
                     closeDialog();
@@ -330,35 +330,46 @@ watchEffect(() => {
     if (selectedRowDetails.value && selectedRowDetails.value.id) {
         // Personal Information
         console.log(selectedRowDetails.value);
-        payload.value = Object.assign({}, selectedRowDetails.value);
-        payload.value.id = selectedRowDetails.value.id ? selectedRowDetails.value.id : '';
-        payload.value.patient_id = selectedRowDetails.value.patient_Id ? selectedRowDetails.value.patient_Id : '';
-        payload.value.register_id_no = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0].case_No ? selectedRowDetails.value.patient_registry[0].case_No : '';
-        payload.value.lastname = selectedRowDetails.value.lastname ? selectedRowDetails.value.lastname : '';
-        payload.value.firstname = selectedRowDetails.value.firstname ? selectedRowDetails.value.firstname : '';
-        payload.value.middlename = selectedRowDetails.value.middlename ? selectedRowDetails.value.middlename : '';
-        payload.value.sex_id = parseInt(selectedRowDetails.value.sex_id) ? parseInt(selectedRowDetails.value.sex_id) : '';
-        payload.value.suffix_id = parseInt(selectedRowDetails.value.suffix_id) ? parseInt(selectedRowDetails.value.suffix_id) : '';
-        payload.value.civilstatus_id = parseInt(selectedRowDetails.value.civilstatus_id) ? parseInt(selectedRowDetails.value.civilstatus_id) : '';
-        payload.value.birthdate = useDateMMDDYYY(selectedRowDetails.value.birthdate) ? useDateMMDDYYY(selectedRowDetails.value.birthdate) : '';
-        payload.value.age = selectedRowDetails.value.age ? selectedRowDetails.value.age : '';
+        payload.value          = Object.assign({}); // clear first
+        payload.value          = Object.assign({}, selectedRowDetails.value);
+        let patient_details    = selectedRowDetails.value;
+        let registry           = selectedRowDetails.value.patient_registry;
+
+        // Personal Information
+        const pd               = payload.value;
+        pd.id                  = patient_details.id || '';
+        pd.patient_id          = patient_details.patient_Id || '';
+        pd.patient_Name        = patient_details.name || '';
+        pd.register_id_no      = registry?.[0]?.case_No || '';
+        pd.lastname            = patient_details.lastname || '';
+        pd.firstname           = patient_details.firstname || '';
+        pd.middlename          = patient_details.middlename || '';
+        pd.sex_id              = parseInt(patient_details.sex_id) || '';
+        pd.suffix_id           = parseInt(patient_details.suffix_id) || '';
+        pd.civilstatus_id      = parseInt(patient_details.civilstatus_id) || '';
+        pd.birthdate           = useDateMMDDYYY(patient_details.birthdate) || '';
+        pd.age                 = patient_details.age || '';
+
         // Registry Information
-        payload.value.register_Source = selectedRowDetails.value.patient_registry && parseInt(selectedRowDetails.value.patient_registry[0].register_Source) ? parseInt(selectedRowDetails.value.patient_registry[0].register_Source) : '';
-        payload.value.register_Casetype = selectedRowDetails.value.patient_registry && parseInt(selectedRowDetails.value.patient_registry[0].register_Casetype) ? parseInt(selectedRowDetails.value.patient_registry[0].register_Casetype) : '';
-        payload.value.mscAccount_Trans_Types = selectedRowDetails.value.patient_registry && parseInt(selectedRowDetails.value.patient_registry[0].mscAccount_Trans_Types) ? parseInt(selectedRowDetails.value.patient_registry[0].mscAccount_Trans_Types) : '';
-        payload.value.mscAccount_Type = selectedRowDetails.value.patient_registry && parseInt(selectedRowDetails.value.patient_registry[0].mscAccount_Type) ? parseInt(selectedRowDetails.value.patient_registry[0].mscAccount_Type) : '';
-        payload.value.mscPrice_Groups = selectedRowDetails.value.patient_registry && parseInt(selectedRowDetails.value.patient_registry[0].mscPrice_Groups) ? parseInt(selectedRowDetails.value.patient_registry[0].mscPrice_Groups) : '';
-        payload.value.mscPrice_Schemes = selectedRowDetails.value.patient_registry && parseInt(selectedRowDetails.value.patient_registry[0].mscPrice_Schemes) ? parseInt(selectedRowDetails.value.patient_registry[0].mscPrice_Schemes) : '';
-        payload.value.mscService_Type = selectedRowDetails.value.patient_registry && parseInt(selectedRowDetails.value.patient_registry[0].mscService_Type) ? parseInt(selectedRowDetails.value.patient_registry[0].mscService_Type) : '';
-        payload.value.mscCase_Indicators_Id = selectedRowDetails.value.patient_registry && parseInt(selectedRowDetails.value.patient_registry[0].mscCase_Indicators_Id) ? parseInt(selectedRowDetails.value.patient_registry[0].mscCase_Indicators_Id) : '';
-        payload.value.mscBroughtBy_Relationship_Id = selectedRowDetails.value.patient_registry && parseInt(selectedRowDetails.value.patient_registry[0].mscBroughtBy_Relationship_Id) ? parseInt(selectedRowDetails.value.patient_registry[0].mscBroughtBy_Relationship_Id) : '';
-        payload.value.medical_Package_Name = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0].medical_Package_Name ? selectedRowDetails.value.patient_registry[0].medical_Package_Name : '';
+        const reg              = registry?.[0] || {};
+        pd.register_Source     = parseInt(reg.register_Source) || '';
+        pd.register_Casetype   = parseInt(reg.register_Casetype) || '';
+        pd.mscAccount_Trans_Types = parseInt(reg.mscAccount_Trans_Types) || '';
+        pd.mscAccount_Type     = parseInt(reg.mscAccount_Type) || '';
+        pd.mscPrice_Groups     = parseInt(reg.mscPrice_Groups) || '';
+        pd.mscPrice_Schemes    = parseInt(reg.mscPrice_Schemes) || '';
+        pd.mscService_Type     = parseInt(reg.mscService_Type) || '';
+        pd.mscCase_Indicators_Id = parseInt(reg.mscCase_Indicators_Id) || '';
+        pd.mscBroughtBy_Relationship_Id = parseInt(reg.mscBroughtBy_Relationship_Id) || '';
+        pd.medical_Package_Name = reg.medical_Package_Name || '';
+
         // Other Details
-        payload.value.birthplace = selectedRowDetails.value.birthplace ? selectedRowDetails.value.birthplace : '';
-        payload.value.religion_id = parseInt(selectedRowDetails.value.religion_id) ? parseInt(selectedRowDetails.value.religion_id) : '';
-        payload.value.nationality_id = parseInt(selectedRowDetails.value.nationality_id) ? parseInt(selectedRowDetails.value.nationality_id) : '';
+        pd.birthplace          = patient_details.birthplace || '';
+        pd.religion_id         = parseInt(patient_details.religion_id) || '';
+        pd.nationality_id      = parseInt(patient_details.nationality_id) || '';
+
         // Patient Identifier
-        const patientIdentifierMapping = {
+        const idMap = {
             isHemodialysis: 1,
             isPeritoneal: 2,
             isLINAC: 3,
@@ -370,64 +381,58 @@ watchEffect(() => {
             isTBDots: 9,
             isPAD: 10,
             isRadioTherapy: 11,
-        }
-        const patientIdentifierTemp = selectedRowDetails.value.patient_registry ? selectedRowDetails.value.patient_registry[0] : {};
-        let foundPatientIdentifier = '';
-        for (const [key, value] of Object.entries(patientIdentifierMapping)) {
-            if (patientIdentifierTemp[key] == 1) {
-                foundPatientIdentifier = value;
+        };
+
+        let patientId = '';
+        for (const [key, value] of Object.entries(idMap)) {
+            if (reg[key] === 1) {
+                patientId = value;
                 break;
             }
         }
-        payload.value.patientIdentifier = foundPatientIdentifier;
+        pd.patientIdentifier = patientId;
 
-        // For HMO GUARANTORS
+        // Guarantors
         const Guarantor = ref([]);
-        if (selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0].guarantor_Id != null && selectedRowDetails.value.patient_registry[0].guarantor_Name != 'PERSONAL') {
-            let guarantor_Id = selectedRowDetails.value.patient_registry[0].guarantor_Id ? selectedRowDetails.value.patient_registry[0].guarantor_Id : '';
-            let guarantor_name = selectedRowDetails.value.patient_registry[0].guarantor_Name ? selectedRowDetails.value.patient_registry[0].guarantor_Name : '';
-            let guarantor_Approval_code = selectedRowDetails.value.patient_registry[0].guarantor_Approval_code ? selectedRowDetails.value.patient_registry[0].guarantor_Approval_code : 'N/A';
-            let guarantor_Approval_no = selectedRowDetails.value.patient_registry[0].guarantor_Approval_no ? selectedRowDetails.value.patient_registry[0].guarantor_Approval_no : 'N/A';
-            let guarantor_Approval_date = useDateMMDDYYY(selectedRowDetails.value.patient_registry[0].guarantor_Approval_date) ? useDateMMDDYYY(selectedRowDetails.value.patient_registry[0].guarantor_Approval_date) : '';
-            let guarantor_Validity_date = useDateMMDDYYY(selectedRowDetails.value.patient_registry[0].guarantor_Validity_date) ? useDateMMDDYYY(selectedRowDetails.value.patient_registry[0].guarantor_Validity_date) : '';
-            let guarantor_Credit_Limit = selectedRowDetails.value.patient_registry[0].guarantor_Credit_Limit ? selectedRowDetails.value.patient_registry[0].guarantor_Credit_Limit : '';
+        if (reg.guarantor_Id != null && reg.guarantor_Name !== 'PERSONAL') {
             Guarantor.value.push({
-                guarantor_Id,
-                guarantor_name,
-                guarantor_Approval_code,
-                guarantor_Approval_no,
-                guarantor_Approval_date,
-                guarantor_Validity_date,
-                guarantor_Credit_Limit
+                guarantor_code:             reg.guarantor_Id || '',
+                guarantor_Id:               reg.guarantor_Id || '',
+                guarantor_name:             reg.guarantor_Name || '',
+                guarantor_Approval_code:    reg.guarantor_Approval_code || 'N/A',
+                guarantor_Approval_no:      reg.guarantor_Approval_no || 'N/A',
+                guarantor_Approval_date:    useDateMMDDYYY(reg.guarantor_Approval_date) || '',
+                guarantor_Validity_date:    useDateMMDDYYY(reg.guarantor_Validity_date) || '',
+                guarantor_Credit_Limit:     reg.guarantor_Credit_Limit || '',
+                isOpen:                     parseInt(reg.guarantor_Credit_Limit) == 0 ? false : true,
             });
         }
-        payload.value.selectedGuarantor = Guarantor.value;
+        pd.selectedGuarantor = Guarantor.value;
 
-        // For CONSULTANTS
+        // Consultants
         const Consultant = ref([]);
-        if (selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0].attending_Doctor != null) {
-            let attending_Doctor = selectedRowDetails.value.patient_registry[0].attending_Doctor ? selectedRowDetails.value.patient_registry[0].attending_Doctor : '';
-            let attending_Doctor_fullname = selectedRowDetails.value.patient_registry[0].attending_Doctor_fullname ? selectedRowDetails.value.patient_registry[0].attending_Doctor_fullname : '';
+        if (reg.attending_Doctor != null) {
             Consultant.value.push({
-                attending_Doctor,
-                attending_Doctor_fullname
+                attending_Doctor:           reg.attending_Doctor || '',
+                attending_Doctor_fullname:  reg.attending_Doctor_fullname || '',
             });
         }
-        payload.value.selectedConsultant = Consultant.value;
+        pd.selectedConsultant = Consultant.value;
+
 
         const Allergy = ref([]);
-
-        if (selectedRowDetails.value.patient_registry && Array.isArray(selectedRowDetails.value.patient_registry)) {
-            selectedRowDetails.value.patient_registry.forEach(reg => {
+        // Allergy
+        if (registry && Array.isArray(registry)) {
+            registry.forEach(reg => {
                 if (reg.allergies && Array.isArray(reg.allergies)) {
                     reg.allergies.forEach(allergy => {
-                        const allergy_id = allergy.allergy_type_id || '';
-                        const allergy_name = allergy.allergy_description || ''; 
-                        const symptoms = allergy.symptoms_allergy.map(symptom => ({
-                            description: symptom.symptom_Description  
-                        })) || []; 
-                        const cause = allergy.cause_of_allergy.map(cause => cause.description).join(', ') || '';
-                        const drugUsed = allergy.drug_used_for_allergy.map(drug => drug.drug_Description).join(', ') || ''; 
+                        const allergy_id    = allergy.allergy_type_id || '';
+                        const allergy_name  = allergy.allergy_description || ''; 
+                        const symptoms      = allergy.symptoms_allergy.map(symptom => ({
+                                                    description: symptom.symptom_Description  
+                                                })) || []; 
+                        const cause         = allergy.cause_of_allergy.map(cause => cause.description).join(', ') || '';
+                        const drugUsed      = allergy.drug_used_for_allergy.map(drug => drug.drug_Description).join(', ') || ''; 
 
                         Allergy.value.push({
                             allergy_id,
@@ -442,10 +447,9 @@ watchEffect(() => {
         }
 
         payload.value.selectedAllergy = Allergy.value;
-
-
-        payload.value.registry_Remarks = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0].registry_Remarks ? selectedRowDetails.value.patient_registry[0].registry_Remarks : '';
+        payload.value.registry_Remarks = selectedRowDetails.value.patient_registry?.[0]?.registry_Remarks || '';
     } else {
+
         if (patientStore.selectedPatient != null && patientStore.selectedPatient.id != null && patientStore.selectedPatient.patient_Id != null) {  
             console.log(patientStore.selectedPatient);
             payload.value = Object.assign({}, patientStore.selectedPatient);

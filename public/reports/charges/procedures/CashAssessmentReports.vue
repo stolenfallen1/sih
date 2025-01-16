@@ -19,7 +19,7 @@
                 </div>
                 <div style="display: flex; margin: 5px 0;">
                     <span style="font-size: 13px; min-width: 150px;">Patient Name:</span>
-                    <span style="font-size: 13px;  display: inline-block; min-width: 150px;">{{ payload.patient_Name }}</span>
+                    <span style="font-size: 13px;  display: inline-block; min-width: 150px;">{{ payload.name }}</span>
                 </div>
                 <div style="display: flex; margin: 5px 0;">
                     <span style="font-size: 13px; min-width: 150px;">DOB:</span>
