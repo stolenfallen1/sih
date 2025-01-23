@@ -270,14 +270,14 @@
 	<EmergencyRegistration :clicked_option="clicked_option" :form_dialog="form_dialog" @selected-user="selectedUser" @patient-registered="loadPatient" @close-dialog="closeAddFormDialog" />
 	<!-- Emergency Sub components -->
 	<PatientProfileDialog :show="PatientProfile" :form_payload="payload" @close-dialog="useSubComponents('PatientProfile', false)" />
-	<SuspendDialog :show="Suspend" :form_type="form_type" @patient-registered="loadPatient" @close-dialog="useSubComponents('Suspend', false)" />
+	<SuspendDialog :show="Suspend" :form_type="form_type" @selected-user="selectedUser" @patient-registered="loadPatient" @close-dialog="useSubComponents('Suspend', false)" />
 	<RequisitionsDialog :show="Requisitions" :form_type="form_type" @close-dialog="handleClose('Requisitions')" />
-	<PostChargesDialog :show="PostCharges" @patient-registered="loadPatient" @close-dialog="useSubComponents('PostCharges', false)" />
-	<ERPostMedicineSuppliesDialog :show="ERPostMedicineSupplies" @patient-registered="loadPatient" @close-dialog="useSubComponents('ERPostMedicineSupplies', false)" />
+	<PostChargesDialog :show="PostCharges" @selected-user="selectedUser" @patient-registered="loadPatient" @close-dialog="useSubComponents('PostCharges', false)" />
+	<ERPostMedicineSuppliesDialog :show="ERPostMedicineSupplies" @selected-user="selectedUser" @patient-registered="loadPatient" @close-dialog="useSubComponents('ERPostMedicineSupplies', false)" />
 	
-	<TagAsMghDialog :show="TagAsMgh" :form_type="form_type" @patient-registered="loadPatient" @close-dialog="useSubComponents('TagAsMgh', false) " />
-	<UntagAsMghDialog :show="UntagAsMgh" @patient-registered="loadPatient" @close-dialog="useSubComponents('UntagAsMgh', false)" />
-	<DischargeDialog :show="Discharge" :form_type="form_type" @patient-registered="loadPatient" @close-dialog="useSubComponents('Discharge', false)" />
+	<TagAsMghDialog :show="TagAsMgh" :form_type="form_type" @selected-user="selectedUser" @patient-registered="loadPatient" @close-dialog="useSubComponents('TagAsMgh', false) " />
+	<UntagAsMghDialog :show="UntagAsMgh" @selected-user="selectedUser" @patient-registered="loadPatient" @close-dialog="useSubComponents('UntagAsMgh', false)" />
+	<DischargeDialog :show="Discharge" @selected-user="selectedUser" :form_type="form_type" @patient-registered="loadPatient" @close-dialog="useSubComponents('Discharge', false)" />
 	<DischargeInstructionDialog :show="DischargeInstruction" @close-dialog="useSubComponents('DischargeInstruction', false)" />
 	<PostFinalDiagnosisDialog :show="PostFinalDiagnosis" @close-dialog="useSubComponents('PostFinalDiagnosis', false)" />
 	<SoaBillingDialog :show="SoaBillingStatement" @close-dialog="useSubComponents('SoaBillingStatement', false)" />
@@ -909,6 +909,7 @@ const handleTabChange = (tabValue) => {
 
 const handleClose = (dialogName) => {
 	useSubComponents(dialogName, false);
+	selectedUser('');
 	loadItems();
 }
 

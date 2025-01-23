@@ -129,7 +129,7 @@
         showDialog.value = false;
     }
 
-    const emits = defineEmits(['close-dialog', 'patient-registered']);
+    const emits = defineEmits(['close-dialog', 'patient-registered', 'selected-user']);
     
     const { selectedRowDetails } = storeToRefs(useSubcomponentSelectedRowDetailsStore()); 
 
@@ -140,6 +140,7 @@
     ]);
 
     const closeDialog = () => {
+        emits('selected-user', '');
         emits('patient-registered');
         emits('close-dialog');
     }

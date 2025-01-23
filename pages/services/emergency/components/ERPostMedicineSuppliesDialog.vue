@@ -43,180 +43,193 @@
             </v-toolbar>
             <v-divider></v-divider>
             <v-card-text>
-                <v-card elevation="4" class="mb-4">
+                <v-card elevation="2" class="mb-4">
                     <v-card-text>
-                        <p style="font-style: italic; font-weight: bold; font-size: 16px;">Patient Info</p>
-                        <v-row class="mt-1">
-                            <v-col cols="6">
-                                <v-row>
-                                    <v-col cols="12">
+                        <!-- <p style="font-style: italic; font-weight: bold; font-size: 16px;">Patient Info</p> -->
+                        <table class="charging-header">
+                            <tbody>
+                                <tr>
+                                    <td width="10%" class="text-right">PATIENT ID : </td>
+                                    <td width="5%" class="text-right">
                                         <v-text-field 
-                                            label="Patient Name"
-                                            v-model="payload.patient_Name"
-                                            variant="solo"
-                                            density="compact"
-                                            hide-details
-                                            readonly
-                                        ></v-text-field>
-                                    </v-col>
-                                    <v-col cols="12">
-                                        <v-text-field 
-                                            label="ID No."
                                             v-model="payload.patient_Id"
                                             variant="solo"
                                             density="compact"
                                             hide-details
                                             readonly
                                         ></v-text-field>
-                                    </v-col>
-                                </v-row>
-                                <v-row>
-                                    <v-col cols="6">
+                                    </td>
+                                    <td width="5%" class="text-right">CASE NO : </td>
+                                    <td width="10%" class="text-right">
                                         <v-text-field 
-                                            label="Civil Status"
-                                            v-model="payload.civil_status"
-                                            variant="solo"
-                                            density="compact"
-                                            hide-details
-                                            readonly
-                                        ></v-text-field>
-                                    </v-col>
-                                    <v-col cols="6">
-                                        <v-text-field 
-                                            label="Gender"
-                                            v-model="payload.sex"
-                                            variant="solo"
-                                            density="compact"
-                                            hide-details
-                                            readonly
-                                        ></v-text-field>
-                                    </v-col>
-                                </v-row>
-                                <v-row>
-                                    <v-col cols="4">
-                                        <v-text-field 
-                                            label="Age"
-                                            v-model="payload.age"
-                                            type="number"
-                                            variant="solo"
-                                            density="compact"
-                                            hide-details
-                                            readonly
-                                        ></v-text-field>
-                                    </v-col>
-                                    <v-col cols="4">
-                                        <v-text-field 
-                                            label="Birthdate"
-                                            v-model="payload.birthdate"
-                                            type="date"
-                                            variant="solo"
-                                            density="compact"
-                                            hide-details
-                                            readonly
-                                        ></v-text-field>
-                                    </v-col>
-                                    <v-col cols="4">
-                                        <v-text-field 
-                                            label="Registry Case Date"
-                                            v-model="payload.registry_Date"
-                                            type="date"
-                                            variant="solo"
-                                            density="compact"
-                                            hide-details
-                                            readonly
-                                        ></v-text-field>
-                                    </v-col>
-                                </v-row>
-                            </v-col>
-                            <v-col cols="6">
-                                <v-row>
-                                    <v-col cols="6">
-                                        <v-text-field 
-                                            label="Case No."
                                             v-model="payload.case_No"
                                             variant="solo"
                                             density="compact"
                                             hide-details
                                             readonly
                                         ></v-text-field>
-                                    </v-col>
-                                    <v-col cols="6">
+                                    </td>
+                                    <td width="10%" class="text-right"> PHYSICIAN : </td>
+                                    <td width="4%" colspan="1">
                                         <v-text-field 
-                                            label="Account"
-                                            v-model="payload.account"
-                                            variant="solo"
-                                            density="compact"
-                                            hide-details
-                                            readonly
-                                        ></v-text-field>
-                                    </v-col>
-                                    <v-col cols="3">
-                                        <v-text-field
-                                            label="ID"
                                             v-model="payload.attending_Doctor"
                                             variant="solo"
                                             density="compact"
                                             hide-details
                                             readonly
                                         ></v-text-field>
-                                    </v-col>
-                                    <v-col cols="9">
-                                        <v-text-field
-                                            label="Physician Name"
+                                    </td>
+                                    <td width="20%" colspan="3">
+                                        <v-text-field 
                                             v-model="payload.attending_Doctor_fullname"
                                             variant="solo"
                                             density="compact"
                                             hide-details
                                             readonly
                                         ></v-text-field>
-                                    </v-col>
-                                    <v-col cols="3">
-                                        <v-text-field
-                                            label="ID"
+                                    </td>
+                                    
+                                </tr>
+                                <tr class="mb-1">
+                                    <td width="10%" class="text-right">PATIENT NAME : </td>
+                                    <td width="35%" colspan="3">
+                                        <v-text-field 
+                                            v-model="payload.patient_Name"
+                                            variant="solo"
+                                            density="compact"
+                                            hide-details
+                                            readonly
+                                        ></v-text-field>
+                                    </td>
+                                    
+                                    <td width="10%" class="text-right">REGISTRY CASE DATE : </td>
+                                    <td width="10%" >
+                                        <v-text-field 
+                                            v-model="payload.registry_Date"
+                                            variant="solo"
+                                            density="compact"
+                                            type="date"
+                                            hide-details
+                                            readonly
+                                        ></v-text-field>
+                                    </td>
+                                    <td width="10%" colspan="3">
+                                        <v-text-field 
+                                            label="Guarantor Code"
                                             v-model="payload.guarantor_Id"
                                             variant="solo"
                                             density="compact"
                                             hide-details
                                             readonly
                                         ></v-text-field>
-                                    </v-col>
-                                    <v-col cols="9">
-                                        <v-text-field
-                                            label="Guarantor Name"
+                                        
+                                    </td>
+                                </tr>
+                                <tr class="mb-1">
+                                    <td width="10%" class="text-right">BIRTHDATE : </td>
+                                    <td width="5%" class="text-right">
+                                        <v-text-field 
+                                            v-model="payload.birthdate"
+                                            variant="solo"
+                                            type="date"
+                                            density="compact"
+                                            hide-details
+                                            readonly
+                                        ></v-text-field>
+                                    </td>
+                                    <td width="5%" class="text-right">AGE : </td>
+                                    <td width="10%" class="text-right">
+                                        <v-text-field 
+                                            v-model="payload.age"
+                                            variant="solo"
+                                            density="compact"
+                                            hide-details
+                                            readonly
+                                        ></v-text-field>
+                                    </td>
+                                    <td width="10%" class="text-right">GUARANTOR NAME : </td>
+                                    <td width="10%" colspan="4">
+                                        <v-text-field 
                                             v-model="payload.guarantor_Name"
                                             variant="solo"
                                             density="compact"
                                             hide-details
                                             readonly
                                         ></v-text-field>
-                                    </v-col>
-                                    <v-col cols="6" v-if="payload.account == 'Company / Insurance'">
-                                        <v-text-field
+                                    </td>
+                                </tr>
+                                <tr class="mb-1">
+                                    <td width="10%" class="text-right">CIVIL STATUS : </td>
+                                    <td width="10%" class="text-right">
+                                        <v-text-field 
+                                            v-model="payload.civil_status"
+                                            variant="solo"
+                                            density="compact"
+                                            hide-details
+                                            readonly
+                                        ></v-text-field>
+                                    </td>
+                                    <td width="5%" class="text-right">GENDER : </td>
+                                    <td width="10%" class="text-right">
+                                        <v-text-field 
+                                            v-model="payload.sex"
+                                            variant="solo"
+                                            density="compact"
+                                            hide-details
+                                            readonly
+                                        ></v-text-field>
+                                    </td>
+                                    <td width="10%" class="text-right">ACCOUNT : </td>
+                                    <td width="5%" :colspan="payload.guarantor_Id != payload.patient_Id ? 2 : 4">
+                                        <v-text-field 
+                                            v-model="payload.account"
+                                            variant="solo"
+                                            density="compact"
+                                            hide-details
+                                            readonly
+                                        ></v-text-field>
+                                    </td>
+                                    <td width="10%" colspan="2" v-if="payload.guarantor_Id != payload.patient_Id">
+                                        <v-text-field 
                                             label="Credit Limit"
+                                            v-if="payload.guarantor_Id != payload.patient_Id"
                                             v-model="payload.guarantor_Credit_Limit"
                                             variant="solo"
                                             density="compact"
                                             hide-details
                                             readonly
-                                        />
-                                    </v-col>
-                                    <v-col cols="6">
+                                        ></v-text-field>
+                                    </td>
+                                </tr>
+                                <tr class="mb-1">
+                                    <td width="10%" class="text-right">ADDRESS : </td>
+                                    <td width="35%" colspan="3">
+                                        <v-text-field 
+                                            v-model="payload.bldgstreet"
+                                            variant="solo"
+                                            density="compact"
+                                            hide-details
+                                            readonly
+                                        ></v-text-field>
+                                    </td>
+                                    
+                                    <td width="10%" class="text-right">CHARGE TO : </td>
+                                    <td width="10%" colspan="4">
                                         <v-autocomplete
-                                            bg-color="#C0C0C0"
-                                            label="Charge To"
-                                            item-title="text"
+                                            item-title="description"
                                             item-value="id"
                                             v-model="payload.charge_to"
                                             :items="charge_to"
-                                            :readonly="payload.account == 'Self-Pay'"
+                                            :readonly="payload.mscPrice_Schemes == 2 ? false : true"
                                             variant="solo"
                                             density="compact"
                                             hide-details
                                         ></v-autocomplete>
-                                    </v-col>
-                                </v-row>
-                            </v-col>
-                        </v-row>
+                                    </td>
+                                    
+                                </tr>
+                            </tbody>
+                        </table>
                     </v-card-text>
                 </v-card>
                 <v-expansion-panels
@@ -529,7 +542,7 @@
     })
 
     const { selectedRowDetails } = storeToRefs(useSubcomponentSelectedRowDetailsStore()); 
-    const emits = defineEmits(['close-dialog', 'post-charges', 'revoke-charges', 'patient-registered']);
+    const emits = defineEmits(['close-dialog', 'post-charges', 'revoke-charges', 'patient-registered', 'selected-user']);
     const isLoading = ref(false);
     const credit_limit = ref(null);
     let panel = ref([0, 1, 2, 3]);
@@ -964,78 +977,6 @@
     }
     const reference_id = ref(0);
     const medsys_assess_id = ref(0);
-    // const handleCancelCharges = async (request_id, assess_num) => {
-    //     reference_id.value = request_id;
-    //     medsys_assess_id.value = assess_num;
-    //     openConfirmDialog()
-            
-    // }
-    // const onSubmit = async () => {
-    //     isLoading.value = true;
-    //     isLoadingBtn.value = true;
-        
-    //     const medicines = Medicines.value.filter(obj => obj.code !== '');
-    //     const supplies = Supplies.value.filter(obj => obj.code !== '');
-
-    //     let flagMedicine = true;
-    //     let flagSupply = true;
-
-    //     payload.value.Medicines = medicines;
-    //     payload.value.Supplies = supplies;
-    //     payload.value.reference_id = reference_id.value;
-    //     payload.value.medsys_AssessNum = medsys_assess_id.value;
-    //     console.log('Payload: ', payload.value);
-    //     try {
-    //         if(parseInt(defineProcess.value) === 1) {
-    //             await processCharges();
-    //         } else {
-    //             if (payload.value.medicine_stocks_OnHand !== undefined) {
-    //                 const sufficient_mdecine_stocks = checkStockAvailability(payload.value.medicine_stocks_OnHand, medicines, 'medicine', (flag) => flagMedicine = flag);
-    //                 console.log('Sufficient Medicine: ', sufficient_mdecine_stocks);
-    //                 if(!sufficient_mdecine_stocks) {
-    //                     useSnackbar(true, "error", 'Cannot charge, double-check item stocks for medicines or supplies.');
-    //                     return;
-    //                 }
-    //             }
-    //             if (payload.value.supply_stocks_OnHand !== undefined) {
-    //                 const suficient_stocks_supply = checkStockAvailability(payload.value.supply_stocks_OnHand, supplies, 'supply', (flag) => flagSupply = flag);
-    //                 console.log('Sufficient Supply: ', suficient_stocks_supply);
-    //                 if(!suficient_stocks_supply) {
-    //                     useSnackbar(true, "error", 'Cannot charge, double-check item stocks for medicines or supplies.');
-    //                     return;
-    //                 }
-    //             }
-    //             if (flagMedicine || flagSupply) {
-    //                 if (payload.value.charge_to === "Company / Insurance") {
-    //                     credit_limit.value = payload.value.guarantor_Credit_Limit === 'OPEN'
-    //                         ? null
-    //                         : parseFloat(payload.value.guarantor_Credit_Limit.replace(/[^0-9.-]+/g, ''));
-    //                     if (credit_limit.value !== null && parseFloat(totalAmount.value) > credit_limit.value) {
-    //                         if (confirm(`Insufficient credit limit! Total is ${totalAmount.value}, but your credit limit is only ${credit_limit.value}. Proceed anyway?`)) {
-    //                             await processCharges();
-    //                         } else {
-    //                             useSnackbar(true, "warning", 'Charge process halted. Please review the items.');
-    //                         }
-    //                     } else {
-    //                         await processCharges();
-    //                     }
-    //                 } else {
-    //                     await processCharges();
-    //                 }
-    //             } else {
-    //                 useSnackbar(true, "error", 'Cannot charge, double-check item stocks for medicines or supplies.');
-    //             }
-    //         }
-    //     } catch (error) {
-    //         handleErrorResponse(error);
-    //     } finally {
-    //         defineProcess.value = 0;
-    //         isLoadingBtn.value = false;
-    //         isLoading.value = false;
-    //         clearFields();
-    //         closeConfirmDialog();
-    //     }
-    // };
 
     const onSubmit = async () => {
         isLoading.value = true;
@@ -1128,6 +1069,7 @@
     };
 
     const closeDialog = () => {
+        emits('selected-user');
         emits('patient-registered')
         emits('close-dialog');
         panel.value = [0, 1];
@@ -1346,6 +1288,7 @@
                     && selectedRowDetails.value.patient_registry[0].guarantor_Credit_Limit !== undefined
                     ? usePeso(selectedRowDetails.value.patient_registry[0].guarantor_Credit_Limit) 
                     : "OPEN";
+                payload.value.bldgstreet = selectedRowDetails.value.bldgstreet ?? '';
                 isDischarge.value = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0].discharged_Date;
                 isTagAsMgh.value    = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0].mgh_Datetime;
             }

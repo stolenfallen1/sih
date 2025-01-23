@@ -257,9 +257,10 @@ const onSubmit = () => {
     emits('closeDialog');
 };
 
-const emits = defineEmits(['close-dialog', 'patient-registered']);
+const emits = defineEmits(['close-dialog', 'patient-registered', 'selected-user']);
 
 const closeDialog = () => {
+    emits('selected-user', '');
     emits('patient-registered');
     emits('close-dialog');
 }

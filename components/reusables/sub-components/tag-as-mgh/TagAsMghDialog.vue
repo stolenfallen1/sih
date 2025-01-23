@@ -21,7 +21,7 @@
         },
     });
 
-    const emits = defineEmits(['close-dialog', 'check-pending-charges', 'patient-registered']);
+    const emits = defineEmits(['close-dialog', 'check-pending-charges', 'patient-registered', 'selected-user']);
 
     const payload = ref([{
         mgh_queue_no: 0,
@@ -187,6 +187,7 @@
     const { selectedRowDetails } = storeToRefs(useSubcomponentSelectedRowDetailsStore()); 
 
     const closeDialog = () => {
+        emits('selected-user', '');
         emits('close-dialog');
         emits('patient-registered');
         payload.value = {};

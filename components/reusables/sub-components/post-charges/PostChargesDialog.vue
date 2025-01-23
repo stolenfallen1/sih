@@ -643,7 +643,7 @@ let charge_history_tab = ref("0");
 let pf_history_tab = ref("0");
 
 const { selectedRowDetails } = storeToRefs(useSubcomponentSelectedRowDetailsStore()); 
-const emits = defineEmits(['close-dialog', 'patient-registered']); 
+const emits = defineEmits(['close-dialog', 'patient-registered', 'selected-user']); 
 
 const user_input_revenue_code = ref('');
 const open_charges_list = ref(false);
@@ -1351,15 +1351,7 @@ const getCashProfHistory = async () => {
         return useSnackbar(true, "error", "Failed to fetch cash assessment history.");
     }
 }
-<<<<<<< Updated upstream
 const clearCharges = ()=> {
-=======
-
-const closeDialog = () => {
-    emits('patient-registered');
-    emits('close-dialog');
-    panel.value = [0, 1];
->>>>>>> Stashed changes
     Charges.value = [
         {
             code: "",
@@ -1372,7 +1364,10 @@ const closeDialog = () => {
         }
     ];
 }
+
 const closeDialog = () => {
+    emits('selected-user','');
+    emits('patient-registered');
     emits('close-dialog');
     panel.value = [0, 1];
     clearCharges();
@@ -1393,23 +1388,13 @@ const closeDialog = () => {
     payload.value.charge_to = payload.value.mscPrice_Schemes || 1;
 }
 
-<<<<<<< Updated upstream
-watch(() => payload.value.charge_to, (newCharge) => {
-    if(newCharge){
-        clearCharges();
-=======
 const CloseAlertMessageDialog = () => {
     closeDialog();
 }
 
-watchEffect(() => {
-    charge_history_tab.value = payload.value.account == 'Company / Insurance' ? "0" : "1";
-    pf_history_tab.value = payload.value.account == 'Company / Insurance' ? "0" : "1";
-    if (payload.value.account == 'Self-Pay') {
-        payload.value.charge_to = 'Self-Pay';
-    } else {
-        payload.value.charge_to = 'Company / Insurance';
->>>>>>> Stashed changes
+watch(() => payload.value.charge_to, (newCharge) => {
+    if(newCharge){
+        clearCharges();
     }
 });
 
@@ -1489,7 +1474,7 @@ onMounted(() => {
         border-bottom: 1px solid #eeeaea;
         padding: 4px 8px;
     }
-   
+
     .styled-table {
         overflow-y: auto;
         width: 100%;
