@@ -1,17 +1,37 @@
 <template>
     <v-dialog v-if="selectedRowDetails.value?.patient_registry?.[0]?.discharged_Date !== null || selectedRowDetails.value?.patient_registry?.[0]?.discharged_Date === null" :model-value="show" rounded="lg" scrollable @update:model-value="closeDialog" max-width="400px"> 
-        <v-alert
-            border="left"
+        <v-card
             color="red"
-            dismissible
-            elevation="24"
-            icon="mdi-alert-circle"
         >
-           <div class="note">
-                <span>Note:</span>
-                <p class="message">This action is not available at this time; please call the IT Department when it's necessary.</p>
-           </div>
-        </v-alert>
+            <v-card-title
+                class="bg-error text-white"
+            >
+            Alert Message
+            </v-card-title>
+            <v-card-text>
+                <v-alert
+                    dismissible
+                    elevation="24"
+                    icon="mdi-alert-circle"
+                >
+                    <div class="note">
+                        <span>Note:</span>
+                        <p>
+                            This action is not available at this time; please call the IT Department when it's necessary.
+                        </p>
+                    </div>
+                </v-alert>
+            </v-card-text>
+            <v-card-actions
+                class="bg-error text-white"
+                elevation="24"
+            >
+                <v-spacer></v-spacer>
+                <v-btn 
+                    bg-color="primary" text
+                    @click="CloseAlertMessageDialog">Close</v-btn>
+            </v-card-actions>
+        </v-card>
     </v-dialog>
     <v-dialog v-if="selectedRowDetails.value?.patient_registry?.[0]?.discharged_Date === null && selectedRowDetails.value?.patient_registry?.[0]?.discharged_Date !== null" :model-value="show" rounded="lg" scrollable @update:model-value="closeDialog" max-width="750px">
         <form @submit.prevent="onSubmit">
@@ -175,6 +195,8 @@ const props = defineProps({
     }
 });
 
+
+
 const { selectedRowDetails } = storeToRefs(useSubcomponentSelectedRowDetailsStore()); 
 
 const payload = ref([
@@ -235,10 +257,15 @@ const onSubmit = () => {
     emits('closeDialog');
 };
 
-const emits = defineEmits(['close-dialog'])
+const emits = defineEmits(['close-dialog', 'patient-registered']);
 
 const closeDialog = () => {
+    emits('patient-registered');
     emits('close-dialog');
+}
+
+const CloseAlertMessageDialog = () => {
+    closeDialog();
 }
 </script>
 
@@ -253,7 +280,7 @@ const closeDialog = () => {
     }
     .note span {
         font-size: 20px;
-        color: #ffffe0;
+        color: #000;
         font-weight: bold;
         font-style: italic;
     }

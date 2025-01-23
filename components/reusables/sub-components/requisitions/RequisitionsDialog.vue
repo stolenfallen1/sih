@@ -1,18 +1,37 @@
 <template>
     <v-dialog v-if="isDischarge !== null || isTagAsMgh !==  null" :model-value="show" rounded="lg" scrollable @update:model-value="closeDialog" max-width="400px"> 
-        <v-alert
-            border="left"
+        <v-card
             color="red"
-            dismissible
-            elevation="24"
-            icon="mdi-alert-circle"
         >
-           <div class="note">
-                <span>Note:</span>
-                <p class="message">Can't post or request charges for patients that have been tagged for May Go Home (MGH) or have been discharged.</p>
-           </div>
-          
-        </v-alert>
+            <v-card-title
+                class="bg-error text-white"
+            >
+            Alert Message
+            </v-card-title>
+            <v-card-text>
+                <v-alert
+                    dismissible
+                    elevation="24"
+                    icon="mdi-alert-circle"
+                >
+                    <div class="note">
+                        <span>Note:</span>
+                        <p>
+                            Can't post or request charges for patients that have been tagged for May Go Home (MGH) or have been discharged.
+                        </p>
+                    </div>
+                </v-alert>
+            </v-card-text>
+            <v-card-actions
+                class="bg-error text-white"
+                elevation="24"
+            >
+                <v-spacer></v-spacer>
+                <v-btn 
+                    bg-color="primary" text
+                    @click="CloseAlertMessageDialog">Close</v-btn>
+            </v-card-actions>
+        </v-card>
     </v-dialog>
     <v-dialog v-if="isDischarge === null && isTagAsMgh === null" :model-value="show" rounded="lg" scrollable @update:model-value="closeDialog" max-width="1120px">    
         <v-card rounded="lg">
@@ -303,6 +322,10 @@ const closeDialog = () => {
     emits('close-dialog');
 }
 
+const CloseAlertMessageDialog = () => {
+    closeDialog();
+}
+
 const closeWarningDialog = () => {
     warning_cannot_be_revoked.value = false;
     selectedRequisitionItem.value = [];
@@ -501,7 +524,7 @@ onUpdated(() => {
     }
     .note span {
         font-size: 20px;
-        color: #ffffe0;
+        color: #000;
         font-weight: bold;
         font-style: italic;
     }

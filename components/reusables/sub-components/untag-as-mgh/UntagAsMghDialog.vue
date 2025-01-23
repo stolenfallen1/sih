@@ -1,31 +1,71 @@
 <template>
     <v-dialog v-if="isDischarge !== null && isTagAsMgh !== null" :model-value="show" rounded="lg" scrollable @update:model-value="closeDialog" max-width="400px">
-    <v-alert
-        border="left"
-        color="red"
-        dismissible
-        elevation="24"
-        icon="mdi-alert-circle"
-    >
-        <div class="note">
-            <span>Note:</span>
-            <p class="message">Can't Untag May Go Home (MGH) for patients that have been already discharged.</p>
-        </div>
-    </v-alert>
+        <v-card
+            color="red"
+        >
+            <v-card-title
+                class="bg-error text-white"
+            >
+            Alert Message
+            </v-card-title>
+            <v-card-text>
+                <v-alert
+                    dismissible
+                    elevation="24"
+                    icon="mdi-alert-circle"
+                >
+                    <div class="note">
+                        <span>Note:</span>
+                        <p>
+                            Can't Untag May Go Home (MGH) for patients that have been already discharged.
+                        </p>
+                    </div>
+                </v-alert>
+            </v-card-text>
+            <v-card-actions
+                class="bg-error text-white"
+                elevation="24"
+            >
+                <v-spacer></v-spacer>
+                <v-btn 
+                    bg-color="primary" text
+                    @click="CloseAlertMessageDialog">Close</v-btn>
+            </v-card-actions>
+        </v-card>
     </v-dialog>
     <v-dialog v-if="isDischarge === null && isTagAsMgh === null" :model-value="show" rounded="lg" scrollable @update:model-value="closeDialog" max-width="400px">
-        <v-alert
-            border="left"
+        <v-card
             color="red"
-            dismissible
-            elevation="24"
-            icon="mdi-alert-circle"
         >
-            <div class="note">
-                <span>Note:</span>
-                <p class="message">Can't Untag May Go Home (MGH) for patients that have not been tagged yet for May Go Home (MGH).</p>
-            </div>
-        </v-alert>
+            <v-card-title
+                class="bg-error text-white"
+            >
+            Alert Message
+            </v-card-title>
+            <v-card-text>
+                <v-alert
+                    dismissible
+                    elevation="24"
+                    icon="mdi-alert-circle"
+                >
+                    <div class="note">
+                        <span>Note:</span>
+                        <p>
+                            Can't Untag May Go Home (MGH) for patients that have not been tagged yet for May Go Home (MGH).
+                        </p>
+                    </div>
+                </v-alert>
+            </v-card-text>
+            <v-card-actions
+                class="bg-error text-white"
+                elevation="24"
+            >
+                <v-spacer></v-spacer>
+                <v-btn 
+                    bg-color="primary" text
+                    @click="CloseAlertMessageDialog">Close</v-btn>
+            </v-card-actions>
+        </v-card>
     </v-dialog>
     <v-dialog v-if="isDischarge === null && isTagAsMgh !== null" :model-value="show" rounded="lg" scrollable @update:model-value="closeDialog" max-width="600px">
         <form @submit.prevent="openConfirmDialog">        
@@ -89,7 +129,7 @@
         showDialog.value = false;
     }
 
-    const emits = defineEmits(['close-dialog']);
+    const emits = defineEmits(['close-dialog', 'patient-registered']);
     
     const { selectedRowDetails } = storeToRefs(useSubcomponentSelectedRowDetailsStore()); 
 
@@ -100,7 +140,12 @@
     ]);
 
     const closeDialog = () => {
+        emits('patient-registered');
         emits('close-dialog');
+    }
+
+    const CloseAlertMessageDialog = () => {
+        closeDialog();
     }
 
     const onSubmit = async () => {
@@ -136,7 +181,6 @@
     onUpdated(() => {
         if (selectedRowDetails.value && selectedRowDetails.value.id) {
             if (payload.value.id !== selectedRowDetails.value.id) { 
-                payload.value                   = Object.assign({}, selectedRowDetails.value);
                 payload.value.patient_Id        = selectedRowDetails.value.patient_Id ? selectedRowDetails.value.patient_Id : '';
                 payload.value.suffix_id         = parseInt(selectedRowDetails.value.suffix_id) ? parseInt(selectedRowDetails.value.suffix_id) : '';
                 payload.value.case_No           = selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0].case_No ? selectedRowDetails.value.patient_registry[0].case_No : '';
@@ -156,7 +200,7 @@
     }
     .note span {
         font-size: 20px;
-        color: #ffffe0;
+        color: #000;
         font-weight: bold;
         font-style: italic;
     }

@@ -34,7 +34,7 @@
                     fixed-header
                     density="compact" 
                     height="50vh"
-                >
+                    >
                     <template v-slot:[`item.id`]="props">
                         <td class="test" :props="props">
                             <v-checkbox
@@ -210,9 +210,7 @@
     const handleSelectedRow = (selectedRows) => {
         const selectedItems = selectedRows.map(rowId => serverItems.value.find(item => item.id === rowId));  
         price_array.value = selectedItems.map(item => item.ware_house_items[0].price);
-        
         const validSelectedItems = selectedItems.filter(item => item !== undefined && parseInt(item.ware_house_items[0].item_OnHand) > 0)
-        console.log('VALID SELECTED ITEMS', validSelectedItems);
         if(validSelectedItems) {            
             if(props.user_input_revenue_code === 'EM') {
                 medicine_stocks.value = selectedItems.map(
@@ -226,7 +224,7 @@
                 medicine_stocks_array.value.push({ 
                     medicine_id: validSelectedItems[0].id, 
                     medicine_stock: medicine_stocks.value[0], 
-                    item_List_Cost: medicine_item_ListCost.value[0]
+                    item_List_Cost: medicine_item_ListCost.value[0],
                 });
                 props.payload.medicine_stocks_OnHand = medicine_stocks_array.value;
             }

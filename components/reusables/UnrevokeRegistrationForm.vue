@@ -69,8 +69,11 @@ const closeConfirmDialog = () => {
 };
 
 const onSubmit = async (user_details) => {
+    payload.value.case_No = selectedRowDetails.value.patient_registry[0].case_No;
+    payload.value.patient_Id = selectedRowDetails.value.patient_Id;
+    payload.value.mscAccount_Trans_Types = selectedRowDetails.value.patient_registry[0].mscAccount_Trans_Types;
     if (user_details.user_passcode === usePasscode()) {
-        const response = await useMethod("put", "unrevoke-patient", "", "", selectedRowDetails.value.patient_Id);
+        const response = await useMethod("put", "unrevoke-patient", payload.value, "", "");
         if (response) {
             closeConfirmDialog();
             closeDialog();

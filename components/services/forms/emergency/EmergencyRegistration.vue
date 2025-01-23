@@ -170,7 +170,7 @@
     });
 
     const isLoading = ref(false);
-    const emits = defineEmits(['close-dialog', 'patient-registered']);
+    const emits = defineEmits(['close-dialog', 'patient-registered', 'selected-user']);
     const patientDetail = ref({});
 
     const closeConfirmDialog = () => {
@@ -179,6 +179,7 @@
 
     const closeDialog = () => {
         showDialog.value = false;
+        tab.value = "0";
         payload.value = {};
         formErrors.value = {};
         patientStore.clearSelectedPatient();
@@ -252,7 +253,6 @@
         if (!valid.value) {
             const firstErrorField = Object.keys(formErrors.value)[0];
             tab.value = findTabIndexByError(firstErrorField);
-
             await nextTick();
             focusField(firstErrorField);
         }
@@ -265,11 +265,13 @@
             if (payload.value.id) {
                 response = await useMethod("put", "update-patient", payload.value, "", payload.value.patient_Id);
                 if (response) {
+                    tab.value = "0";
                     showSuccessResponse(response);
                 }
             } else {
                 response = await useMethod("post", "register-patient", payload.value);
                 if (response) {
+                    tab.value = "0";
                     showSuccessResponse(response);
                 }
             }
@@ -283,6 +285,7 @@
     const showSuccessResponse = (response) => {
         useSnackbar(true, "green", response.message);
         emits('patient-registered', '');
+        emits('selected-user', '');
         closeConfirmDialog();
         closeDialog();
     }
@@ -388,10 +391,8 @@
                     guarantor_Validity_date,
                     guarantor_Credit_Limit
                 });
-
             }
             payload.value.selectedGuarantor = Guarantor.value;
-
             // For CONSULTANTS
             const Consultant = ref([]);
             if (selectedRowDetails.value.patient_registry && selectedRowDetails.value.patient_registry[0].attending_Doctor != null) {

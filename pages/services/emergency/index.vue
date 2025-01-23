@@ -267,13 +267,13 @@
 		</v-card-actions>
 		</v-card>
 	</v-menu>
-	<EmergencyRegistration :clicked_option="clicked_option" :form_dialog="form_dialog" @patient-registered="loadPatient" @close-dialog="closeAddFormDialog" />
+	<EmergencyRegistration :clicked_option="clicked_option" :form_dialog="form_dialog" @selected-user="selectedUser" @patient-registered="loadPatient" @close-dialog="closeAddFormDialog" />
 	<!-- Emergency Sub components -->
 	<PatientProfileDialog :show="PatientProfile" :form_payload="payload" @close-dialog="useSubComponents('PatientProfile', false)" />
-	<SuspendDialog :show="Suspend" :form_type="form_type" @close-dialog="useSubComponents('Suspend', false)" />
+	<SuspendDialog :show="Suspend" :form_type="form_type" @patient-registered="loadPatient" @close-dialog="useSubComponents('Suspend', false)" />
 	<RequisitionsDialog :show="Requisitions" :form_type="form_type" @close-dialog="handleClose('Requisitions')" />
-	<PostChargesDialog :show="PostCharges" @close-dialog="useSubComponents('PostCharges', false)" />
-	<ERPostMedicineSuppliesDialog :show="ERPostMedicineSupplies" @close-dialog="useSubComponents('ERPostMedicineSupplies', false)" />
+	<PostChargesDialog :show="PostCharges" @patient-registered="loadPatient" @close-dialog="useSubComponents('PostCharges', false)" />
+	<ERPostMedicineSuppliesDialog :show="ERPostMedicineSupplies" @patient-registered="loadPatient" @close-dialog="useSubComponents('ERPostMedicineSupplies', false)" />
 	
 	<TagAsMghDialog :show="TagAsMgh" :form_type="form_type" @patient-registered="loadPatient" @close-dialog="useSubComponents('TagAsMgh', false) " />
 	<UntagAsMghDialog :show="UntagAsMgh" @patient-registered="loadPatient" @close-dialog="useSubComponents('UntagAsMgh', false)" />
@@ -361,7 +361,7 @@
 			label: "Registered",
 			title: "Registered patients today.",
 			value: 1,
-			endpoint: useLaravelAPI() + "/get-emergency",
+			endpoint: useLaravelAPI() + "/get-emergency-patient",
 			columns: [
 				{
 					title: "",
@@ -651,7 +651,6 @@
 	const params = ref("");
 	const loading = ref(true);
 	const open_summary_modal = ref(false);
-
 	const erPatient_test_data = ref([
 		{ label: "Active", value: "1", color: "green" },
 		{ label: "Discharged", value: "2", color: "lightblue" },
@@ -744,6 +743,7 @@
 			isrefresh.value = false;
 			isSelectedUser.value = true;
 		}
+		console.log('Selected User:', isSelectedUser.value);
 	};
 
 const loadPatient = (patientDetails) => {
@@ -911,6 +911,7 @@ const handleClose = (dialogName) => {
 	useSubComponents(dialogName, false);
 	loadItems();
 }
+
 
 const updateTotalItems = (newTotalItems) => {
 	totalItems.value = newTotalItems;

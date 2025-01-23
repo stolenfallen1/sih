@@ -281,7 +281,7 @@ const tableTabs = ref([
     label: "Registered",
     title: "Registered patients today.",
     value: 1,
-    endpoint: useLaravelAPI() + "/get-outpatient",
+    endpoint: useLaravelAPI() + "/get-out-patient",
     columns: [
               {
                 title: "",
@@ -355,7 +355,7 @@ const tableTabs = ref([
     label: "Revoked",
     title: "Revoked patients today.",
     value: 2,
-    endpoint: useLaravelAPI() + "/get-revoked-outpatient",
+    endpoint: useLaravelAPI() + "/get-revoked-out-patient",
     columns: [
               {
                 title: "Patient ID",

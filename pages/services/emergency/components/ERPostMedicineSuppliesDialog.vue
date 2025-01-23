@@ -1,17 +1,37 @@
 <template>
     <v-dialog v-if="isDischarge !== null || isTagAsMgh !== null" :model-value="show" rounded="lg" scrollable @update:model-value="closeDialog" max-width="400px"> 
-        <v-alert
-            border="left"
+        <v-card
             color="red"
-            dismissible
-            elevation="24"
-            icon="mdi-alert-circle"
         >
-           <div class="note">
-                <span>Note:</span>
-                <p class="message">Can't post or request charges for patients that have been tagged for May Go Home (MGH) or have been discharged.</p>
-           </div>
-        </v-alert>
+            <v-card-title
+                class="bg-error text-white"
+            >
+            Alert Message
+            </v-card-title>
+            <v-card-text>
+                <v-alert
+                    dismissible
+                    elevation="24"
+                    icon="mdi-alert-circle"
+                >
+                    <div class="note">
+                        <span>Note:</span>
+                        <p>
+                            Can't post or request charges for patients that have been tagged for May Go Home (MGH) or have been discharged.
+                        </p>
+                    </div>
+                </v-alert>
+            </v-card-text>
+            <v-card-actions
+                class="bg-error text-white"
+                elevation="24"
+            >
+                <v-spacer></v-spacer>
+                <v-btn 
+                    bg-color="primary" text
+                    @click="CloseAlertMessageDialog">Close</v-btn>
+            </v-card-actions>
+        </v-card>
     </v-dialog>
     <v-dialog v-if="isDischarge === null && isTagAsMgh === null" :model-value="show" rounded="lg" scrollable @update:model-value="closeDialog" max-width="1120px">    
         <v-card rounded="lg">
@@ -243,9 +263,23 @@
                                         <tr>
                                             <td> <input class="input medicine-focus" v-model="item.code" @keyup.enter="handleAddMedicine(item, index)" :readonly="item.isReadonly" /> </td>
                                             <td> <input class="input medicine-focus" v-model="item.item_name" @keyup.enter="handleAddMedicine(item, index)" readonly /> </td>
-                                            <td> <input class="input medicine-focus" v-model="item.frequency_description" @keyup.enter="openFrequencyList" readonly /> </td>
+                                            <td> <input 
+                                                    class="input medicine-focus" 
+                                                    v-model="item.frequency_description" 
+                                                    @keyup.enter="openFrequencyList(index)" 
+                                                    :class="{ 'error-border': item.frequencyError }" 
+                                                    @input="clearError(item, 'frequency')"
+                                                    readonly  
+                                                /> 
+                                            </td>
                                             <td> <input class="input medicine-focus" v-model="item.price" readonly /> </td>
-                                            <td> <input class="input medicine-focus" v-model="item.quantity" @input="handleTotalMedicine(item)" /> </td>
+                                            <td> <input 
+                                                    class="input medicine-focus" 
+                                                    v-model="item.quantity" 
+                                                    @input="handleTotalMedicine(item, 'quantity')" 
+                                                    :class="{ 'error-border': item.quantityError }" 
+                                                /> 
+                                            </td>
                                             <td> <input class="input medicine-focus" v-model="item.amount" readonly /> </td>
                                             <td> <input class="input medicine-focus" v-model="item.remarks" /> </td>
                                             <td>
@@ -307,7 +341,7 @@
                                             <td> <input class="input supplies-focus" v-model="item.code" @keyup.enter="handleAddSupplies(item, index)" :readonly="item.isReadonly" /> </td>
                                             <td> <input class="input supplies-focus" v-model="item.item_name" @keyup.enter="handleAddSupplies(item, index)" readonly /> </td>
                                             <td> <input class="input supplies-focus" v-model="item.price" readonly /> </td>
-                                            <td> <input class="input medicine-focus" v-model="item.quantity" @input="handleTotalSupply(item)" /> </td>
+                                            <td> <input class="input medicine-focus" v-model="item.quantity" @input="handleTotalSupply(item, 'quantity')" :class="{ 'error-border': item.quantityError }"  /> </td>
                                             <td> <input class="input medicine-focus" v-model="item.amount" readonly /> </td>
                                             <td> <input class="input supplies-focus" v-model="item.remarks" /> </td>
                                             <td>
@@ -495,7 +529,7 @@
     })
 
     const { selectedRowDetails } = storeToRefs(useSubcomponentSelectedRowDetailsStore()); 
-    const emits = defineEmits(['close-dialog', 'post-charges'])
+    const emits = defineEmits(['close-dialog', 'post-charges', 'revoke-charges', 'patient-registered']);
     const isLoading = ref(false);
     const credit_limit = ref(null);
     let panel = ref([0, 1, 2, 3]);
@@ -517,6 +551,22 @@
     ]);
 
     const openConfirmDialog = async () => {
+        if (Medicines.value.length > 0 && !validateMedicines()) {
+            useSnackbar(
+                true,
+                "error",
+                'Please fill up all required fields for medicines.'
+            );
+            return; 
+        } 
+        if (Supplies.value.length > 0 && !validateSupplies()) {
+            useSnackbar(
+                true,
+                "error",
+                'Please fill up all required fields for supplies.'
+            );
+            return; 
+        }
         showDialog.value = true;
     }
 
@@ -606,9 +656,15 @@
         }
     };
 
-    const openFrequencyList = () => {
+    const openFrequencyList = (rowIndex) => {
+        currentRowIndex.value = rowIndex;
         open_frequency_list.value = true;
     }
+    const currentRowIndex = ref(null);
+
+    const handleFrequencySelect = (selected_item) => {
+        handleSelectedFrequency(selected_item, currentRowIndex.value);
+    };
 
     const handleAddMedicine = (item, index) => {
         item.code = item.code.toUpperCase();
@@ -707,7 +763,6 @@
     };
 
     const handleSelectedItem = (selected_item, listType) => {
-        console.log('Selected Item ni ha: ', selected_item);
         if (listType === 'medicines') {
             const lastRow = Medicines.value[Medicines.value.length - 1];
             lastRow.item_id = selected_item.ware_house_items ? selected_item.ware_house_items[0].item_Id : '';
@@ -723,35 +778,141 @@
         }
     };
 
+    //This function will validate if frequency and quantity is empty
+    const validateSupplies = () => {
+        let isValid = true;
+        const validRows = Supplies.value.filter((item) => item.quantity || item.item_name);
+        if (validRows.length === 0) {
+            return true;
+        }
+        validRows.forEach((item) => {
+            if (!item.quantity) {
+                item.quantityError = true; 
+                isValid = false;
+            } else {
+                item.quantityError = false; 
+            }
+        });
+        return isValid;
+    };
+
+    const validateMedicines = () => {
+        let isValid = true;
+        const validRows = Medicines.value.filter((item) => item.frequency || item.quantity || item.item_name);
+        if (validRows.length === 0) {
+            return true;
+        }
+        validRows.forEach((item) => {
+            if (!item.frequency) {
+                item.frequencyError = true;
+                isValid = false;
+            } else {
+                item.frequencyError = false;
+            }
+            if (!item.quantity) {
+                item.quantityError = true; 
+                isValid = false;
+            } else {
+                item.quantityError = false; 
+            }
+            });
+        return isValid;
+    };
+
+
+    const clearError = (item, field) => {
+        if (field === 'frequency' && item.frequency) {
+            item.frequencyError = false; 
+        }
+
+        if (field === 'quantity' && item.quantity) {
+            item.quantityError = false;
+        }
+    };
 
     const handleTotalMedicine = (item) => {
+        console.log('Payload Medicines : ', payload.value);
+        const itemStocks = payload.value.medicine_stocks_OnHand.find(
+            (selectedItem) => parseInt(selectedItem.medicine_id) === parseInt(item.item_id)
+        );
+        if (!itemStocks) {
+            console.error(`Stock not found for item ID: ${item.item_id}`);
+            useSnackbar(
+                true,
+                "error",
+                `No stock found for item ID: ${item.item_id}`
+            );
+            return;
+        }
         if (!item.base_price) {
             item.base_price = parseFloat(item.price.replace(/[^0-9.-]+/g, ''));
         }
-        const base_price = item.base_price;
-        const quantity = parseInt(item.quantity) || 0;
+        const base_price = parseFloat(item.base_price) || 0;
+        let quantity = parseInt(item.quantity) || 0; 
+        const availableStock = parseFloat(itemStocks.medicine_stock) || 0;
+        if (quantity > availableStock) {
+            console.warn(
+                `Insufficient stock! Entered: ${quantity}, Available: ${availableStock}`
+            );
+            useSnackbar(
+                true,
+                "error",
+                `Insufficient stock for item ${item.item_id}. Only ${availableStock} units are available.`
+            );
+            quantity = availableStock;
+            item.quantity = availableStock;
+        }
         if (!isNaN(quantity) && !isNaN(base_price)) {
             item.amount = (quantity * base_price).toFixed(2);
-            calculateTotalAmountMedicine();
         } else {
-            item.price = "0.00"; 
+            item.amount = "0.00";
+        }
+        if (quantity <= availableStock) {
+            calculateTotalAmountMedicine();
         }
     };
 
-    
     const handleTotalSupply = (item) => {
+        const itemStocks = payload.value.supply_stocks_OnHand.find(
+            (selectedItem) => parseInt(selectedItem.supply_id) === parseInt(item.item_id)
+        );
+        if (!itemStocks) {
+            console.error(`Stock not found for item ID: ${item.item_id}`);
+            useSnackbar(
+                true,
+                "error",
+                `No stock found for item ID: ${item.item_id}`
+            );
+            return;
+        }
         if (!item.base_price) {
             item.base_price = parseFloat(item.price.replace(/[^0-9.-]+/g, ''));
         }
-        const base_price = item.base_price;
-        const quantity = parseInt(item.quantity) || 0;
+        const base_price = parseFloat(item.base_price) || 0;
+        let quantity = parseInt(item.quantity) || 0; 
+        const availableStock = parseFloat(itemStocks.supply_stock) || 0;
+        if (quantity > availableStock) {
+            console.warn(
+                `Insufficient stock! Entered: ${quantity}, Available: ${availableStock}`
+            );
+            useSnackbar(
+                true,
+                "error",
+                `Insufficient stock for item ${item.item_id}. Only ${availableStock} units are available.`
+            );
+            quantity = availableStock;
+            item.quantity = availableStock;
+        }
         if (!isNaN(quantity) && !isNaN(base_price)) {
             item.amount = (quantity * base_price).toFixed(2);
-            calculateTotalAmountSupply();
         } else {
-            item.price = "0.00"; 
+            item.amount = "0.00";
+        }
+        if (quantity <= availableStock) {
+            calculateTotalAmountSupply();
         }
     };
+
 
     const totalAmount = ref(0);
     const calculateTotalAmountMedicine = () => {
@@ -772,10 +933,19 @@
     }
 
     const handleSelectedFrequency = (selected_item) => {
-        const lastRow = Medicines.value[Medicines.value.length - 1];
-        lastRow.frequency = selected_item.dosage_id; 
-        lastRow.frequency_description = selected_item.description;
-    };
+    if (currentRowIndex.value !== null) {
+        const row = Medicines.value[currentRowIndex.value];
+        if (row) {
+            row.frequency = selected_item.dosage_id;
+            row.frequency_description = selected_item.description;
+        } else {
+            console.error(`No row found at index: ${currentRowIndex.value}`);
+        }
+    } else {
+        console.error("currentRowIndex is null or undefined");
+    }
+    open_frequency_list.value = false; // Close the dialog
+};
 
     const removeMedicineItem = (selectedItem) => {
         Medicines.value = Medicines.value.filter(item => !(item.map_item_id === selectedItem.map_item_id && item.code === selectedItem.code));
@@ -800,36 +970,94 @@
     //     openConfirmDialog()
             
     // }
+    // const onSubmit = async () => {
+    //     isLoading.value = true;
+    //     isLoadingBtn.value = true;
+        
+    //     const medicines = Medicines.value.filter(obj => obj.code !== '');
+    //     const supplies = Supplies.value.filter(obj => obj.code !== '');
+
+    //     let flagMedicine = true;
+    //     let flagSupply = true;
+
+    //     payload.value.Medicines = medicines;
+    //     payload.value.Supplies = supplies;
+    //     payload.value.reference_id = reference_id.value;
+    //     payload.value.medsys_AssessNum = medsys_assess_id.value;
+    //     console.log('Payload: ', payload.value);
+    //     try {
+    //         if(parseInt(defineProcess.value) === 1) {
+    //             await processCharges();
+    //         } else {
+    //             if (payload.value.medicine_stocks_OnHand !== undefined) {
+    //                 const sufficient_mdecine_stocks = checkStockAvailability(payload.value.medicine_stocks_OnHand, medicines, 'medicine', (flag) => flagMedicine = flag);
+    //                 console.log('Sufficient Medicine: ', sufficient_mdecine_stocks);
+    //                 if(!sufficient_mdecine_stocks) {
+    //                     useSnackbar(true, "error", 'Cannot charge, double-check item stocks for medicines or supplies.');
+    //                     return;
+    //                 }
+    //             }
+    //             if (payload.value.supply_stocks_OnHand !== undefined) {
+    //                 const suficient_stocks_supply = checkStockAvailability(payload.value.supply_stocks_OnHand, supplies, 'supply', (flag) => flagSupply = flag);
+    //                 console.log('Sufficient Supply: ', suficient_stocks_supply);
+    //                 if(!suficient_stocks_supply) {
+    //                     useSnackbar(true, "error", 'Cannot charge, double-check item stocks for medicines or supplies.');
+    //                     return;
+    //                 }
+    //             }
+    //             if (flagMedicine || flagSupply) {
+    //                 if (payload.value.charge_to === "Company / Insurance") {
+    //                     credit_limit.value = payload.value.guarantor_Credit_Limit === 'OPEN'
+    //                         ? null
+    //                         : parseFloat(payload.value.guarantor_Credit_Limit.replace(/[^0-9.-]+/g, ''));
+    //                     if (credit_limit.value !== null && parseFloat(totalAmount.value) > credit_limit.value) {
+    //                         if (confirm(`Insufficient credit limit! Total is ${totalAmount.value}, but your credit limit is only ${credit_limit.value}. Proceed anyway?`)) {
+    //                             await processCharges();
+    //                         } else {
+    //                             useSnackbar(true, "warning", 'Charge process halted. Please review the items.');
+    //                         }
+    //                     } else {
+    //                         await processCharges();
+    //                     }
+    //                 } else {
+    //                     await processCharges();
+    //                 }
+    //             } else {
+    //                 useSnackbar(true, "error", 'Cannot charge, double-check item stocks for medicines or supplies.');
+    //             }
+    //         }
+    //     } catch (error) {
+    //         handleErrorResponse(error);
+    //     } finally {
+    //         defineProcess.value = 0;
+    //         isLoadingBtn.value = false;
+    //         isLoading.value = false;
+    //         clearFields();
+    //         closeConfirmDialog();
+    //     }
+    // };
+
     const onSubmit = async () => {
         isLoading.value = true;
         isLoadingBtn.value = true;
-
         const medicines = Medicines.value.filter(obj => obj.code !== '');
         const supplies = Supplies.value.filter(obj => obj.code !== '');
-
         let flagMedicine = true;
         let flagSupply = true;
-
         payload.value.Medicines = medicines;
         payload.value.Supplies = supplies;
         payload.value.reference_id = reference_id.value;
         payload.value.medsys_AssessNum = medsys_assess_id.value;
-        console.log('Payload: ', payload.value);
         try {
-            if(parseInt(defineProcess.value) === 1) {
+            if (parseInt(defineProcess.value) === 1) {
                 await processCharges();
             } else {
-                if (payload.value.medicine_stocks_OnHand !== undefined) {
-                    checkStockAvailability(payload.value.medicine_stocks_OnHand, medicines, 'medicine', (flag) => flagMedicine = flag);
-                }
-                if (payload.value.supply_stocks_OnHand !== undefined) {
-                    checkStockAvailability(payload.value.supply_stocks_OnHand, supplies, 'supply', (flag) => flagSupply = flag);
-                }
-                if (flagMedicine || flagSupply) {
+                if (flagMedicine && flagSupply) {
                     if (payload.value.charge_to === "Company / Insurance") {
                         credit_limit.value = payload.value.guarantor_Credit_Limit === 'OPEN'
                             ? null
                             : parseFloat(payload.value.guarantor_Credit_Limit.replace(/[^0-9.-]+/g, ''));
+
                         if (credit_limit.value !== null && parseFloat(totalAmount.value) > credit_limit.value) {
                             if (confirm(`Insufficient credit limit! Total is ${totalAmount.value}, but your credit limit is only ${credit_limit.value}. Proceed anyway?`)) {
                                 await processCharges();
@@ -855,22 +1083,6 @@
             clearFields();
             closeConfirmDialog();
         }
-    };
-
-    const checkStockAvailability = (stocksOnHand, items, itemType, updateFlag) => {
-        stocksOnHand.forEach((stock, index) => {
-            const item = items[index];
-            if (!item) return;
-
-            const requiredQuantity = parseInt(item.quantity);
-            const availableStocks = parseInt(stock.stock);
-
-            if (availableStocks < requiredQuantity) {
-                const itemId = stock.id;
-                updateFlag(false);
-                useSnackbar(true, "error", `Insufficient stock! for ${itemId}. You requested ${requiredQuantity} units, but only ${availableStocks} are available.`);
-            }
-        });
     };
 
     const processCharges = async () => {
@@ -915,12 +1127,8 @@
         await processCharges(); 
     };
 
-
-    // const closeDialog = () => {
-    //     emits('close-dialog');
-    //     panel.value = [0, 1, 2, 3];
-    // }
     const closeDialog = () => {
+        emits('patient-registered')
         emits('close-dialog');
         panel.value = [0, 1];
         Medicines.value = [
@@ -946,6 +1154,10 @@
                 stat: "",
             }
         ]
+    }
+
+    const CloseAlertMessageDialog = () => {
+        closeDialog();
     }
 
     const clearFields = () => {
@@ -1187,9 +1399,13 @@
     }
     .note span {
         font-size: 20px;
-        color: #ffffe0;
+        color: #000;
         font-weight: bold;
         font-style: italic;
+    }
+    .error-border {
+        border: 2px solid red;
+        border-radius: 5px;
     }
     
 </style>
